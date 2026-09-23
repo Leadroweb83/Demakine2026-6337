@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../lib/api";
 import { Badge, Card, PageTitle, inputCls } from "./ui";
+import { LEAD_STATUSES, STATUS_META, statusMeta } from "./lead-status";
 
 type Lead = {
   id: number;
@@ -13,9 +14,12 @@ type Lead = {
   product: string | null;
   message: string | null;
   source: string | null;
+  status: string | null;
   attachments: string | null;
   createdAt: string;
 };
+
+export type LeadsFilter = { status?: string; source?: string; term?: string };
 
 /** Miniatura das fotos anexadas pelo lead (URL assinada, valida 10 min). */
 function AttachmentCell({ raw }: { raw: string | null }) {
@@ -60,14 +64,17 @@ function AttachmentCell({ raw }: { raw: string | null }) {
   );
 }
 
-const whatsappHref = (phone: string, name: string) =>
+export const hasPhone = (phone: string | null | undefined) => (phone ?? "").replace(/\D/g, "").length >= 10;
+
+export const whatsappHref = (phone: string, name: string) =>
   `https://wa.me/55${phone.replace(/\D/g, "")}?text=${encodeURIComponent(
     `Olá ${name}! Aqui é da Demakine, recebemos seu contato.`,
   )}`;
 
-export function AdminLeads() {
-  const [term, setTerm] = useState("");
-  const [source, setSource] = useState("todas");
+export function AdminLeads({ initial }: { initial?: LeadsFilter }) {
+  const [term, setTerm] = useState(initial?.term ?? "");
+  const [source, setSource] = useState(initial?.source ?? "todas");
+  const [status, setStatus] = useState(initial?.status ?? "todos");
 
   const leadsQuery = useQuery({
     queryKey: ["admin-leads"],
@@ -88,12 +95,13 @@ export function AdminLeads() {
     const t = term.trim().toLowerCase();
     return leads.filter((l) => {
       if (source !== "todas" && (l.source ?? "site") !== source) return false;
+      if (status !== "todos" && (l.status ?? "novo") !== status) return false;
       if (!t) return true;
       return [l.name, l.company, l.phone, l.email, l.city, l.product, l.message]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(t));
     });
-  }, [leads, term, source]);
+  }, [leads, term, source, status]);
 
   return (
     <div className="space-y-6">
@@ -131,6 +139,23 @@ export function AdminLeads() {
             ))}
           </select>
         </div>
+        <div className="min-w-[180px]">
+          <span className="block text-[11px] font-bold uppercase tracking-wide text-dm-ink/60">
+            Status
+          </span>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className={`mt-1.5 ${inputCls}`}
+          >
+            <option value="todos">Todos os status</option>
+            {LEAD_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {STATUS_META[s].label}
+              </option>
+            ))}
+          </select>
+        </div>
         <p className="pb-2 text-[13px] text-dm-ink/60">
           {filtered.length} de {leads.length} leads
         </p>
@@ -148,6 +173,7 @@ export function AdminLeads() {
             <thead className="bg-dm-surface text-[11px] font-bold uppercase tracking-wide text-dm-ink/55">
               <tr>
                 <th className="px-5 py-3">Nome</th>
+                <th className="px-5 py-3">Status</th>
                 <th className="px-5 py-3">Empresa</th>
                 <th className="px-5 py-3">Telefone</th>
                 <th className="px-5 py-3">E-mail</th>
@@ -161,9 +187,17 @@ export function AdminLeads() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((lead) => (
+              {filtered.map((lead) => {
+                const st = statusMeta(lead.status);
+                return (
                 <tr key={lead.id} className="border-t border-black/5 hover:bg-dm-surface/60">
                   <td className="px-5 py-4 font-semibold text-dm-ink">{lead.name}</td>
+                  <td className="px-5 py-4">
+                    <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-[12.5px] font-semibold text-dm-ink/80">
+                      <span className="h-2 w-2 rounded-full" style={{ background: st.color }} />
+                      {st.label}
+                    </span>
+                  </td>
                   <td className="px-5 py-4 text-dm-ink/70">{lead.company || "-"}</td>
                   <td className="px-5 py-4 text-dm-ink/70">{lead.phone}</td>
                   <td className="px-5 py-4 text-dm-ink/70">{lead.email || "-"}</td>
@@ -182,24 +216,34 @@ export function AdminLeads() {
                     {new Date(lead.createdAt).toLocaleString("pt-BR")}
                   </td>
                   <td className="px-5 py-4">
-                    <a
-                      href={whatsappHref(lead.phone, lead.name)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full bg-dm-green px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-wide text-white hover:bg-dm-green-dark"
-                    >
-                      WhatsApp
-                    </a>
+                    {hasPhone(lead.phone) ? (
+                      <a
+                        href={whatsappHref(lead.phone, lead.name)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-full bg-dm-green px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-wide text-white hover:bg-dm-green-dark"
+                      >
+                        WhatsApp
+                      </a>
+                    ) : lead.email ? (
+                      <a
+                        href={`mailto:${lead.email}`}
+                        className="rounded-full border border-black/10 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-wide text-dm-ink/70 hover:bg-black/[0.03]"
+                      >
+                        E-mail
+                      </a>
+                    ) : null}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         )}
       </div>
 
       <p className="text-[12.5px] text-dm-ink/50">
-        Status, responsável, anotações e exportação em CSV entram na fase 2 do painel.
+        Mudança de status, responsável, anotações e exportação em CSV entram nas próximas etapas da fase 2.
       </p>
     </div>
   );

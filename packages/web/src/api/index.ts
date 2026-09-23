@@ -5,7 +5,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3, S3_BUCKET, ALLOWED_IMAGE_TYPES, safeName } from "./lib/s3";
 import { db } from "./database";
 import * as schema from "./database/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { auth } from "./auth";
 import { authMiddleware, requireAuth, requireRole, type SessionUser } from "./middleware/auth";
 import { createPanelUser, isRole, randomPassword, setUserPassword } from "./lib/users";
@@ -135,50 +135,14 @@ const app = new Hono<Env>()
     const leads = await db.select().from(schema.leads).orderBy(desc(schema.leads.createdAt));
     return c.json({ leads }, 200);
   })
-  .get('/admin/overview', requireAuth, async (c) => {
-    const user = c.get('user')!;
-    const role = (user.role ?? 'editor') as string;
-    const canSeeLeads = role === 'super_admin' || role === 'admin' || role === 'vendedor';
-
-    let totalLeads = 0;
-    let leadsLast30 = 0;
-    let bySource: { source: string; total: number }[] = [];
-    let byMonth: { month: string; total: number }[] = [];
-
-    if (canSeeLeads) {
-      const rows = await db.select().from(schema.leads);
-      totalLeads = rows.length;
-      const cut = Date.now() - 30 * 24 * 60 * 60 * 1000;
-      leadsLast30 = rows.filter((r) => (r.createdAt?.getTime() ?? 0) >= cut).length;
-
-      const sourceMap = new Map<string, number>();
-      const monthMap = new Map<string, number>();
-      for (const r of rows) {
-        const s = r.source ?? 'site';
-        sourceMap.set(s, (sourceMap.get(s) ?? 0) + 1);
-        const d = r.createdAt ?? new Date();
-        const m = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-        monthMap.set(m, (monthMap.get(m) ?? 0) + 1);
-      }
-      bySource = [...sourceMap.entries()]
-        .map(([source, total]) => ({ source, total }))
-        .sort((a, b) => b.total - a.total);
-      byMonth = [...monthMap.entries()]
-        .map(([month, total]) => ({ month, total }))
-        .sort((a, b) => a.month.localeCompare(b.month))
-        .slice(-12);
-    }
-
-    const [{ total: totalUsers } = { total: 0 }] = await db
-      .select({ total: sql<number>`count(*)` })
-      .from(schema.user);
-
-    return c.json({ canSeeLeads, totalLeads, leadsLast30, bySource, byMonth, totalUsers }, 200);
-  })
   .get('/admin/dashboard', requireRole('admin', 'vendedor'), async (c) => {
-    const days = Number(c.req.query('dias') ?? '90');
+    const rawDays = Number(c.req.query('dias') ?? '90');
+    const days = Number.isFinite(rawDays) && rawDays >= 0 ? Math.min(rawDays, 3650) : 90;
+    const onlyMine = c.req.query('escopo') === 'meus';
+    const me = c.get('user')!;
     const now = Date.now();
-    const rows = await db.select().from(schema.leads);
+    const allRows = await db.select().from(schema.leads);
+    const rows = onlyMine ? allRows.filter((r) => r.ownerId === me.id) : allRows;
     const users = await db
       .select({ id: schema.user.id, name: schema.user.name })
       .from(schema.user);
@@ -235,85 +199,130 @@ const app = new Hono<Env>()
       }))
       .sort((a, b) => b.total - a.total);
 
+    // datas no fuso da fabrica: o servidor roda em UTC
+    const spFmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Sao_Paulo',
+      year: 'numeric',
+      month: '2-digit',
+      weekday: 'short',
+      hour: '2-digit',
+      hourCycle: 'h23',
+    });
+    const WEEKDAY_INDEX: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    const sp = (d: Date) => {
+      const p = Object.fromEntries(spFmt.formatToParts(d).map((x) => [x.type, x.value]));
+      return {
+        year: Number(p.year),
+        month: Number(p.month),
+        weekday: WEEKDAY_INDEX[p.weekday ?? 'Sun'] ?? 0,
+        hour: Number(p.hour) % 24,
+      };
+    };
+    const monthKey = (year: number, month: number) => `${year}-${String(month).padStart(2, '0')}`;
+
     // serie de 12 meses (total e ganhos), com o mesmo mes do ano anterior
-    const monthKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     const monthTotals = new Map<string, { total: number; won: number }>();
     for (const r of rows) {
-      const d = r.createdAt ?? new Date();
-      const k = monthKey(d);
+      const d = sp(r.createdAt ?? new Date());
+      const k = monthKey(d.year, d.month);
       const cur = monthTotals.get(k) ?? { total: 0, won: 0 };
       cur.total += 1;
       if (r.status === 'ganho') cur.won += 1;
       monthTotals.set(k, cur);
     }
     const byMonth: { month: string; total: number; won: number; lastYear: number }[] = [];
-    const cursor = new Date();
-    cursor.setDate(1);
+    const today = sp(new Date());
     for (let i = 11; i >= 0; i--) {
-      const d = new Date(cursor.getFullYear(), cursor.getMonth() - i, 1);
-      const k = monthKey(d);
-      const ly = monthKey(new Date(d.getFullYear() - 1, d.getMonth(), 1));
+      const idx = today.year * 12 + (today.month - 1) - i;
+      const year = Math.floor(idx / 12);
+      const month = (idx % 12) + 1;
+      const k = monthKey(year, month);
       byMonth.push({
         month: k,
         total: monthTotals.get(k)?.total ?? 0,
         won: monthTotals.get(k)?.won ?? 0,
-        lastYear: monthTotals.get(ly)?.total ?? 0,
+        lastYear: monthTotals.get(monthKey(year - 1, month))?.total ?? 0,
       });
     }
 
     // tempo medio ate o primeiro contato (horas)
-    const contacted = period.filter((r) => r.firstContactAt && r.createdAt);
-    const avgFirstContactHours = contacted.length
-      ? Math.round(
-          (contacted.reduce((acc, r) => acc + (at(r.firstContactAt) - at(r.createdAt)), 0) /
-            contacted.length /
-            36e5) *
-            10,
-        ) / 10
-      : null;
+    const avgFirstContact = (list: typeof rows) => {
+      const contacted = list.filter((r) => r.firstContactAt && r.createdAt);
+      if (!contacted.length) return null;
+      const sum = contacted.reduce((acc, r) => acc + (at(r.firstContactAt) - at(r.createdAt)), 0);
+      return Math.round((sum / contacted.length / 36e5) * 10) / 10;
+    };
+    const conversionOf = (list: typeof rows) => {
+      const w = list.filter((r) => r.status === 'ganho').length;
+      const cl = list.filter((r) => r.status === 'ganho' || r.status === 'perdido').length;
+      return cl ? Math.round((w / cl) * 100) : null;
+    };
 
-    // leads parados: sem contato e criados ha mais de 48h
-    const stale = rows
+    // leads parados: sem contato e criados ha mais de 48h (assinante de newsletter nao espera contato)
+    const staleAll = rows
       .filter(
         (r) =>
           (r.status ?? 'novo') === 'novo' &&
           !r.firstContactAt &&
+          !(r.source ?? '').startsWith('newsletter') &&
           at(r.createdAt) < now - 48 * 36e5,
       )
-      .sort((a, b) => at(a.createdAt) - at(b.createdAt))
-      .slice(0, 12)
+      .sort((a, b) => at(a.createdAt) - at(b.createdAt));
+    const stale = staleAll.slice(0, 12).map((r) => ({
+      id: r.id,
+      name: r.name,
+      phone: r.phone,
+      company: r.company,
+      source: r.source ?? 'site',
+      product: r.product,
+      createdAt: r.createdAt,
+      hours: Math.round((now - at(r.createdAt)) / 36e5),
+    }));
+
+    const recent = [...rows]
+      .sort((a, b) => at(b.createdAt) - at(a.createdAt))
+      .slice(0, 6)
       .map((r) => ({
         id: r.id,
         name: r.name,
-        phone: r.phone,
         company: r.company,
-        source: r.source ?? 'site',
+        phone: r.phone,
+        city: r.city,
         product: r.product,
+        source: r.source ?? 'site',
+        status: r.status ?? 'novo',
         createdAt: r.createdAt,
-        hours: Math.round((now - at(r.createdAt)) / 36e5),
       }));
 
-    const WEEKDAYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
-    const byWeekday = WEEKDAYS.map((label, i) => ({
-      label,
-      total: period.filter((r) => (r.createdAt ?? new Date()).getDay() === i).length,
-    }));
-
-    const byHourMap = new Map<number, number>();
+    // mapa de calor: 7 dias x 8 faixas de 3 horas
+    const byWeekHour = Array.from({ length: 7 }, () => Array.from({ length: 8 }, () => 0));
     for (const r of period) {
-      const h = (r.createdAt ?? new Date()).getHours();
-      byHourMap.set(h, (byHourMap.get(h) ?? 0) + 1);
+      const d = sp(r.createdAt ?? new Date());
+      byWeekHour[d.weekday]![Math.floor(d.hour / 3)]! += 1;
     }
-    const byHour = Array.from({ length: 24 }, (_, h) => ({
-      label: String(h).padStart(2, '0'),
-      total: byHourMap.get(h) ?? 0,
-    }));
+
+    // UF a partir da cidade digitada ("Limeira/SP", "Limeira - SP", "Limeira, SP")
+    const UFS = new Set([
+      'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
+      'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+    ]);
+    const ufOf = (city: string | null) => {
+      const m = (city ?? '').trim().match(/(?:[/,–-]\s*|\s)([A-Za-z]{2})\.?$/);
+      const uf = m?.[1]?.toUpperCase();
+      return uf && UFS.has(uf) ? uf : null;
+    };
+    const byState = countBy(period, (r) => ufOf(r.city));
+    const stateUnknown = period.filter((r) => !ufOf(r.city)).length;
 
     const byOwner = countBy(period, (r) => (r.ownerId ? userName.get(r.ownerId) ?? 'Removido' : null));
+    const unassigned = period.filter((r) => !r.ownerId).length;
+    const isOpen = (r: (typeof rows)[number]) =>
+      (r.status ?? 'novo') === 'novo' || r.status === 'em_contato';
 
     return c.json(
       {
         days,
+        scope: onlyMine ? 'meus' : 'todos',
         generatedAt: new Date().toISOString(),
         kpi: {
           total: period.length,
@@ -325,10 +334,12 @@ const app = new Hono<Env>()
           allTime: rows.length,
           won,
           conversion,
-          openLeads: period.filter((r) => (r.status ?? 'novo') === 'novo' || r.status === 'em_contato')
-            .length,
-          avgFirstContactHours,
-          staleCount: stale.length,
+          previousConversion: conversionOf(previous),
+          openLeads: period.filter(isOpen).length,
+          previousOpenLeads: previous.filter(isOpen).length,
+          avgFirstContactHours: avgFirstContact(period),
+          previousAvgFirstContactHours: avgFirstContact(previous),
+          staleCount: staleAll.length,
           withPhotos: period.filter((r) => !!r.attachments).length,
         },
         byStatus,
@@ -340,10 +351,13 @@ const app = new Hono<Env>()
           period.filter((r) => r.status === 'perdido'),
           (r) => r.lossReason,
         ).slice(0, 6),
-        byWeekday,
-        byHour,
+        byWeekHour,
+        byState,
+        stateUnknown,
         byOwner,
+        unassigned,
         stale,
+        recent,
       },
       200,
     );

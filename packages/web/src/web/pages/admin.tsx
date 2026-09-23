@@ -18,8 +18,8 @@ import {
 import { api } from "../lib/api";
 import { authClient, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
 import { AdminLogin } from "../admin/login";
-import { AdminOverview } from "../admin/overview";
-import { AdminLeads } from "../admin/leads";
+import { AdminDashboard } from "../admin/dashboard";
+import { AdminLeads, type LeadsFilter } from "../admin/leads";
 import { AdminUsers } from "../admin/users";
 import { AdminAccount } from "../admin/account";
 import { Badge, Card, PageTitle } from "../admin/ui";
@@ -36,7 +36,7 @@ type NavItem = {
 };
 
 const NAV: NavItem[] = [
-  { id: "overview", label: "Visão geral", Icon: BarChart3, area: "livre" },
+  { id: "overview", label: "Dashboard", Icon: BarChart3, area: "livre" },
   { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
   { id: "cases", label: "Cases", Icon: Newspaper, area: "conteudo" },
   { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo", soon: true },
@@ -122,10 +122,13 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
   const [current, setCurrent] = useState(user.mustChangePassword ? "conta" : "overview");
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [leadsFilter, setLeadsFilter] = useState<LeadsFilter | undefined>();
 
-  const go = (id: string) => {
+  const go = (id: string, filter?: LeadsFilter) => {
+    setLeadsFilter(filter);
     setCurrent(id);
     setMobileOpen(false);
+    window.scrollTo({ top: 0 });
   };
 
   useEffect(() => {
@@ -253,8 +256,8 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
             </div>
           )}
 
-          {current === "overview" && <AdminOverview user={user} onGo={go} />}
-          {current === "leads" && <AdminLeads />}
+          {current === "overview" && <AdminDashboard user={user} onGo={go} />}
+          {current === "leads" && <AdminLeads key={JSON.stringify(leadsFilter ?? {})} initial={leadsFilter} />}
           {current === "cases" && <CasesPending />}
           {current === "usuarios" && <AdminUsers me={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
