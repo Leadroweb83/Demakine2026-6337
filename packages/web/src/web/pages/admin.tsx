@@ -27,9 +27,9 @@ import { AdminSiteSettings } from "../admin/site-settings";
 import { AdminMedia } from "../admin/media";
 import { AdminCatalog } from "../admin/catalog";
 import { AdminBlog } from "../admin/blog";
-import { Badge, Card, PageTitle } from "../admin/ui";
+import { AdminCases } from "../admin/cases";
+import { Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
-import { caseStudies } from "@/lib/cases";
 
 type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "vagas" | "livre";
 
@@ -63,50 +63,6 @@ function allowed(role: string, area: Area) {
   if (role === "editor") return area === "conteudo" || area === "vagas";
   if (role === "rh") return area === "vagas";
   return false;
-}
-
-/** Checklist do que falta para cada aplicacao virar case real. So aparece no painel. */
-function CasesPending() {
-  return (
-    <div className="space-y-6">
-      <PageTitle
-        title="Cases: o que falta preencher"
-        hint="As páginas em /cases publicam a configuração técnica e um cenário simulado, nunca número de cliente. Para virar case de verdade, cada aplicação precisa dos itens abaixo. Este checklist aparece somente aqui no painel."
-      />
-      <div className="grid gap-4 lg:grid-cols-2">
-        {caseStudies.map((c) => (
-          <Card key={c.slug}>
-            <Badge>{c.segment}</Badge>
-            <h3 className="mt-2 font-display text-[16px] font-bold text-dm-ink">{c.title}</h3>
-            <a
-              href={`/cases/${c.slug}`}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-1 inline-block text-[12.5px] font-semibold text-dm-blue underline"
-            >
-              /cases/{c.slug}
-            </a>
-            <ul className="mt-4 space-y-3">
-              {c.pending.map((p) => (
-                <li key={p.field} className="flex gap-3">
-                  <span className="mt-0.5 h-4 w-4 shrink-0 rounded border-2 border-dm-red" />
-                  <span>
-                    <span className="block text-[13.5px] font-bold text-dm-ink">{p.field}</span>
-                    <span className="block text-[12.5px] leading-relaxed text-dm-ink/60">
-                      {p.why}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        ))}
-      </div>
-      <p className="text-[12.5px] text-dm-ink/50">
-        A edição dos cases com dados reais, fotos e depoimento entra na fase 3 do painel.
-      </p>
-    </div>
-  );
 }
 
 function Soon({ label }: { label: string }) {
@@ -290,7 +246,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "leads" && (
             <AdminLeads key={JSON.stringify(leadsFilter ?? {})} user={user} initial={leadsFilter} />
           )}
-          {current === "cases" && <CasesPending />}
+          {current === "cases" && <AdminCases user={user} />}
           {current === "vagas" && <AdminVagas user={user} />}
           {current === "site" && <AdminSiteSettings />}
           {current === "midia" && <AdminMedia user={user} />}

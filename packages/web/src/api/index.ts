@@ -544,6 +544,12 @@ const app = new Hono<Env>()
           ? (current.data as { draft?: boolean }).draft !== true
           : publishedInCode(collection, key);
         if (!published) data.draft = true;
+        // autorização de uso do nome do cliente é decisão de admin: o editor não muda esse campo
+        if (collection === 'case') {
+          const prev = (current?.data as { real?: { authorized?: boolean; authorizedAt?: string; authorizedBy?: string } } | undefined)?.real;
+          const real = (data.real ?? {}) as Record<string, unknown>;
+          data.real = { ...real, authorized: prev?.authorized === true, authorizedAt: prev?.authorizedAt, authorizedBy: prev?.authorizedBy };
+        }
       }
       if (JSON.stringify(data).length > CONTENT_MAX_BYTES) return c.json({ error: 'Conteúdo grande demais' }, 400);
       const values = {

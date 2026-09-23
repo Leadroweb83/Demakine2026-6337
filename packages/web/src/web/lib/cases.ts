@@ -16,6 +16,7 @@
  */
 
 import type { RoiInput } from "./engine";
+import { deletedKeys, editedDocs } from "./runtime-content";
 
 export type CasePending = {
   /** o que falta ser preenchido pelo cliente */
@@ -44,9 +45,44 @@ export type CaseStudy = {
   products: string[];
   /** premissas do cenário simulado */
   simulation: RoiInput & { note: string };
-  /** o que ainda falta para publicar como case com dado real */
-  pending: CasePending[];
+  /** legado: o checklist agora é calculado por casePending() */
+  pending?: CasePending[];
+  /** dados reais do cliente; só aparecem no site com autorização registrada (ver hasRealData) */
+  real?: CaseReal;
+  /** rascunho salvo no painel: não aparece no site */
+  draft?: boolean;
 };
+
+export type CaseReal = {
+  client: string;
+  /** marcado no painel por quem tem a autorização por escrito do cliente */
+  authorized: boolean;
+  authorizedAt?: string;
+  authorizedBy?: string;
+  results: { label: string; before: string; after: string }[];
+  testimonial?: { name: string; role: string; text: string };
+  /** fotos da instalação no cliente */
+  photos: string[];
+};
+
+/** Dado real só vai para o site com cliente identificado, autorização marcada e algo medido ou dito por ele. */
+export function hasRealData(c: CaseStudy) {
+  const r = c.real;
+  return Boolean(r?.authorized && r.client.trim() && (r.results.length || r.testimonial?.text.trim()));
+}
+
+/** O que ainda falta para o case virar case de verdade (checklist do painel). */
+export function casePending(c: CaseStudy) {
+  const r = c.real;
+  const done = [
+    Boolean(r?.client.trim()),
+    Boolean(r?.authorized),
+    Boolean(r?.results.length),
+    Boolean(r?.photos.length),
+    Boolean(r?.testimonial?.name.trim() && r.testimonial.text.trim()),
+  ];
+  return casePendingDefaults.map((p, i) => ({ ...p, done: done[i]! }));
+}
 
 export const casePendingDefaults: CasePending[] = [
   {
@@ -71,7 +107,8 @@ export const casePendingDefaults: CasePending[] = [
   },
 ];
 
-export const caseStudies: CaseStudy[] = [
+/** Cases como vêm no código, sem as edições do painel. */
+export const DEFAULT_CASES: CaseStudy[] = [
   {
     slug: "recebimento-e-ensaque-de-graos",
     title: "Recebimento e ensaque de grãos em cooperativa",
@@ -265,6 +302,33 @@ export const caseStudies: CaseStudy[] = [
     pending: casePendingDefaults,
   },
 ];
+
+export const EMPTY_CASE: CaseStudy = {
+  slug: "",
+  title: "",
+  segment: "",
+  region: "",
+  eyebrow: "Aplicação típica",
+  intro: "",
+  image: "",
+  challenge: [],
+  solution: [],
+  products: [],
+  simulation: { volumePerDay: 1000, people: 4, peopleAfter: 2, costPerPerson: 3500, daysPerMonth: 22, note: "" },
+};
+
+function withPanelEdits(base: CaseStudy[]) {
+  const edits = editedDocs<CaseStudy>("case");
+  const hidden = new Set(deletedKeys("case"));
+  const known = new Set(base.map((c) => c.slug));
+  const merged = base.map((c) => (edits[c.slug] ? { ...c, ...edits[c.slug], slug: c.slug } : c));
+  for (const [slug, doc] of Object.entries(edits)) {
+    if (!known.has(slug) && doc.title && doc.segment) merged.push({ ...EMPTY_CASE, ...doc, slug });
+  }
+  return merged.filter((c) => !hidden.has(c.slug) && !c.draft);
+}
+
+export const caseStudies = withPanelEdits(DEFAULT_CASES);
 
 export function getCase(slug: string) {
   return caseStudies.find((c) => c.slug === slug);

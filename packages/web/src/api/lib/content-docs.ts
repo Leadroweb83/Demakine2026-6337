@@ -1,4 +1,5 @@
 import content from "../../web/data/content.json";
+import { DEFAULT_CASES } from "../../web/lib/cases";
 import type { Role } from "../auth";
 
 /** Coleções editáveis e quem pode salvar cada uma (super admin sempre pode). */
@@ -23,5 +24,6 @@ const CODE_POSTS = new Set((content as { posts: { slug: string }[] }).posts.map(
 /** Item que já vem publicado no código do site (edição dele continua publicada). */
 export function publishedInCode(collection: string, key: string) {
   if (collection === "post") return CODE_POSTS.has(key);
+  if (collection === "case") return DEFAULT_CASES.some((c) => c.slug === key);
   return false;
 }
