@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Calculator, TrendingUp } from "lucide-react";
 import { brl, computeRoi, num, roiAssumptions } from "@/lib/engine";
 import { LeadForm } from "@/components/lead-form";
@@ -19,6 +19,7 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
   const [daysPerMonth, setDays] = useState(22);
   const [investment, setInvestment] = useState<number | "">("");
   const [showForm, setShowForm] = useState(false);
+  const uid = useId();
 
   const r = useMemo(
     () =>
@@ -62,8 +63,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <label className={fieldLabel}>Volumes movimentados por dia</label>
+            <label htmlFor={`${uid}-volume`} className={fieldLabel}>Volumes movimentados por dia</label>
             <input
+              id={`${uid}-volume`}
               type="number"
               min={1}
               value={volumePerDay}
@@ -72,8 +74,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Dias trabalhados por mês</label>
+            <label htmlFor={`${uid}-dias`} className={fieldLabel}>Dias trabalhados por mês</label>
             <input
+              id={`${uid}-dias`}
               type="number"
               min={1}
               max={31}
@@ -83,8 +86,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Pessoas nessa tarefa hoje</label>
+            <label htmlFor={`${uid}-pessoas`} className={fieldLabel}>Pessoas nessa tarefa hoje</label>
             <input
+              id={`${uid}-pessoas`}
               type="number"
               min={1}
               value={people}
@@ -93,8 +97,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Pessoas depois da esteira</label>
+            <label htmlFor={`${uid}-depois`} className={fieldLabel}>Pessoas depois da esteira</label>
             <input
+              id={`${uid}-depois`}
               type="number"
               min={0}
               value={peopleAfter}
@@ -103,8 +108,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Custo mensal por pessoa</label>
+            <label htmlFor={`${uid}-custo`} className={fieldLabel}>Custo mensal por pessoa</label>
             <input
+              id={`${uid}-custo`}
               type="number"
               min={0}
               step={100}
@@ -114,8 +120,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Investimento (opcional)</label>
+            <label htmlFor={`${uid}-investimento`} className={fieldLabel}>Investimento (opcional)</label>
             <input
+              id={`${uid}-investimento`}
               type="number"
               min={0}
               step={1000}
