@@ -16,7 +16,7 @@ import {
 } from "./lib/s3";
 import { db } from "./database";
 import * as schema from "./database/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import { auth } from "./auth";
 import { authMiddleware, requireAuth, requireRole, type SessionUser } from "./middleware/auth";
 import { createPanelUser, isRole, randomPassword, setUserPassword } from "./lib/users";
@@ -29,6 +29,7 @@ import {
   slugify,
   type JobInput,
 } from "./lib/jobs";
+import { isLeadStatus } from "./lib/leads";
 
 type Env = {
   Variables: {
@@ -384,6 +385,119 @@ const app = new Hono<Env>()
     const leads = await db.select().from(schema.leads).orderBy(desc(schema.leads.createdAt));
     return c.json({ leads }, 200);
   })
+  // ------------------------------------------------------------- CRM de leads
+  .get('/admin/equipe', requireRole('admin', 'vendedor'), async (c) => {
+    const team = await db
+      .select({ id: schema.user.id, name: schema.user.name, image: schema.user.image, role: schema.user.role })
+      .from(schema.user)
+      .where(and(eq(schema.user.active, true), inArray(schema.user.role, ['super_admin', 'admin', 'vendedor'])))
+      .orderBy(asc(schema.user.name));
+    return c.json({ team }, 200);
+  })
+  .get('/admin/leads/:id/eventos', requireRole('admin', 'vendedor'), async (c) => {
+    const id = Number(c.req.param('id'));
+    const events = await db
+      .select({
+        id: schema.leadEvents.id,
+        type: schema.leadEvents.type,
+        text: schema.leadEvents.text,
+        createdAt: schema.leadEvents.createdAt,
+        userName: schema.user.name,
+      })
+      .from(schema.leadEvents)
+      .leftJoin(schema.user, eq(schema.leadEvents.userId, schema.user.id))
+      .where(eq(schema.leadEvents.leadId, id))
+      .orderBy(desc(schema.leadEvents.createdAt));
+    return c.json({ events }, 200);
+  })
+  .patch(
+    '/admin/leads/:id',
+    requireRole('admin', 'vendedor'),
+    validator('json', (v) => (v ?? {}) as { status?: string; ownerId?: string | null; lossReason?: string | null }),
+    async (c) => {
+      const id = Number(c.req.param('id'));
+      const me = c.get('user')!;
+      const body = c.req.valid('json');
+      const [lead] = await db.select().from(schema.leads).where(eq(schema.leads.id, id));
+      if (!lead) return c.json({ error: 'Lead não encontrado' }, 404);
+
+      const patch: Partial<typeof schema.leads.$inferInsert> = {};
+      const events: { type: string; text: string }[] = [];
+      const now = new Date();
+
+      if (body.status !== undefined && body.status !== lead.status) {
+        if (!isLeadStatus(body.status)) return c.json({ error: 'Status inválido' }, 400);
+        const reason = body.lossReason?.trim().slice(0, 120) || null;
+        if (body.status === 'perdido' && !reason) {
+          return c.json({ error: 'Informe o motivo da perda' }, 400);
+        }
+        patch.status = body.status;
+        patch.lossReason = body.status === 'perdido' ? reason : null;
+        // sair de "novo" conta como primeiro contato, para o tempo médio do dashboard
+        if (body.status !== 'novo' && !lead.firstContactAt) {
+          patch.firstContactAt = now;
+          patch.lastContactAt = now;
+        }
+        events.push({
+          type: 'status',
+          text: `${lead.status ?? 'novo'} > ${body.status}${reason && body.status === 'perdido' ? ` (${reason})` : ''}`,
+        });
+      }
+
+      if (body.ownerId !== undefined && body.ownerId !== lead.ownerId) {
+        let ownerName = 'ninguém';
+        if (body.ownerId) {
+          const [owner] = await db
+            .select({ id: schema.user.id, name: schema.user.name })
+            .from(schema.user)
+            .where(eq(schema.user.id, body.ownerId));
+          if (!owner) return c.json({ error: 'Responsável inválido' }, 400);
+          ownerName = owner.name;
+        }
+        patch.ownerId = body.ownerId || null;
+        events.push({ type: 'responsavel', text: ownerName });
+      }
+
+      if (!Object.keys(patch).length) return c.json({ ok: true }, 200);
+      await db.update(schema.leads).set(patch).where(eq(schema.leads.id, id));
+      await db
+        .insert(schema.leadEvents)
+        .values(events.map((e) => ({ leadId: id, userId: me.id, type: e.type, text: e.text })));
+      return c.json({ ok: true }, 200);
+    },
+  )
+  .post(
+    '/admin/leads/:id/eventos',
+    requireRole('admin', 'vendedor'),
+    validator('json', (v) => (v ?? {}) as { type?: string; text?: string }),
+    async (c) => {
+      const id = Number(c.req.param('id'));
+      const me = c.get('user')!;
+      const body = c.req.valid('json');
+      const text = body.text?.trim().slice(0, 2000) ?? '';
+      if (body.type !== 'nota' && body.type !== 'contato') return c.json({ error: 'Tipo inválido' }, 400);
+      if (body.type === 'nota' && !text) return c.json({ error: 'Escreva a anotação' }, 400);
+
+      const [lead] = await db.select().from(schema.leads).where(eq(schema.leads.id, id));
+      if (!lead) return c.json({ error: 'Lead não encontrado' }, 404);
+
+      const rows: { leadId: number; userId: string; type: string; text: string | null }[] = [
+        { leadId: id, userId: me.id, type: body.type, text: text || null },
+      ];
+      if (body.type === 'contato') {
+        const now = new Date();
+        const patch: Partial<typeof schema.leads.$inferInsert> = { lastContactAt: now };
+        if (!lead.firstContactAt) patch.firstContactAt = now;
+        if ((lead.status ?? 'novo') === 'novo') {
+          patch.status = 'em_contato';
+          rows.push({ leadId: id, userId: me.id, type: 'status', text: 'novo > em_contato' });
+        }
+        await db.update(schema.leads).set(patch).where(eq(schema.leads.id, id));
+      }
+      await db.insert(schema.leadEvents).values(rows);
+      return c.json({ ok: true }, 201);
+    },
+  )
   .get('/admin/dashboard', requireRole('admin', 'vendedor'), async (c) => {
     const rawDays = Number(c.req.query('dias') ?? '90');
     const days = Number.isFinite(rawDays) && rawDays >= 0 ? Math.min(rawDays, 3650) : 90;

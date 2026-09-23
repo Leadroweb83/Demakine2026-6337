@@ -24,6 +24,23 @@ export const leads = pgTable("leads", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** Histórico do lead: status, responsável, anotação e contato feito, com autor e data. */
+export const leadEvents = pgTable(
+  "lead_events",
+  {
+    id: serial("id").primaryKey(),
+    leadId: integer("lead_id")
+      .notNull()
+      .references(() => leads.id, { onDelete: "cascade" }),
+    userId: text("user_id"),
+    /** status | responsavel | nota | contato */
+    type: text("type").notNull(),
+    text: text("text"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("lead_events_lead_idx").on(t.leadId)],
+);
+
 /** Vagas publicadas em /vagas. Requisitos e benefícios: um item por linha. */
 export const jobs = pgTable("jobs", {
   id: serial("id").primaryKey(),

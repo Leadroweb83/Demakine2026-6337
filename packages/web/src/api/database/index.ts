@@ -10,6 +10,9 @@ import * as schema from "./schema";
  * idle_timeout curto devolve a conexão ao pool quando a função fica parada.
  */
 const url = process.env.DATABASE_URL!.replace(/(pooler\.supabase\.com):6543\//, "$1:5432/");
-const client = postgres(url, { prepare: false, max: 1, idle_timeout: 20 });
+// No dev o Vite recarrega este módulo a cada edição; guardar o cliente no globalThis
+// evita abrir um cliente novo por recarga (os antigos ficavam presos e travavam a API).
+const g = globalThis as unknown as { __demakineSql?: ReturnType<typeof postgres> };
+const client = (g.__demakineSql ??= postgres(url, { prepare: false, max: 1, idle_timeout: 20 }));
 
 export const db = drizzle(client, { schema });

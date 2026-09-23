@@ -108,12 +108,10 @@ function CasesPending() {
 function Soon({ label }: { label: string }) {
   return (
     <div className="space-y-6">
-      <PageTitle title={label} hint="Esta área entra nas próximas fases do painel." />
+      <PageTitle title={label} hint="Esta área ainda está em construção." />
       <Card>
         <p className="text-[13.5px] leading-relaxed text-dm-ink/70">
-          A fase 1 entregou o login por pessoa, os papéis e a estrutura do painel. As telas de
-          edição de conteúdo, loja, vagas e mídia entram nas fases seguintes, na ordem combinada no
-          plano.
+          Em breve você vai poder cuidar desta parte do site direto por aqui.
         </p>
       </Card>
     </div>
@@ -222,7 +220,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
                             active ? "bg-dm-blue/10 text-dm-blue" : "bg-white/15 text-white/70"
                           }`}
                         >
-                          fase
+                          em breve
                         </span>
                       )}
                     </span>
@@ -285,7 +283,9 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           )}
 
           {current === "overview" && <AdminDashboard user={user} onGo={go} />}
-          {current === "leads" && <AdminLeads key={JSON.stringify(leadsFilter ?? {})} initial={leadsFilter} />}
+          {current === "leads" && (
+            <AdminLeads key={JSON.stringify(leadsFilter ?? {})} user={user} initial={leadsFilter} />
+          )}
           {current === "cases" && <CasesPending />}
           {current === "vagas" && <AdminVagas user={user} />}
           {current === "usuarios" && <AdminUsers me={user} />}
