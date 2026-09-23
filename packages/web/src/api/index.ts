@@ -34,6 +34,7 @@ import {
   type JobInput,
 } from "./lib/jobs";
 import { isLeadStatus } from "./lib/leads";
+import { buildSitemap } from "./lib/sitemap";
 import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection, publishedInCode } from "./lib/content-docs";
 
 type Env = {
@@ -128,6 +129,14 @@ const app = new Hono<Env>()
     );
 
     return c.json({ url, key }, 200);
+  })
+  .get('/sitemap.xml', async (c) => {
+    const docs = await db.select().from(schema.contentDocs);
+    const jobs = (await db.select().from(schema.jobs)).filter(isJobOpen);
+    c.header('Content-Type', 'application/xml; charset=utf-8');
+    c.header('Cache-Control', 'public, max-age=0, must-revalidate');
+    c.header('CDN-Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    return c.body(buildSitemap(docs, jobs));
   })
   // -------------------------------------------------- conteúdo editável (site)
   .get('/conteudo', async (c) => {
