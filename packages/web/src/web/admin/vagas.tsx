@@ -140,7 +140,7 @@ export function AdminVagas({ user }: { user: PanelUser }) {
               onClick={() => setTab(t)}
               aria-pressed={tab === t}
               className={cn(
-                "flex-1 rounded-full px-5 py-2 text-[12.5px] font-bold uppercase tracking-wide transition-colors",
+                "flex-1 whitespace-nowrap rounded-full px-5 py-2 text-[12.5px] font-bold uppercase tracking-wide transition-colors",
                 tab === t ? "bg-white text-dm-ink shadow-sm" : "text-dm-ink/55 hover:text-dm-ink",
               )}
             >
@@ -208,7 +208,7 @@ function Jobs({
   }
 
   return (
-    <Card className="p-0">
+    <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 px-6 py-4">
         <p className="text-[13px] text-dm-ink/60">
           {jobs.filter((j) => j.open).length} abertas no site · {jobs.length} no total
@@ -267,7 +267,7 @@ function Jobs({
       {!loading && !jobs.length && (
         <p className="px-6 py-8 text-[13.5px] text-dm-ink/50">Nenhuma vaga cadastrada ainda.</p>
       )}
-    </Card>
+    </div>
   );
 }
 
@@ -529,7 +529,7 @@ function Candidates({ jobs }: { jobs: Job[] }) {
                       <p className="truncate text-[13.5px] font-bold text-dm-ink">{a.name}</p>
                       <p className="mt-0.5 truncate text-[12px] text-dm-ink/55">{a.jobTitle ?? "Banco de talentos"}</p>
                       <p className="mt-2 flex items-center gap-2 text-[11.5px] text-dm-ink/45">
-                        <span>{when(a.createdAt)}</span>
+                        <span className="shrink-0">{when(a.createdAt)}</span>
                         {a.city && <span className="truncate">· {a.city}</span>}
                         {a.resumeKey && <FileText className="ml-auto h-3.5 w-3.5 shrink-0 text-dm-blue" aria-label="Tem currículo" />}
                       </p>
