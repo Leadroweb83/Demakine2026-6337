@@ -12,6 +12,10 @@ import {
   avatarPublicUrl,
   RESUME_BUCKET,
   RESUME_MAX_BYTES,
+  MEDIA_BUCKET,
+  MEDIA_MAX_BYTES,
+  MEDIA_TYPES,
+  publicUrl,
   safeName,
 } from "./lib/s3";
 import { db } from "./database";
@@ -398,6 +402,103 @@ const app = new Hono<Env>()
   .get('/admin/leads', requireRole('admin', 'vendedor'), async (c) => {
     const leads = await db.select().from(schema.leads).orderBy(desc(schema.leads.createdAt));
     return c.json({ leads }, 200);
+  })
+  // ------------------------------------------------------ biblioteca de mídia
+  .get('/admin/midia', requireRole('admin', 'editor'), async (c) => {
+    const items = await db
+      .select({
+        id: schema.media.id,
+        key: schema.media.key,
+        url: schema.media.url,
+        name: schema.media.name,
+        alt: schema.media.alt,
+        width: schema.media.width,
+        height: schema.media.height,
+        size: schema.media.size,
+        uploadedBy: schema.media.uploadedBy,
+        uploaderName: schema.user.name,
+        createdAt: schema.media.createdAt,
+      })
+      .from(schema.media)
+      .leftJoin(schema.user, eq(schema.media.uploadedBy, schema.user.id))
+      .orderBy(desc(schema.media.createdAt));
+    return c.json({ items }, 200);
+  })
+  .post('/admin/midia/presign', requireRole('admin', 'editor'), async (c) => {
+    const body = await c.req.json<{ contentType?: string; size?: number }>();
+    const type = body.contentType ?? '';
+    if (!MEDIA_TYPES.includes(type)) return c.json({ error: 'Envie imagem em WEBP, JPG ou PNG' }, 400);
+    if (typeof body.size === 'number' && body.size > MEDIA_MAX_BYTES) {
+      return c.json({ error: 'A imagem pode ter no máximo 8 MB' }, 400);
+    }
+    const ext = type === 'image/png' ? 'png' : type === 'image/jpeg' ? 'jpg' : 'webp';
+    const key = `${new Date().toISOString().slice(0, 7)}/${crypto.randomUUID()}.${ext}`;
+    const url = await getSignedUrl(
+      s3,
+      new PutObjectCommand({ Bucket: MEDIA_BUCKET, Key: key, ContentType: type }),
+      { expiresIn: 600 },
+    );
+    return c.json({ url, key }, 200);
+  })
+  .post(
+    '/admin/midia',
+    requireRole('admin', 'editor'),
+    validator(
+      'json',
+      (v) =>
+        (v ?? {}) as { key?: string; name?: string; alt?: string; width?: number; height?: number; size?: number },
+    ),
+    async (c) => {
+      const body = c.req.valid('json');
+      const key = body.key ?? '';
+      if (!/^\d{4}-\d{2}\/[0-9a-f-]{36}\.(webp|jpg|png)$/.test(key)) return c.json({ error: 'Arquivo inválido' }, 400);
+      const exists = await s3
+        .send(new HeadObjectCommand({ Bucket: MEDIA_BUCKET, Key: key }))
+        .then(() => true)
+        .catch(() => false);
+      if (!exists) return c.json({ error: 'A imagem não terminou de enviar' }, 400);
+      const int = (n: unknown) => (typeof n === 'number' && Number.isFinite(n) ? Math.round(n) : null);
+      const [item] = await db
+        .insert(schema.media)
+        .values({
+          key,
+          url: publicUrl(MEDIA_BUCKET, key),
+          name: body.name?.trim().slice(0, 160) || key,
+          alt: body.alt?.trim().slice(0, 300) || null,
+          width: int(body.width),
+          height: int(body.height),
+          size: int(body.size),
+          uploadedBy: c.get('user')!.id,
+        })
+        .returning();
+      return c.json({ item }, 201);
+    },
+  )
+  .patch(
+    '/admin/midia/:id',
+    requireRole('admin', 'editor'),
+    validator('json', (v) => (v ?? {}) as { alt?: string | null; name?: string }),
+    async (c) => {
+      const body = c.req.valid('json');
+      const patch: Partial<typeof schema.media.$inferInsert> = {};
+      if (body.alt !== undefined) patch.alt = body.alt?.trim().slice(0, 300) || null;
+      if (body.name?.trim()) patch.name = body.name.trim().slice(0, 160);
+      if (!Object.keys(patch).length) return c.json({ error: 'Nada para atualizar' }, 400);
+      await db.update(schema.media).set(patch).where(eq(schema.media.id, Number(c.req.param('id'))));
+      return c.json({ ok: true }, 200);
+    },
+  )
+  .delete('/admin/midia/:id', requireRole('admin', 'editor'), async (c) => {
+    const me = c.get('user')!;
+    const id = Number(c.req.param('id'));
+    const [item] = await db.select().from(schema.media).where(eq(schema.media.id, id));
+    if (!item) return c.json({ error: 'Imagem não encontrada' }, 404);
+    if (me.role === 'editor' && item.uploadedBy !== me.id) {
+      return c.json({ error: 'O editor só apaga imagens que ele mesmo enviou' }, 403);
+    }
+    await db.delete(schema.media).where(eq(schema.media.id, id));
+    await s3.send(new DeleteObjectCommand({ Bucket: MEDIA_BUCKET, Key: item.key })).catch(() => undefined);
+    return c.json({ ok: true }, 200);
   })
   // -------------------------------------------------- conteúdo editável (painel)
   .get('/admin/conteudo/:collection', requireAuth, async (c) => {

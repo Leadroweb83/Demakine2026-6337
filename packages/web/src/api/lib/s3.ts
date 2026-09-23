@@ -16,13 +16,23 @@ export const S3_BUCKET = process.env.S3_BUCKET!;
 export const AVATAR_BUCKET = "avatars";
 export const AVATAR_TYPES = ["image/webp", "image/jpeg", "image/png"];
 
-export function avatarPublicUrl(key: string) {
+/** URL pública de um arquivo num bucket público do Supabase Storage. */
+export function publicUrl(bucket: string, key: string) {
   const base = (process.env.S3_ENDPOINT ?? "").replace(
     ".storage.supabase.co/storage/v1/s3",
     ".supabase.co/storage/v1/object/public",
   );
-  return `${base}/${AVATAR_BUCKET}/${key}`;
+  return `${base}/${bucket}/${key}`;
 }
+
+export function avatarPublicUrl(key: string) {
+  return publicUrl(AVATAR_BUCKET, key);
+}
+
+/** Biblioteca de mídia do site (bucket público, 8 MB, só WEBP/JPG/PNG no próprio bucket). */
+export const MEDIA_BUCKET = "midia";
+export const MEDIA_TYPES = ["image/webp", "image/jpeg", "image/png"];
+export const MEDIA_MAX_BYTES = 8 * 1024 * 1024;
 
 /** Currículos das candidaturas (bucket privado, só PDF, 5 MB no próprio bucket). */
 export const RESUME_BUCKET = "curriculos";

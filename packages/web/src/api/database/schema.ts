@@ -42,6 +42,20 @@ export const contentDocs = pgTable(
   (t) => [primaryKey({ columns: [t.collection, t.key] })],
 );
 
+/** Biblioteca de mídia: imagens no bucket público "midia", usadas por catálogo, blog e cases. */
+export const media = pgTable("media", {
+  id: serial("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  url: text("url").notNull(),
+  name: text("name").notNull(),
+  alt: text("alt"),
+  width: integer("width"),
+  height: integer("height"),
+  size: integer("size"),
+  uploadedBy: text("uploaded_by"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 /** Histórico do lead: status, responsável, anotação e contato feito, com autor e data. */
 export const leadEvents = pgTable(
   "lead_events",
