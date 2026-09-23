@@ -1,4 +1,5 @@
 import raw from "../data/content.json";
+import { deletedKeys, editedDocs } from "./runtime-content";
 
 export type Category = {
   slug: string;
@@ -24,6 +25,8 @@ export type Product = {
   images: string[];
   seoTitle?: string;
   seoDesc?: string;
+  /** vídeos do YouTube editados no painel; sem isto vale a lista de product-videos.ts */
+  videos?: { id: string; title: string }[];
 };
 
 export type Client = { id: number; name: string; segment: string; logo: string };
@@ -64,7 +67,36 @@ export const categories = content.categories;
 /** Produto ainda sem foto própria usa a foto da fábrica, para nenhuma vitrine quebrar. */
 const FALLBACK_IMAGE = "/img/site/hero.jpg";
 
-export const products = content.products.map((p) =>
+/** Produtos como vêm no código, sem as edições do painel (base do editor de catálogo). */
+export const DEFAULT_PRODUCTS: readonly Product[] = content.products;
+
+export const EMPTY_PRODUCT: Product = {
+  slug: "",
+  name: "",
+  title: "",
+  category: "",
+  applications: [],
+  summary: "",
+  description: [],
+  features: [],
+  models: [],
+  specKeys: [],
+  images: [],
+};
+
+/** Junta o catálogo do código com o painel: edita por slug, acrescenta os novos e tira os ocultos. */
+function withPanelEdits(base: Product[]) {
+  const edits = editedDocs<Product>("produto");
+  const hidden = new Set(deletedKeys("produto"));
+  const known = new Set(base.map((p) => p.slug));
+  const merged = base.map((p) => (edits[p.slug] ? { ...p, ...edits[p.slug], slug: p.slug } : p));
+  for (const [slug, doc] of Object.entries(edits)) {
+    if (!known.has(slug) && doc.name && doc.category) merged.push({ ...EMPTY_PRODUCT, ...doc, slug });
+  }
+  return merged.filter((p) => !hidden.has(p.slug));
+}
+
+export const products = withPanelEdits(content.products).map((p) =>
   p.images.length ? p : { ...p, images: [FALLBACK_IMAGE] },
 ).sort((a, b) => {
   const ia = FEATURED_ORDER.indexOf(a.slug);

@@ -1,3 +1,5 @@
+import { editedDoc } from "./runtime-content";
+
 /**
  * Vídeos reais do canal Demakine Industrial (youtube.com/@demakineindustrial) por produto.
  * Só entram vídeos públicos com incorporação liberada; a capa fica em /img/videos/<id>.webp
@@ -44,5 +46,14 @@ export const productVideos: Record<string, ProductVideo[]> = {
 };
 
 export function videosFor(slug: string) {
-  return productVideos[slug] ?? [];
+  // lista editada no painel vale mesmo vazia (é assim que se tira todos os vídeos)
+  const edited = editedDoc<{ videos?: ProductVideo[] }>("produto", slug)?.videos;
+  return edited ?? productVideos[slug] ?? [];
 }
+
+/** Capa local quando existe; vídeo cadastrado pelo painel cai na capa do YouTube. */
+export function videoThumb(id: string) {
+  return LOCAL_THUMBS.has(id) ? `/img/videos/${id}.webp` : `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}
+
+const LOCAL_THUMBS = new Set(Object.values(productVideos).flatMap((list) => list.map((v) => v.id)));

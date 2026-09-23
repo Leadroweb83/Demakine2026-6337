@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MessageCircle, Play, Youtube } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { BtnGhost, BtnWhats, Section } from "@/components/kit";
-import type { ProductVideo } from "@/lib/product-videos";
+import { videoThumb, type ProductVideo } from "@/lib/product-videos";
 import { artigo } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -46,7 +46,7 @@ export function ProductVideos({ productName, videos }: { productName: string; vi
                   className="group relative block h-full w-full"
                 >
                   <img
-                    src={`/img/videos/${video.id}.webp`}
+                    src={videoThumb(video.id)}
                     alt={video.title}
                     loading="lazy"
                     className="h-full w-full object-cover opacity-90 transition-all duration-500 group-hover:scale-[1.03] group-hover:opacity-100"
@@ -95,7 +95,7 @@ export function ProductVideos({ productName, videos }: { productName: string; vi
                     >
                       <span className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-black">
                         <img
-                          src={`/img/videos/${v.id}.webp`}
+                          src={videoThumb(v.id)}
                           alt=""
                           loading="lazy"
                           className="h-full w-full object-cover opacity-90"

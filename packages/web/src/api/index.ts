@@ -138,8 +138,10 @@ const app = new Hono<Env>()
       if (r.deleted) (deleted[r.collection] ??= []).push(r.key);
       else (out[r.collection] ??= {})[r.key] = r.data;
     }
-    // cache curto na borda: edição do painel aparece em até ~1 min
-    c.header('Cache-Control', 'public, max-age=0, s-maxage=30, stale-while-revalidate=300');
+    // navegador sempre confere; só a borda da Vercel guarda (30 s): edição aparece em até ~1 min.
+    // stale-while-revalidate no Cache-Control valeria também no navegador e mostraria versão velha.
+    c.header('Cache-Control', 'public, max-age=0, must-revalidate');
+    c.header('CDN-Cache-Control', 'public, s-maxage=30, stale-while-revalidate=300');
     return c.json({ docs: out, deleted }, 200);
   })
   // ------------------------------------------------------------------ vagas
