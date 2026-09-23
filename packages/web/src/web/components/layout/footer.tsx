@@ -147,8 +147,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/trabalhe-conosco" className="hover:text-white">
-                  Trabalhe conosco
+                <Link href="/vagas" className="hover:text-white">
+                  Vagas e trabalhe conosco
                 </Link>
               </li>
             </ul>

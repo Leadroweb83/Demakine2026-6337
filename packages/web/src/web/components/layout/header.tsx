@@ -162,7 +162,7 @@ export function Header() {
                       onFocus={openMega}
                       aria-expanded={mega}
                       className={cn(
-                        "flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold transition-colors",
+                        "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-[14px] font-semibold min-[1800px]:px-3 transition-colors",
                         active || mega
                           ? "bg-dm-blue-soft text-dm-blue"
                           : "text-dm-ink/75 hover:text-dm-blue",
@@ -184,11 +184,19 @@ export function Header() {
                   key={item.to}
                   href={item.to}
                   className={cn(
-                    "whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold transition-colors",
+                    "whitespace-nowrap rounded-full px-2 py-2 text-[14px] font-semibold min-[1800px]:px-3 transition-colors",
                     active ? "bg-dm-blue-soft text-dm-blue" : "text-dm-ink/75 hover:text-dm-blue",
                   )}
+                  title={"short" in item ? item.label : undefined}
                 >
-                  {item.label}
+                  {"short" in item ? (
+                    <>
+                      <span className="min-[1800px]:hidden">{item.short}</span>
+                      <span className="hidden min-[1800px]:inline">{item.label}</span>
+                    </>
+                  ) : (
+                    item.label
+                  )}
                 </Link>
               );
             })}

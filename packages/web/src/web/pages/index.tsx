@@ -30,6 +30,7 @@ import { ScrollText } from "@/components/scroll-text";
 import { AgroBand } from "@/components/agro-band";
 import { VideoSection } from "@/components/video-section";
 import { BestSellers } from "@/components/best-sellers";
+import { JobsCta } from "@/components/jobs-cta";
 import { SegmentsCarousel } from "@/components/segments-carousel";
 import { TestimonialsWall } from "@/components/testimonials";
 import { Timeline } from "@/components/timeline";
@@ -388,6 +389,9 @@ export default function Home() {
               </Link>
             </Reveal>
           ))}
+        </div>
+        <div className="mt-12">
+          <JobsCta />
         </div>
       </Section>
 

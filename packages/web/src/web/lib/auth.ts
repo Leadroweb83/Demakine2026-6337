@@ -47,6 +47,7 @@ export const ROLE_LABEL: Record<string, string> = {
   admin: "Admin",
   editor: "Editor",
   vendedor: "Vendedor",
+  rh: "RH",
 };
 
 export type PanelUser = {
@@ -59,11 +60,15 @@ export type PanelUser = {
   image?: string | null;
 };
 
-export function can(role: string | undefined, area: "leads" | "conteudo" | "loja" | "config" | "usuarios") {
+export function can(
+  role: string | undefined,
+  area: "leads" | "conteudo" | "loja" | "config" | "usuarios" | "vagas" | "candidatos",
+) {
   const r = role ?? "";
   if (r === "super_admin") return true;
   if (r === "admin") return area !== "usuarios";
   if (r === "vendedor") return area === "leads";
-  if (r === "editor") return area === "conteudo";
+  if (r === "editor") return area === "conteudo" || area === "vagas";
+  if (r === "rh") return area === "vagas" || area === "candidatos";
   return false;
 }

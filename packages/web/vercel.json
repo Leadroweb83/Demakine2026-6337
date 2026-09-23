@@ -11,6 +11,11 @@
       "source": "/produtos/esteira-transportadora-em-v",
       "destination": "/produtos/esteira-transportadora-para-granel",
       "permanent": true
+    },
+    {
+      "source": "/trabalhe-conosco",
+      "destination": "/vagas",
+      "permanent": true
     }
   ],
   "rewrites": [

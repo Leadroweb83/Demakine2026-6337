@@ -1,15 +1,34 @@
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 import { cors } from "hono/cors"
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3, S3_BUCKET, ALLOWED_IMAGE_TYPES, AVATAR_BUCKET, AVATAR_TYPES, avatarPublicUrl, safeName } from "./lib/s3";
+import {
+  s3,
+  S3_BUCKET,
+  ALLOWED_IMAGE_TYPES,
+  AVATAR_BUCKET,
+  AVATAR_TYPES,
+  avatarPublicUrl,
+  RESUME_BUCKET,
+  RESUME_MAX_BYTES,
+  safeName,
+} from "./lib/s3";
 import { db } from "./database";
 import * as schema from "./database/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { auth } from "./auth";
 import { authMiddleware, requireAuth, requireRole, type SessionUser } from "./middleware/auth";
 import { createPanelUser, isRole, randomPassword, setUserPassword } from "./lib/users";
+import {
+  APPLICATION_STATUSES,
+  RESUME_KEY_RE,
+  isJobOpen,
+  parseJobInput,
+  publicJob,
+  slugify,
+  type JobInput,
+} from "./lib/jobs";
 
 type Env = {
   Variables: {
@@ -104,6 +123,96 @@ const app = new Hono<Env>()
 
     return c.json({ url, key }, 200);
   })
+  // ------------------------------------------------------------------ vagas
+  .get('/vagas', async (c) => {
+    const rows = await db.select().from(schema.jobs).orderBy(desc(schema.jobs.createdAt));
+    const jobs = rows.filter(isJobOpen).map(publicJob);
+    return c.json({ jobs }, 200);
+  })
+  .get('/vagas/:slug', async (c) => {
+    const [job] = await db.select().from(schema.jobs).where(eq(schema.jobs.slug, c.req.param('slug')));
+    if (!job) return c.json({ error: 'Vaga não encontrada' }, 404);
+    return c.json({ job: publicJob(job) }, 200);
+  })
+  .post('/vagas/curriculo', async (c) => {
+    const body = await c.req.json<{ contentType?: string; size?: number }>();
+    if (body.contentType !== 'application/pdf') {
+      return c.json({ error: 'Envie o currículo em PDF' }, 400);
+    }
+    if (typeof body.size === 'number' && body.size > RESUME_MAX_BYTES) {
+      return c.json({ error: 'O PDF pode ter no máximo 5 MB' }, 400);
+    }
+    const month = new Date().toISOString().slice(0, 7);
+    const key = `${month}/${crypto.randomUUID()}.pdf`;
+    const url = await getSignedUrl(
+      s3,
+      new PutObjectCommand({ Bucket: RESUME_BUCKET, Key: key, ContentType: 'application/pdf' }),
+      { expiresIn: 600 },
+    );
+    return c.json({ url, key }, 200);
+  })
+  .post('/vagas/candidatura', async (c) => {
+    const body = await c.req.json<{
+      jobSlug?: string | null;
+      name?: string;
+      email?: string;
+      phone?: string;
+      city?: string;
+      linkedin?: string;
+      salaryExpectation?: string;
+      message?: string;
+      resumeKey?: string | null;
+      consent?: boolean;
+      website?: string;
+    }>();
+    // campo invisível: robô preenche, gente não
+    if (body.website) return c.json({ ok: true }, 201);
+
+    const text = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+    const name = text(body.name, 120);
+    const email = text(body.email, 160).toLowerCase();
+    const phone = text(body.phone, 40);
+    const message = text(body.message, 3000);
+    const resumeKey = body.resumeKey || null;
+
+    if (name.length < 3) return c.json({ error: 'Informe seu nome completo' }, 400);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return c.json({ error: 'Informe um e-mail válido' }, 400);
+    if (phone.replace(/\D/g, '').length < 10) return c.json({ error: 'Informe um telefone com DDD' }, 400);
+    if (!body.consent) return c.json({ error: 'É preciso autorizar o uso dos seus dados para a seleção' }, 400);
+    if (!resumeKey && message.length < 20) {
+      return c.json({ error: 'Envie o currículo em PDF ou conte um pouco da sua experiência' }, 400);
+    }
+    if (resumeKey) {
+      if (!RESUME_KEY_RE.test(resumeKey)) return c.json({ error: 'Arquivo de currículo inválido' }, 400);
+      const exists = await s3
+        .send(new HeadObjectCommand({ Bucket: RESUME_BUCKET, Key: resumeKey }))
+        .then(() => true)
+        .catch(() => false);
+      if (!exists) return c.json({ error: 'O currículo não terminou de enviar. Tente de novo.' }, 400);
+    }
+
+    let jobId: number | null = null;
+    if (body.jobSlug) {
+      const [job] = await db.select().from(schema.jobs).where(eq(schema.jobs.slug, body.jobSlug));
+      if (!job || !isJobOpen(job)) return c.json({ error: 'Esta vaga não está mais aberta' }, 400);
+      jobId = job.id;
+    }
+
+    await db.insert(schema.applications).values({
+      jobId,
+      name,
+      email,
+      phone,
+      city: text(body.city, 80) || null,
+      linkedin: text(body.linkedin, 200) || null,
+      salaryExpectation: text(body.salaryExpectation, 60) || null,
+      message: message || null,
+      resumeKey,
+      status: jobId ? 'recebido' : 'banco',
+      consentAt: new Date(),
+    });
+    return c.json({ ok: true }, 201);
+  })
   // ---------------------------------------------------------------- painel
   .get('/admin/me', async (c) => {
     const user = c.get('user');
@@ -131,6 +240,144 @@ const app = new Hono<Env>()
     const url = await getSignedUrl(s3, new GetObjectCommand({ Bucket: S3_BUCKET, Key: key }), {
       expiresIn: 600,
     });
+    return c.json({ url }, 200);
+  })
+  // ------------------------------------------------------- vagas (painel)
+  .get('/admin/vagas', requireRole('admin', 'editor', 'rh'), async (c) => {
+    const role = c.get('user')!.role;
+    const seesCandidates = role === 'super_admin' || role === 'admin' || role === 'rh';
+    const jobs = await db.select().from(schema.jobs).orderBy(desc(schema.jobs.createdAt));
+    const counts = seesCandidates
+      ? await db
+          .select({ jobId: schema.applications.jobId, total: sql<number>`count(*)::int` })
+          .from(schema.applications)
+          .groupBy(schema.applications.jobId)
+      : [];
+    const byJob = new Map(counts.map((r) => [r.jobId, r.total]));
+    return c.json(
+      {
+        jobs: jobs.map((j) => ({ ...j, open: isJobOpen(j), applications: byJob.get(j.id) ?? 0 })),
+        talentPool: byJob.get(null) ?? 0,
+        seesCandidates,
+      },
+      200,
+    );
+  })
+  .post('/admin/vagas', requireRole('admin', 'editor', 'rh'), async (c) => {
+    const parsed = parseJobInput(await c.req.json<JobInput>(), false);
+    if ('error' in parsed) return c.json({ error: parsed.error }, 400);
+    const base = slugify(parsed.data.title as string) || 'vaga';
+    const taken = new Set(
+      (await db.select({ slug: schema.jobs.slug }).from(schema.jobs)).map((r) => r.slug),
+    );
+    let slug = base;
+    for (let n = 2; taken.has(slug); n++) slug = `${base}-${n}`;
+    const [job] = await db
+      .insert(schema.jobs)
+      .values({ ...(parsed.data as typeof schema.jobs.$inferInsert), slug })
+      .returning();
+    return c.json({ job }, 201);
+  })
+  .patch(
+    '/admin/vagas/:id',
+    requireRole('admin', 'editor', 'rh'),
+    validator('json', (v) => (v ?? {}) as JobInput),
+    async (c) => {
+    const id = Number(c.req.param('id'));
+    const parsed = parseJobInput(c.req.valid('json'), true);
+    if ('error' in parsed) return c.json({ error: parsed.error }, 400);
+    const [job] = await db
+      .update(schema.jobs)
+      .set({ ...parsed.data, updatedAt: new Date() })
+      .where(eq(schema.jobs.id, id))
+      .returning();
+    if (!job) return c.json({ error: 'Vaga não encontrada' }, 404);
+    return c.json({ job }, 200);
+    },
+  )
+  .delete('/admin/vagas/:id', requireRole('admin', 'rh'), async (c) => {
+    const id = Number(c.req.param('id'));
+    const [used] = await db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(schema.applications)
+      .where(eq(schema.applications.jobId, id));
+    if ((used?.total ?? 0) > 0) {
+      return c.json({ error: 'Esta vaga tem candidatos. Encerre a vaga em vez de apagar.' }, 409);
+    }
+    await db.delete(schema.jobs).where(eq(schema.jobs.id, id));
+    return c.json({ ok: true }, 200);
+  })
+  .get('/admin/candidaturas/novas', requireRole('admin', 'rh'), async (c) => {
+    const [row] = await db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(schema.applications)
+      .where(eq(schema.applications.status, 'recebido'));
+    return c.json({ total: row?.total ?? 0 }, 200);
+  })
+  .get('/admin/candidaturas', requireRole('admin', 'rh'), async (c) => {
+    const rows = await db
+      .select({
+        application: schema.applications,
+        jobTitle: schema.jobs.title,
+        jobSlug: schema.jobs.slug,
+      })
+      .from(schema.applications)
+      .leftJoin(schema.jobs, eq(schema.applications.jobId, schema.jobs.id))
+      .orderBy(desc(schema.applications.createdAt));
+    return c.json(
+      { applications: rows.map((r) => ({ ...r.application, jobTitle: r.jobTitle, jobSlug: r.jobSlug })) },
+      200,
+    );
+  })
+  .patch(
+    '/admin/candidaturas/:id',
+    requireRole('admin', 'rh'),
+    validator('json', (v) => (v ?? {}) as { status?: string; notes?: string | null }),
+    async (c) => {
+    const id = Number(c.req.param('id'));
+    const body = c.req.valid('json');
+    const patch: Record<string, unknown> = {};
+    if (body.status !== undefined) {
+      if (!(APPLICATION_STATUSES as readonly string[]).includes(body.status)) {
+        return c.json({ error: 'Status inválido' }, 400);
+      }
+      patch.status = body.status;
+    }
+    if (body.notes !== undefined) patch.notes = body.notes?.trim().slice(0, 4000) || null;
+    if (!Object.keys(patch).length) return c.json({ error: 'Nada para atualizar' }, 400);
+    await db.update(schema.applications).set(patch).where(eq(schema.applications.id, id));
+    return c.json({ ok: true }, 200);
+    },
+  )
+  .delete('/admin/candidaturas/:id', requireRole('admin', 'rh'), async (c) => {
+    const id = Number(c.req.param('id'));
+    const [row] = await db
+      .delete(schema.applications)
+      .where(eq(schema.applications.id, id))
+      .returning({ resumeKey: schema.applications.resumeKey });
+    if (row?.resumeKey) {
+      await s3
+        .send(new DeleteObjectCommand({ Bucket: RESUME_BUCKET, Key: row.resumeKey }))
+        .catch(() => undefined);
+    }
+    return c.json({ ok: true }, 200);
+  })
+  .get('/admin/curriculo/:id', requireRole('admin', 'rh'), async (c) => {
+    const id = Number(c.req.param('id'));
+    const [row] = await db
+      .select({ key: schema.applications.resumeKey, name: schema.applications.name })
+      .from(schema.applications)
+      .where(eq(schema.applications.id, id));
+    if (!row?.key) return c.json({ error: 'Candidatura sem currículo' }, 404);
+    const url = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: RESUME_BUCKET,
+        Key: row.key,
+        ResponseContentDisposition: `inline; filename="curriculo-${safeName(row.name).replace(/\./g, '')}.pdf"`,
+      }),
+      { expiresIn: 300 },
+    );
     return c.json({ url }, 200);
   })
   .get('/admin/leads', requireRole('admin', 'vendedor'), async (c) => {

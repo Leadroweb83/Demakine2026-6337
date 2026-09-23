@@ -4,7 +4,7 @@ import { bearer } from "better-auth/plugins";
 import { db } from "./database";
 
 /** Papéis do painel Demakine. */
-export const ROLES = ["super_admin", "admin", "editor", "vendedor"] as const;
+export const ROLES = ["super_admin", "admin", "editor", "vendedor", "rh"] as const;
 export type Role = (typeof ROLES)[number];
 
 export const auth = betterAuth({

@@ -1,4 +1,4 @@
-import { Route, Switch } from "wouter";
+import { Redirect, Route, Switch } from "wouter";
 import { Provider } from "./components/provider";
 import { CompareProvider } from "./components/compare";
 import { ScrollProgress, StickyCta } from "./components/sticky-cta";
@@ -22,7 +22,8 @@ import Segmento from "./pages/segmento";
 import Cases from "./pages/cases";
 import CaseStudyPage from "./pages/case";
 import Contato from "./pages/contato";
-import TrabalheConosco from "./pages/trabalhe-conosco";
+import Vagas from "./pages/vagas";
+import Vaga from "./pages/vaga";
 import Admin from "./pages/admin";
 import Loja from "./pages/loja";
 import ExportLanding from "./pages/export";
@@ -68,7 +69,11 @@ function Site() {
         <Route path="/cases" component={Cases} />
         <Route path="/cases/:slug" component={CaseStudyPage} />
         <Route path="/contato" component={Contato} />
-        <Route path="/trabalhe-conosco" component={TrabalheConosco} />
+        <Route path="/vagas" component={Vagas} />
+        <Route path="/vagas/:slug" component={Vaga} />
+        <Route path="/trabalhe-conosco">
+          <Redirect to="/vagas" replace />
+        </Route>
         <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
         <Route path="/termos-de-uso" component={TermosDeUso} />
         <Route component={NotFound} />

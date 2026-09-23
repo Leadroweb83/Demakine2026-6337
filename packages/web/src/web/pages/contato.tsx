@@ -4,6 +4,7 @@ import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import { BtnWhats, PageHero, Section, SectionHead } from "@/components/kit";
 import { departments, site, waLink } from "@/lib/site";
+import { JobsCta } from "@/components/jobs-cta";
 
 export default function Contato() {
   return (
@@ -146,6 +147,9 @@ export default function Contato() {
               </div>
             </Reveal>
           ))}
+        </div>
+        <div className="mt-8">
+          <JobsCta />
         </div>
       </Section>
 

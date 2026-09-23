@@ -16,17 +16,18 @@ import {
   Menu,
 } from "lucide-react";
 import { api } from "../lib/api";
-import { authClient, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
+import { authClient, can, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
 import { AdminLogin } from "../admin/login";
 import { AdminDashboard } from "../admin/dashboard";
 import { AdminLeads, type LeadsFilter } from "../admin/leads";
 import { AdminUsers } from "../admin/users";
 import { AdminAccount } from "../admin/account";
+import { AdminVagas } from "../admin/vagas";
 import { Badge, Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
 import { caseStudies } from "@/lib/cases";
 
-type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "livre";
+type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "vagas" | "livre";
 
 type NavItem = {
   id: string;
@@ -43,7 +44,7 @@ const NAV: NavItem[] = [
   { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo", soon: true },
   { id: "produtos", label: "Catálogo", Icon: Package, area: "conteudo", soon: true },
   { id: "loja", label: "Loja", Icon: ShoppingCart, area: "loja", soon: true },
-  { id: "vagas", label: "Vagas", Icon: Briefcase, area: "leads", soon: true },
+  { id: "vagas", label: "Vagas", Icon: Briefcase, area: "vagas" },
   { id: "midia", label: "Mídia", Icon: Images, area: "conteudo", soon: true },
   { id: "site", label: "Dados do site", Icon: Sliders, area: "config", soon: true },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
@@ -55,7 +56,8 @@ function allowed(role: string, area: Area) {
   if (role === "super_admin") return true;
   if (role === "admin") return area !== "usuarios";
   if (role === "vendedor") return area === "leads";
-  if (role === "editor") return area === "conteudo";
+  if (role === "editor") return area === "conteudo" || area === "vagas";
+  if (role === "rh") return area === "vagas";
   return false;
 }
 
@@ -120,7 +122,19 @@ function Soon({ label }: { label: string }) {
 
 function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) {
   const nav = useMemo(() => NAV.filter((n) => allowed(user.role, n.area)), [user.role]);
-  const [current, setCurrent] = useState(user.mustChangePassword ? "conta" : "overview");
+  const [current, setCurrent] = useState(
+    user.mustChangePassword ? "conta" : user.role === "rh" ? "vagas" : "overview",
+  );
+  const newApplications = useQuery({
+    queryKey: ["admin-candidaturas-novas"],
+    enabled: can(user.role, "candidatos"),
+    refetchInterval: 60_000,
+    queryFn: async () => {
+      const res = await api.admin.candidaturas.novas.$get();
+      return res.ok ? (await res.json()).total : 0;
+    },
+  });
+  const badges: Record<string, number> = { vagas: newApplications.data ?? 0 };
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [leadsFilter, setLeadsFilter] = useState<LeadsFilter | undefined>();
@@ -194,6 +208,14 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
                   {!collapsed && (
                     <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
                       <span className="truncate">{n.label}</span>
+                      {!n.soon && (badges[n.id] ?? 0) > 0 && (
+                        <span
+                          className="rounded-full bg-dm-red px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white"
+                          title={`${badges[n.id]} candidatura(s) nova(s)`}
+                        >
+                          {badges[n.id]}
+                        </span>
+                      )}
                       {n.soon && (
                         <span
                           className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
@@ -265,6 +287,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "overview" && <AdminDashboard user={user} onGo={go} />}
           {current === "leads" && <AdminLeads key={JSON.stringify(leadsFilter ?? {})} initial={leadsFilter} />}
           {current === "cases" && <CasesPending />}
+          {current === "vagas" && <AdminVagas user={user} />}
           {current === "usuarios" && <AdminUsers me={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}

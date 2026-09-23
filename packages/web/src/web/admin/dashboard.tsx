@@ -137,13 +137,30 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
           title={`Olá, ${firstName}`}
           hint={`Você está no painel como ${ROLE_LABEL[user.role] ?? user.role}.`}
         />
-        <Card>
-          <h2 className="font-display text-[15px] font-extrabold text-dm-ink">Seu acesso é de conteúdo</h2>
-          <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-dm-ink/65">
-            O papel de editor não enxerga leads nem dados comerciais. As áreas de blog, cases,
-            depoimentos e mídia entram nas próximas fases do painel e aparecerão aqui no menu.
-          </p>
-        </Card>
+        {user.role === "rh" ? (
+          <Card>
+            <h2 className="font-display text-[15px] font-extrabold text-dm-ink">Seu acesso é de recrutamento</h2>
+            <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-dm-ink/65">
+              O papel de RH cuida das vagas e dos candidatos. Leads e dados comerciais ficam com o time de
+              vendas.
+            </p>
+            <button
+              type="button"
+              onClick={() => onGo("vagas")}
+              className="mt-4 rounded-full bg-dm-blue px-5 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white hover:bg-[#0d3480]"
+            >
+              Ir para Vagas
+            </button>
+          </Card>
+        ) : (
+          <Card>
+            <h2 className="font-display text-[15px] font-extrabold text-dm-ink">Seu acesso é de conteúdo</h2>
+            <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-dm-ink/65">
+              O papel de editor não enxerga leads nem dados comerciais. Vagas já está no menu; blog,
+              cases, depoimentos e mídia entram nas próximas fases do painel.
+            </p>
+          </Card>
+        )}
       </div>
     );
   }

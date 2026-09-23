@@ -16,13 +16,14 @@ type Row = {
   image?: string | null;
 };
 
-const ROLE_OPTIONS = ["admin", "editor", "vendedor", "super_admin"] as const;
+const ROLE_OPTIONS = ["admin", "editor", "vendedor", "rh", "super_admin"] as const;
 
 const ROLE_HELP: Record<string, string> = {
   super_admin: "Vê tudo, cria usuários e controla as chaves.",
   admin: "Vê tudo do negócio: leads, catálogo, loja, conteúdo e dados do site. Não gerencia usuários.",
-  editor: "Só conteúdo: blog, cases, depoimentos e mídia. Não vê leads, preço nem configuração.",
-  vendedor: "Só leads e vagas. Nenhuma área de conteúdo.",
+  editor: "Conteúdo (blog, cases, depoimentos, mídia) e o texto das vagas. Não vê leads, candidatos, preço nem configuração.",
+  vendedor: "Só leads. Nenhuma área de conteúdo nem candidatos.",
+  rh: "Só vagas e candidatos: publica vagas, vê currículos e conduz a seleção. Não vê leads nem conteúdo.",
 };
 
 export function AdminUsers({ me }: { me: PanelUser }) {

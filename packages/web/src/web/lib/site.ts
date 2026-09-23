@@ -49,37 +49,17 @@ export const departments = [
   { name: "Marketing", phone: "(19) 99893-6063", email: "marketing@demakine.com.br" },
 ] as const;
 
-export const jobs = [
-  {
-    title: "Ajudante de Produção",
-    area: "Produção",
-    type: "Efetivo · Limeira/SP",
-    desc: "Apoio na montagem, movimentação de materiais e organização do setor produtivo.",
-  },
-  {
-    title: "Montador Soldador",
-    area: "Produção",
-    type: "Efetivo · Limeira/SP",
-    desc: "Leitura de desenho técnico, montagem de estruturas e solda MIG/eletrodo.",
-  },
-  {
-    title: "Vendedor",
-    area: "Comercial",
-    type: "Efetivo · Limeira/SP",
-    desc: "Atendimento técnico-comercial, prospecção e acompanhamento de propostas.",
-  },
-] as const;
-
 export const nav = [
   { label: "Home", to: "/" },
   { label: "Produtos", to: "/produtos" },
   { label: "Agro", to: "/agro" },
-  { label: "Projetos Especiais", to: "/projetos-especiais" },
+  { label: "Projetos Especiais", short: "Projetos", to: "/projetos-especiais" },
   { label: "Ferramentas", to: "/ferramentas" },
   { label: "A Empresa", to: "/a-empresa" },
   { label: "Clientes", to: "/clientes" },
-  { label: "Assistência Técnica", to: "/assistencia-tecnica" },
+  { label: "Assistência Técnica", short: "Assistência", to: "/assistencia-tecnica" },
   { label: "Blog", to: "/blog" },
+  { label: "Vagas", to: "/vagas" },
   { label: "Contato", to: "/contato" },
 ] as const;
 

@@ -24,6 +24,10 @@ export function avatarPublicUrl(key: string) {
   return `${base}/${AVATAR_BUCKET}/${key}`;
 }
 
+/** Currículos das candidaturas (bucket privado, só PDF, 5 MB no próprio bucket). */
+export const RESUME_BUCKET = "curriculos";
+export const RESUME_MAX_BYTES = 5 * 1024 * 1024;
+
 /** Só imagem, para o upload de foto de peça. */
 export const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",

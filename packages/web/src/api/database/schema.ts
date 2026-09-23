@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, date, index, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const leads = pgTable("leads", {
   id: serial("id").primaryKey(),
@@ -23,5 +23,52 @@ export const leads = pgTable("leads", {
   lossReason: text("loss_reason"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/** Vagas publicadas em /vagas. Requisitos e benefícios: um item por linha. */
+export const jobs = pgTable("jobs", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  area: text("area").notNull(),
+  /** efetivo | estagio | temporario | pj */
+  type: text("type").default("efetivo").notNull(),
+  location: text("location").default("Limeira/SP").notNull(),
+  summary: text("summary").notNull(),
+  description: text("description"),
+  requirements: text("requirements"),
+  benefits: text("benefits"),
+  salary: text("salary"),
+  showSalary: boolean("show_salary").default(false).notNull(),
+  /** aberta | pausada | encerrada */
+  status: text("status").default("aberta").notNull(),
+  /** último dia para se candidatar (inclusive) */
+  deadline: date("deadline"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Candidaturas. jobId nulo = banco de talentos. */
+export const applications = pgTable(
+  "applications",
+  {
+    id: serial("id").primaryKey(),
+    jobId: integer("job_id").references(() => jobs.id, { onDelete: "set null" }),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull(),
+    city: text("city"),
+    linkedin: text("linkedin"),
+    salaryExpectation: text("salary_expectation"),
+    message: text("message"),
+    /** key do PDF no bucket privado de currículos; opcional (quem não tem escreve a experiência) */
+    resumeKey: text("resume_key"),
+    /** recebido | analise | entrevista | aprovado | reprovado | banco */
+    status: text("status").default("recebido").notNull(),
+    notes: text("notes"),
+    consentAt: timestamp("consent_at", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("applications_job_idx").on(t.jobId)],
+);
 
 export * from "./auth-schema";
