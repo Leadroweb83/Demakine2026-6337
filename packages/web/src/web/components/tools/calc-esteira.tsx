@@ -55,7 +55,7 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
           >
             {materials.map((m) => (
               <option key={m.key} value={m.key}>
-                {m.label} — {m.hint}
+                {m.label} · {m.hint}
               </option>
             ))}
           </select>
@@ -143,7 +143,7 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
             href={waLink(waMsg)}
             target="_blank"
             rel="noreferrer"
-            className="cine-shine inline-flex items-center justify-center gap-2 rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
+            className="cine-shine inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
           >
             Orçar este modelo
           </a>

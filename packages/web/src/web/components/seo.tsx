@@ -72,7 +72,7 @@ export const organizationJsonLd = {
   telephone: "+55 19 3033-9397",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Rua Silvino del Pietro, 212 — Jd. Nova Limeira",
+    streetAddress: "Rua Silvino del Pietro, 212, Jd. Nova Limeira",
     addressLocality: "Limeira",
     addressRegion: "SP",
     addressCountry: "BR",

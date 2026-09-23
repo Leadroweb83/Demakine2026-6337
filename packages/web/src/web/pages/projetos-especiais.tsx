@@ -5,7 +5,7 @@ import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import { CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
 import { projects } from "@/lib/content";
-import { segments } from "@/lib/site";
+import { segmentList } from "@/lib/segments";
 
 const pillars = [
   {
@@ -64,7 +64,7 @@ export default function ProjetosEspeciais() {
   return (
     <>
       <Seo
-        title="Projetos Especiais — Equipamentos sob medida | Demakine"
+        title="Projetos Especiais: Equipamentos sob medida | Demakine"
         description="Esteiras em Z, moegas para big bag, inox sanitário, galvanizadas, com trilho e contador de sacos. Mais de 20 configurações especiais projetadas e entregues pela Demakine."
         path="/projetos-especiais"
         image="/img/site/projetos.jpg"
@@ -180,15 +180,24 @@ export default function ProjetosEspeciais() {
 
         <Reveal className="mt-14 rounded-2xl border border-dm-line bg-dm-surface p-7 md:p-9">
           <p className="eyebrow text-dm-blue">Segmentos atendidos</p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {segments.map((s) => (
-              <span
-                key={s}
-                className="rounded-full border border-dm-line bg-white px-4 py-2 text-[13.5px] font-semibold text-dm-ink/80"
-              >
-                {s}
-              </span>
-            ))}
+          <div className="mt-5 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+            {segmentList.map((s) => {
+              const Icon = s.icon;
+              return (
+                <span
+                  key={s.slug}
+                  className="flex items-center gap-2.5 rounded-xl border border-dm-line bg-white px-3 py-2.5 text-[13.5px] font-semibold text-dm-ink/85"
+                >
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                    style={{ backgroundColor: `${s.color}14`, color: s.color }}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  {s.name}
+                </span>
+              );
+            })}
           </div>
           <p className="mt-5 text-[15px] text-dm-gray">
             Seja qual for a sua necessidade, temos a expertise para desenvolver o equipamento sob

@@ -44,6 +44,36 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
 
   const activeData = active ? byState[active] : undefined;
 
+  /** Origem: fábrica em Limeira/SP. */
+  const origin: [number, number] = [map.states.SP.c[0] - 6, map.states.SP.c[1] - 26];
+
+  /** Curvas da fábrica até cada estado atendido, com tempos variados. */
+  const routes = useMemo(() => {
+    return Object.keys(byState)
+      .filter((uf) => uf !== "SP")
+      .map((uf, i) => {
+        const s = map.states[uf];
+        const [ox, oy] = origin;
+        const [tx, ty] = s.c;
+        const mx = (ox + tx) / 2;
+        const my = (oy + ty) / 2;
+        const dx = tx - ox;
+        const dy = ty - oy;
+        const len = Math.hypot(dx, dy) || 1;
+        // desloca o ponto de controle na perpendicular para virar arco
+        const bow = Math.min(90, len * 0.24);
+        const cx = mx + (-dy / len) * bow;
+        const cy = my + (dx / len) * bow;
+        return {
+          uf,
+          d: `M ${ox} ${oy} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${tx} ${ty}`,
+          dur: +(2.4 + (len / 900) * 3.4).toFixed(2),
+          begin: +((i % 7) * 0.55).toFixed(2),
+        };
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [byState]);
+
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
       <div className="relative mx-auto w-full max-w-[420px]">
@@ -68,10 +98,54 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
             >
               <title>
                 {s.name}
-                {byState[uf] ? ` — ${byState[uf].count} cliente(s)` : ""}
+                {byState[uf] ? `: ${byState[uf].count} cliente(s)` : ""}
               </title>
             </path>
           ))}
+
+          {/* rotas de logística saindo da fábrica em Limeira/SP */}
+          <g pointerEvents="none">
+            {routes.map((r, i) => (
+              <g key={`route-${r.uf}`}>
+                <path
+                  id={`dm-route-${r.uf}`}
+                  d={r.d}
+                  fill="none"
+                  stroke={
+                    active === r.uf
+                      ? "rgba(228,20,27,0.9)"
+                      : dark
+                        ? "rgba(255,255,255,0.45)"
+                        : "rgba(16,61,148,0.4)"
+                  }
+                  strokeWidth={active === r.uf ? 2 : 1.5}
+                  strokeLinecap="round"
+                  className="route-line"
+                  style={{ animationDelay: `${(i % 6) * 0.22}s` }}
+                />
+                <circle r={4.2} fill="#ff3b42" opacity={0.95} stroke="#fff" strokeWidth={1}>
+                  <animateMotion
+                    dur={`${r.dur}s`}
+                    begin={`${r.begin}s`}
+                    repeatCount="indefinite"
+                    keyPoints="0;1"
+                    keyTimes="0;1"
+                    calcMode="linear"
+                  >
+                    <mpath href={`#dm-route-${r.uf}`} />
+                  </animateMotion>
+                  <animate
+                    attributeName="opacity"
+                    values="0;1;1;0"
+                    keyTimes="0;0.12;0.85;1"
+                    dur={`${r.dur}s`}
+                    begin={`${r.begin}s`}
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </g>
+            ))}
+          </g>
 
           {Object.entries(byState).map(([uf]) => {
             const s = map.states[uf];
@@ -94,9 +168,17 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
 
           {/* fábrica em Limeira/SP */}
           <g pointerEvents="none">
+            <circle cx={origin[0]} cy={origin[1]} r={9} className="dm-hub-pulse" fill="#e4141b" />
             <circle
-              cx={map.states.SP.c[0] - 6}
-              cy={map.states.SP.c[1] - 26}
+              cx={origin[0]}
+              cy={origin[1]}
+              r={9}
+              className="dm-hub-pulse dm-hub-pulse--2"
+              fill="#e4141b"
+            />
+            <circle
+              cx={origin[0]}
+              cy={origin[1]}
               r={9}
               fill="#e4141b"
               stroke="#fff"

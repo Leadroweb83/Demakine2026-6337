@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Calculadora de retorno: compara o custo da movimentação manual
- * com a operação mecanizada. Não estima preço de máquina — o investimento
+ * com a operação mecanizada. Não estima preço de máquina; o investimento
  * é opcional e informado pelo próprio usuário.
  */
 export function CalcRoi({ dark = false }: { dark?: boolean }) {
@@ -219,12 +219,7 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
               )}
               target="_blank"
               rel="noreferrer"
-              className={cn(
-                "inline-flex items-center justify-center rounded-full border px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide transition-colors",
-                dark
-                  ? "border-white/25 text-white hover:border-white/60"
-                  : "border-dm-line text-dm-ink hover:border-dm-blue hover:text-dm-blue",
-              )}
+              className="inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
             >
               Falar no WhatsApp
             </a>

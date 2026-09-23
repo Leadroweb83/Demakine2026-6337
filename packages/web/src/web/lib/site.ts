@@ -9,10 +9,17 @@ export const site = {
   mobile: "(19) 99884-2717",
   mobileHref: "tel:+5519998842717",
   whatsapp: "5519998842717",
-  address: "Rua Silvino del Pietro, 212 — Jd. Nova Limeira, Limeira/SP",
+  // CNPJ: preencher com o numero oficial confirmado pelo cliente.
+  // Enquanto estiver vazio, o bloco institucional do rodape nao exibe a linha de CNPJ.
+  cnpj: "" as string,
+  address: "Rua Silvino del Pietro, 212, Jd. Nova Limeira, Limeira/SP",
   addressShort: "Limeira / SP",
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Rua+Silvino+del+Pietro,+212+-+Jd.+Nova+Limeira+-+Limeira+SP",
+  mapsDirections:
+    "https://www.google.com/maps/dir/?api=1&destination=Rua+Silvino+del+Pietro,+212+-+Jd.+Nova+Limeira+-+Limeira+SP",
+  mapsEmbed:
+    "https://www.google.com/maps?q=Rua+Silvino+del+Pietro,+212+-+Jd.+Nova+Limeira+-+Limeira+SP&z=15&output=embed",
   social: {
     facebook: "https://www.facebook.com/demakineindustrial/",
     instagram: "https://instagram.com/demakineindustrial",
@@ -66,6 +73,7 @@ export const jobs = [
 export const nav = [
   { label: "Home", to: "/" },
   { label: "Produtos", to: "/produtos" },
+  { label: "Agro", to: "/agro" },
   { label: "Projetos Especiais", to: "/projetos-especiais" },
   { label: "Ferramentas", to: "/ferramentas" },
   { label: "A Empresa", to: "/a-empresa" },

@@ -1,7 +1,10 @@
 import { Link, useParams } from "wouter";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
-import { Breadcrumb, BtnPrimary, CtaBand, Section } from "@/components/kit";
+import { Breadcrumb, BtnWhats, CtaBand, Section } from "@/components/kit";
+import { ShareBar } from "@/components/share";
+import { CalcEsteira } from "@/components/tools/calc-esteira";
+import { CalcRoi } from "@/components/tools/calc-roi";
 import { formatDate, getPost, posts } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 
@@ -58,11 +61,17 @@ export default function Post() {
   const intro = post.blocks.find((b) => !b.startsWith("#")) ?? "";
   const body = post.blocks.filter((b, idx) => !(idx === 0 && b.startsWith("# ")));
   const gallery = post.images.filter((img) => img !== post.cover).slice(0, 6);
+  const tool =
+    post.slug === "como-dimensionar-sua-esteira-transportadora"
+      ? "esteira"
+      : post.slug === "quanto-custa-movimentar-carga-na-mao"
+        ? "roi"
+        : null;
 
   return (
     <>
       <Seo
-        title={`${post.title} — Blog Demakine`}
+        title={`${post.title} | Blog Demakine`}
         description={intro.slice(0, 180)}
         path={`/blog/${post.slug}`}
         image={post.cover}
@@ -97,6 +106,12 @@ export default function Post() {
             <p className="mt-4 text-[14px] text-dm-gray">
               Publicado em {formatDate(post.date)} · Equipe Demakine
             </p>
+            <ShareBar
+              className="mt-6"
+              compact
+              title={post.title}
+              path={`/blog/${post.slug}`}
+            />
           </div>
 
           <div className="mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl">
@@ -126,17 +141,44 @@ export default function Post() {
             </div>
           )}
 
+          {tool && (
+            <div className="mx-auto mt-14 max-w-4xl">
+              <p className="eyebrow text-dm-blue">
+                {tool === "esteira" ? "Calculadora" : "Calculadora de retorno"}
+              </p>
+              <h2 className="h3 mt-3">
+                {tool === "esteira"
+                  ? "Faça o dimensionamento agora"
+                  : "Veja quanto a sua operação gasta hoje"}
+              </h2>
+              <p className="mt-3 text-[16px] leading-relaxed text-dm-gray">
+                {tool === "esteira"
+                  ? "Preencha os dados da sua operação e veja largura de correia, capacidade e inclinação de referência. É o mesmo cálculo que usamos no primeiro contato."
+                  : "Coloque o número de pessoas, as horas na movimentação manual e o custo hora. O resultado mostra o gasto anual e em quanto tempo o equipamento se paga."}
+              </p>
+              <div className="mt-6">{tool === "esteira" ? <CalcEsteira /> : <CalcRoi />}</div>
+              <p className="mt-4 text-[14px] text-dm-gray">
+                Resultado de referência. O dimensionamento final é confirmado pela nossa engenharia
+                com os dados reais da sua operação.
+              </p>
+            </div>
+          )}
+
           <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-dm-line bg-dm-surface p-7">
             <h2 className="h3">Precisa aplicar isso na sua operação?</h2>
             <p className="mt-3 text-[15.5px] leading-relaxed text-dm-gray">
-              Nossa engenharia avalia seu processo e indica o equipamento correto — inclusive projetos
+              Nossa engenharia avalia seu processo e indica o equipamento correto, inclusive projetos
               sob medida.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <BtnPrimary href={waLink(`Olá! Li o artigo "${post.title}" e quero falar com um especialista.`)} external>
+              <BtnWhats href={waLink(`Olá! Li o artigo "${post.title}" e quero falar com um especialista.`)}>
                 Falar com especialista
-              </BtnPrimary>
+              </BtnWhats>
             </div>
+          </div>
+
+          <div className="mx-auto mt-10 max-w-3xl border-t border-dm-line pt-7">
+            <ShareBar title={post.title} path={`/blog/${post.slug}`} />
           </div>
         </div>
       </article>

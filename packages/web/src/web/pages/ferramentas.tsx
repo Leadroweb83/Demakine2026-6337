@@ -20,7 +20,7 @@ export default function Ferramentas() {
   return (
     <>
       <Seo
-        title="Ferramentas de engenharia — dimensione sua esteira | Demakine"
+        title="Ferramentas de engenharia: dimensione sua esteira | Demakine"
         description="Dimensione o transportador, configure a máquina, calcule o retorno da automação e receba a recomendação do equipamento certo. Ferramentas gratuitas da engenharia Demakine."
         path="/ferramentas"
       />
@@ -44,7 +44,7 @@ export default function Ferramentas() {
             <CineRule className="mt-6" />
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/70">
               Quatro ferramentas com a mesma lógica que a nossa engenharia usa no dia a dia. O
-              resultado sai com o modelo da nossa tabela real de produção — sem chute e sem cadastro
+              resultado sai com o modelo da nossa tabela real de produção, sem chute e sem cadastro
               obrigatório.
             </p>
             <CineBullets
@@ -111,7 +111,7 @@ export default function Ferramentas() {
         <p className="mt-6 max-w-3xl text-[13.5px] leading-relaxed text-dm-gray">
           Premissas padrão: {roiAssumptions.manualPerPersonHour} volumes por hora por pessoa no processo
           manual e {roiAssumptions.beltPerHour} volumes por hora com transportador. São valores de
-          referência de operações parecidas com a sua — ajuste para o seu caso. O investimento é
+          referência de operações parecidas com a sua. Ajuste para o seu caso. O investimento é
           opcional e só entra no cálculo quando você informa, porque o preço depende do projeto.
         </p>
       </Section>

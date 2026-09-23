@@ -33,7 +33,7 @@ export default function TrabalheConosco() {
   return (
     <>
       <Seo
-        title="Trabalhe Conosco — Vagas na Demakine"
+        title="Trabalhe Conosco | Vagas na Demakine"
         description="Vem ser Demakine. Confira as vagas abertas em produção e comercial na nossa fábrica em Limeira/SP e envie seu currículo."
         path="/trabalhe-conosco"
       />

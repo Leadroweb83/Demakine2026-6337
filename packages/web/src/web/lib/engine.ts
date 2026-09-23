@@ -1,7 +1,7 @@
 /**
  * Motor de dimensionamento e cálculo.
  * Toda a lógica usa as tabelas de modelos reais publicadas em content.json
- * (nenhum valor inventado — quando a tabela não cobre o caso, cai em "sob medida").
+ * (nenhum valor inventado; quando a tabela não cobre o caso, cai em "sob medida").
  */
 import { getProduct, products, type Product } from "./content";
 
@@ -136,7 +136,7 @@ export function sizeConveyor(input: SizingInput): SizingResult {
   }
   if (input.sanitary) {
     notes.push(
-      "Para uso sanitário fabricamos a mesma máquina em aço inox, com correia atóxica — item de projeto especial.",
+      "Para uso sanitário fabricamos a mesma máquina em aço inox, com correia atóxica, item de projeto especial.",
     );
   }
 
@@ -342,10 +342,10 @@ export function configure({ length, angle, family }: ConfigInput) {
       model: m.model,
       length: parseMeters(m.specs["Comprimento"]),
       heightMax: parseMeters(m.specs["Altura máxima"]),
-      motor: m.specs["Motor de tração"] ?? "—",
-      belt: m.specs["Largura da correia"] ?? "—",
-      speed: m.specs["Velocidade"] ?? "—",
-      capacity: m.specs["Capacidade"] ?? "—",
+      motor: m.specs["Motor de tração"] ?? "-",
+      belt: m.specs["Largura da correia"] ?? "-",
+      speed: m.specs["Velocidade"] ?? "-",
+      capacity: m.specs["Capacidade"] ?? "-",
     }))
     .filter((m) => m.length !== null)
     .sort((a, b) => (a.length ?? 0) - (b.length ?? 0));

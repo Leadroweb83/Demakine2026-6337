@@ -2,14 +2,14 @@ import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnPrimary, PageHero, Section, SectionHead } from "@/components/kit";
+import { BtnWhats, PageHero, Section, SectionHead } from "@/components/kit";
 import { departments, site, waLink } from "@/lib/site";
 
 export default function Contato() {
   return (
     <>
       <Seo
-        title="Contato — Demakine Equipamentos Agroindustriais"
+        title="Contato | Demakine Equipamentos Agroindustriais"
         description="Fale com a Demakine por telefone, WhatsApp ou e-mail. Contatos por departamento, endereço da fábrica em Limeira/SP e formulário de orçamento."
         path="/contato"
         jsonLd={{
@@ -160,9 +160,9 @@ export default function Contato() {
           />
         </Reveal>
         <div className="mt-8 text-center">
-          <BtnPrimary href={waLink("Olá! Quero um orçamento de equipamento Demakine.")} external>
+          <BtnWhats href={waLink("Olá! Quero um orçamento de equipamento Demakine.")}>
             Pedir orçamento agora
-          </BtnPrimary>
+          </BtnWhats>
         </div>
       </Section>
     </>

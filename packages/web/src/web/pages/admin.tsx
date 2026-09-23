@@ -1,166 +1,264 @@
-import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  BarChart3,
+  ChevronLeft,
+  ClipboardList,
+  Images,
+  LogOut,
+  Newspaper,
+  Package,
+  ShoppingCart,
+  Sliders,
+  UserCircle2,
+  Users,
+  Briefcase,
+  Menu,
+} from "lucide-react";
 import { api } from "../lib/api";
+import { authClient, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
+import { AdminLogin } from "../admin/login";
+import { AdminOverview } from "../admin/overview";
+import { AdminLeads } from "../admin/leads";
+import { AdminUsers } from "../admin/users";
+import { AdminAccount } from "../admin/account";
+import { Badge, Card, PageTitle } from "../admin/ui";
+import { caseStudies } from "@/lib/cases";
 
-type Lead = {
-  id: number;
-  name: string;
-  company: string | null;
-  phone: string;
-  email: string | null;
-  city: string | null;
-  product: string | null;
-  message: string | null;
-  source: string | null;
-  createdAt: string;
+type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "livre";
+
+type NavItem = {
+  id: string;
+  label: string;
+  Icon: typeof BarChart3;
+  area: Area;
+  soon?: boolean;
 };
 
-function LoginForm({ onSuccess }: { onSuccess: () => void }) {
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+const NAV: NavItem[] = [
+  { id: "overview", label: "Visão geral", Icon: BarChart3, area: "livre" },
+  { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
+  { id: "cases", label: "Cases", Icon: Newspaper, area: "conteudo" },
+  { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo", soon: true },
+  { id: "produtos", label: "Catálogo", Icon: Package, area: "conteudo", soon: true },
+  { id: "loja", label: "Loja", Icon: ShoppingCart, area: "loja", soon: true },
+  { id: "vagas", label: "Vagas", Icon: Briefcase, area: "leads", soon: true },
+  { id: "midia", label: "Mídia", Icon: Images, area: "conteudo", soon: true },
+  { id: "site", label: "Dados do site", Icon: Sliders, area: "config", soon: true },
+  { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
+  { id: "conta", label: "Minha conta", Icon: UserCircle2, area: "livre" },
+];
 
-  const login = useMutation({
-    mutationFn: async () => {
-      const res = await api.admin.login.$post({ json: { password } });
-      if (!res.ok) throw new Error("unauthorized");
-      return res.json();
-    },
-    onSuccess: () => onSuccess(),
-    onError: () => setError(true),
-  });
+function allowed(role: string, area: Area) {
+  if (area === "livre") return true;
+  if (role === "super_admin") return true;
+  if (role === "admin") return area !== "usuarios";
+  if (role === "vendedor") return area === "leads";
+  if (role === "editor") return area === "conteudo";
+  return false;
+}
 
+/** Checklist do que falta para cada aplicacao virar case real. So aparece no painel. */
+function CasesPending() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0A1F3D] px-6 font-[Montserrat]">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setError(false);
-          login.mutate();
-        }}
-        className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl"
-      >
-        <img src="/img/site/logo-blue.png" alt="Demakine" className="mx-auto h-10 w-auto object-contain" />
-        <h1 className="mt-6 text-center text-lg font-bold text-[#111318]">Painel de Leads</h1>
-        <p className="mt-1 text-center text-sm text-[#111318]/60">Acesso restrito</p>
-
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Senha de acesso"
-          className="mt-6 w-full rounded-lg border border-black/10 px-4 py-3 text-sm outline-none focus:border-[#103D94]"
-          autoFocus
-        />
-
-        {error && <p className="mt-2 text-xs font-medium text-red-600">Senha incorreta. Tente novamente.</p>}
-
-        <button
-          type="submit"
-          disabled={login.isPending}
-          className="mt-4 w-full rounded-full bg-[#103D94] px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
-        >
-          {login.isPending ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
+    <div className="space-y-6">
+      <PageTitle
+        title="Cases: o que falta preencher"
+        hint="As páginas em /cases publicam a configuração técnica e um cenário simulado, nunca número de cliente. Para virar case de verdade, cada aplicação precisa dos itens abaixo. Este checklist aparece somente aqui no painel."
+      />
+      <div className="grid gap-4 lg:grid-cols-2">
+        {caseStudies.map((c) => (
+          <Card key={c.slug}>
+            <Badge>{c.segment}</Badge>
+            <h3 className="mt-2 font-display text-[16px] font-bold text-dm-ink">{c.title}</h3>
+            <a
+              href={`/cases/${c.slug}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 inline-block text-[12.5px] font-semibold text-dm-blue underline"
+            >
+              /cases/{c.slug}
+            </a>
+            <ul className="mt-4 space-y-3">
+              {c.pending.map((p) => (
+                <li key={p.field} className="flex gap-3">
+                  <span className="mt-0.5 h-4 w-4 shrink-0 rounded border-2 border-dm-red" />
+                  <span>
+                    <span className="block text-[13.5px] font-bold text-dm-ink">{p.field}</span>
+                    <span className="block text-[12.5px] leading-relaxed text-dm-ink/60">
+                      {p.why}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
+      <p className="text-[12.5px] text-dm-ink/50">
+        A edição dos cases com dados reais, fotos e depoimento entra na fase 3 do painel.
+      </p>
     </div>
   );
 }
 
-function LeadsTable() {
-  const queryClient = useQueryClient();
+function Soon({ label }: { label: string }) {
+  return (
+    <div className="space-y-6">
+      <PageTitle title={label} hint="Esta área entra nas próximas fases do painel." />
+      <Card>
+        <p className="text-[13.5px] leading-relaxed text-dm-ink/70">
+          A fase 1 entregou o login por pessoa, os papéis e a estrutura do painel. As telas de
+          edição de conteúdo, loja, vagas e mídia entram nas fases seguintes, na ordem combinada no
+          plano.
+        </p>
+      </Card>
+    </div>
+  );
+}
 
-  const leadsQuery = useQuery({
-    queryKey: ["admin-leads"],
-    queryFn: async () => {
-      const res = await api.admin.leads.$get();
-      if (!res.ok) throw new Error("failed");
-      return (await res.json()).leads as Lead[];
-    },
-  });
+function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) {
+  const nav = useMemo(() => NAV.filter((n) => allowed(user.role, n.area)), [user.role]);
+  const [current, setCurrent] = useState(user.mustChangePassword ? "conta" : "overview");
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const logout = useMutation({
-    mutationFn: async () => {
-      await api.admin.logout.$post();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-me"] });
-    },
-  });
+  const go = (id: string) => {
+    setCurrent(id);
+    setMobileOpen(false);
+  };
 
-  const leads = leadsQuery.data ?? [];
+  useEffect(() => {
+    if (!nav.some((n) => n.id === current)) setCurrent("overview");
+  }, [nav, current]);
 
-  const whatsappHref = (phone: string, name: string) =>
-    `https://wa.me/55${phone.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá ${name}! Aqui é da Demakine, recebemos seu contato.`)}`;
+  const item = nav.find((n) => n.id === current);
 
   return (
-    <div className="min-h-screen bg-[#F4F6FA] font-[Montserrat]">
-      <header className="flex items-center justify-between bg-[#0A1F3D] px-6 py-4">
-        <img src="/img/site/logo-white.png" alt="Demakine" className="h-9 w-auto object-contain" />
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-white/70">{leads.length} leads recebidos</span>
+    <div className="flex min-h-screen bg-dm-surface">
+      {mobileOpen && (
+        <button
+          aria-label="Fechar menu"
+          onClick={() => setMobileOpen(false)}
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+        />
+      )}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen shrink-0 flex-col justify-between bg-dm-blue-deep transition-transform duration-300 lg:sticky lg:top-0 lg:translate-x-0 lg:transition-[width] ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        } ${collapsed ? "w-[76px]" : "w-[248px]"}`}
+      >
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <div className="flex items-center justify-between px-4 py-5">
+            {!collapsed && (
+              <img
+                src="/img/site/logo-white.png"
+                alt="Demakine"
+                className="h-8 w-auto object-contain"
+              />
+            )}
+            <button
+              onClick={() => {
+                if (window.innerWidth < 1024) setMobileOpen(false);
+                else setCollapsed((v) => !v);
+              }}
+              aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+              className="rounded-lg p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <ChevronLeft
+                size={18}
+                className={`transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
+              />
+            </button>
+          </div>
+
+          <nav className="mt-2 space-y-1 px-2.5">
+            {nav.map((n) => {
+              const active = n.id === current;
+              return (
+                <button
+                  key={n.id}
+                  onClick={() => go(n.id)}
+                  title={n.label}
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13.5px] font-semibold transition-colors ${
+                    active
+                      ? "bg-white text-dm-blue-deep"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  <n.Icon size={18} className="shrink-0" />
+                  {!collapsed && (
+                    <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                      <span className="truncate">{n.label}</span>
+                      {n.soon && (
+                        <span
+                          className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
+                            active ? "bg-dm-blue/10 text-dm-blue" : "bg-white/15 text-white/70"
+                          }`}
+                        >
+                          fase
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="border-t border-white/10 px-4 py-5">
+          {!collapsed && (
+            <>
+              <p className="truncate text-[13px] font-bold text-white">{user.name}</p>
+              <p className="truncate text-[11.5px] text-white/55">{user.email}</p>
+              <p className="mt-1.5 text-[10.5px] font-bold uppercase tracking-wide text-white/50">
+                {ROLE_LABEL[user.role] ?? user.role}
+              </p>
+            </>
+          )}
           <button
-            onClick={() => logout.mutate()}
-            className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-white/10"
+            onClick={onSignOut}
+            className="mt-3 flex w-full items-center gap-2 rounded-xl border border-white/20 px-3 py-2 text-[12px] font-bold uppercase tracking-wide text-white/80 transition-colors hover:bg-white/10 hover:text-white"
           >
-            Sair
+            <LogOut size={15} />
+            {!collapsed && "Sair"}
           </button>
         </div>
-      </header>
+      </aside>
 
-      <main className="mx-auto max-w-[1400px] px-6 py-10">
-        <h1 className="text-2xl font-extrabold text-[#111318]">Leads Recebidos</h1>
-        <p className="mt-1 text-sm text-[#111318]/60">Contatos enviados pelo formulário do site.</p>
+      <main className="min-w-0 flex-1">
+        <div className="sticky top-0 z-30 flex items-center gap-3 bg-dm-blue-deep px-4 py-3 lg:hidden">
+          <button
+            onClick={() => setMobileOpen(true)}
+            aria-label="Abrir menu"
+            className="rounded-lg p-2 text-white/80 hover:bg-white/10"
+          >
+            <Menu size={20} />
+          </button>
+          <img
+            src="/img/site/logo-white.png"
+            alt="Demakine"
+            className="h-7 w-auto object-contain"
+          />
+          <span className="ml-auto truncate text-[11px] font-bold uppercase tracking-wide text-white/60">
+            {ROLE_LABEL[user.role] ?? user.role}
+          </span>
+        </div>
 
-        <div className="mt-8 overflow-x-auto rounded-2xl bg-white shadow-sm">
-          {leadsQuery.isLoading ? (
-            <p className="p-8 text-center text-sm text-[#111318]/60">Carregando...</p>
-          ) : leads.length === 0 ? (
-            <p className="p-8 text-center text-sm text-[#111318]/60">Nenhum lead recebido ainda.</p>
-          ) : (
-            <table className="w-full min-w-[1100px] text-left text-sm">
-              <thead className="bg-[#F4F6FA] text-xs font-bold uppercase tracking-wide text-[#111318]/60">
-                <tr>
-                  <th className="px-5 py-3">Nome</th>
-                  <th className="px-5 py-3">Empresa</th>
-                  <th className="px-5 py-3">Telefone</th>
-                  <th className="px-5 py-3">E-mail</th>
-                  <th className="px-5 py-3">Cidade</th>
-                  <th className="px-5 py-3">Interesse</th>
-                  <th className="px-5 py-3">Origem</th>
-                  <th className="px-5 py-3">Mensagem</th>
-                  <th className="px-5 py-3">Data</th>
-                  <th className="px-5 py-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {leads.map((lead) => (
-                  <tr key={lead.id} className="border-t border-black/5">
-                    <td className="px-5 py-4 font-semibold text-[#111318]">{lead.name}</td>
-                    <td className="px-5 py-4 text-[#111318]/70">{lead.company || "—"}</td>
-                    <td className="px-5 py-4 text-[#111318]/70">{lead.phone}</td>
-                    <td className="px-5 py-4 text-[#111318]/70">{lead.email || "—"}</td>
-                    <td className="px-5 py-4 text-[#111318]/70">{lead.city || "—"}</td>
-                    <td className="px-5 py-4 text-[#111318]/70">{lead.product || "—"}</td>
-                    <td className="px-5 py-4 text-[11px] uppercase tracking-wide text-[#103D94]">{lead.source || "site"}</td>
-                    <td className="max-w-xs truncate px-5 py-4 text-[#111318]/70">{lead.message || "—"}</td>
-                    <td className="px-5 py-4 text-[#111318]/60">
-                      {new Date(lead.createdAt).toLocaleString("pt-BR")}
-                    </td>
-                    <td className="px-5 py-4">
-                      <a
-                        href={whatsappHref(lead.phone, lead.name)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="rounded-full bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white"
-                      >
-                        WhatsApp
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="mx-auto max-w-[1360px] px-5 py-8 lg:px-10 lg:py-10">
+          {user.mustChangePassword && current !== "conta" && (
+            <div className="mb-6 rounded-xl bg-dm-red/10 px-5 py-4 text-[13.5px] font-semibold text-dm-red">
+              Sua senha é provisória. Vá em Minha conta e defina uma senha sua.
+            </div>
           )}
+
+          {current === "overview" && <AdminOverview user={user} onGo={go} />}
+          {current === "leads" && <AdminLeads />}
+          {current === "cases" && <CasesPending />}
+          {current === "usuarios" && <AdminUsers me={user} />}
+          {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
+          {item?.soon && <Soon label={item.label} />}
         </div>
       </main>
     </div>
@@ -168,26 +266,46 @@ function LeadsTable() {
 }
 
 function Admin() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   const meQuery = useQuery({
     queryKey: ["admin-me"],
     queryFn: async () => {
       const res = await api.admin.me.$get();
-      if (!res.ok) return { authenticated: false };
+      if (!res.ok) return { user: null };
       return res.json();
     },
   });
 
+  useEffect(() => {
+    document.title = "Painel Demakine";
+  }, []);
+
   if (meQuery.isLoading) {
-    return <div className="flex min-h-screen items-center justify-center bg-[#0A1F3D] text-white">Carregando...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-dm-blue-deep text-[14px] text-white/80">
+        Carregando painel...
+      </div>
+    );
   }
 
-  if (!meQuery.data?.authenticated) {
-    return <LoginForm onSuccess={() => queryClient.invalidateQueries({ queryKey: ["admin-me"] })} />;
+  const user = meQuery.data?.user as PanelUser | null | undefined;
+
+  if (!user) {
+    return <AdminLogin onSuccess={() => qc.invalidateQueries({ queryKey: ["admin-me"] })} />;
   }
 
-  return <LeadsTable />;
+  return (
+    <Panel
+      user={user}
+      onSignOut={async () => {
+        await authClient.signOut();
+        clearAuthToken();
+        qc.clear();
+        qc.invalidateQueries({ queryKey: ["admin-me"] });
+      }}
+    />
+  );
 }
 
 export default Admin;

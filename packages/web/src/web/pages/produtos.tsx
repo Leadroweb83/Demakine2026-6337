@@ -36,7 +36,7 @@ export default function Produtos() {
   return (
     <>
       <Seo
-        title="Catálogo de Equipamentos — Demakine"
+        title="Catálogo de Equipamentos | Demakine"
         description="21 equipamentos agroindustriais: esteiras transportadoras, roscas, elevadores de canecas e de sacaria, máquinas de costurar sacos e peneiras. Especificações, modelos e capacidades."
         path="/produtos"
       />

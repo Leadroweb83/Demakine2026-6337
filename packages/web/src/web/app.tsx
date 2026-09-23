@@ -2,7 +2,8 @@ import { Route, Switch } from "wouter";
 import { Provider } from "./components/provider";
 import { CompareProvider } from "./components/compare";
 import { ScrollProgress, StickyCta } from "./components/sticky-cta";
-import { AgentFeedback, RunableBadge } from "@runablehq/website-runtime";
+import { AgentFeedback } from "@runablehq/website-runtime";
+import { CookieConsent } from "./components/cookie-consent";
 import { Shell } from "./components/layout/shell";
 import { BtnPrimary, Section } from "./components/kit";
 import Home from "./pages/index";
@@ -15,10 +16,18 @@ import AssistenciaTecnica from "./pages/assistencia-tecnica";
 import Blog from "./pages/blog";
 import Post from "./pages/post";
 import Downloads from "./pages/downloads";
+import Faq from "./pages/faq";
 import Ferramentas from "./pages/ferramentas";
+import Agro from "./pages/agro";
+import Segmento from "./pages/segmento";
+import Cases from "./pages/cases";
+import CaseStudyPage from "./pages/case";
 import Contato from "./pages/contato";
 import TrabalheConosco from "./pages/trabalhe-conosco";
 import Admin from "./pages/admin";
+import Loja from "./pages/loja";
+import ExportLanding from "./pages/export";
+import { PoliticaDePrivacidade, TermosDeUso } from "./pages/legal";
 
 function NotFound() {
   return (
@@ -53,9 +62,16 @@ function Site() {
         <Route path="/blog" component={Blog} />
         <Route path="/blog/:slug" component={Post} />
         <Route path="/downloads" component={Downloads} />
+        <Route path="/faq" component={Faq} />
         <Route path="/ferramentas" component={Ferramentas} />
+        <Route path="/agro" component={Agro} />
+        <Route path="/segmentos/:slug" component={Segmento} />
+        <Route path="/cases" component={Cases} />
+        <Route path="/cases/:slug" component={CaseStudyPage} />
         <Route path="/contato" component={Contato} />
         <Route path="/trabalhe-conosco" component={TrabalheConosco} />
+        <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
+        <Route path="/termos-de-uso" component={TermosDeUso} />
         <Route component={NotFound} />
       </Switch>
     </Shell>
@@ -69,14 +85,16 @@ function App() {
         <ScrollProgress />
         <Switch>
           <Route path="/admin" component={Admin} />
+          <Route path="/loja" component={Loja} />
+          <Route path="/export" component={ExportLanding} />
           <Route component={Site} />
         </Switch>
         <StickyCta />
       </CompareProvider>
-      {/* Do not remove — off by default, activated by parent iframe via postMessage */}
+      {/* Do not remove, off by default, activated by parent iframe via postMessage */}
+      <CookieConsent />
       {import.meta.env.DEV && <AgentFeedback />}
       {/* "Made with Runable" badge - if user asks to remove the runable badge, remove this code as well as comment */}
-      {<RunableBadge />}
     </Provider>
   );
 }

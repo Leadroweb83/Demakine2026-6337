@@ -171,13 +171,15 @@ export function CineShot({
   const { ref, inView } = useInView<HTMLDivElement>(0.2);
   return (
     <div ref={ref} className={cn(float && "cine-float", className)}>
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        className="cine-shot w-full object-contain"
-        style={{ animationPlayState: inView ? "running" : "paused" }}
-      />
+      <div className="overflow-hidden rounded-3xl">
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className="cine-shot w-full rounded-3xl object-contain"
+          style={{ animationPlayState: inView ? "running" : "paused" }}
+        />
+      </div>
     </div>
   );
 }
@@ -188,11 +190,27 @@ export function CineStat({
   value,
   label,
   className,
+  boxed = false,
 }: {
   value: ReactNode;
   label: string;
   className?: string;
+  /** Bloco com borda, fundo e hover (usado nas fichas de especificação). */
+  boxed?: boolean;
 }) {
+  if (boxed) {
+    return (
+      <div className={cn("cine-stat-box cine-stat-box--center", className)}>
+        <span className="cine-stat-bar" aria-hidden="true" />
+        <p className="cine-kicker text-balance text-[26px] leading-[1.03] text-white sm:text-[30px] md:text-[34px]">
+          {value}
+        </p>
+        <p className="text-[10px] font-semibold uppercase leading-snug tracking-[0.07em] text-white/55 sm:text-[11.5px] sm:tracking-[0.14em]">
+          {label}
+        </p>
+      </div>
+    );
+  }
   return (
     <div className={className}>
       <p className="cine-kicker text-3xl text-white md:text-4xl">{value}</p>

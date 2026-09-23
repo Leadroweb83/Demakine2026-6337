@@ -21,7 +21,7 @@ export default function Clientes() {
   return (
     <>
       <Seo
-        title="Nossos Clientes e Depoimentos — Demakine"
+        title="Nossos Clientes e Depoimentos | Demakine"
         description="Indústrias de todos os portes e segmentos em todo o Brasil movimentam sua produção com equipamentos Demakine. Veja clientes e 29 depoimentos reais."
         path="/clientes"
       />

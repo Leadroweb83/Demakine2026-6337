@@ -2,7 +2,7 @@ import { Cog, MapPin, PhoneCall, Timer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnGhost, BtnPrimary, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
+import { BtnGhost, BtnPrimary, BtnWhats, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
 import { departments, site, waLink } from "@/lib/site";
 
 const services = [
@@ -41,7 +41,7 @@ export default function AssistenciaTecnica() {
   return (
     <>
       <Seo
-        title="Assistência Técnica e SAC — Demakine"
+        title="Assistência Técnica e SAC | Demakine"
         description="Assistência técnica especializada, peças de reposição e parcerias técnicas em todo o Brasil para equipamentos Demakine. Suporte do projeto ao pós-venda."
         path="/assistencia-tecnica"
       />
@@ -86,14 +86,13 @@ export default function AssistenciaTecnica() {
                 {support.email}
               </a>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <BtnPrimary
+                <BtnWhats
                   href={waLink("Olá! Preciso de assistência técnica para um equipamento Demakine.")}
-                  external
                   className="gap-2"
                 >
                   <PhoneCall className="h-4 w-4" />
                   Abrir atendimento
-                </BtnPrimary>
+                </BtnWhats>
                 <BtnGhost to="/downloads">Manuais e downloads</BtnGhost>
               </div>
             </div>
@@ -147,6 +146,9 @@ export default function AssistenciaTecnica() {
               buttonLabel="Abrir chamado"
               title="Solicitar assistência técnica"
               subtitle="Descreva o equipamento e o problema. Nosso SAC responde em até 1 dia útil."
+              photos
+              photoLabel="Foto da peça, da máquina ou da placa de identificação"
+              photoHint="A foto acelera o atendimento: com ela o técnico já identifica o modelo. Até 3 fotos, 10MB cada."
             />
           </Reveal>
         </div>

@@ -98,6 +98,31 @@ export function BtnPrimary({
   );
 }
 
+/** Botão de WhatsApp: sempre verde, em todo o site. */
+export function BtnWhats({
+  href,
+  children,
+  className,
+}: {
+  href?: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white shadow-[0_12px_30px_rgba(23,134,79,0.24)] transition-colors hover:bg-dm-green-dark",
+        className,
+      )}
+    >
+      {children}
+    </a>
+  );
+}
+
 export function BtnGhost({
   href,
   to,
@@ -259,8 +284,8 @@ export function ProductCard({
 export function ClientsMarquee({ tone = "white" }: { tone?: "white" | "surface" }) {
   const row = [...clients, ...clients];
   return (
-    <div className={cn("marquee-wrap overflow-hidden py-10", tone === "surface" ? "bg-dm-surface" : "bg-white")}>
-      <div className="marquee-track items-center gap-12 px-6">
+    <div className={cn("marquee-wrap overflow-hidden py-12 md:py-14", tone === "surface" ? "bg-dm-surface" : "bg-white")}>
+      <div className="marquee-track items-center gap-14 px-6 md:gap-16">
         {row.map((c, idx) => (
           <img
             key={`${c.id}-${idx}`}
@@ -268,7 +293,7 @@ export function ClientsMarquee({ tone = "white" }: { tone?: "white" | "surface" 
             alt={c.name}
             loading="lazy"
             title={c.name}
-            className="h-12 w-auto shrink-0 opacity-55 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 md:h-14"
+            className="h-[68px] w-auto shrink-0 opacity-70 grayscale transition-all duration-300 hover:scale-105 hover:opacity-100 hover:grayscale-0 md:h-[92px]"
           />
         ))}
       </div>
@@ -312,7 +337,7 @@ export function TestimonialGrid({ limit = 6, start = 0 }: { limit?: number; star
 
 export function CtaBand({
   title = "Precisa de um equipamento sob medida?",
-  text = "Envie as informações da sua operação — material, comprimento, altura e capacidade. Nossa engenharia monta a solução ideal e você recebe o orçamento em até 1 dia útil.",
+  text = "Envie as informações da sua operação: material, comprimento, altura e capacidade. Nossa engenharia monta a solução ideal e você recebe o orçamento em até 1 dia útil.",
   waMessage = "Olá! Quero um orçamento de equipamento Demakine.",
 }: {
   title?: string;
@@ -327,9 +352,9 @@ export function CtaBand({
           <h2 className="h2 text-white">{title}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-[17px] leading-relaxed text-white/65">{text}</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <BtnPrimary href={waLink(waMessage)} external>
+            <BtnWhats href={waLink(waMessage)}>
               Falar no WhatsApp
-            </BtnPrimary>
+            </BtnWhats>
             <BtnGhost dark to="/contato">
               Enviar especificação
             </BtnGhost>

@@ -1,0 +1,16 @@
+{
+  "name": "Demakine Equipamentos Agroindustriais",
+  "short_name": "Demakine",
+  "description": "Esteiras transportadoras, roscas, elevadores e máquinas de costurar sacos fabricados sob medida em Limeira/SP.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#103D94",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

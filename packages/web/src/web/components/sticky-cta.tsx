@@ -47,7 +47,7 @@ export function StickyCta() {
   }, []);
 
   // não empilha com a barra do comparador nem com a própria página de contato
-  if (!show || slugs.length > 0 || location === "/contato" || location === "/admin") return null;
+  if (!show || slugs.length > 0 || location === "/contato" || location === "/admin" || location === "/loja") return null;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-dm-line bg-white/95 px-3 pb-14 pt-2.5 backdrop-blur md:hidden">
@@ -66,9 +66,9 @@ export function StickyCta() {
           href={waLink("Olá! Vim pelo site da Demakine e quero falar com um especialista.")}
           target="_blank"
           rel="noreferrer"
-          className="flex flex-1 items-center justify-center gap-2 rounded-full border border-dm-line px-4 py-3 text-[12.5px] font-bold uppercase tracking-wide text-dm-ink"
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-dm-green px-4 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white"
         >
-          <MessageCircle className="h-4 w-4 text-[#25D366]" />
+          <MessageCircle className="h-4 w-4" />
           WhatsApp
         </a>
       </div>

@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
+import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,12 @@ type LeadFormProps = {
   successExtra?: ReactNode;
   /** Texto alternativo do painel de sucesso. */
   successTitle?: string;
+  /** Habilita o anexo de foto da peca/maquina (ate 3 imagens). */
+  photos?: boolean;
+  /** Rotulo do bloco de foto, quando habilitado. */
+  photoLabel?: string;
+  /** Ajuda do bloco de foto, quando habilitado. */
+  photoHint?: string;
 };
 
 const inputBase =
@@ -35,6 +42,9 @@ export function LeadForm({
   onSuccess,
   successExtra,
   successTitle,
+  photos = false,
+  photoLabel,
+  photoHint,
 }: LeadFormProps) {
   const dark = variant === "dark";
   const [form, setForm] = useState({
@@ -46,11 +56,12 @@ export function LeadForm({
     message: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [shots, setShots] = useState<UploadedPhoto[]>([]);
 
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product, source },
+        json: { ...form, product, source, attachments: shots.map((s) => s.key) },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
@@ -88,7 +99,7 @@ export function LeadForm({
           )}
           target="_blank"
           rel="noreferrer"
-          className="mt-5 inline-block rounded-full bg-[#25D366] px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
+          className="mt-5 inline-block rounded-full bg-dm-green px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
         >
           Falar no WhatsApp
         </a>
@@ -198,7 +209,7 @@ export function LeadForm({
           rows={compact ? 2 : 4}
           placeholder={
             product
-              ? `Conte o que precisa (material transportado, comprimento, altura, capacidade) — ${product}`
+              ? `Conte o que precisa (material transportado, comprimento, altura, capacidade) para ${product}`
               : "Conte o que precisa: material transportado, comprimento, altura e capacidade"
           }
           aria-label="Mensagem"
@@ -212,12 +223,29 @@ export function LeadForm({
         />
       </div>
 
+      {photos && (
+        <div
+          className={cn(
+            "mt-4 rounded-xl border p-4",
+            dark ? "border-white/12 bg-white/[0.03]" : "border-dm-line bg-dm-surface",
+          )}
+        >
+          <PhotoUpload
+            value={shots}
+            onChange={setShots}
+            dark={dark}
+            {...(photoLabel ? { label: photoLabel } : {})}
+            {...(photoHint ? { hint: photoHint } : {})}
+          />
+        </div>
+      )}
+
       {error && <p className="mt-3 text-sm font-medium text-dm-red">{error}</p>}
 
       <button
         type="submit"
         disabled={send.isPending}
-        className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-dm-red px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017] disabled:opacity-60"
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-dm-green px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white shadow-[0_12px_30px_rgba(23,134,79,0.28)] transition-colors hover:bg-dm-green-dark disabled:opacity-60"
       >
         {send.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
         {send.isPending ? "Enviando..." : buttonLabel}

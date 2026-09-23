@@ -205,11 +205,11 @@ function CompareModal({ onClose }: { onClose: () => void }) {
       },
       {
         label: "Aplicações",
-        values: list.map((p) => p.applications?.slice(0, 3).join(", ") || "—"),
+        values: list.map((p) => p.applications?.slice(0, 3).join(", ") || "-"),
       },
       {
         label: "Destaques",
-        values: list.map((p) => p.features?.slice(0, 2).join(" · ") || "—"),
+        values: list.map((p) => p.features?.slice(0, 2).join(" · ") || "-"),
       },
     ];
 
@@ -222,7 +222,7 @@ function CompareModal({ onClose }: { onClose: () => void }) {
     for (const k of specKeys) {
       base.push({
         label: `${k} (1º modelo)`,
-        values: list.map((p) => p.models?.[0]?.specs?.[k] ?? "—"),
+        values: list.map((p) => p.models?.[0]?.specs?.[k] ?? "-"),
       });
     }
     return base;
@@ -316,7 +316,7 @@ function CompareModal({ onClose }: { onClose: () => void }) {
             )}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white hover:bg-[#c31017]"
+            className="inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white hover:bg-dm-green-dark"
           >
             Tirar dúvida no WhatsApp
           </a>

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, Phone, Search, X } from "lucide-react";
+import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { nav, site, waLink } from "@/lib/site";
-import { searchProducts } from "@/lib/content";
+import { categories, searchProducts } from "@/lib/content";
+import { ProductsMega } from "@/components/layout/mega-menu";
 import { cn } from "@/lib/utils";
 
 function SearchBox({ onDone }: { onDone?: () => void }) {
@@ -71,6 +72,17 @@ export function Header() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mega, setMega] = useState(false);
+  const closeTimer = useRef<number | null>(null);
+
+  const openMega = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    setMega(true);
+  };
+  const scheduleClose = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setMega(false), 150);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -81,7 +93,16 @@ export function Header() {
 
   useEffect(() => {
     setOpen(false);
+    setMega(false);
   }, [location]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMega(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -117,17 +138,47 @@ export function Header() {
         )}
       >
         <div className="dm-container flex h-[68px] items-center gap-6">
-          <Link href="/" className="shrink-0" aria-label="Demakine — página inicial">
+          <Link href="/" className="shrink-0" aria-label="Demakine, página inicial">
             <img
               src="/img/site/logo-blue.png"
               alt="Demakine Equipamentos Agroindustriais"
-              className="h-11 w-auto object-contain md:h-12"
+              className="h-8 w-auto object-contain md:h-9"
             />
           </Link>
 
           <nav className="ml-auto hidden items-center gap-1 xl:flex">
             {nav.slice(1).map((item) => {
               const active = location === item.to || location.startsWith(`${item.to}/`);
+              if (item.to === "/produtos") {
+                return (
+                  <div
+                    key={item.to}
+                    onMouseEnter={openMega}
+                    onMouseLeave={scheduleClose}
+                    className="relative"
+                  >
+                    <Link
+                      href={item.to}
+                      onFocus={openMega}
+                      aria-expanded={mega}
+                      className={cn(
+                        "flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold transition-colors",
+                        active || mega
+                          ? "bg-dm-blue-soft text-dm-blue"
+                          : "text-dm-ink/75 hover:text-dm-blue",
+                      )}
+                    >
+                      {item.label}
+                      <ChevronDown
+                        className={cn(
+                          "h-3.5 w-3.5 transition-transform duration-300",
+                          mega && "rotate-180",
+                        )}
+                      />
+                    </Link>
+                  </div>
+                );
+              }
               return (
                 <Link
                   key={item.to}
@@ -151,7 +202,7 @@ export function Header() {
             href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
             target="_blank"
             rel="noreferrer"
-            className="hidden shrink-0 lg:ml-auto rounded-full bg-dm-red px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017] lg:block"
+            className="hidden shrink-0 lg:ml-auto rounded-full bg-dm-green px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark lg:block"
           >
             Pedir orçamento
           </a>
@@ -167,6 +218,16 @@ export function Header() {
           </button>
         </div>
 
+        {mega && (
+          <div
+            onMouseEnter={openMega}
+            onMouseLeave={scheduleClose}
+            className="absolute left-0 right-0 top-full hidden xl:block"
+          >
+            <ProductsMega onNavigate={() => setMega(false)} />
+          </div>
+        )}
+
         {open && (
           <div className="border-t border-dm-line bg-white xl:hidden">
             <div className="dm-container max-h-[calc(100dvh-120px)] overflow-y-auto py-5">
@@ -175,16 +236,30 @@ export function Header() {
                 {nav.map((item) => {
                   const active = location === item.to;
                   return (
-                    <Link
-                      key={item.to}
-                      href={item.to}
-                      className={cn(
-                        "border-b border-dm-line/70 py-3.5 text-[15px] font-semibold",
-                        active ? "text-dm-blue" : "text-dm-ink",
+                    <div key={item.to} className="border-b border-dm-line/70">
+                      <Link
+                        href={item.to}
+                        className={cn(
+                          "block py-3.5 text-[15px] font-semibold",
+                          active ? "text-dm-blue" : "text-dm-ink",
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                      {item.to === "/produtos" && (
+                        <div className="flex flex-wrap gap-2 pb-4">
+                          {categories.map((c) => (
+                            <Link
+                              key={c.slug}
+                              href={`/produtos?cat=${c.slug}`}
+                              className="rounded-full border border-dm-line bg-dm-surface px-3 py-1.5 text-[13px] font-semibold text-dm-ink/75"
+                            >
+                              {c.short}
+                            </Link>
+                          ))}
+                        </div>
                       )}
-                    >
-                      {item.label}
-                    </Link>
+                    </div>
                   );
                 })}
               </nav>
@@ -193,7 +268,7 @@ export function Header() {
                   href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full bg-dm-red px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
+                  className="rounded-full bg-dm-green px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
                 >
                   Pedir orçamento no WhatsApp
                 </a>

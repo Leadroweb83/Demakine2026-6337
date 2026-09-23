@@ -285,14 +285,14 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
           <Fact
             dark={dark}
             k="Correia"
-            v={families.find((f) => f.key === family)?.belt ?? "—"}
+            v={families.find((f) => f.key === family)?.belt ?? "-"}
           />
         </div>
 
         {cfg.custom && (
           <p className={cn("mt-4 text-[13.5px]", dark ? "text-white/60" : "text-dm-gray")}>
             {cfg.overHeight
-              ? "Nessa inclinação a altura passa do limite do modelo padrão — fabricamos reforçado sob medida."
+              ? "Nessa inclinação a altura passa do limite do modelo padrão, por isso fabricamos reforçado sob medida."
               : `A linha padrão vai até ${num(cfg.maxLen, 0)} m; acima disso fabricamos em módulos ou sob medida.`}
           </p>
         )}
@@ -304,7 +304,7 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
             )}
             target="_blank"
             rel="noreferrer"
-            className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
+            className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
           >
             Orçar esta configuração
           </a>

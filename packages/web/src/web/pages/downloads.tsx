@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, FileText, Images, Lock, Wrench } from "lucide-react";
+import { ClipboardCheck, Download, FileText, Images, Lock, Printer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
@@ -15,6 +15,20 @@ const files = [
     desc: "Catálogo completo de equipamentos com fotos, aplicações e especificações principais.",
     meta: "PDF · 3,5 MB",
     href: "/downloads/catalogo-demakine.pdf",
+  },
+  {
+    Icon: Printer,
+    title: "Checklist de manutenção em 5 minutos por dia",
+    desc: "Rotina diária, semanal e mensal em uma folha para imprimir e pendurar ao lado do equipamento, com folha de registro do que foi feito.",
+    meta: "PDF · 2 páginas",
+    href: "/downloads/checklist-manutencao-demakine.pdf",
+  },
+  {
+    Icon: ClipboardCheck,
+    title: "Guia de correias por aplicação",
+    desc: "Qual correia usar em cada material: lisa, taliscada, perfil em V, PVC sanitária, atóxica, borracha reforçada e modular, com o que evitar em cada caso.",
+    meta: "PDF · 1 página",
+    href: "/downloads/tabela-de-correias-demakine.pdf",
   },
 ];
 
@@ -39,14 +53,19 @@ const onRequest = [
 /** Materiais liberados depois do cadastro (gate leve de lead). */
 const gated = [
   {
+    title: "Checklist antes de comprar uma esteira (PDF)",
+    desc: "27 conferências em 6 blocos, mais os erros que custam caro depois da compra. É a lista que a nossa engenharia percorre antes de fechar projeto.",
+    href: "/downloads/checklist-antes-de-comprar-uma-esteira.pdf",
+  },
+  {
     title: "Catálogo técnico completo (PDF)",
     desc: "Todas as linhas, modelos e tabelas de especificação em um arquivo.",
     href: "/downloads/catalogo-demakine.pdf",
   },
   {
-    title: "Checklist de dimensionamento",
-    desc: "As 12 informações que a engenharia precisa para fechar seu projeto sem retrabalho.",
-    href: "/ferramentas#dimensionar",
+    title: "Calculadora de dimensionamento e de retorno",
+    desc: "Largura de correia, capacidade e inclinação de referência, mais o cálculo de quanto custa movimentar carga na mão hoje.",
+    href: "/ferramentas",
     internal: true,
   },
 ];
@@ -58,21 +77,25 @@ export default function Downloads() {
   return (
     <>
       <Seo
-        title="Downloads — Catálogo e fichas técnicas | Demakine"
-        description="Baixe o catálogo de equipamentos Demakine e solicite fichas técnicas, desenhos dimensionais e manuais de operação dos nossos modelos."
+        title="Central de materiais: catálogo, checklists e guias | Demakine"
+        description="Baixe o catálogo Demakine, o checklist de manutenção para imprimir, o guia de correias por aplicação e o checklist antes de comprar uma esteira transportadora."
         path="/downloads"
       />
 
       <PageHero
-        eyebrow="Downloads"
-        title="Catálogo, fichas técnicas e documentação"
-        text="Material técnico para você comparar modelos, conferir dimensões e apresentar a solução internamente."
+        eyebrow="Central de materiais"
+        title="Catálogo, checklists e guias técnicos"
+        text="Material para você comparar modelos, conferir dimensões, treinar sua equipe na manutenção e apresentar a solução internamente. Download direto, sem enrolação."
         image="/img/site/hero.jpg"
         crumbs={[{ label: "Downloads" }]}
       />
 
       <Section>
-        <SectionHead eyebrow="Download direto" title="Disponível agora" />
+        <SectionHead
+          eyebrow="Download direto"
+          title="Disponível agora, sem cadastro"
+          text="Três materiais que você baixa na hora: o catálogo de equipamentos, o checklist de manutenção para pendurar na fábrica e o guia de correias por aplicação."
+        />
         <div className="mt-10 grid gap-5 md:grid-cols-2">
           {files.map((f, idx) => (
             <Reveal key={f.title} i={idx}>
@@ -110,8 +133,9 @@ export default function Downloads() {
             <p className="eyebrow text-dm-blue">Kit técnico</p>
             <h2 className="h2 mt-3">Kit do comprador industrial</h2>
             <p className="mt-4 text-[16.5px] leading-relaxed text-dm-gray">
-              Catálogo completo mais o checklist de dimensionamento que usamos internamente. Deixe
-              seu contato uma vez e libere o acesso aos dois materiais.
+              O checklist que evita o erro caro na compra da esteira, o catálogo completo e as
+              calculadoras de dimensionamento e de retorno. Deixe seu contato uma vez e libere o
+              acesso aos três materiais.
             </p>
 
             <ul className="mt-7 space-y-3">
@@ -213,7 +237,7 @@ export default function Downloads() {
               href={waLink("Olá! Quero receber a ficha técnica de um equipamento Demakine.")}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-block text-[15px] font-bold text-dm-blue hover:underline"
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-dm-green px-6 py-3 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
             >
               Ou peça direto no WhatsApp →
             </a>

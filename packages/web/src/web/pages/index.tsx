@@ -3,10 +3,16 @@ import {
   ArrowRight,
   BadgeCheck,
   Boxes,
+  Clock,
   Clock3,
   Cog,
   Factory,
   Headphones,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Navigation,
+  Phone,
   Ruler,
   ShieldCheck,
   Truck,
@@ -22,22 +28,26 @@ import {
   CineTag,
   CineTitle,
 } from "@/components/cine";
-import { Rotator } from "@/components/rotator";
+import { HomeHero } from "@/components/hero";
+import { ScrollText } from "@/components/scroll-text";
+import { AgroBand } from "@/components/agro-band";
+import { VideoSection } from "@/components/video-section";
+import { SegmentsCarousel } from "@/components/segments-carousel";
+import { TestimonialsWall } from "@/components/testimonials";
 import { Timeline } from "@/components/timeline";
 import { QuickSelector } from "@/components/tools/quick-selector";
 import { BrazilMap } from "@/components/tools/brazil-map";
-import { CompareSlider } from "@/components/tools/compare-slider";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { LeadForm } from "@/components/lead-form";
 import {
   BtnGhost,
   BtnPrimary,
+  BtnWhats,
   ClientsMarquee,
   ProductCard,
   Section,
   SectionHead,
-  TestimonialGrid,
 } from "@/components/kit";
 import {
   bestSeller,
@@ -102,89 +112,13 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Demakine — Esteiras, Roscas, Elevadores e Máquinas de Costurar Sacos"
+        title="Demakine | Esteiras, Roscas, Elevadores e Máquinas de Costurar Sacos"
         description="Fábrica de esteiras transportadoras, roscas, elevadores, máquinas de costurar sacos e projetos especiais sob medida. +15 anos e 7.000 máquinas entregues em todo o Brasil. Limeira/SP."
         path="/"
         jsonLd={organizationJsonLd}
       />
 
-      {/* ---------------------------------------------------------------- hero */}
-      <CineSection
-        bleed
-        className="pt-14 pb-16 md:pt-20 md:pb-24"
-        media={
-          <video
-            className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.32]"
-            src="/video/hero-loop.mp4"
-            poster="/img/site/hero.jpg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          />
-        }
-      >
-        <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-          <div>
-            <CineTag>{site.legal} · Limeira/SP</CineTag>
-
-            <h1 className="cine-title mt-6 text-white">
-              <span className="cine-line">
-                <span style={{ ["--i" as string]: 0 }}>A indústria</span>
-              </span>
-              <span className="cine-line">
-                <span style={{ ["--i" as string]: 1 }}>em movimento</span>
-              </span>
-              <span className="block text-[0.46em] font-display font-extrabold leading-tight tracking-normal normal-case text-white/85 md:text-[0.4em]">
-                para{" "}
-                <Rotator
-                  words={["grãos", "fertilizantes", "reciclagem", "construção", "alimentos"]}
-                />
-              </span>
-            </h1>
-
-            <CineRule className="mt-6" />
-
-            <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-white/72 md:text-lg">
-              Esteiras transportadoras, roscas, elevadores, máquinas de costurar sacos e projetos
-              especiais fabricados sob medida na nossa fábrica em Limeira/SP. Menos gente carregando
-              no braço, mais produtividade na linha.
-            </p>
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <BtnPrimary to="/contato" className="cine-shine">
-                Solicitar orçamento
-              </BtnPrimary>
-              <BtnGhost dark href="/downloads/catalogo-demakine.pdf" external>
-                Ver catálogo (PDF)
-              </BtnGhost>
-            </div>
-
-            <div className="mt-12 grid max-w-3xl grid-cols-2 gap-x-6 gap-y-8 border-t border-white/15 pt-8 md:grid-cols-4">
-              <CineStat value={<Counter to={site.stats.years} suffix="+" />} label="anos de mercado" />
-              <CineStat value={<Counter to={site.stats.machines} suffix="+" />} label="máquinas entregues" />
-              <CineStat value={<Counter to={site.stats.clients} suffix="+" />} label="clientes atendidos" />
-              <a
-                href={site.mapsUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="transition-opacity hover:opacity-80"
-              >
-                <CineStat value={<Counter to={site.stats.rating} decimals={1} />} label="nota média · ver no Google" />
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <QuickSelector />
-            <p className="mt-3 text-center text-[12.5px] text-white/45">
-              Três escolhas e você já cai na ficha técnica do equipamento indicado.
-            </p>
-          </div>
-        </div>
-      </CineSection>
+      <HomeHero />
 
       {/* ------------------------------------------------------- logos clientes */}
       <div className="border-b border-dm-line bg-white">
@@ -233,12 +167,15 @@ export default function Home() {
         </div>
       </Section>
 
+      {/* -------------------------------------------------------- vídeo + empresa */}
+      <VideoSection />
+
       {/* -------------------------------------------------------- produtos top */}
       <Section tone="surface">
         <SectionHead
           eyebrow="Mais procurados"
           title="Os equipamentos que mais saem da nossa fábrica"
-          text="Modelos com tabela de especificações, capacidade e motorização definidas — e sempre ajustáveis ao seu layout."
+          text="Modelos com tabela de especificações, capacidade e motorização definidas, e sempre ajustáveis ao seu layout."
           action={<BtnGhost to="/produtos">Todos os produtos</BtnGhost>}
         />
 
@@ -261,25 +198,28 @@ export default function Home() {
             </p>
             <CineBullets className="mt-7" items={championBullets} />
 
-            <div className="mt-8 flex flex-wrap items-center gap-6">
-              <CineStat value={`${champion.models.length}`} label="modelos de tabela" />
-              <CineStat value="3 a 12 m" label="comprimento" />
-              <CineStat value="0,75 a 5 cv" label="motorização" />
+            <div className="mt-8 grid max-w-lg grid-cols-3 gap-3">
+              <CineStat boxed value={`${champion.models.length}`} label="modelos de tabela" />
+              <CineStat boxed value="3 a 12 m" label="comprimento" />
+              <CineStat boxed value="0,75 a 5 cv" label="motorização" />
             </div>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <BtnPrimary to={`/produtos/${champion.slug}`} className="cine-shine">
                 Ver ficha técnica
               </BtnPrimary>
-              <BtnGhost dark href={waLink(`Olá! Quero um orçamento da ${champion.name}.`)} external>
+              <BtnWhats href={waLink(`Olá! Quero um orçamento da ${champion.name}.`)} className="cine-shine">
                 Pedir orçamento
-              </BtnGhost>
+              </BtnWhats>
             </div>
           </div>
 
           <CineShot src={champion.images[0]} alt={champion.name} />
         </div>
       </CineSection>
+
+      {/* ------------------------------------------------------------- faixa agro */}
+      <AgroBand />
 
       {/* --------------------------------------------------------- diferenciais */}
       <Section>
@@ -348,42 +288,45 @@ export default function Home() {
 
       {/* ------------------------------------------------------------- segmentos */}
       <Section tone="surface">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-end">
           <Reveal>
             <p className="eyebrow text-dm-blue">Segmentos atendidos</p>
             <h2 className="h2 mt-3">Da lavoura ao centro de distribuição</h2>
-            <p className="mt-4 text-[17px] leading-relaxed text-dm-gray">
-              Grãos, fertilizantes, alimentos, reciclagem, plásticos, papel e celulose, logística e
-              construção. Cada segmento tem uma exigência diferente de correia, higienização e
-              capacidade — e a gente conhece todas elas.
+            <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-dm-gray">
+              Cada segmento tem uma exigência diferente de correia, higienização, inclinação e
+              capacidade. Escolha o seu e veja o equipamento que a nossa engenharia indica.
             </p>
-            <div className="mt-7 flex flex-wrap gap-2">
-              {segments.map((s) => (
-                <span
-                  key={s}
-                  className="rounded-full border border-dm-line bg-white px-4 py-2 text-[13.5px] font-semibold text-dm-ink/80"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-            <div className="mt-8">
-              <BtnGhost to="/clientes">Conhecer nossos clientes</BtnGhost>
-            </div>
           </Reveal>
 
-          <Reveal i={1}>
-            <div className="overflow-hidden rounded-2xl">
-              <img
-                src="/img/site/fabrica.jpg"
-                alt="Fábrica Demakine em Limeira/SP"
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
+          <Reveal i={1} className="min-w-0">
+            <div className="grid grid-cols-2 items-end gap-x-6 gap-y-5 border-t border-dm-line pt-6 lg:flex lg:justify-end lg:gap-10">
+              <div>
+                <p className="font-display text-[2.1rem] font-extrabold leading-none text-dm-blue">
+                  {segments.length}
+                </p>
+                <p className="mt-1.5 text-[12.5px] uppercase tracking-[0.14em] text-dm-gray">
+                  segmentos atendidos
+                </p>
+              </div>
+              <div>
+                <p className="font-display text-[2.1rem] font-extrabold leading-none text-dm-blue">
+                  21
+                </p>
+                <p className="mt-1.5 text-[12.5px] uppercase tracking-[0.14em] text-dm-gray">
+                  linhas de equipamento
+                </p>
+              </div>
             </div>
           </Reveal>
         </div>
+
+        <div className="mt-10">
+          <SegmentsCarousel />
+        </div>
       </Section>
+
+      {/* ------------------------------------------------------- texto cinético */}
+      <ScrollText />
 
       {/* -------------------------------------------------------------- processo */}
       <Section>
@@ -394,29 +337,6 @@ export default function Home() {
         />
         <div className="mt-10">
           <Timeline />
-        </div>
-      </Section>
-
-      {/* ------------------------------------------------------------ comparador */}
-      <Section tone="surface">
-        <SectionHead
-          eyebrow="Duas configurações, dois resultados"
-          title="Correia lisa ou taliscada? Arraste e veja a diferença"
-          text="Duas esteiras inclinadas que fabricamos, lado a lado. É esse tipo de detalhe que definimos junto com você antes de cortar o primeiro perfil."
-        />
-        <div className="mt-10">
-          <CompareSlider
-            left={{
-              image: "/img/projetos/esteira-inclinada-correia-lisa/1.jpg",
-              label: "Correia lisa",
-              caption: "Indicada para caixas, fardos e produtos embalados em inclinação suave. Superfície fácil de higienizar e menos desgaste na emenda.",
-            }}
-            right={{
-              image: "/img/projetos/esteira-inclinada-correia-taliscada/1.jpg",
-              label: "Correia taliscada",
-              caption: "Para inclinação forte e material solto: as taliscas seguram a carga na subida e evitam retorno de grão, sacaria e resíduo.",
-            }}
-          />
         </div>
       </Section>
 
@@ -431,12 +351,6 @@ export default function Home() {
               O mapa mostra os estados onde clientes já publicaram depoimento sobre a Demakine.
               Entregamos em todo o país, com logística acompanhada e assistência técnica própria.
             </p>
-            <Link
-              href="/assistencia-tecnica"
-              className="mt-3 inline-block text-[13.5px] font-bold text-white/70 underline underline-offset-4 hover:text-white"
-            >
-              Como funciona nossa assistência técnica
-            </Link>
 
             <div className="mt-8 space-y-3">
               {[
@@ -447,13 +361,15 @@ export default function Home() {
                 <Reveal key={t.to} i={idx}>
                   <Link
                     href={t.to}
-                    className="cine-shine flex items-center justify-between gap-4 rounded-2xl border border-white/12 bg-white/[0.05] px-5 py-4 transition-colors hover:border-white/35"
+                    className="cine-shine group flex items-center justify-between gap-4 rounded-2xl border border-white/12 bg-white/[0.05] px-5 py-4 transition-colors hover:border-dm-green/70"
                   >
                     <span>
                       <span className="block text-[15.5px] font-bold text-white">{t.title}</span>
                       <span className="mt-1 block text-[13.5px] text-white/60">{t.text}</span>
                     </span>
-                    <ArrowRight className="h-5 w-5 shrink-0 text-[#ff5a60]" />
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-dm-green text-white transition-transform duration-300 group-hover:translate-x-1">
+                      <ArrowRight className="h-4.5 w-4.5" />
+                    </span>
                   </Link>
                 </Reveal>
               ))}
@@ -472,8 +388,8 @@ export default function Home() {
           text="Nota média 4,9. A maior parte dos nossos clientes chega por indicação de outro cliente."
           action={<BtnGhost to="/clientes">Ver todos</BtnGhost>}
         />
-        <div className="mt-12">
-          <TestimonialGrid limit={6} />
+        <div className="mt-2">
+          <TestimonialsWall />
         </div>
       </Section>
 
@@ -528,26 +444,95 @@ export default function Home() {
               de linha. Resposta em até 1 dia útil.
             </p>
 
-            <dl className="mt-9 space-y-5 text-white/70">
-              <div>
-                <dt className="eyebrow text-white/40">Telefone e WhatsApp</dt>
-                <dd className="mt-1 text-[16px]">
-                  <a href={site.phoneHref} className="hover:text-white">{site.phone}</a>
-                  {" · "}
-                  <a href={site.mobileHref} className="hover:text-white">{site.mobile}</a>
-                </dd>
+            <div className="mt-9 grid gap-3 sm:grid-cols-2">
+              <a
+                href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-start gap-3.5 rounded-2xl border border-white/12 bg-white/[0.05] p-4 transition-colors hover:border-dm-green/70"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-dm-green/18 text-[#4ade9a]">
+                  <MessageCircle className="h-5 w-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[11.5px] font-semibold uppercase tracking-[0.14em] text-white/45">
+                    WhatsApp
+                  </span>
+                  <span className="mt-0.5 block text-[16px] font-bold text-white">{site.mobile}</span>
+                </span>
+              </a>
+
+              <a
+                href={site.phoneHref}
+                className="group flex items-start gap-3.5 rounded-2xl border border-white/12 bg-white/[0.05] p-4 transition-colors hover:border-white/35"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white">
+                  <Phone className="h-5 w-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[11.5px] font-semibold uppercase tracking-[0.14em] text-white/45">
+                    Telefone
+                  </span>
+                  <span className="mt-0.5 block text-[16px] font-bold text-white">{site.phone}</span>
+                </span>
+              </a>
+
+              <a
+                href={`mailto:${site.email}`}
+                className="group flex items-start gap-3.5 rounded-2xl border border-white/12 bg-white/[0.05] p-4 transition-colors hover:border-white/35 sm:col-span-2"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white">
+                  <Mail className="h-5 w-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[11.5px] font-semibold uppercase tracking-[0.14em] text-white/45">
+                    E-mail
+                  </span>
+                  <span className="mt-0.5 block truncate text-[16px] font-bold text-white">
+                    {site.email}
+                  </span>
+                </span>
+              </a>
+            </div>
+
+            {/* fábrica + mapa */}
+            <div className="mt-4 overflow-hidden rounded-2xl border border-white/12 bg-white/[0.05]">
+              <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-3.5">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white">
+                    <MapPin className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[11.5px] font-semibold uppercase tracking-[0.14em] text-white/45">
+                      Fábrica
+                    </span>
+                    <span className="mt-0.5 block text-[15.5px] font-semibold leading-snug text-white">
+                      {site.address}
+                    </span>
+                    <span className="mt-1 flex items-center gap-1.5 text-[13px] text-white/55">
+                      <Clock className="h-3.5 w-3.5" />
+                      Seg a Qui 07h30 às 17h30 · Sex 07h30 às 16h30
+                    </span>
+                  </span>
+                </div>
+                <a
+                  href={site.mapsDirections}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-dm-green px-5 py-3 text-[13.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+                >
+                  <Navigation className="h-4 w-4" />
+                  Me leve até lá!
+                </a>
               </div>
-              <div>
-                <dt className="eyebrow text-white/40">E-mail</dt>
-                <dd className="mt-1 text-[16px]">
-                  <a href={`mailto:${site.email}`} className="hover:text-white">{site.email}</a>
-                </dd>
-              </div>
-              <div>
-                <dt className="eyebrow text-white/40">Fábrica</dt>
-                <dd className="mt-1 text-[16px]">{site.address}</dd>
-              </div>
-            </dl>
+              <iframe
+                src={site.mapsEmbed}
+                title="Mapa da fábrica Demakine em Limeira/SP"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[210px] w-full border-0 grayscale-[0.35] contrast-[1.05]"
+              />
+            </div>
           </Reveal>
 
           <Reveal i={1}>

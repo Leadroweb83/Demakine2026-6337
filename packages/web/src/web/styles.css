@@ -9,9 +9,21 @@
   --color-dm-gray: #5c6473;
   --color-dm-line: #e3e6ec;
   --color-dm-surface: #f6f7f9;
+  /* verde de decisão (CTAs de conversão) */
+  --color-dm-green: #17864f;
+  --color-dm-green-dark: #106b3e;
+  --color-dm-green-soft: #e8f5ee;
+
+  /* agro */
+  --color-ag-deep: #0f2c1a;
+  --color-ag-green: #1d5230;
+  --color-ag-leaf: #2f7a3f;
+  --color-ag-gold: #d8a02a;
+  --color-ag-cream: #f5f2e7;
 
   --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 @layer base {
@@ -44,7 +56,7 @@
   h5 {
     font-family: var(--font-display);
     font-weight: 800;
-    line-height: 1.08;
+    line-height: 1.32;
     letter-spacing: -0.02em;
     margin: 0;
     text-wrap: balance;
@@ -178,8 +190,70 @@
   }
   .marquee-track,
   .pulse-ring,
-  .hero-in {
+  .hero-in,
+  .route-line,
+  .dm-hub-pulse,
+  .mega-panel,
+  .spin-hint {
     animation: none;
+  }
+}
+
+/* ---------------------------------------------------- pseudo-360 do produto */
+.spin-hint {
+  animation: spin-hint 2.6s linear infinite;
+}
+@keyframes spin-hint {
+  0%,
+  55% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+/* ------------------------------------------------- rotas de logística (mapa) */
+.route-line {
+  stroke-dasharray: 5 11;
+  animation: route-dash 1.5s linear infinite;
+}
+@keyframes route-dash {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+.dm-hub-pulse {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: hub-pulse 2.6s ease-out infinite;
+}
+.dm-hub-pulse--2 {
+  animation-delay: 1.3s;
+}
+@keyframes hub-pulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(3.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.4);
+  }
+}
+
+/* ------------------------------------------------------------------ mega menu */
+.mega-panel {
+  animation: mega-in 0.22s cubic-bezier(0.16, 0.84, 0.28, 1) both;
+}
+@keyframes mega-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
   }
 }
 
@@ -376,7 +450,7 @@
   font-family: "Anton", var(--font-display), sans-serif;
   font-weight: 400;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 1.18;
   letter-spacing: 0.005em;
   font-size: clamp(2.1rem, 5.2vw, 4.4rem);
   text-shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
@@ -388,6 +462,61 @@
   font-family: "Anton", var(--font-display), sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+/* bloco de número + legenda (fichas de especificação) */
+.cine-stat-box {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 132px;
+  padding: 16px 13px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
+  transition:
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+/* variante centralizada: número grande no centro, legenda embaixo */
+.cine-stat-box--center {
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  min-height: 156px;
+  padding: 24px 16px 18px;
+}
+.cine-stat-box--center .cine-stat-bar {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+}
+.cine-stat-box--center:hover .cine-stat-bar {
+  width: 100%;
+}
+.cine-stat-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 3px;
+  width: 34px;
+  background: var(--color-dm-red, #e4141b);
+  transition: width 0.4s cubic-bezier(0.16, 0.84, 0.28, 1);
+}
+.cine-stat-box:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.38);
+}
+.cine-stat-box:hover .cine-stat-bar {
+  width: 100%;
 }
 
 /* revelação por linha (máscara subindo) */
@@ -413,7 +542,6 @@
 /* bullets do catálogo */
 .cine-bullets {
   list-style: none;
-  margin: 0;
   padding: 0;
 }
 .cine-bullets li {
@@ -637,5 +765,430 @@
   .cine-line > span {
     animation: none;
     transform: none;
+  }
+}
+
+/* ================================================================== *
+ * TEXTO CINÉTICO (Motion scroll)
+ * ================================================================== */
+
+.kinetic-row {
+  font-family: "Anton", var(--font-display), sans-serif;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: 0.004em;
+  font-size: clamp(3.2rem, 11vw, 9.5rem);
+}
+.kinetic-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.38);
+}
+@media (min-width: 768px) {
+  .kinetic-outline {
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.34);
+  }
+}
+
+/* ================================================================== *
+ * HERO — camadas criativas
+ * ================================================================== */
+
+/* marca d'água gigante atrás do conteúdo */
+.hero-mark {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  font-family: "Anton", var(--font-display), sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(6rem, 20vw, 20rem);
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.055);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* corte diagonal vermelho no canto */
+.hero-slash {
+  position: absolute;
+  right: -12%;
+  top: -18%;
+  width: 46%;
+  height: 150%;
+  background: linear-gradient(180deg, rgba(228, 20, 27, 0.5), rgba(228, 20, 27, 0));
+  transform: rotate(14deg);
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ticker do rodapé do hero */
+.ticker {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-run 34s linear infinite;
+}
+@keyframes ticker-run {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ================================================================== *
+ * TEMA AGRO
+ * ================================================================== */
+
+.agro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #0f2c1a;
+  color: #fff;
+}
+.agro-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(120% 90% at 12% 0%, #1d5230 0%, rgba(29, 82, 48, 0) 60%),
+    linear-gradient(160deg, #123420 0%, #0c2416 62%, #0a1f13 100%);
+}
+.agro-beam {
+  position: absolute;
+  left: -8%;
+  top: -30%;
+  width: 52%;
+  height: 170%;
+  z-index: -2;
+  background: linear-gradient(180deg, rgba(216, 160, 42, 0.34), rgba(216, 160, 42, 0));
+  transform: rotate(-15deg);
+  filter: blur(52px);
+  animation: agro-beam 9s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes agro-beam {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* textura de campo: linhas de plantio em perspectiva */
+.agro-field {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 42%;
+  z-index: -2;
+  background-image: repeating-linear-gradient(
+    92deg,
+    rgba(255, 255, 255, 0.055) 0 1px,
+    transparent 1px 46px
+  );
+  mask-image: linear-gradient(180deg, transparent, #000);
+  transform: perspective(340px) rotateX(58deg);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+.agro-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #d8a02a;
+  color: #12331e;
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  transform: skewX(-12deg);
+}
+.agro-tag > span {
+  transform: skewX(12deg);
+}
+.agro-rule {
+  height: 3px;
+  width: 84px;
+  background: #d8a02a;
+  transform-origin: left;
+  animation: cine-rule 0.9s cubic-bezier(0.16, 0.84, 0.28, 1) both;
+}
+.agro-bullets {
+  list-style: none;
+  padding: 0;
+}
+.agro-bullets li {
+  position: relative;
+  padding-left: 1.35rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+.agro-bullets li + li {
+  margin-top: 0.8rem;
+}
+.agro-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #d8a02a;
+  box-shadow: 0 0 0 4px rgba(216, 160, 42, 0.18);
+}
+/* grão caindo (detalhe decorativo) */
+.grain-fall {
+  animation: grain-fall 2.6s ease-in infinite;
+}
+@keyframes grain-fall {
+  0% {
+    transform: translateY(-14px);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(26px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .agro-beam,
+  .grain-fall,
+  .agro-rule {
+    animation: none !important;
+  }
+}
+
+/* carrossel de segmentos */
+.seg-track {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 61, 148, 0.35) transparent;
+  scroll-padding-left: 0;
+}
+.seg-track::-webkit-scrollbar {
+  height: 6px;
+}
+.seg-track::-webkit-scrollbar-track {
+  background: rgba(16, 61, 148, 0.08);
+  border-radius: 999px;
+}
+.seg-track::-webkit-scrollbar-thumb {
+  background: rgba(16, 61, 148, 0.4);
+  border-radius: 999px;
+}
+
+/* loop infinito (InfiniteSlider) */
+.inf-track {
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+@keyframes inf-loop-y {
+  to {
+    transform: translateY(calc(var(--inf-size) * -1));
+  }
+}
+@keyframes inf-loop-x {
+  to {
+    transform: translateX(calc(var(--inf-size) * -1));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inf-track {
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------- assinatura DEMAKINE na base do rodapé */
+.dm-wordmark {
+  position: relative;
+  overflow: hidden;
+  height: 7.4vw;
+  min-height: 44px;
+  max-height: 118px;
+  pointer-events: none;
+  user-select: none;
+}
+.dm-wordmark-text {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  display: block;
+  translate: -50% 0;
+  font-family: "Anton", var(--font-display, sans-serif);
+  font-weight: 400;
+  font-size: 14vw;
+  line-height: 0.78;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: #ffffff;
+  transition: opacity 0.3s linear;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dm-wordmark-text {
+    transform: none !important;
+    opacity: 0.16 !important;
+    transition: none;
+  }
+}
+
+/* ==================================================================
+   LOJA TÉCNICA (/loja) — identidade blueprint
+   Malha técnica, cotas de desenho, códigos em mono, LED de estoque.
+   Cores: só azul, vermelho, verde de decisão, tinta e branco.
+   ================================================================== */
+.shop-mono {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+/* malha de desenho técnico */
+.shop-grid {
+  background-image:
+    linear-gradient(rgba(16, 61, 148, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 61, 148, 0.055) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.shop-grid-dark {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* cota de desenho: linha com serifas nas pontas */
+.shop-dim {
+  position: relative;
+}
+.shop-dim::before,
+.shop-dim::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+.shop-dim-h::before,
+.shop-dim-h::after {
+  top: 50%;
+  width: 1px;
+  height: 11px;
+  translate: 0 -50%;
+}
+.shop-dim-h::before {
+  left: 0;
+}
+.shop-dim-h::after {
+  right: 0;
+}
+.shop-dim-v::before,
+.shop-dim-v::after {
+  left: 50%;
+  height: 1px;
+  width: 11px;
+  translate: -50% 0;
+}
+.shop-dim-v::before {
+  top: 0;
+}
+.shop-dim-v::after {
+  bottom: 0;
+}
+
+/* LED de estoque */
+.shop-led {
+  position: relative;
+  display: inline-flex;
+  height: 7px;
+  width: 7px;
+  border-radius: 999px;
+}
+.shop-led::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  opacity: 0.32;
+}
+.shop-led-on {
+  animation: shop-blink 2.6s ease-in-out infinite;
+}
+@keyframes shop-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.42;
+  }
+}
+
+/* trilho horizontal com snap */
+.shop-rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.shop-rail::-webkit-scrollbar {
+  display: none;
+}
+.shop-rail > * {
+  scroll-snap-align: start;
+}
+
+/* ticker técnico */
+.shop-ticker {
+  display: flex;
+  width: max-content;
+  animation: shop-ticker 38s linear infinite;
+}
+@keyframes shop-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* card com canto chanfrado (chapa cortada) */
+.shop-cut {
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+}
+
+/* varredura de luz no hero */
+.shop-scan {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.09) 50%,
+    transparent 62%
+  );
+  animation: shop-scan 7s ease-in-out infinite;
+}
+@keyframes shop-scan {
+  0% {
+    transform: translateX(-60%);
+  }
+  100% {
+    transform: translateX(60%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-ticker,
+  .shop-led-on,
+  .shop-scan {
+    animation: none;
   }
 }

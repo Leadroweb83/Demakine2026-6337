@@ -121,7 +121,7 @@ export function Quiz({ dark = false }: { dark?: boolean }) {
                 )}
                 target="_blank"
                 rel="noreferrer"
-                className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
+                className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
               >
                 Pedir orçamento
               </a>

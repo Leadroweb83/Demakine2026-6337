@@ -42,7 +42,7 @@ export default function AEmpresa() {
   return (
     <>
       <Seo
-        title="A Empresa — Demakine Equipamentos Agroindustriais"
+        title="A Empresa | Demakine Equipamentos Agroindustriais"
         description="Há mais de 15 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio. Missão, visão, valores e propósito social."
         path="/a-empresa"
         image="/img/site/fabrica.jpg"
