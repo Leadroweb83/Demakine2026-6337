@@ -4,5 +4,8 @@
   "buildCommand": "vite build && bun build src/api/index.ts --outdir server-build --target node --format esm --packages external",
   "outputDirectory": "dist",
   "regions": ["gru1"],
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api?__path=$1" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
 }
