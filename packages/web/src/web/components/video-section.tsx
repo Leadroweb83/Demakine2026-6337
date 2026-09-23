@@ -41,11 +41,11 @@ export function VideoSection() {
         aria-hidden="true"
       />
 
-      <div className="dm-container relative grid items-center gap-10 lg:grid-cols-[1.08fr_1fr] lg:gap-14">
+      <div className="dm-container relative grid items-center gap-10 lg:grid-cols-[1.08fr_1fr] xl:items-stretch lg:gap-14">
         {/* vídeo */}
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-black shadow-[0_36px_80px_rgba(0,0,0,0.5)]">
-            <div className="aspect-video w-full">
+        <Reveal className="xl:h-full">
+          <div className="relative overflow-hidden rounded-3xl xl:h-full border border-white/12 bg-black shadow-[0_36px_80px_rgba(0,0,0,0.5)]">
+            <div className="aspect-video w-full xl:aspect-auto xl:h-full">
               {playing ? (
                 <iframe
                   src={`https://www.youtube-nocookie.com/embed/${YT_ID}?autoplay=1&rel=0&modestbranding=1`}
@@ -89,21 +89,16 @@ export function VideoSection() {
         {/* texto */}
         <Reveal i={1}>
           <p className="eyebrow text-white/45">Quem é a Demakine</p>
-          <h2 className="h2 mt-3 text-white">
+          <h2 className="mt-3 font-display text-[26px] font-extrabold leading-tight text-white md:text-[32px]">
             Mais de 15 anos fabricando o que a indústria precisa mover
           </h2>
-          <p className="mt-5 text-[17px] leading-relaxed text-white/70">
-            Começamos atendendo a indústria e o agronegócio da região de Limeira e hoje temos
-            equipamentos rodando em todo o Brasil: esteiras transportadoras, roscas, elevadores,
-            peneiras e projetos especiais. Cada máquina sai da fábrica testada, com quem projetou
-            acompanhando de perto.
-          </p>
-          <p className="mt-4 text-[17px] leading-relaxed text-white/70">
-            É esse jeito de trabalhar, atendimento técnico de verdade e prazo cumprido, que faz a
-            maior parte dos nossos clientes voltar e indicar a Demakine.
+          <p className="mt-4 text-[15.5px] leading-relaxed text-white/70">
+            Começamos em Limeira e hoje temos esteiras, roscas, elevadores e peneiras rodando em
+            todo o Brasil. Cada máquina sai testada da fábrica, e é esse atendimento técnico com
+            prazo cumprido que faz nossos clientes voltarem e indicarem a Demakine.
           </p>
 
-          <div className="mt-8 grid grid-cols-3 gap-3">
+          <div className="mt-6 grid grid-cols-3 gap-3">
             {[
               { value: <Counter to={site.stats.years} suffix="+" />, label: "anos de mercado" },
               { value: <Counter to={site.stats.machines} suffix="+" />, label: "máquinas entregues" },
@@ -111,9 +106,9 @@ export function VideoSection() {
             ].map((s) => (
               <div
                 key={s.label}
-                className="rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-4 text-center"
+                className="rounded-2xl border border-white/12 bg-white/[0.05] px-3 py-3 text-center"
               >
-                <p className="cine-kicker tabnum text-[26px] leading-none text-white md:text-[30px]">
+                <p className="cine-kicker tabnum text-[24px] leading-none text-white md:text-[26px]">
                   {s.value}
                 </p>
                 <p className="mt-2 text-[11px] font-semibold uppercase leading-snug tracking-[0.1em] text-white/50">
@@ -123,15 +118,15 @@ export function VideoSection() {
             ))}
           </div>
 
-          <ul className="mt-8 space-y-4">
+          <ul className="mt-6 space-y-3">
             {points.map(({ Icon, title, text }) => (
               <li key={title} className="flex items-start gap-3.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white">
-                  <Icon className="h-[18px] w-[18px]" />
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white">
+                  <Icon className="h-4 w-4" />
                 </span>
                 <span>
-                  <span className="block text-[15.5px] font-bold text-white">{title}</span>
-                  <span className="mt-0.5 block text-[14.5px] leading-relaxed text-white/60">
+                  <span className="block text-[14.5px] font-bold text-white">{title}</span>
+                  <span className="mt-0.5 block text-[13.5px] leading-snug text-white/60">
                     {text}
                   </span>
                 </span>
@@ -139,17 +134,17 @@ export function VideoSection() {
             ))}
           </ul>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <Link
               href="/produtos"
-              className="inline-flex items-center gap-2 rounded-full bg-dm-green px-7 py-4 text-[13.5px] font-bold uppercase tracking-wide text-white shadow-[0_16px_36px_rgba(23,134,79,0.32)] transition-colors hover:bg-dm-green-dark"
+              className="inline-flex items-center gap-2 rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white shadow-[0_16px_36px_rgba(23,134,79,0.32)] transition-colors hover:bg-dm-green-dark"
             >
               Conhecer nossos produtos
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/a-empresa"
-              className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-4 text-[13.5px] font-bold uppercase tracking-wide text-white transition-colors hover:border-white/60"
+              className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:border-white/60"
             >
               <Award className="h-4 w-4" />
               Nossa história
