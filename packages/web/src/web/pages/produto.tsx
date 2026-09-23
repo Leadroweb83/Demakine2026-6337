@@ -20,6 +20,8 @@ import { CineBullets, CineRule, CineSection, CineTag, CineTitle } from "@/compon
 import { CompareToggle } from "@/components/compare";
 import { Hotspots } from "@/components/tools/hotspots";
 import { Spin360 } from "@/components/spin-360";
+import { ProductVideos } from "@/components/product-videos";
+import { videosFor } from "@/lib/product-videos";
 import { FaqAccordion } from "@/components/faq";
 import { faqGroups, faqJsonLd } from "@/lib/faq";
 import {
@@ -70,6 +72,7 @@ export default function Produto() {
   const extras = productExtras(product.category);
   const fit = materialFit(product.slug);
   const pageFaq = [...extras.faq, ...faqGroups[0].items.slice(0, 1), ...faqGroups[2].items.slice(0, 1)];
+  const videos = videosFor(product.slug);
 
   return (
     <>
@@ -230,6 +233,9 @@ export default function Produto() {
           )}
         </div>
       </Section>
+
+      {/* ---------------------------------------------------------------- vídeos */}
+      {videos.length > 0 && <ProductVideos productName={product.name} videos={videos} />}
 
       {/* ------------------------------------------------------------- anatomia */}
       {isBelt && (
