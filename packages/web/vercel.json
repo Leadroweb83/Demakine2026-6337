@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "buildCommand": "vite build",
+  "buildCommand": "vite build && bun build src/api/index.ts --outdir server-build --target node --format esm --packages external",
   "outputDirectory": "dist",
   "regions": ["gru1"],
   "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]

@@ -1,4 +1,6 @@
-import app from "../src/api";
+// A API vem empacotada num arquivo só pelo buildCommand do vercel.json: o Node em ESM
+// não resolve os imports sem extensão do código-fonte.
+// @ts-ignore gerado no build
+import app from "../server-build/index.js";
 
-// Vercel Function no padrão fetch: o Hono já expõe app.fetch com as rotas /api/*.
 export default app;
