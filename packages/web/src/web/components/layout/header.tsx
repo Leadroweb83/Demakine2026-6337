@@ -121,7 +121,7 @@ export function Header() {
             <img
               src="/img/site/logo-blue.png"
               alt="Demakine Equipamentos Agroindustriais"
-              className="h-8 w-auto object-contain md:h-9"
+              className="h-11 w-auto object-contain md:h-12"
             />
           </Link>
 

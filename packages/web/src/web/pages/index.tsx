@@ -166,7 +166,14 @@ export default function Home() {
               <CineStat value={<Counter to={site.stats.years} suffix="+" />} label="anos de mercado" />
               <CineStat value={<Counter to={site.stats.machines} suffix="+" />} label="máquinas entregues" />
               <CineStat value={<Counter to={site.stats.clients} suffix="+" />} label="clientes atendidos" />
-              <CineStat value={<Counter to={site.stats.rating} decimals={1} />} label="nota média" />
+              <a
+                href={site.mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-opacity hover:opacity-80"
+              >
+                <CineStat value={<Counter to={site.stats.rating} decimals={1} />} label="nota média · ver no Google" />
+              </a>
             </div>
           </div>
 
@@ -424,6 +431,12 @@ export default function Home() {
               O mapa mostra os estados onde clientes já publicaram depoimento sobre a Demakine.
               Entregamos em todo o país, com logística acompanhada e assistência técnica própria.
             </p>
+            <Link
+              href="/assistencia-tecnica"
+              className="mt-3 inline-block text-[13.5px] font-bold text-white/70 underline underline-offset-4 hover:text-white"
+            >
+              Como funciona nossa assistência técnica
+            </Link>
 
             <div className="mt-8 space-y-3">
               {[
