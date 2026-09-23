@@ -33,6 +33,7 @@ import {
 } from "./charts";
 import { STATUS_META, statusMeta } from "./lead-status";
 import { hasPhone, whatsappHref, type LeadsFilter } from "./leads";
+import { UserAvatar } from "./avatar";
 
 type Go = (id: string, filter?: LeadsFilter) => void;
 
@@ -464,7 +465,11 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
           }}
         >
           <RankList
-            data={data.byOwner.map((o) => ({ label: o.label, value: o.total }))}
+            data={data.byOwner.map((o) => ({
+              label: o.label,
+              value: o.total,
+              icon: <UserAvatar name={o.label} image={o.image} size={22} className="ring-0" />,
+            }))}
             empty={
               <EmptyState
                 icon={<Users size={28} />}

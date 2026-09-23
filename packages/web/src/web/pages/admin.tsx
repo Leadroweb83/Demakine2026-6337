@@ -23,6 +23,7 @@ import { AdminLeads, type LeadsFilter } from "../admin/leads";
 import { AdminUsers } from "../admin/users";
 import { AdminAccount } from "../admin/account";
 import { Badge, Card, PageTitle } from "../admin/ui";
+import { UserAvatar } from "../admin/avatar";
 import { caseStudies } from "@/lib/cases";
 
 type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "livre";
@@ -211,14 +212,19 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
         </div>
 
         <div className="border-t border-white/10 px-4 py-5">
-          {!collapsed && (
-            <>
-              <p className="truncate text-[13px] font-bold text-white">{user.name}</p>
-              <p className="truncate text-[11.5px] text-white/55">{user.email}</p>
-              <p className="mt-1.5 text-[10.5px] font-bold uppercase tracking-wide text-white/50">
-                {ROLE_LABEL[user.role] ?? user.role}
-              </p>
-            </>
+          {collapsed ? (
+            <UserAvatar name={user.name} image={user.image} size={38} className="mx-auto ring-white/20" />
+          ) : (
+            <div className="flex items-center gap-3">
+              <UserAvatar name={user.name} image={user.image} size={40} className="ring-white/20" />
+              <div className="min-w-0">
+                <p className="truncate text-[13px] font-bold text-white">{user.name}</p>
+                <p className="truncate text-[11.5px] text-white/55">{user.email}</p>
+                <p className="mt-1 text-[10.5px] font-bold uppercase tracking-wide text-white/50">
+                  {ROLE_LABEL[user.role] ?? user.role}
+                </p>
+              </div>
+            </div>
           )}
           <button
             onClick={onSignOut}

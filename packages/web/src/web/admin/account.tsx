@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api";
 import { ROLE_LABEL, type PanelUser } from "../lib/auth";
 import { Badge, Btn, Card, Field, PageTitle, inputCls } from "./ui";
+import { AvatarEditor } from "./avatar";
 
 export function AdminAccount({ user, forced = false }: { user: PanelUser; forced?: boolean }) {
   const qc = useQueryClient();
@@ -47,6 +48,15 @@ export function AdminAccount({ user, forced = false }: { user: PanelUser; forced
       />
 
       <Card>
+        <div className="mb-5 border-b border-black/5 pb-5">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-dm-ink/50">Foto</p>
+          <div className="mt-2">
+            <AvatarEditor name={user.name} image={user.image} />
+          </div>
+          <p className="mt-2 text-[12px] text-dm-ink/50">
+            Aparece no menu do painel e nos leads que forem seus. Você pode trocar ou remover quando quiser.
+          </p>
+        </div>
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-wide text-dm-ink/50">Nome</p>

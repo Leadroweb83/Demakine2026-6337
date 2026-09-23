@@ -56,6 +56,7 @@ export type PanelUser = {
   role: string;
   active: boolean;
   mustChangePassword: boolean;
+  image?: string | null;
 };
 
 export function can(role: string | undefined, area: "leads" | "conteudo" | "loja" | "config" | "usuarios") {

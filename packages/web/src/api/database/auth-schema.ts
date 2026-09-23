@@ -19,6 +19,8 @@ export const user = pgTable("user", {
   role: text("role").default("editor"),
   active: boolean("active").default(true),
   mustChangePassword: boolean("must_change_password").default(false),
+  /** JSON com a ordem e os cards escondidos do dashboard, por usuário. */
+  dashboardLayout: text("dashboard_layout"),
 });
 
 export const session = pgTable(

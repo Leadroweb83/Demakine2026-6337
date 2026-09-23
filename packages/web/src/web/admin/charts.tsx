@@ -461,7 +461,7 @@ export function RankList({
   empty,
   valueLabel = (v) => plural(v, "lead", "leads"),
 }: {
-  data: { label: string; value: number; sub?: string }[];
+  data: { label: string; value: number; sub?: string; icon?: ReactNode }[];
   onSelect?: (label: string) => void;
   empty: ReactNode;
   valueLabel?: (v: number) => string;
@@ -474,7 +474,10 @@ export function RankList({
         const body = (
           <>
             <div className="flex items-baseline justify-between gap-3">
-              <span className="truncate text-[13px] font-semibold text-dm-ink">{d.label}</span>
+              <span className="flex min-w-0 items-center gap-2">
+                {d.icon}
+                <span className="truncate text-[13px] font-semibold text-dm-ink">{d.label}</span>
+              </span>
               <span className="shrink-0 text-[12.5px] tabular-nums text-dm-ink/60">
                 <b className="text-dm-ink">{d.value}</b>
                 {d.sub ? <span className="ml-1.5 text-dm-ink/45">{d.sub}</span> : null}

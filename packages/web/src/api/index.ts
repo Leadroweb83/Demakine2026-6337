@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { cors } from "hono/cors"
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3, S3_BUCKET, ALLOWED_IMAGE_TYPES, safeName } from "./lib/s3";
+import { s3, S3_BUCKET, ALLOWED_IMAGE_TYPES, AVATAR_BUCKET, AVATAR_TYPES, avatarPublicUrl, safeName } from "./lib/s3";
 import { db } from "./database";
 import * as schema from "./database/schema";
 import { desc, eq } from "drizzle-orm";
@@ -116,6 +116,7 @@ const app = new Hono<Env>()
           role: (user.role ?? 'editor') as string,
           active: user.active !== false,
           mustChangePassword: user.mustChangePassword === true,
+          image: (user as { image?: string | null }).image ?? null,
         },
       },
       200,
@@ -144,9 +145,10 @@ const app = new Hono<Env>()
     const allRows = await db.select().from(schema.leads);
     const rows = onlyMine ? allRows.filter((r) => r.ownerId === me.id) : allRows;
     const users = await db
-      .select({ id: schema.user.id, name: schema.user.name })
+      .select({ id: schema.user.id, name: schema.user.name, image: schema.user.image })
       .from(schema.user);
     const userName = new Map(users.map((u) => [u.id, u.name]));
+    const imageByName = new Map(users.map((u) => [u.name, u.image]));
 
     const ms = (d: number) => d * 24 * 60 * 60 * 1000;
     const inPeriod = (t: number) => (days > 0 ? t >= now - ms(days) : true);
@@ -315,7 +317,9 @@ const app = new Hono<Env>()
     const byState = countBy(period, (r) => ufOf(r.city));
     const stateUnknown = period.filter((r) => !ufOf(r.city)).length;
 
-    const byOwner = countBy(period, (r) => (r.ownerId ? userName.get(r.ownerId) ?? 'Removido' : null));
+    const byOwner = countBy(period, (r) => (r.ownerId ? userName.get(r.ownerId) ?? 'Removido' : null)).map(
+      (o) => ({ ...o, image: imageByName.get(o.label) ?? null }),
+    );
     const unassigned = period.filter((r) => !r.ownerId).length;
     const isOpen = (r: (typeof rows)[number]) =>
       (r.status ?? 'novo') === 'novo' || r.status === 'em_contato';
@@ -395,6 +399,7 @@ const app = new Hono<Env>()
         active: schema.user.active,
         mustChangePassword: schema.user.mustChangePassword,
         createdAt: schema.user.createdAt,
+        image: schema.user.image,
       })
       .from(schema.user)
       .orderBy(desc(schema.user.createdAt));
@@ -457,6 +462,80 @@ const app = new Hono<Env>()
     } catch (err) {
       return c.json({ error: err instanceof Error ? err.message : 'Falha ao trocar a senha' }, 400);
     }
+  })
+  // ------------------------------------------------- preferências do dashboard
+  .get('/admin/preferences', requireAuth, async (c) => {
+    const [row] = await db
+      .select({ layout: schema.user.dashboardLayout })
+      .from(schema.user)
+      .where(eq(schema.user.id, c.get('user')!.id));
+    let layout: { order: string[]; hidden: string[] } | null = null;
+    try {
+      layout = row?.layout ? JSON.parse(row.layout) : null;
+    } catch {
+      layout = null;
+    }
+    return c.json({ layout }, 200);
+  })
+  .put('/admin/preferences', requireAuth, async (c) => {
+    const body = await c.req.json<{ layout: { order?: unknown; hidden?: unknown } | null }>();
+    const ids = (v: unknown) =>
+      Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string' && /^[a-z0-9-]{1,40}$/.test(x)).slice(0, 60) : [];
+    const layout = body.layout ? { order: ids(body.layout.order), hidden: ids(body.layout.hidden) } : null;
+    await db
+      .update(schema.user)
+      .set({ dashboardLayout: layout ? JSON.stringify(layout) : null })
+      .where(eq(schema.user.id, c.get('user')!.id));
+    return c.json({ layout }, 200);
+  })
+  // ------------------------------------------------------------ foto de perfil
+  .post('/admin/avatar/presign', requireAuth, async (c) => {
+    const me = c.get('user')!;
+    const body = await c.req.json<{ contentType?: string; size?: number; userId?: string }>();
+    const target = body.userId && body.userId !== me.id ? body.userId : me.id;
+    if (target !== me.id && me.role !== 'super_admin') {
+      return c.json({ error: 'Só o super admin troca a foto de outra pessoa' }, 403);
+    }
+    if (!AVATAR_TYPES.includes(body.contentType ?? '')) {
+      return c.json({ error: 'Envie a foto em WEBP, JPG ou PNG' }, 400);
+    }
+    if (typeof body.size === 'number' && body.size > 2 * 1024 * 1024) {
+      return c.json({ error: 'A foto pode ter no máximo 2 MB' }, 400);
+    }
+    const ext = body.contentType === 'image/png' ? 'png' : body.contentType === 'image/jpeg' ? 'jpg' : 'webp';
+    const key = `${target}/${crypto.randomUUID()}.${ext}`;
+    const url = await getSignedUrl(
+      s3,
+      new PutObjectCommand({ Bucket: AVATAR_BUCKET, Key: key, ContentType: body.contentType }),
+      { expiresIn: 300 },
+    );
+    return c.json({ url, key }, 200);
+  })
+  .post('/admin/avatar', requireAuth, async (c) => {
+    const me = c.get('user')!;
+    const body = await c.req.json<{ key?: string | null; userId?: string }>();
+    const target = body.userId && body.userId !== me.id ? body.userId : me.id;
+    if (target !== me.id && me.role !== 'super_admin') {
+      return c.json({ error: 'Só o super admin troca a foto de outra pessoa' }, 403);
+    }
+    const key = body.key ?? null;
+    if (key !== null && !new RegExp(`^${target}/[0-9a-f-]{36}\\.(webp|jpg|png)$`).test(key)) {
+      return c.json({ error: 'Arquivo de foto inválido' }, 400);
+    }
+    const [current] = await db
+      .select({ image: schema.user.image })
+      .from(schema.user)
+      .where(eq(schema.user.id, target));
+    const image = key ? avatarPublicUrl(key) : null;
+    await db.update(schema.user).set({ image }).where(eq(schema.user.id, target));
+    // apaga a foto anterior para não acumular arquivo órfão no bucket
+    const prefix = avatarPublicUrl('');
+    if (current?.image && current.image !== image && current.image.startsWith(prefix)) {
+      await s3
+        .send(new DeleteObjectCommand({ Bucket: AVATAR_BUCKET, Key: current.image.slice(prefix.length) }))
+        .catch(() => undefined);
+    }
+    return c.json({ image }, 200);
   });
 
 export type AppType = typeof app;

@@ -12,6 +12,18 @@ export const s3 = new S3Client({
 
 export const S3_BUCKET = process.env.S3_BUCKET!;
 
+/** Fotos de perfil da equipe (bucket público, nome de arquivo aleatório). */
+export const AVATAR_BUCKET = "avatars";
+export const AVATAR_TYPES = ["image/webp", "image/jpeg", "image/png"];
+
+export function avatarPublicUrl(key: string) {
+  const base = (process.env.S3_ENDPOINT ?? "").replace(
+    ".storage.supabase.co/storage/v1/s3",
+    ".supabase.co/storage/v1/object/public",
+  );
+  return `${base}/${AVATAR_BUCKET}/${key}`;
+}
+
 /** Só imagem, para o upload de foto de peça. */
 export const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",
