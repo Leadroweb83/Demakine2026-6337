@@ -3,7 +3,6 @@ import { Link, useParams } from "wouter";
 import {
   AlertTriangle,
   Check,
-  ClipboardCheck,
   HelpCircle,
   MessageCircle,
   Minus,
@@ -25,6 +24,7 @@ import { videosFor } from "@/lib/product-videos";
 import { ProductProcess } from "@/components/product-process";
 import { processFor } from "@/lib/product-process";
 import { maintenanceFor } from "@/lib/product-maintenance";
+import { ProductChecklist } from "@/components/product-checklist";
 import { FaqAccordion } from "@/components/faq";
 import { faqGroups, faqJsonLd } from "@/lib/faq";
 import {
@@ -53,6 +53,13 @@ function NotFound() {
   );
 }
 
+/** Consumível e máquinas de terceiros: a manutenção segue o manual do fabricante. */
+const NO_CHECKLIST = [
+  "linha-fio-para-costura-de-sacaria",
+  "maquina-de-costurar-sacos-gk-26",
+  "maquina-de-costurar-sacos-siruba-aa-6",
+];
+
 export default function Produto() {
   const { slug } = useParams<{ slug: string }>();
   const product = getProduct(slug ?? "");
@@ -80,6 +87,7 @@ export default function Produto() {
   const videos = videosFor(product.slug);
   const process = processFor(product.slug);
   const maintenance = maintenanceFor(product.slug);
+  const showChecklist = !NO_CHECKLIST.includes(product.slug);
 
   return (
     <>
@@ -506,79 +514,57 @@ export default function Produto() {
         </Reveal>
       </Section>
 
-      {/* -------------------------------------------------- manutenção em 5 minutos */}
-      <Section>
-        <Reveal>
-          <p className="eyebrow text-dm-blue">Manutenção</p>
-          <h2 className="h2 mt-3">
-            {maintenance ? `Manutenção ${art.da} ${product.name}` : "Manutenção em 5 minutos por dia"}
-          </h2>
-          <p className="mt-4 max-w-2xl text-[16.5px] leading-relaxed text-dm-gray">
-            {maintenance
-              ? maintenance.intro
-              : "A maior parte das paradas que atendemos poderia ter sido vista antes, em uma volta rápida na máquina. Esse é o roteiro que recomendamos para a sua equipe."}
-          </p>
-        </Reveal>
+      {/* ---------------------------------------------------- checklist de manutenção */}
+      {showChecklist && (
+        <Section>
+          <Reveal>
+            <p className="eyebrow text-dm-blue">Checklist de manutenção</p>
+            <h2 className="h2 mt-3">
+              Checklist {art.da} {product.name}
+            </h2>
+            <p className="mt-4 max-w-2xl text-[16.5px] leading-relaxed text-dm-gray">
+              {maintenance
+                ? maintenance.intro
+                : "A maior parte das paradas que atendemos poderia ter sido vista antes, em uma volta rápida na máquina. Esse é o roteiro que recomendamos para a sua equipe."}
+            </p>
+          </Reveal>
 
-        <div
-          className={cn(
-            "mt-8 grid gap-5",
-            (maintenance?.plan ?? maintenancePlan).length === 2 ? "md:grid-cols-2" : "md:grid-cols-3",
-          )}
-        >
-          {(maintenance?.plan ?? maintenancePlan).map((plan, idx) => (
-            <Reveal key={plan.period} i={idx} className="h-full">
-              <div className="h-full rounded-2xl border border-dm-line bg-white p-6">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-dm-blue-soft text-dm-blue">
-                  <ClipboardCheck className="h-5 w-5" />
-                </span>
-                <h3 className="mt-4 text-[17px] font-bold text-dm-ink">{plan.period}</h3>
-                <ul className="mt-4 space-y-2.5">
-                  {plan.items.map((t) => (
+          <ProductChecklist groups={maintenance?.plan ?? maintenancePlan} />
+
+          {maintenance && (
+            <Reveal className="mt-5">
+              <div className="rounded-2xl border border-dm-red/20 bg-dm-red/[0.04] p-6">
+                <h3 className="flex items-center gap-2 text-[16px] font-bold text-dm-ink">
+                  <AlertTriangle className="h-4.5 w-4.5 text-dm-red" />
+                  Sempre
+                </h3>
+                <ul className="mt-3 grid gap-2.5 md:grid-cols-2">
+                  {maintenance.always.map((t) => (
                     <li key={t} className="flex gap-3 text-[14.5px] leading-relaxed text-dm-ink/80">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-dm-green" />
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-dm-red" />
                       <span>{t}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </Reveal>
-          ))}
-        </div>
-
-        {maintenance && (
-          <Reveal className="mt-5">
-            <div className="rounded-2xl border border-dm-red/20 bg-dm-red/[0.04] p-6">
-              <h3 className="flex items-center gap-2 text-[16px] font-bold text-dm-ink">
-                <AlertTriangle className="h-4.5 w-4.5 text-dm-red" />
-                Sempre
-              </h3>
-              <ul className="mt-3 grid gap-2.5 md:grid-cols-2">
-                {maintenance.always.map((t) => (
-                  <li key={t} className="flex gap-3 text-[14.5px] leading-relaxed text-dm-ink/80">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-dm-red" />
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        )}
-
-        <Reveal i={3} className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <BtnGhost
-            href={maintenance?.checklistPdf ?? "/downloads/checklist-manutencao-demakine.pdf"}
-            external
-            className="gap-2"
-          >
-            <Printer className="h-4 w-4" />
-            Baixar checklist em PDF para pendurar na fábrica
-          </BtnGhost>
-          {maintenance && (
-            <span className="text-[13px] text-dm-gray">Fonte: {maintenance.source}</span>
           )}
-        </Reveal>
-      </Section>
+
+          <Reveal i={3} className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <BtnGhost
+              href={maintenance?.checklistPdf ?? "/downloads/checklist-manutencao-demakine.pdf"}
+              external
+              className="gap-2"
+            >
+              <Printer className="h-4 w-4" />
+              Baixar checklist em PDF para pendurar na fábrica
+            </BtnGhost>
+            {maintenance && (
+              <span className="text-[13px] text-dm-gray">Fonte: {maintenance.source}</span>
+            )}
+          </Reveal>
+        </Section>
+      )}
 
       {/* ------------------------------------------------------------ faq do produto */}
       <Section tone="surface">
