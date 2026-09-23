@@ -1,7 +1,7 @@
 import { Link, useParams } from "wouter";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
-import { Breadcrumb, BtnWhats, CtaBand, Section } from "@/components/kit";
+import { Breadcrumb, BtnPrimary, BtnWhats, CtaBand, Section } from "@/components/kit";
 import { ShareBar } from "@/components/share";
 import { CalcEsteira } from "@/components/tools/calc-esteira";
 import { CalcRoi } from "@/components/tools/calc-roi";
