@@ -174,6 +174,7 @@ const app = new Hono<Env>()
     const byStatus = STATUS.map((s) => ({
       status: s,
       total: period.filter((r) => (r.status ?? 'novo') === s).length,
+      previous: previous.filter((r) => (r.status ?? 'novo') === s).length,
     }));
 
     const won = period.filter((r) => r.status === 'ganho').length;

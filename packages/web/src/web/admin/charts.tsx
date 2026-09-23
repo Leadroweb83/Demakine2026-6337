@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowDownRight, ArrowUpRight, BarChart3, Minus, Table2 } from "lucide-react";
 import mapRaw from "../data/br-map.json";
 import { LEAD_STATUSES, STATUS_META, type LeadStatus } from "./lead-status";
+import { RingChart, type RingSegment } from "@/components/ui/ring-chart";
 
 /** Azul de marcas validado contra o fundo branco (o azul da marca é escuro demais para barra). */
 export const MARK_BLUE = "#2f6bd8";
@@ -378,96 +379,41 @@ function Legend({ color, label }: { color: string; label: string }) {
 export function StatusDonut({
   byStatus,
   onSelect,
+  showDelta,
 }: {
-  byStatus: { status: string; total: number }[];
+  byStatus: { status: string; total: number; previous?: number }[];
   onSelect: (status: LeadStatus) => void;
+  showDelta: boolean;
 }) {
-  const [hover, setHover] = useState<LeadStatus | null>(null);
-  const values = LEAD_STATUSES.map((s) => ({
-    status: s,
-    total: byStatus.find((b) => b.status === s)?.total ?? 0,
-  }));
+  const values = LEAD_STATUSES.map((s) => {
+    const row = byStatus.find((b) => b.status === s);
+    return { status: s, total: row?.total ?? 0, previous: row?.previous ?? 0 };
+  });
   const total = values.reduce((a, v) => a + v.total, 0);
-  const r = 58;
-  const circ = 2 * Math.PI * r;
-  const visible = values.filter((v) => v.total > 0);
-  const gap = visible.length > 1 ? 2.5 : 0;
 
-  let offset = 0;
-  const arcs = values.map((v) => {
-    const len = total ? (v.total / total) * circ : 0;
-    const arc = { ...v, len: Math.max(0, len - gap), offset };
-    offset += len;
-    return arc;
+  const segments: RingSegment[] = values.map((v) => {
+    const meta = STATUS_META[v.status];
+    const d = v.total - v.previous;
+    const tone = d === 0 ? "neutral" : v.status === "ganho" ? (d > 0 ? "good" : "bad") : v.status === "perdido" ? (d > 0 ? "bad" : "good") : "neutral";
+    return {
+      key: v.status,
+      label: meta.label,
+      value: v.total,
+      color: meta.color,
+      icon: <meta.Icon size={14} className="shrink-0 text-dm-ink/40" />,
+      badge: showDelta ? { text: d > 0 ? `+${d}` : d < 0 ? `−${Math.abs(d)}` : "0", tone } : undefined,
+    };
   });
 
-  const focus = hover ? values.find((v) => v.status === hover) : null;
-
   return (
-    <div className="flex flex-col items-center gap-6 sm:flex-row lg:flex-col xl:flex-row">
-      <div className="relative h-[150px] w-[150px] shrink-0">
-        <svg viewBox="0 0 150 150" className="h-full w-full -rotate-90" aria-hidden="true">
-          <circle cx="75" cy="75" r={r} fill="none" stroke="#eef0f4" strokeWidth="16" />
-          {arcs.map(
-            (a) =>
-              a.len > 0 && (
-                <circle
-                  key={a.status}
-                  cx="75"
-                  cy="75"
-                  r={r}
-                  fill="none"
-                  stroke={STATUS_META[a.status].color}
-                  strokeWidth={hover === a.status ? 20 : 16}
-                  strokeDasharray={`${a.len} ${circ - a.len}`}
-                  strokeDashoffset={-a.offset}
-                  className="cursor-pointer transition-[stroke-width,opacity] duration-200"
-                  style={{ opacity: hover && hover !== a.status ? 0.35 : 1 }}
-                  onMouseEnter={() => setHover(a.status)}
-                  onMouseLeave={() => setHover(null)}
-                  onClick={() => onSelect(a.status)}
-                />
-              ),
-          )}
-        </svg>
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="text-[28px] font-bold leading-none text-dm-ink">
-            {focus ? focus.total : <AnimatedNumber value={total} />}
-          </span>
-          <span className="mt-1 max-w-[90px] text-[10.5px] font-semibold uppercase tracking-wide text-dm-ink/50">
-            {focus ? STATUS_META[focus.status].label : "leads"}
-          </span>
-        </div>
-      </div>
-      <ul className="w-full min-w-0 flex-1 space-y-1">
-        {values.map((v) => {
-          const meta = STATUS_META[v.status];
-          return (
-            <li key={v.status}>
-              <button
-                type="button"
-                onClick={() => onSelect(v.status)}
-                onMouseEnter={() => setHover(v.status)}
-                onMouseLeave={() => setHover(null)}
-                onFocus={() => setHover(v.status)}
-                onBlur={() => setHover(null)}
-                className="flex w-full items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left text-[13px] transition-colors hover:bg-black/[0.03]"
-              >
-                <span className="flex items-center gap-2 text-dm-ink/80">
-                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: meta.color }} />
-                  <meta.Icon size={14} className="shrink-0 text-dm-ink/45" />
-                  {meta.label}
-                </span>
-                <span className="tabular-nums text-dm-ink/60">
-                  <b className="text-dm-ink">{v.total}</b>
-                  {total ? ` · ${Math.round((v.total / total) * 100)}%` : ""}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <RingChart
+      segments={segments}
+      centerLabel="Total"
+      centerValue={<AnimatedNumber value={total} />}
+      onSelect={(key) => onSelect(key as LeadStatus)}
+      size={176}
+      thickness={24}
+    />
   );
 }
 

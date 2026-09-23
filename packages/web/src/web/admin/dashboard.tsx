@@ -318,7 +318,7 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
 
         <ChartCard
           title="Status dos leads"
-          hint="Clique em um status para abrir a lista filtrada."
+          hint="Clique em um status para abrir a lista filtrada. O selo mostra a variação contra o período anterior."
           table={{
             columns: ["Status", "Leads"],
             rows: data.byStatus.map((s) => [statusMeta(s.status).label, s.total]),
@@ -331,7 +331,11 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
               text="Aqui aparece a divisão entre novos, em contato, ganhos e perdidos."
             />
           ) : (
-            <StatusDonut byStatus={data.byStatus} onSelect={(status) => onGo("leads", { status })} />
+            <StatusDonut
+              byStatus={data.byStatus}
+              showDelta={shownDays > 0 && kpi.previousTotal > 0}
+              onSelect={(status) => onGo("leads", { status })}
+            />
           )}
         </ChartCard>
       </div>

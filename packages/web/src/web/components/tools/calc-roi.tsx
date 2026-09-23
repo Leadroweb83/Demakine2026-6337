@@ -4,6 +4,7 @@ import { brl, computeRoi, num, roiAssumptions } from "@/lib/engine";
 import { LeadForm } from "@/components/lead-form";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { RingChart } from "@/components/ui/ring-chart";
 
 /**
  * Calculadora de retorno: compara o custo da movimentação manual
@@ -157,6 +158,49 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
           />
           <Big dark={dark} k="Horas/mês liberadas" v={`${num(r.hoursSavedPerMonth, 0)} h`} />
         </div>
+
+        {(() => {
+          const today = Math.max(1, people) * costPerPerson;
+          const stays = Math.max(0, today - r.monthlySaving);
+          const share = today > 0 ? Math.round((r.monthlySaving / today) * 100) : 0;
+          return today > 0 ? (
+            <div
+              className={cn(
+                "mt-5 rounded-xl border p-5",
+                dark ? "border-white/10 bg-white/[0.03]" : "border-dm-line bg-white",
+              )}
+            >
+              <p className={cn("text-[13px] font-semibold", dark ? "text-white/75" : "text-dm-ink/80")}>
+                Custo mensal de mão de obra nessa tarefa
+              </p>
+              <RingChart
+                dark={dark}
+                size={200}
+                thickness={20}
+                className="mt-4 sm:flex-row sm:items-center sm:gap-8"
+                centerLabel="Hoje, por mês"
+                centerValue={brl(today)}
+                segments={[
+                  {
+                    key: "economia",
+                    label: "Economia com a esteira",
+                    value: r.monthlySaving,
+                    display: brl(r.monthlySaving),
+                    color: dark ? "#7fa8ff" : "#103d94",
+                    badge: { text: `−${share}%`, tone: share > 0 ? "good" : "neutral" },
+                  },
+                  {
+                    key: "continua",
+                    label: "Custo que continua",
+                    value: stays,
+                    display: brl(stays),
+                    color: dark ? "rgba(255,255,255,0.3)" : "#c5cad3",
+                  },
+                ]}
+              />
+            </div>
+          ) : null;
+        })()}
 
         <div
           className={cn(
