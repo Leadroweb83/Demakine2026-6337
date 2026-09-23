@@ -9,7 +9,7 @@ type MapData = {
   states: Record<string, { name: string; d: string; c: [number, number] }>;
 };
 
-const map = mapRaw as MapData;
+const map = mapRaw as unknown as MapData;
 
 /** Agrega os depoimentos reais por UF (a cidade vem no formato "Cidade/UF"). */
 function useByState() {

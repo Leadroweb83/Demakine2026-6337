@@ -35,10 +35,8 @@ import { VideoSection } from "@/components/video-section";
 import { SegmentsCarousel } from "@/components/segments-carousel";
 import { TestimonialsWall } from "@/components/testimonials";
 import { Timeline } from "@/components/timeline";
-import { QuickSelector } from "@/components/tools/quick-selector";
 import { BrazilMap } from "@/components/tools/brazil-map";
 import { Reveal } from "@/components/reveal";
-import { Counter } from "@/components/counter";
 import { LeadForm } from "@/components/lead-form";
 import {
   BtnGhost,

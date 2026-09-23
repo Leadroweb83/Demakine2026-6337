@@ -13,6 +13,7 @@ type Row = {
   active: boolean | null;
   mustChangePassword: boolean | null;
   createdAt: string;
+  image?: string | null;
 };
 
 const ROLE_OPTIONS = ["admin", "editor", "vendedor", "super_admin"] as const;

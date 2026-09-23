@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { validator } from 'hono/validator';
 import { cors } from "hono/cors"
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -428,10 +429,14 @@ const app = new Hono<Env>()
       return c.json({ error: err instanceof Error ? err.message : 'Falha ao criar usuário' }, 400);
     }
   })
-  .patch('/admin/users/:id', requireRole(), async (c) => {
+  .patch(
+    '/admin/users/:id',
+    requireRole(),
+    validator('json', (v) => v as { name?: string; role?: string; active?: boolean }),
+    async (c) => {
     const id = c.req.param('id');
     const me = c.get('user')!;
-    const body = await c.req.json<{ name?: string; role?: string; active?: boolean }>();
+    const body = c.req.valid('json');
 
     if (id === me.id && (body.role !== undefined || body.active === false)) {
       return c.json({ error: 'Você não pode alterar o próprio papel nem se desativar' }, 400);
@@ -447,10 +452,15 @@ const app = new Hono<Env>()
 
     await db.update(schema.user).set(patch).where(eq(schema.user.id, id));
     return c.json({ ok: true }, 200);
-  })
-  .post('/admin/users/:id/password', requireRole(), async (c) => {
+    },
+  )
+  .post(
+    '/admin/users/:id/password',
+    requireRole(),
+    validator('json', (v) => (v ?? {}) as { password?: string }),
+    async (c) => {
     const id = c.req.param('id');
-    const body = await c.req.json<{ password?: string }>().catch(() => ({ password: undefined }));
+    const body = c.req.valid('json');
     if (body.password && body.password.length < 8) {
       return c.json({ error: 'A senha precisa de no mínimo 8 caracteres' }, 400);
     }
@@ -462,7 +472,8 @@ const app = new Hono<Env>()
     } catch (err) {
       return c.json({ error: err instanceof Error ? err.message : 'Falha ao trocar a senha' }, 400);
     }
-  })
+    },
+  )
   // ------------------------------------------------- preferências do dashboard
   .get('/admin/preferences', requireAuth, async (c) => {
     const [row] = await db

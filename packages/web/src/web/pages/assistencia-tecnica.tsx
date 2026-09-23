@@ -2,7 +2,7 @@ import { Cog, MapPin, PhoneCall, Timer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnGhost, BtnPrimary, BtnWhats, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
+import { BtnGhost, BtnWhats, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
 import { departments, site, waLink } from "@/lib/site";
 
 const services = [

@@ -182,7 +182,7 @@ export function KpiTile({
   decimals?: number;
   suffix?: string;
   delta: number | null;
-  deltaUnit?: "%" | " pts" | "h";
+  deltaUnit?: "%" | " pts" | "h" | "";
   goodWhen?: "up" | "down";
   compareLabel: string;
   footnote?: ReactNode;
@@ -579,7 +579,7 @@ export function WeekHourHeatmap({ matrix }: { matrix: number[][] }) {
 /* ------------------------------------------------------------------ mapa do Brasil */
 
 type MapData = { w: number; h: number; states: Record<string, { name: string; d: string; c: [number, number] }> };
-const brMap = mapRaw as MapData;
+const brMap = mapRaw as unknown as MapData;
 
 export function LeadsMap({
   byState,
