@@ -1,7 +1,7 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-export const leads = sqliteTable("leads", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const leads = pgTable("leads", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   company: text("company"),
   phone: text("phone").notNull(),
@@ -17,13 +17,11 @@ export const leads = sqliteTable("leads", {
   /** id do usuario responsavel pelo lead */
   ownerId: text("owner_id"),
   /** data do primeiro/ultimo contato feito pelo time */
-  firstContactAt: integer("first_contact_at", { mode: "timestamp" }),
-  lastContactAt: integer("last_contact_at", { mode: "timestamp" }),
+  firstContactAt: timestamp("first_contact_at", { withTimezone: true }),
+  lastContactAt: timestamp("last_contact_at", { withTimezone: true }),
   /** motivo da perda, obrigatorio ao marcar perdido */
   lossReason: text("loss_reason"),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export * from "./auth-schema";

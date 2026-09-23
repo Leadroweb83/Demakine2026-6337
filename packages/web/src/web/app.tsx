@@ -2,7 +2,6 @@ import { Route, Switch } from "wouter";
 import { Provider } from "./components/provider";
 import { CompareProvider } from "./components/compare";
 import { ScrollProgress, StickyCta } from "./components/sticky-cta";
-import { AgentFeedback } from "@runablehq/website-runtime";
 import { CookieConsent } from "./components/cookie-consent";
 import { Shell } from "./components/layout/shell";
 import { BtnPrimary, Section } from "./components/kit";
@@ -91,10 +90,7 @@ function App() {
         </Switch>
         <StickyCta />
       </CompareProvider>
-      {/* Do not remove, off by default, activated by parent iframe via postMessage */}
       <CookieConsent />
-      {import.meta.env.DEV && <AgentFeedback />}
-      {/* "Made with Runable" badge - if user asks to remove the runable badge, remove this code as well as comment */}
     </Provider>
   );
 }

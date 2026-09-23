@@ -10,7 +10,7 @@ export type Role = (typeof ROLES)[number];
 export const auth = betterAuth({
   basePath: "/api/auth",
   baseURL: process.env.WEBSITE_URL,
-  database: drizzleAdapter(db, { provider: "sqlite" }),
+  database: drizzleAdapter(db, { provider: "pg" }),
   emailAndPassword: {
     enabled: true,
     // Ninguém se cadastra sozinho: o super admin cria os usuários no painel.
