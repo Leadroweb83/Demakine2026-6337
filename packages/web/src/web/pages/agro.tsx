@@ -260,7 +260,7 @@ export default function Agro() {
       <Section tone="surface">
         <SectionHead
           eyebrow="Quem já produz com a Demakine"
-          title={`${agroClients.length} empresas do agro na nossa base`}
+          title="Algumas das empresas agro que confiam na Demakine"
           text="Cooperativas, tradings, indústrias de nutrição animal, sementeiras e produtores. Todas as marcas abaixo são clientes reais."
           action={<BtnGhost to="/clientes">Ver todos os clientes</BtnGhost>}
         />
