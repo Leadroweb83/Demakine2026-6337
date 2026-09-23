@@ -172,7 +172,7 @@ export const bestSellers: ShopItem[] = [
   {
     slug: "peneira-para-carvao",
     sku: "BF-PNC-010",
-    name: "Peneira para Carvão",
+    name: "Peneira Empacotadora para Carvão",
     brandLine: "Beneficiamento",
     image: "/img/produtos/peneira-para-carvao/1.jpg",
     price: 7900,

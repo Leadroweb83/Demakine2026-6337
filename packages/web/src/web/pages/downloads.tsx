@@ -4,7 +4,8 @@ import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import { CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
-import { products } from "@/lib/content";
+import { getProduct, products } from "@/lib/content";
+import { productMaintenance } from "@/lib/product-maintenance";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -18,8 +19,8 @@ const files = [
   },
   {
     Icon: Printer,
-    title: "Checklist de manutenção em 5 minutos por dia",
-    desc: "Rotina diária, semanal e mensal em uma folha para imprimir e pendurar ao lado do equipamento, com folha de registro do que foi feito.",
+    title: "Checklist geral de manutenção",
+    desc: "Rotina diária, semanal e mensal para esteiras e roscas que ainda não têm checklist próprio, com folha de registro do que foi feito.",
     meta: "PDF · 2 páginas",
     href: "/downloads/checklist-manutencao-demakine.pdf",
   },
@@ -124,6 +125,32 @@ export default function Downloads() {
             </Reveal>
           ))}
         </div>
+
+        <Reveal className="mt-10">
+          <h3 className="text-[18px] font-bold text-dm-ink">Checklist por equipamento</h3>
+          <p className="mt-1.5 max-w-2xl text-[14.5px] leading-relaxed text-dm-gray">
+            Tirados do manual técnico de cada máquina, com a frequência certa de cada cuidado e folha
+            de registro.
+          </p>
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {Object.entries(productMaintenance).map(([slug, m]) => (
+              <li key={slug}>
+                <a
+                  href={m.checklistPdf}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-center gap-3 rounded-xl border border-dm-line bg-white px-4 py-3.5 transition-colors hover:border-dm-blue/40 hover:bg-dm-blue-soft/40"
+                >
+                  <Printer className="h-5 w-5 shrink-0 text-dm-blue" />
+                  <span className="flex-1 text-[14.5px] font-semibold text-dm-ink group-hover:text-dm-blue">
+                    {getProduct(slug)?.name ?? slug}
+                  </span>
+                  <Download className="h-4 w-4 shrink-0 text-dm-ink/40 group-hover:text-dm-blue" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </Section>
 
       {/* ------------------------------------------------------------ kit gated */}

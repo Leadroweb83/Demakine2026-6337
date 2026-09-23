@@ -1623,8 +1623,8 @@
     },
     {
       "slug": "peneira-para-carvao",
-      "name": "Peneira para Carvão",
-      "title": "Peneira para Carvão",
+      "name": "Peneira Empacotadora para Carvão",
+      "title": "Peneira Empacotadora para Carvão",
       "category": "empacotamento-e-costura",
       "tag": null,
       "applications": [
@@ -1633,13 +1633,80 @@
         "Ensacamento",
         "Beneficiamento"
       ],
-      "summary": "A Peneira para Carvão ou Empacotadora de Carvão é um equipamento indispensável para quem precisa de produção e agilidade no empacotamento e seleção do carvão, além disso o equipamento possui sistema que funciona com duas peneiras, bica de saída para pó e cavaco, além de duas bicas para ensaque. A vibração é feita através do eixo excêntrico que permite a movimentação do carvão até a bica, possibilitando assim o empacotamento e como resultado ainda mais qualidade. Produzimos também modelos especiais conforme a necessidade de cada cliente,",
+      "summary": "A Peneira para Carvão ou Empacotadora de Carvão é um equipamento indispensável para quem precisa de produção e agilidade no empacotamento e seleção do carvão, além disso o equipamento possui sistema que funciona com duas peneiras, bica de saída para pó e cavaco, além de duas ou três bicas para ensaque. A vibração é feita através do eixo excêntrico que permite a movimentação do carvão até a bica, possibilitando assim o empacotamento e como resultado ainda mais qualidade. Produzimos também modelos especiais conforme a necessidade de cada cliente.",
       "description": [
-        "A Peneira para Carvão ou Empacotadora de Carvão é um equipamento indispensável para quem precisa de produção e agilidade no empacotamento e seleção do carvão, além disso o equipamento possui sistema que funciona com duas peneiras, bica de saída para pó e cavaco, além de duas bicas para ensaque. A vibração é feita através do eixo excêntrico que permite a movimentação do carvão até a bica, possibilitando assim o empacotamento e como resultado ainda mais qualidade. Produzimos também modelos especiais conforme a necessidade de cada cliente,"
+        "A Peneira para Carvão ou Empacotadora de Carvão é um equipamento indispensável para quem precisa de produção e agilidade no empacotamento e seleção do carvão, além disso o equipamento possui sistema que funciona com duas peneiras, bica de saída para pó e cavaco, além de duas ou três bicas para ensaque. A vibração é feita através do eixo excêntrico que permite a movimentação do carvão até a bica, possibilitando assim o empacotamento e como resultado ainda mais qualidade. Produzimos também modelos especiais conforme a necessidade de cada cliente."
       ],
-      "features": [],
-      "models": [],
-      "specKeys": [],
+      "features": [
+        "Sistema com duas peneiras que separam carvão, pó e cavaco",
+        "Duas ou três bicas de ensaque, conforme o modelo",
+        "Saídas independentes para pó e para cavaco",
+        "Produção de 200 a 600 pacotes de 3 kg por hora",
+        "Motor de 0,75 cv ou 1 cv, em 110 ou 220 V",
+        "Chave de acionamento inclusa, instalada fora da máquina por causa da vibração",
+        "Mancais com graxeiras para lubrificação",
+        "Fixação chumbada ao piso, com guia de fixação para cada modelo",
+        "Modelos especiais sob medida"
+      ],
+      "models": [
+        {
+          "model": "PDM1",
+          "specs": {
+            "Peneiras": "2",
+            "Saídas para carvão": "2",
+            "Saída de pó": "1",
+            "Saída de cavaco": "1",
+            "Produção": "200 pacotes de 3 kg/h",
+            "Dimensões": "2000 x 750 mm",
+            "Altura da entrada": "113 cm",
+            "Altura da saída": "80 cm",
+            "Motor": "0,75 cv",
+            "Tensão": "110 ou 220 V"
+          }
+        },
+        {
+          "model": "PDM2",
+          "specs": {
+            "Peneiras": "2",
+            "Saídas para carvão": "2",
+            "Saída de pó": "1",
+            "Saída de cavaco": "1",
+            "Produção": "400 pacotes de 3 kg/h",
+            "Dimensões": "2800 x 900 mm",
+            "Altura da entrada": "113 cm",
+            "Altura da saída": "80 cm",
+            "Motor": "0,75 cv",
+            "Tensão": "110 ou 220 V"
+          }
+        },
+        {
+          "model": "PDM3",
+          "specs": {
+            "Peneiras": "2",
+            "Saídas para carvão": "3",
+            "Saída de pó": "1",
+            "Saída de cavaco": "1",
+            "Produção": "600 pacotes de 3 kg/h",
+            "Dimensões": "3000 x 1100 mm",
+            "Altura da entrada": "113 cm",
+            "Altura da saída": "80 cm",
+            "Motor": "1 cv",
+            "Tensão": "110 ou 220 V"
+          }
+        }
+      ],
+      "specKeys": [
+        "Peneiras",
+        "Saídas para carvão",
+        "Saída de pó",
+        "Saída de cavaco",
+        "Produção",
+        "Dimensões",
+        "Altura da entrada",
+        "Altura da saída",
+        "Motor",
+        "Tensão"
+      ],
       "images": [
         "/img/produtos/peneira-para-carvao/1.jpg",
         "/img/produtos/peneira-para-carvao/2.jpg",
@@ -1650,8 +1717,8 @@
         "/img/produtos/peneira-para-carvao/7.jpg",
         "/img/produtos/peneira-para-carvao/8.jpg"
       ],
-      "seoTitle": "Peneira para Carvão | Empacotadora de Carvão - Demakine",
-      "seoDesc": "Peneira para Carvão ou Empacotadora de Carvão é um equipamento indispensável para quem precisa de produção e agilidade no empacotamento e seleção do carvão"
+      "seoTitle": "Peneira Empacotadora para Carvão | Demakine",
+      "seoDesc": "Peneira empacotadora para carvão com 2 peneiras, saída de pó e cavaco e até 3 bicas de ensaque. De 200 a 600 pacotes de 3 kg por hora. Fábrica em Limeira/SP."
     }
   ],
   "clients": [

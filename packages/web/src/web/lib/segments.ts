@@ -108,7 +108,7 @@ export const segmentList: Segment[] = [
     color: "#b45309",
     icon: Flame,
     text: "Classificação de carvão e separação de finos antes do ensaque.",
-    product: "Peneira para Carvão",
+    product: "Peneira Empacotadora para Carvão",
     productSlug: "peneira-para-carvao",
   },
   {

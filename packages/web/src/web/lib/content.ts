@@ -85,6 +85,12 @@ export function getProduct(slug: string) {
   return products.find((p) => p.slug === real);
 }
 
+/** Artigo certo antes do nome do equipamento: "o Elevador", "a Esteira". */
+export function artigo(name: string) {
+  const masc = /^(elevador|cartrans|carrinho)/i.test(name.trim());
+  return masc ? { a: "o", A: "O", da: "do", para: "para o" } : { a: "a", A: "A", da: "da", para: "para a" };
+}
+
 export function getPost(slug: string) {
   return posts.find((p) => p.slug === slug);
 }

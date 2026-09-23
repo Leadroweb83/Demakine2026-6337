@@ -3,6 +3,7 @@ import { MessageCircle, Play, Youtube } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { BtnGhost, BtnWhats, Section } from "@/components/kit";
 import type { ProductVideo } from "@/lib/product-videos";
+import { artigo } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,7 @@ export function ProductVideos({ productName, videos }: { productName: string; vi
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState(false);
   const video = videos[current];
+  const art = artigo(productName);
   if (!video) return null;
 
   const choose = (idx: number) => {
@@ -68,7 +70,7 @@ export function ProductVideos({ productName, videos }: { productName: string; vi
 
         <Reveal i={1}>
           <p className="eyebrow text-dm-blue">Veja funcionando</p>
-          <h2 className="h3 mt-3">A {productName} em operação</h2>
+          <h2 className="h3 mt-3">{art.A} {productName} em operação</h2>
           <p className="mt-4 text-[16px] leading-relaxed text-dm-gray">
             Imagens reais de equipamentos Demakine rodando, do jeito que saem da fábrica em
             Limeira/SP. Ajuda a entender o funcionamento antes de falar com a engenharia.
@@ -117,7 +119,7 @@ export function ProductVideos({ productName, videos }: { productName: string; vi
 
           <div className="mt-7 flex flex-wrap gap-3">
             <BtnWhats
-              href={waLink(`Olá! Vi o vídeo da ${productName} no site e quero um orçamento.`)}
+              href={waLink(`Olá! Vi o vídeo ${art.da} ${productName} no site e quero um orçamento.`)}
               className="gap-2 whitespace-nowrap"
             >
               <MessageCircle className="h-4 w-4" />

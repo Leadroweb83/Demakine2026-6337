@@ -4,12 +4,15 @@ checklist antes de comprar) a partir de HTML renderizado no Chrome headless."""
 import json
 import pathlib
 import re
+import shutil
 import subprocess
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PUB = ROOT / "packages/web/public"
 OUT = PUB / "downloads"
 TMP = pathlib.Path("/tmp/dm-pdf")
+CHROME = shutil.which("google-chrome") or "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 TMP.mkdir(parents=True, exist_ok=True)
 LOGO = (PUB / "img/site/logo-blue.png").as_uri()
 
@@ -76,7 +79,7 @@ def render(html, name):
     out = OUT / f"{name}.pdf"
     subprocess.run(
         [
-            "google-chrome",
+            CHROME,
             "--headless=new",
             "--no-sandbox",
             "--disable-gpu",
@@ -330,8 +333,53 @@ def pdf_buy():
     )
 
 
+# ------------------------------------------- checklist de manutenção por equipamento
+def product_maintenance():
+    """Lê o plano de cada equipamento do mesmo TS que alimenta o site (via bun)."""
+    web = ROOT / "packages/web"
+    code = 'const m = await import("./src/web/lib/product-maintenance.ts"); console.log(JSON.stringify(m.productMaintenance))'
+    out = subprocess.run(["bun", "-e", code], cwd=web, check=True, capture_output=True, text=True).stdout
+    names = {p["slug"]: p["name"] for p in json.loads((web / "src/web/data/content.json").read_text(encoding="utf-8"))["products"]}
+    return {slug: (names[slug], plan) for slug, plan in json.loads(out).items()}
+
+
+def pdf_product_maintenance():
+    for slug, (name, m) in product_maintenance().items():
+        cards = ""
+        for group in m["plan"]:
+            lis = "".join(f'<li><span class="box"></span><span>{i}</span></li>' for i in group["items"])
+            cards += f"""<div class="card"><h3>{group["period"]}</h3><ul class="check">{lis}</ul></div>"""
+        always = "".join(f"<li>{a}</li>" for a in m["always"])
+        file = m["checklistPdf"].rsplit("/", 1)[1].removesuffix(".pdf")
+        page = f"""<div class="page">{header(f"Checklist de manutenção preventiva<br>{name}")}
+        <p class="eyebrow" style="margin-top:7mm">Manutenção preventiva</p>
+        <h1>Checklist {"do" if re.match(r"(?i)(elevador|cartrans|carrinho)", name) else "da"} {name}</h1>
+        <p class="lead">{m["intro"]} Imprima esta folha, deixe perto do equipamento e marque cada item conferido.</p>
+        {cards}
+        <div class="note"><strong>Sempre:</strong><ul style="margin:1.5mm 0 0 4mm">{always}</ul>
+        <p style="margin-top:2mm">Baseado no {m["source"][0].lower() + m["source"][1:]}. Em caso de dúvida, fale com a assistência técnica: (19) 99941-4129.</p></div>
+        {footer(f"Checklist · {name}")}</div>
+
+        <div class="page">{header(f"Registro de manutenção<br>{name}")}
+        <p class="eyebrow" style="margin-top:7mm">Registro</p>
+        <h1>Folha de registro</h1>
+        <p class="lead">Anotar o que foi feito é o que transforma manutenção em previsibilidade: você passa a saber quando cada peça costuma pedir troca e programa a reposição antes de parar.</p>
+        <table><thead><tr><th style="width:22mm">Data</th><th style="width:32mm">Responsável</th><th>O que foi conferido ou trocado</th><th style="width:34mm">Próxima ação</th></tr></thead><tbody>
+        {"".join("<tr><td>&nbsp;</td><td></td><td></td><td></td></tr>" for _ in range(13))}
+        </tbody></table>
+        <div class="cta"><strong>Precisa de peça de reposição?</strong>
+        <p>Mande foto da peça pelo WhatsApp que a cotação sai direto com a assistência técnica da Demakine.</p>
+        <span class="wa">WhatsApp (19) 99884-2717</span></div>
+        {footer(f"Checklist · {name}")}</div>"""
+        render(shell([page], f"Checklist de manutenção {name}"), file)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
-    pdf_maintenance()
-    pdf_belts()
-    pdf_buy()
+    if "produtos" in sys.argv:
+        pdf_product_maintenance()
+    else:
+        pdf_maintenance()
+        pdf_belts()
+        pdf_buy()
+        pdf_product_maintenance()

@@ -22,6 +22,9 @@ import { Hotspots } from "@/components/tools/hotspots";
 import { Spin360 } from "@/components/spin-360";
 import { ProductVideos } from "@/components/product-videos";
 import { videosFor } from "@/lib/product-videos";
+import { ProductProcess } from "@/components/product-process";
+import { processFor } from "@/lib/product-process";
+import { maintenanceFor } from "@/lib/product-maintenance";
 import { FaqAccordion } from "@/components/faq";
 import { faqGroups, faqJsonLd } from "@/lib/faq";
 import {
@@ -31,7 +34,7 @@ import {
   productExtras,
   type Fit,
 } from "@/lib/product-content";
-import { categoryName, getProduct, relatedProducts } from "@/lib/content";
+import { artigo, categoryName, getProduct, relatedProducts } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -66,13 +69,16 @@ export default function Produto() {
       return v !== "" && v !== "definir" && v !== "-" && v !== "-";
     }),
   );
-  const waMessage = `Olá! Quero um orçamento da ${product.name}.`;
+  const art = artigo(product.name);
+  const waMessage = `Olá! Quero um orçamento ${art.da} ${product.name}.`;
   const isBelt = product.category === "esteiras-transportadoras";
   const spin = images.length >= 4;
   const extras = productExtras(product.category);
   const fit = materialFit(product.slug);
   const pageFaq = [...extras.faq, ...faqGroups[0].items.slice(0, 1), ...faqGroups[2].items.slice(0, 1)];
   const videos = videosFor(product.slug);
+  const process = processFor(product.slug);
+  const maintenance = maintenanceFor(product.slug);
 
   return (
     <>
@@ -208,7 +214,7 @@ export default function Produto() {
       <Section tone="surface">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
           <Reveal>
-            <h2 className="h3">Sobre a {product.name}</h2>
+            <h2 className="h3">Sobre {art.a} {product.name}</h2>
             <div className="prose-dm mt-5 text-[16px] leading-relaxed text-dm-ink/80">
               {product.description.map((p, idx) => (
                 <p key={idx}>{p}</p>
@@ -305,6 +311,9 @@ export default function Produto() {
       )}
 
       {/* ------------------------------------------------ para qual material serve */}
+      {process ? (
+        <ProductProcess process={process} />
+      ) : (
       <Section>
         <Reveal>
           <p className="eyebrow text-dm-blue">Compatibilidade</p>
@@ -368,6 +377,7 @@ export default function Produto() {
           </p>
         </Reveal>
       </Section>
+      )}
 
       {/* --------------------------------------------------- erros que custam caro */}
       <Section tone="surface">
@@ -395,7 +405,7 @@ export default function Produto() {
         </div>
 
         <Reveal i={3} className="mt-7">
-          <BtnWhats href={waLink(`Olá! Quero conferir se a ${product.name} é a escolha certa para a minha operação.`)} className="gap-2">
+          <BtnWhats href={waLink(`Olá! Quero conferir se ${art.a} ${product.name} é a escolha certa para a minha operação.`)} className="gap-2">
             <MessageCircle className="h-4 w-4" />
             Conferir minha escolha com um especialista
           </BtnWhats>
@@ -414,7 +424,7 @@ export default function Produto() {
             </p>
             <div className="mt-6">
               <BtnWhats
-                href={waLink(`Olá! Quero conferir a preparação do local para instalar a ${product.name}.`)}
+                href={waLink(`Olá! Quero conferir a preparação do local para instalar ${art.a} ${product.name}.`)}
                 className="gap-2"
               >
                 <MessageCircle className="h-4 w-4" />
@@ -485,7 +495,7 @@ export default function Produto() {
               </p>
             </div>
             <BtnWhats
-              href={waLink(`Olá! Preciso de orçamento de peça de reposição para a ${product.name}.`)}
+              href={waLink(`Olá! Preciso de orçamento de peça de reposição ${art.para} ${product.name}.`)}
               className="shrink-0 gap-2"
             >
               <MessageCircle className="h-4 w-4" />
@@ -499,15 +509,23 @@ export default function Produto() {
       <Section>
         <Reveal>
           <p className="eyebrow text-dm-blue">Manutenção</p>
-          <h2 className="h2 mt-3">Manutenção em 5 minutos por dia</h2>
+          <h2 className="h2 mt-3">
+            {maintenance ? `Manutenção ${art.da} ${product.name}` : "Manutenção em 5 minutos por dia"}
+          </h2>
           <p className="mt-4 max-w-2xl text-[16.5px] leading-relaxed text-dm-gray">
-            A maior parte das paradas que atendemos poderia ter sido vista antes, em uma volta rápida
-            na máquina. Esse é o roteiro que recomendamos para a sua equipe.
+            {maintenance
+              ? maintenance.intro
+              : "A maior parte das paradas que atendemos poderia ter sido vista antes, em uma volta rápida na máquina. Esse é o roteiro que recomendamos para a sua equipe."}
           </p>
         </Reveal>
 
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {maintenancePlan.map((plan, idx) => (
+        <div
+          className={cn(
+            "mt-8 grid gap-5",
+            (maintenance?.plan ?? maintenancePlan).length === 2 ? "md:grid-cols-2" : "md:grid-cols-3",
+          )}
+        >
+          {(maintenance?.plan ?? maintenancePlan).map((plan, idx) => (
             <Reveal key={plan.period} i={idx} className="h-full">
               <div className="h-full rounded-2xl border border-dm-line bg-white p-6">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-dm-blue-soft text-dm-blue">
@@ -527,11 +545,37 @@ export default function Produto() {
           ))}
         </div>
 
-        <Reveal i={3} className="mt-7">
-          <BtnGhost href="/downloads/checklist-manutencao-demakine.pdf" external className="gap-2">
+        {maintenance && (
+          <Reveal className="mt-5">
+            <div className="rounded-2xl border border-dm-red/20 bg-dm-red/[0.04] p-6">
+              <h3 className="flex items-center gap-2 text-[16px] font-bold text-dm-ink">
+                <AlertTriangle className="h-4.5 w-4.5 text-dm-red" />
+                Sempre
+              </h3>
+              <ul className="mt-3 grid gap-2.5 md:grid-cols-2">
+                {maintenance.always.map((t) => (
+                  <li key={t} className="flex gap-3 text-[14.5px] leading-relaxed text-dm-ink/80">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-dm-red" />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        )}
+
+        <Reveal i={3} className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <BtnGhost
+            href={maintenance?.checklistPdf ?? "/downloads/checklist-manutencao-demakine.pdf"}
+            external
+            className="gap-2"
+          >
             <Printer className="h-4 w-4" />
             Baixar checklist em PDF para pendurar na fábrica
           </BtnGhost>
+          {maintenance && (
+            <span className="text-[13px] text-dm-gray">Fonte: {maintenance.source}</span>
+          )}
         </Reveal>
       </Section>
 
@@ -564,7 +608,7 @@ export default function Produto() {
         <div className="grid items-start gap-10 lg:grid-cols-2">
           <Reveal>
             <p className="eyebrow text-dm-blue">Orçamento</p>
-            <h2 className="h2 mt-3">Peça uma proposta para a {product.name}</h2>
+            <h2 className="h2 mt-3">Peça uma proposta {art.para} {product.name}</h2>
             <p className="mt-4 text-[16.5px] leading-relaxed text-dm-gray">
               Para acelerar, informe: material transportado, comprimento necessário, altura de
               descarga e capacidade desejada. Se tiver fotos do local, melhor ainda: mande no
