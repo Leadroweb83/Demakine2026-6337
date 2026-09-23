@@ -476,7 +476,7 @@ export default function Home() {
                     </span>
                     <span className="mt-1 flex items-center gap-1.5 text-[13px] text-white/55">
                       <Clock className="h-3.5 w-3.5" />
-                      Seg a Qui 07h30 às 17h30 · Sex 07h30 às 16h30
+                      {site.hoursLine}
                     </span>
                   </span>
                 </div>

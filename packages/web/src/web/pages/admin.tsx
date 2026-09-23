@@ -23,6 +23,7 @@ import { AdminLeads, type LeadsFilter } from "../admin/leads";
 import { AdminUsers } from "../admin/users";
 import { AdminAccount } from "../admin/account";
 import { AdminVagas } from "../admin/vagas";
+import { AdminSiteSettings } from "../admin/site-settings";
 import { Badge, Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
 import { caseStudies } from "@/lib/cases";
@@ -46,7 +47,7 @@ const NAV: NavItem[] = [
   { id: "loja", label: "Loja", Icon: ShoppingCart, area: "loja", soon: true },
   { id: "vagas", label: "Vagas", Icon: Briefcase, area: "vagas" },
   { id: "midia", label: "Mídia", Icon: Images, area: "conteudo", soon: true },
-  { id: "site", label: "Dados do site", Icon: Sliders, area: "config", soon: true },
+  { id: "site", label: "Dados do site", Icon: Sliders, area: "config" },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
   { id: "conta", label: "Minha conta", Icon: UserCircle2, area: "livre" },
 ];
@@ -288,6 +289,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           )}
           {current === "cases" && <CasesPending />}
           {current === "vagas" && <AdminVagas user={user} />}
+          {current === "site" && <AdminSiteSettings />}
           {current === "usuarios" && <AdminUsers me={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}

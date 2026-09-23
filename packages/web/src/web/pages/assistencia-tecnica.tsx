@@ -36,7 +36,8 @@ const checklist = [
 ];
 
 export default function AssistenciaTecnica() {
-  const support = departments.find((d) => d.name === "Assistência Técnica")!;
+  const support =
+    departments.find((d) => d.name.startsWith("Assist")) ?? departments[0]!;
 
   return (
     <>
@@ -133,7 +134,7 @@ export default function AssistenciaTecnica() {
               ))}
             </ol>
             <p className="mt-8 text-[14.5px] text-dm-gray">
-              Horário de atendimento: seg a qui 07h30–17h30 · sex 07h30–16h30 ·{" "}
+              Horário de atendimento: {site.hoursLine} ·{" "}
               <a href={`mailto:${site.email}`} className="font-semibold text-dm-blue hover:underline">
                 {site.email}
               </a>

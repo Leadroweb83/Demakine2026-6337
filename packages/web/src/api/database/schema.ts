@@ -1,4 +1,4 @@
-import { boolean, date, index, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, date, index, integer, jsonb, pgTable, primaryKey, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const leads = pgTable("leads", {
   id: serial("id").primaryKey(),
@@ -23,6 +23,24 @@ export const leads = pgTable("leads", {
   lossReason: text("loss_reason"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * Conteúdo editável pelo painel. Cada linha substitui o padrão que vem no código
+ * (content.json / site.ts): collection "site" (key "main"), "produto" (slug),
+ * "post" (slug), "case" (slug). deleted = item do código escondido do site.
+ */
+export const contentDocs = pgTable(
+  "content_docs",
+  {
+    collection: text("collection").notNull(),
+    key: text("key").notNull(),
+    data: jsonb("data").notNull(),
+    deleted: boolean("deleted").default(false).notNull(),
+    updatedBy: text("updated_by"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.collection, t.key] })],
+);
 
 /** Histórico do lead: status, responsável, anotação e contato feito, com autor e data. */
 export const leadEvents = pgTable(

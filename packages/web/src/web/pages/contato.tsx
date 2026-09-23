@@ -107,9 +107,9 @@ export default function Contato() {
                 <span>
                   <span className="block text-[16px] font-bold text-dm-ink">Horário de atendimento</span>
                   <span className="block text-[15px] text-dm-gray">
-                    Segunda a quinta: 07h30 às 17h30
+                    Segunda a quinta: {site.hours.monThu}
                   </span>
-                  <span className="block text-[15px] text-dm-gray">Sexta: 07h30 às 16h30</span>
+                  <span className="block text-[15px] text-dm-gray">Sexta: {site.hours.fri}</span>
                 </span>
               </div>
             </div>

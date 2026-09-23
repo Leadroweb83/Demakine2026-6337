@@ -30,6 +30,7 @@ import {
   type JobInput,
 } from "./lib/jobs";
 import { isLeadStatus } from "./lib/leads";
+import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection } from "./lib/content-docs";
 
 type Env = {
   Variables: {
@@ -123,6 +124,19 @@ const app = new Hono<Env>()
     );
 
     return c.json({ url, key }, 200);
+  })
+  // -------------------------------------------------- conteúdo editável (site)
+  .get('/conteudo', async (c) => {
+    const rows = await db.select().from(schema.contentDocs);
+    const out: Record<string, Record<string, unknown>> = {};
+    const deleted: Record<string, string[]> = {};
+    for (const r of rows) {
+      if (r.deleted) (deleted[r.collection] ??= []).push(r.key);
+      else (out[r.collection] ??= {})[r.key] = r.data;
+    }
+    // cache curto na borda: edição do painel aparece em até ~1 min
+    c.header('Cache-Control', 'public, max-age=0, s-maxage=30, stale-while-revalidate=300');
+    return c.json({ docs: out, deleted }, 200);
   })
   // ------------------------------------------------------------------ vagas
   .get('/vagas', async (c) => {
@@ -384,6 +398,65 @@ const app = new Hono<Env>()
   .get('/admin/leads', requireRole('admin', 'vendedor'), async (c) => {
     const leads = await db.select().from(schema.leads).orderBy(desc(schema.leads.createdAt));
     return c.json({ leads }, 200);
+  })
+  // -------------------------------------------------- conteúdo editável (painel)
+  .get('/admin/conteudo/:collection', requireAuth, async (c) => {
+    const collection = c.req.param('collection');
+    if (!canEditCollection(c.get('user')!.role, collection)) return c.json({ error: 'Sem permissão' }, 403);
+    const rows = await db
+      .select({
+        key: schema.contentDocs.key,
+        data: schema.contentDocs.data,
+        deleted: schema.contentDocs.deleted,
+        updatedAt: schema.contentDocs.updatedAt,
+        updatedBy: schema.user.name,
+      })
+      .from(schema.contentDocs)
+      .leftJoin(schema.user, eq(schema.contentDocs.updatedBy, schema.user.id))
+      .where(eq(schema.contentDocs.collection, collection));
+    return c.json({ docs: rows }, 200);
+  })
+  .put(
+    '/admin/conteudo/:collection/:key',
+    requireAuth,
+    validator('json', (v) => (v ?? {}) as { data?: unknown; deleted?: boolean }),
+    async (c) => {
+      const me = c.get('user')!;
+      const collection = c.req.param('collection');
+      const key = c.req.param('key');
+      if (!CONTENT_COLLECTIONS[collection] || !CONTENT_KEY_RE.test(key)) {
+        return c.json({ error: 'Conteúdo inválido' }, 400);
+      }
+      if (!canEditCollection(me.role, collection)) return c.json({ error: 'Sem permissão' }, 403);
+      const body = c.req.valid('json');
+      const data = body.data ?? {};
+      if (typeof data !== 'object' || Array.isArray(data)) return c.json({ error: 'Formato inválido' }, 400);
+      if (JSON.stringify(data).length > CONTENT_MAX_BYTES) return c.json({ error: 'Conteúdo grande demais' }, 400);
+      const values = {
+        collection,
+        key,
+        data,
+        deleted: body.deleted === true,
+        updatedBy: me.id,
+        updatedAt: new Date(),
+      };
+      await db
+        .insert(schema.contentDocs)
+        .values(values)
+        .onConflictDoUpdate({
+          target: [schema.contentDocs.collection, schema.contentDocs.key],
+          set: { data: values.data, deleted: values.deleted, updatedBy: values.updatedBy, updatedAt: values.updatedAt },
+        });
+      return c.json({ ok: true }, 200);
+    },
+  )
+  .delete('/admin/conteudo/:collection/:key', requireAuth, async (c) => {
+    const collection = c.req.param('collection');
+    if (!canEditCollection(c.get('user')!.role, collection)) return c.json({ error: 'Sem permissão' }, 403);
+    await db
+      .delete(schema.contentDocs)
+      .where(and(eq(schema.contentDocs.collection, collection), eq(schema.contentDocs.key, c.req.param('key'))));
+    return c.json({ ok: true }, 200);
   })
   // ------------------------------------------------------------- CRM de leads
   .get('/admin/equipe', requireRole('admin', 'vendedor'), async (c) => {

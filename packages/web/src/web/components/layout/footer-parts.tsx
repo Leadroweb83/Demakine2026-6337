@@ -218,7 +218,7 @@ export function OpenStatus({ className }: { className?: string }) {
       </span>
       <span className="flex items-center gap-1.5 text-[12.5px] text-white/40">
         <Clock className="h-3.5 w-3.5" />
-        Seg a Qui 07h30 às 17h30 · Sex 07h30 às 16h30
+        {site.hoursLine}
       </span>
     </div>
   );
@@ -393,7 +393,7 @@ export function LocalBusinessBlock({ cnpj }: { cnpj?: string }) {
         </span>
         <meta itemProp="openingHours" content="Mo-Th 07:30-17:30" />
         <meta itemProp="openingHours" content="Fr 07:30-16:30" />
-        <span className="mt-0.5 block">Seg a Qui 07h30 às 17h30 · Sex 07h30 às 16h30</span>
+        <span className="mt-0.5 block">{site.hoursLine}</span>
       </p>
     </div>
   );
