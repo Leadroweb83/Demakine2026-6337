@@ -20,11 +20,8 @@ import {
 } from "lucide-react";
 import { Seo, organizationJsonLd } from "@/components/seo";
 import {
-  CineBullets,
   CineRule,
   CineSection,
-  CineShot,
-  CineStat,
   CineTag,
   CineTitle,
 } from "@/components/cine";
@@ -32,6 +29,7 @@ import { HomeHero } from "@/components/hero";
 import { ScrollText } from "@/components/scroll-text";
 import { AgroBand } from "@/components/agro-band";
 import { VideoSection } from "@/components/video-section";
+import { BestSellers } from "@/components/best-sellers";
 import { SegmentsCarousel } from "@/components/segments-carousel";
 import { TestimonialsWall } from "@/components/testimonials";
 import { Timeline } from "@/components/timeline";
@@ -40,18 +38,14 @@ import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import {
   BtnGhost,
-  BtnPrimary,
-  BtnWhats,
   ClientsMarquee,
   ProductCard,
   Section,
   SectionHead,
 } from "@/components/kit";
 import {
-  bestSeller,
   categories,
   formatDate,
-  getProduct,
   posts,
   products,
   projects,
@@ -104,8 +98,6 @@ export default function Home() {
   const featured = products.slice(0, 8);
   const latestPosts = posts.slice(0, 3);
   const homeProjects = projects.slice(0, 6);
-  const champion = getProduct(bestSeller) ?? products[0];
-  const championBullets = champion.features.slice(0, 5);
 
   return (
     <>
@@ -184,37 +176,8 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ----------------------------------------------------------- spotlight */}
-      <CineSection>
-        <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <div>
-            <CineTag>Campeã de vendas</CineTag>
-            <CineTitle className="mt-5" lines={["Esteira para", "sacaria e fardos"]} />
-            <CineRule className="mt-5" />
-            <p className="mt-5 max-w-xl text-[16.5px] leading-relaxed text-white/70">
-              {champion.summary}
-            </p>
-            <CineBullets className="mt-7" items={championBullets} />
-
-            <div className="mt-8 grid max-w-lg grid-cols-3 gap-3">
-              <CineStat boxed value={`${champion.models.length}`} label="modelos de tabela" />
-              <CineStat boxed value="3 a 12 m" label="comprimento" />
-              <CineStat boxed value="0,75 a 5 cv" label="motorização" />
-            </div>
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <BtnPrimary to={`/produtos/${champion.slug}`} className="cine-shine">
-                Ver ficha técnica
-              </BtnPrimary>
-              <BtnWhats href={waLink(`Olá! Quero um orçamento da ${champion.name}.`)} className="cine-shine">
-                Pedir orçamento
-              </BtnWhats>
-            </div>
-          </div>
-
-          <CineShot src={champion.images[0]} alt={champion.name} />
-        </div>
-      </CineSection>
+      {/* ------------------------------------------------ campeãs de vendas */}
+      <BestSellers />
 
       {/* ------------------------------------------------------------- faixa agro */}
       <AgroBand />

@@ -78,8 +78,6 @@ export const testimonials = content.testimonials;
 export const projects = content.projects;
 export const posts = [...content.posts].sort((a, b) => b.date.localeCompare(a.date));
 
-export const bestSeller = "esteira-transportadora-para-sacaria";
-
 /** Endereços de produtos que foram unificados; o 301 de verdade fica no vercel.json. */
 export const productAliases: Record<string, string> = {
   "esteira-transportadora-em-v": "esteira-transportadora-para-granel",

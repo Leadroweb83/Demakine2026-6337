@@ -132,6 +132,15 @@
   transform: none;
 }
 
+@keyframes bs-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 @keyframes dm-marquee {
   from {
     transform: translateX(0);
