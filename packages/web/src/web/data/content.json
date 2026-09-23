@@ -605,153 +605,24 @@
       "seoDesc": "Esteira transportadora de caixas,esteiras para caixas, esteira elevatória, esteira dala, esteira de elevação, esteira para transporte de caixas"
     },
     {
-      "slug": "esteira-transportadora-em-v",
-      "name": "Esteira Transportadora em V",
-      "title": "Esteira Transportadora em V",
-      "category": "esteiras-transportadoras",
-      "tag": null,
-      "applications": [
-        "Granel com maior volume",
-        "Grãos e sementes",
-        "Cama de frango",
-        "Resíduos e compostos"
-      ],
-      "summary": "A Esteira transportadora em “V” é ideal para transporte de produtos a granel (adubo/cama de frango (aviário), areia, soja, pedra, brita, grãos, sal, pedrisco, cereais e outros. A esteira transportadora para granel é essencial para agilizar o sistema de carga e descarga junto ao caminhão, garantindo menos gasto com mão de obra e aumentando a produtividade.",
-      "description": [
-        "A Esteira transportadora em “V” é ideal para transporte de produtos a granel (adubo/cama de frango (aviário), areia, soja, pedra, brita, grãos, sal, pedrisco, cereais e outros. A esteira transportadora para granel é essencial para agilizar o sistema de carga e descarga junto ao caminhão, garantindo menos gasto com mão de obra e aumentando a produtividade.",
-        "A Esteira transportadora de correia é fabricada com barras de aço SAE 1020, estrutura leve e resistente, de fácil locomoção. Possui motorredutor blindado na tração da correia e na tração do levante. A Correia é feita no formato em V com taliscas emborrachada para melhor fixação do produto.",
-        "Possui sistema de reversão da correia que possibilita que a esteira seja usada para carga ou descarga. Possui rodas e pneus de automóvel que possibilitam transportar o equipamento rapidamente a qualquer lugar. A altura da esteira pode ser regulada de forma automática através da chave elétrica ou manualmente por meio de uma manivela com catraca.",
-        "Ideal para carga e descarga de caminhões, transformando o que antes demoravam horas em apenas alguns minutos. Fabricamos sua esteira no tamanho e forma que precisar, para isso peça um orçamento ou entre em contato.",
-        "Observação: A capacidade de transporte da esteira transportadora em V depende diretamente do tipo e do peso do produto a ser transportado."
-      ],
-      "features": [
-        "Rodas e pneus de automóvel aro 13″",
-        "Correia emborrachada em tipo em V com taliscas",
-        "Levante elétrico ou manual na manivela",
-        "Sistema de reversão na chave para carga e descarga",
-        "Moega de recepção do material",
-        "Estrutura principal construída com tubos retangulares",
-        "Equipado com rolo de tração tipo gaiola",
-        "Roletes de apoio da lona “ duplos” galvanizados com rolamentos",
-        "Regulagem com mancais para alinhamento da correia",
-        "Rodízios giratórios Ø5″ na traseira",
-        "Motoredutores blindados",
-        "Disponível em 220 ou 380 Volts Trifásico e em casos especiais o motor pode ser Monofásico",
-        "Pintura na cor azul automotiva"
-      ],
-      "models": [
-        {
-          "model": "EV5",
-          "specs": {
-            "Comprimento": "5 m",
-            "Largura da correia": "50 cm",
-            "Altura máxima": "2,5 m",
-            "Altura mínima": "1 m",
-            "Motor de tração": "1 cv",
-            "Velocidade": "60 m/min",
-            "Capacidade": "70 kg/m"
-          }
-        },
-        {
-          "model": "EV6",
-          "specs": {
-            "Comprimento": "6 m",
-            "Largura da correia": "50 cm",
-            "Altura máxima": "3 m",
-            "Altura mínima": "1,20 m",
-            "Motor de tração": "1,5 cv",
-            "Velocidade": "60 m/min",
-            "Capacidade": "70 kg/m"
-          }
-        },
-        {
-          "model": "EV7",
-          "specs": {
-            "Comprimento": "7 m",
-            "Largura da correia": "50 cm",
-            "Altura máxima": "3,5 m",
-            "Altura mínima": "1,30 m",
-            "Motor de tração": "1,5 cv",
-            "Velocidade": "60 m/min",
-            "Capacidade": "70 kg/m"
-          }
-        },
-        {
-          "model": "EV8",
-          "specs": {
-            "Comprimento": "8 m",
-            "Largura da correia": "50 cm",
-            "Altura máxima": "4 m",
-            "Altura mínima": "1,30 m",
-            "Motor de tração": "2 cv",
-            "Velocidade": "60 m/min",
-            "Capacidade": "70 kg/m"
-          }
-        },
-        {
-          "model": "EV10",
-          "specs": {
-            "Comprimento": "10 m",
-            "Largura da correia": "50 cm",
-            "Altura máxima": "5 m",
-            "Altura mínima": "1,30 m",
-            "Motor de tração": "3 cv",
-            "Velocidade": "60 m/min",
-            "Capacidade": "70 kg/m"
-          }
-        },
-        {
-          "model": "EV12",
-          "specs": {
-            "Comprimento": "12 m",
-            "Largura da correia": "50 cm",
-            "Altura máxima": "6 m",
-            "Altura mínima": "1,30 m",
-            "Motor de tração": "3,0 cv",
-            "Velocidade": "60 m/min",
-            "Capacidade": "70 kg/m"
-          }
-        }
-      ],
-      "specKeys": [
-        "Comprimento",
-        "Largura da correia",
-        "Altura máxima",
-        "Altura mínima",
-        "Motor de tração",
-        "Velocidade",
-        "Capacidade"
-      ],
-      "images": [
-        "/img/produtos/esteira-transportadora-em-v/1.jpg",
-        "/img/produtos/esteira-transportadora-em-v/2.jpg",
-        "/img/produtos/esteira-transportadora-em-v/3.jpg",
-        "/img/produtos/esteira-transportadora-em-v/4.jpg",
-        "/img/produtos/esteira-transportadora-em-v/5.jpg",
-        "/img/produtos/esteira-transportadora-em-v/6.jpg",
-        "/img/produtos/esteira-transportadora-em-v/7.jpg",
-        "/img/produtos/esteira-transportadora-em-v/8.jpg",
-        "/img/produtos/esteira-transportadora-em-v/9.jpg",
-        "/img/produtos/esteira-transportadora-em-v/10.jpg"
-      ],
-      "seoTitle": "Esteira Transportadora em V | Esteira para Granel - Demakine",
-      "seoDesc": "Esteira transportadora em v, esteira transportadora de grãos, esteira para cama de frango,areia,soja,pedra,brita,sal,pedrisco, cereais, esteira para granel"
-    },
-    {
       "slug": "esteira-transportadora-para-granel",
-      "name": "Esteira Transportadora para Granel",
-      "title": "Esteira Transportadora para Granel",
+      "name": "Esteira Transportadora em V para Granel",
+      "title": "Esteira Transportadora em V para Granel",
       "category": "esteiras-transportadoras",
       "tag": null,
       "applications": [
         "Grãos a granel",
         "Adubo e fertilizante",
         "Areia, brita e agregados",
-        "Descarga de moega"
+        "Descarga de moega",
+        "Cama de frango",
+        "Resíduos e compostos"
       ],
-      "summary": "A Esteira Transportadora Granel é necessária para produtos como adubo, cama de frango, aviário, minérios de ferro, carvão, areia, soja, café, pedra, concreto, brita, grãos, sal, pedrisco, cereais e outros. A Esteira Transportadora para Granel é muito importante para agilizar o sistema de carga e descarga junto ao caminhão, também é utilizada para alimentação de máquinas e abastecimento em armazéns, trazendo redução de custo com mão de obra e aumentando a produtividade, transformando o que antes demoravam horas em apenas alguns minutos.",
+      "summary": "A Esteira Transportadora em V para Granel é indicada para produtos como adubo, cama de frango, aviário, minérios de ferro, carvão, areia, soja, café, pedra, concreto, brita, grãos, sal, pedrisco, cereais e outros. A Esteira Transportadora para Granel é muito importante para agilizar o sistema de carga e descarga junto ao caminhão, também é utilizada para alimentação de máquinas e abastecimento em armazéns, trazendo redução de custo com mão de obra e aumentando a produtividade, transformando o que antes demoravam horas em apenas alguns minutos.",
       "description": [
-        "A Esteira Transportadora Granel é necessária para produtos como adubo, cama de frango, aviário, minérios de ferro, carvão, areia, soja, café, pedra, concreto, brita, grãos, sal, pedrisco, cereais e outros. A Esteira Transportadora para Granel é muito importante para agilizar o sistema de carga e descarga junto ao caminhão, também é utilizada para alimentação de máquinas e abastecimento em armazéns, trazendo redução de custo com mão de obra e aumentando a produtividade, transformando o que antes demoravam horas em apenas alguns minutos.",
+        "A Esteira Transportadora em V para Granel é indicada para produtos como adubo, cama de frango, aviário, minérios de ferro, carvão, areia, soja, café, pedra, concreto, brita, grãos, sal, pedrisco, cereais e outros. A Esteira Transportadora para Granel é muito importante para agilizar o sistema de carga e descarga junto ao caminhão, também é utilizada para alimentação de máquinas e abastecimento em armazéns, trazendo redução de custo com mão de obra e aumentando a produtividade, transformando o que antes demoravam horas em apenas alguns minutos.",
+        "A Esteira transportadora de correia é fabricada com barras de aço SAE 1020, estrutura leve e resistente, de fácil locomoção. Possui motorredutor blindado na tração da correia e na tração do levante. A Correia é feita no formato em V com taliscas emborrachada para melhor fixação do produto.",
+        "Possui sistema de reversão da correia que possibilita que a esteira seja usada para carga ou descarga. Possui rodas e pneus de automóvel que possibilitam transportar o equipamento rapidamente a qualquer lugar. A altura da esteira pode ser regulada de forma automática através da chave elétrica ou manualmente por meio de uma manivela com catraca.",
         "Fabricamos sua esteira no tamanho e forma que precisar, para isso peça um orçamento ou entre em contato.",
         "Observação: A capacidade de transporte da esteira transportadora em V depende diretamente do tipo e do peso do produto a ser transportado."
       ],
@@ -863,10 +734,14 @@
         "/img/produtos/esteira-transportadora-para-granel/7.jpg",
         "/img/produtos/esteira-transportadora-para-granel/8.jpg",
         "/img/produtos/esteira-transportadora-para-granel/9.jpg",
-        "/img/produtos/esteira-transportadora-para-granel/10.jpg"
+        "/img/produtos/esteira-transportadora-para-granel/10.jpg",
+        "/img/produtos/esteira-transportadora-para-granel/11.jpg",
+        "/img/produtos/esteira-transportadora-para-granel/12.jpg",
+        "/img/produtos/esteira-transportadora-para-granel/13.jpg",
+        "/img/produtos/esteira-transportadora-para-granel/14.jpg"
       ],
-      "seoTitle": "Esteira transportadora Granel (Grãos, café, soja, concreto, areia)",
-      "seoDesc": "esteira para granel, esteira em v, esteira transportadora para granel, esteira transportadora de Grãos, correia transportadora em v,transportador de correia"
+      "seoTitle": "Esteira Transportadora em V para Granel | Demakine",
+      "seoDesc": "Esteira em V para granel: grãos, adubo, areia, brita, cama de frango e mais. Carga e descarga de caminhão com reversão, levante elétrico e modelos de 5 a 12 m."
     },
     {
       "slug": "esteira-transportadora-em-v-para-cama-de-frango-aviario",
@@ -2573,7 +2448,7 @@
       "images": [
         "/img/produtos/esteira-transportadora-horizontal/1.jpg",
         "/img/produtos/esteira-transportadora-horizontal/4.jpg",
-        "/img/produtos/esteira-transportadora-em-v/1.jpg",
+        "/img/produtos/esteira-transportadora-para-granel/10.jpg",
         "/img/produtos/esteira-transportadora-para-sacaria/2.jpg"
       ]
     },

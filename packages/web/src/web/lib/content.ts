@@ -53,7 +53,6 @@ const FEATURED_ORDER = [
   "esteira-transportadora-para-sacaria",
   "esteira-transportadora-para-granel",
   "esteira-transportadora-horizontal",
-  "esteira-transportadora-em-v",
   "rosca-transportadora",
   "elevador-de-canecas",
   "maquina-de-costurar-sacos-gk-26",
@@ -76,8 +75,14 @@ export const posts = [...content.posts].sort((a, b) => b.date.localeCompare(a.da
 
 export const bestSeller = "esteira-transportadora-para-sacaria";
 
+/** Endereços de produtos que foram unificados; o 301 de verdade fica no vercel.json. */
+export const productAliases: Record<string, string> = {
+  "esteira-transportadora-em-v": "esteira-transportadora-para-granel",
+};
+
 export function getProduct(slug: string) {
-  return products.find((p) => p.slug === slug);
+  const real = productAliases[slug] ?? slug;
+  return products.find((p) => p.slug === real);
 }
 
 export function getPost(slug: string) {

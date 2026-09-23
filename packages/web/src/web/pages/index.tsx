@@ -135,7 +135,7 @@ export default function Home() {
         <SectionHead
           eyebrow="Linhas de produto"
           title="Equipamentos para transportar, elevar e embalar"
-          text="21 equipamentos em linha, com dezenas de modelos e variações. Se o seu processo pede algo diferente, a gente projeta."
+          text={`${products.length} equipamentos em linha, com dezenas de modelos e variações. Se o seu processo pede algo diferente, a gente projeta.`}
           action={<BtnGhost to="/produtos">Ver catálogo</BtnGhost>}
         />
 

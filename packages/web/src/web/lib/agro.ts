@@ -49,7 +49,7 @@ export const agroChain = [
     step: "01",
     title: "Recepção e moega",
     text: "Descarga de caminhão, big bag ou tulha para dentro do processo, sem gente no braço.",
-    slugs: ["esteira-transportadora-para-granel", "esteira-transportadora-em-v", "calha-transportadora"],
+    slugs: ["esteira-transportadora-para-granel", "calha-transportadora"],
   },
   {
     step: "02",
@@ -98,8 +98,8 @@ export const agroChains = [
     id: "fertilizantes",
     name: "Fertilizantes e insumos",
     text: "Material abrasivo e úmido pede correia e estrutura certas, é o que fazemos há 15 anos.",
-    slugs: ["esteira-transportadora-em-v", "rosca-transportadora", "esteira-transportadora-para-sacaria"],
-    image: "/img/produtos/esteira-transportadora-em-v/1.jpg",
+    slugs: ["esteira-transportadora-para-granel", "rosca-transportadora", "esteira-transportadora-para-sacaria"],
+    image: "/img/produtos/esteira-transportadora-para-granel/10.jpg",
   },
   {
     id: "nutricao-animal",
@@ -112,7 +112,7 @@ export const agroChains = [
     id: "sementes",
     name: "Sementes",
     text: "Transporte com pouco impacto no grão e limpeza fácil entre lotes e cultivares.",
-    slugs: ["esteira-transportadora-em-v", "esteira-transportadora-para-sacaria", "calha-transportadora"],
+    slugs: ["esteira-transportadora-para-granel", "esteira-transportadora-para-sacaria", "calha-transportadora"],
     image: "/img/produtos/esteira-transportadora-para-sacaria/1.jpg",
   },
   {

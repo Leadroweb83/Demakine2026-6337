@@ -21,9 +21,6 @@ export const productVideos: Record<string, ProductVideo[]> = {
   "esteira-transportadora-de-caixas": [
     { id: "a7Kgiz062mQ", title: "Esteira para transporte de caixas e pacotes" },
   ],
-  "esteira-transportadora-em-v": [
-    { id: "a-NygthhN6s", title: "Esteira transportadora em V para grãos e granel" },
-  ],
   "esteira-transportadora-para-granel": [
     { id: "57Hgk90y_oQ", title: "Esteira transportadora para granel dentro da NR-10 e NR-12" },
     { id: "aWztsf8pIJ0", title: "Esteira transportadora de grãos, milho e ração" },

@@ -3,9 +3,24 @@
   "framework": "vite",
   "buildCommand": "vite build && bun build src/api/index.ts --outdir server-build --target node --format esm --packages external",
   "outputDirectory": "dist",
-  "regions": ["gru1"],
+  "regions": [
+    "gru1"
+  ],
+  "redirects": [
+    {
+      "source": "/produtos/esteira-transportadora-em-v",
+      "destination": "/produtos/esteira-transportadora-para-granel",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api?__path=$1" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api?__path=$1"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
   ]
 }

@@ -51,15 +51,6 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     Carvão: "consulta",
     "Fruta e legume": "sim",
   },
-  "esteira-transportadora-em-v": {
-    "Grão e granel": "sim",
-    Sacaria: "nao",
-    "Caixa e pacote": "nao",
-    "Resíduo e reciclagem": "sim",
-    "Areia e brita": "sim",
-    Carvão: "sim",
-    "Fruta e legume": "nao",
-  },
   "esteira-transportadora-de-caixas": {
     "Grão e granel": "nao",
     Sacaria: "sim",

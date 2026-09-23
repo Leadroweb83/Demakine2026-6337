@@ -126,8 +126,8 @@ export const segmentList: Segment[] = [
     color: "#d97706",
     icon: HardHat,
     text: "Areia, brita e agregados com maior volume por metro de correia.",
-    product: "Esteira Transportadora em V",
-    productSlug: "esteira-transportadora-em-v",
+    product: "Esteira Transportadora em V para Granel",
+    productSlug: "esteira-transportadora-para-granel",
   },
   {
     name: "Cooperativas",

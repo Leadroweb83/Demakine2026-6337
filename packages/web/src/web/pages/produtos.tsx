@@ -37,7 +37,7 @@ export default function Produtos() {
     <>
       <Seo
         title="Catálogo de Equipamentos | Demakine"
-        description="21 equipamentos agroindustriais: esteiras transportadoras, roscas, elevadores de canecas e de sacaria, máquinas de costurar sacos e peneiras. Especificações, modelos e capacidades."
+        description={`${products.length} equipamentos agroindustriais: esteiras transportadoras, roscas, elevadores de canecas e de sacaria, máquinas de costurar sacos e peneiras. Especificações, modelos e capacidades.`}
         path="/produtos"
       />
 

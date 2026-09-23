@@ -134,7 +134,7 @@ export const segmentLps: SegmentLp[] = [
       "esteira-transportadora-para-reciclagem-triagem",
       "esteira-transportadora-horizontal",
       "esteira-transportadora-articulada",
-      "esteira-transportadora-em-v",
+      "esteira-transportadora-para-granel",
       "esteira-transportadora-dalla",
     ],
     faq: [
@@ -165,7 +165,7 @@ export const segmentLps: SegmentLp[] = [
     eyebrow: "Segmento",
     intro:
       "Agregado é o material mais severo que existe para um transportador: abrasivo, com carga de impacto na alimentação e volume alto por hora. O que segura isso é estrutura reforçada e perfil de correia que aumenta o volume transportado por metro.",
-    hero: "/img/produtos/esteira-transportadora-em-v/1.jpg",
+    hero: "/img/produtos/esteira-transportadora-para-granel/10.jpg",
     color: "#d97706",
     pains: [
       {
@@ -193,7 +193,6 @@ export const segmentLps: SegmentLp[] = [
       { step: "Carregamento", text: "Descarga no caminhão com equipamento móvel de pátio." },
     ],
     products: [
-      "esteira-transportadora-em-v",
       "esteira-transportadora-para-granel",
       "peneira-para-carvao",
       "calha-transportadora",

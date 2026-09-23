@@ -287,7 +287,7 @@ export function solveQuiz(a: QuizAnswers): QuizResult | null {
     reasons.push("Para elevar granel a grande altura, o elevador de canecas é o mais eficiente.");
   }
   if (a.material === "granel" && a.height === "media") {
-    slug = "esteira-transportadora-em-v";
+    slug = "esteira-transportadora-para-granel";
     reasons.push("Em V a correia forma calha e segura o granel na subida, sem perda de material.");
   }
 
