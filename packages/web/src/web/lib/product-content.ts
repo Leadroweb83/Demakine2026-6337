@@ -208,6 +208,11 @@ export function materialFit(slug: string): Record<MaterialKey, Fit> {
   );
 }
 
+/** Sem entrada na matriz, tudo viraria "sob consulta": melhor não mostrar a seção. */
+export function hasMaterialFit(slug: string) {
+  return slug in fitBySlug;
+}
+
 /** Produtos que já têm a matriz preenchida, para a tabela geral do site. */
 export function matrixProducts() {
   return Object.keys(fitBySlug)

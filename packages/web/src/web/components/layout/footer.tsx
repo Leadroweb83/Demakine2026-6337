@@ -3,7 +3,7 @@ import { ArrowRight, Mail, MapPin, MessageCircle, Navigation, Phone } from "luci
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import { nav, site, waLink } from "@/lib/site";
 import { segmentLps } from "@/lib/segmentos-lp";
-import { categories, products } from "@/lib/content";
+import { categories, getProduct } from "@/lib/content";
 import {
   BrandWordmark,
   FooterSearch,
@@ -21,8 +21,25 @@ const socials = [
   { href: site.social.youtube, label: "YouTube", Icon: FaYoutube },
 ];
 
+/** Lista escolhida pela Demakine; "Máquinas de costura" abre o catálogo filtrado. */
+const FOOTER_EQUIPMENT: { slug?: string; label?: string; href?: string }[] = [
+  { slug: "esteira-transportadora-para-sacaria" },
+  { slug: "esteira-transportadora-para-granel" },
+  { slug: "esteira-transportadora-horizontal" },
+  { slug: "rosca-transportadora" },
+  { slug: "elevador-de-canecas" },
+  { slug: "elevador-de-sacaria" },
+  { slug: "peneira-para-carvao" },
+  { slug: "mini-sistema-de-costura" },
+  { label: "Máquinas de Costura", href: "/produtos?cat=empacotamento-e-costura" },
+];
+
 export function Footer() {
-  const top = products.slice(0, 6);
+  const top = FOOTER_EQUIPMENT.flatMap((item) => {
+    if (item.href) return [{ key: item.href, label: item.label ?? "", href: item.href }];
+    const p = item.slug ? getProduct(item.slug) : undefined;
+    return p ? [{ key: p.slug, label: p.name, href: `/produtos/${p.slug}` }] : [];
+  });
 
   return (
     <footer className="relative overflow-hidden bg-dm-blue-deep text-white">
@@ -89,10 +106,10 @@ export function Footer() {
           <div>
             <h3 className="eyebrow text-white/45">Equipamentos</h3>
             <ul className="mt-5 space-y-2.5 text-[15px] text-white/70">
-              {top.map((p) => (
-                <li key={p.slug}>
-                  <Link href={`/produtos/${p.slug}`} className="hover:text-white">
-                    {p.name}
+              {top.map((item) => (
+                <li key={item.key}>
+                  <Link href={item.href} className="hover:text-white">
+                    {item.label}
                   </Link>
                 </li>
               ))}

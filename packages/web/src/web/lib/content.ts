@@ -61,7 +61,12 @@ const FEATURED_ORDER = [
 
 export const categories = content.categories;
 
-export const products = [...content.products].sort((a, b) => {
+/** Produto ainda sem foto própria usa a foto da fábrica, para nenhuma vitrine quebrar. */
+const FALLBACK_IMAGE = "/img/site/hero.jpg";
+
+export const products = content.products.map((p) =>
+  p.images.length ? p : { ...p, images: [FALLBACK_IMAGE] },
+).sort((a, b) => {
   const ia = FEATURED_ORDER.indexOf(a.slug);
   const ib = FEATURED_ORDER.indexOf(b.slug);
   if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
@@ -87,7 +92,7 @@ export function getProduct(slug: string) {
 
 /** Artigo certo antes do nome do equipamento: "o Elevador", "a Esteira". */
 export function artigo(name: string) {
-  const masc = /^(elevador|cartrans|carrinho)/i.test(name.trim());
+  const masc = /^(elevador|cartrans|carrinho|mini sistema|sistema)/i.test(name.trim());
   return masc ? { a: "o", A: "O", da: "do", para: "para o" } : { a: "a", A: "A", da: "da", para: "para a" };
 }
 

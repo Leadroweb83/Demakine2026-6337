@@ -353,7 +353,7 @@ def pdf_product_maintenance():
         file = m["checklistPdf"].rsplit("/", 1)[1].removesuffix(".pdf")
         page = f"""<div class="page">{header(f"Checklist de manutenção preventiva<br>{name}")}
         <p class="eyebrow" style="margin-top:7mm">Manutenção preventiva</p>
-        <h1>Checklist {"do" if re.match(r"(?i)(elevador|cartrans|carrinho)", name) else "da"} {name}</h1>
+        <h1>Checklist {"do" if re.match(r"(?i)(elevador|cartrans|carrinho|mini sistema|sistema)", name) else "da"} {name}</h1>
         <p class="lead">{m["intro"]} Imprima esta folha, deixe perto do equipamento e marque cada item conferido.</p>
         {cards}
         <div class="note"><strong>Sempre:</strong><ul style="margin:1.5mm 0 0 4mm">{always}</ul>

@@ -28,6 +28,7 @@ import { maintenanceFor } from "@/lib/product-maintenance";
 import { FaqAccordion } from "@/components/faq";
 import { faqGroups, faqJsonLd } from "@/lib/faq";
 import {
+  hasMaterialFit,
   maintenancePlan,
   materialFit,
   materials,
@@ -313,7 +314,7 @@ export default function Produto() {
       {/* ------------------------------------------------ para qual material serve */}
       {process ? (
         <ProductProcess process={process} />
-      ) : (
+      ) : !hasMaterialFit(product.slug) ? null : (
       <Section>
         <Reveal>
           <p className="eyebrow text-dm-blue">Compatibilidade</p>
