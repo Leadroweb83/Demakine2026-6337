@@ -1,3 +1,4 @@
+import content from "../../web/data/content.json";
 import type { Role } from "../auth";
 
 /** Coleções editáveis e quem pode salvar cada uma (super admin sempre pode). */
@@ -15,4 +16,12 @@ export function canEditCollection(role: string | null | undefined, collection: s
   const allowed = CONTENT_COLLECTIONS[collection];
   if (!allowed) return false;
   return role === "super_admin" || allowed.includes((role ?? "") as Role);
+}
+
+const CODE_POSTS = new Set((content as { posts: { slug: string }[] }).posts.map((p) => p.slug));
+
+/** Item que já vem publicado no código do site (edição dele continua publicada). */
+export function publishedInCode(collection: string, key: string) {
+  if (collection === "post") return CODE_POSTS.has(key);
+  return false;
 }

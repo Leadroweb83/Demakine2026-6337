@@ -34,7 +34,7 @@ import {
   type JobInput,
 } from "./lib/jobs";
 import { isLeadStatus } from "./lib/leads";
-import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection } from "./lib/content-docs";
+import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection, publishedInCode } from "./lib/content-docs";
 
 type Env = {
   Variables: {
@@ -532,8 +532,19 @@ const app = new Hono<Env>()
       }
       if (!canEditCollection(me.role, collection)) return c.json({ error: 'Sem permissão' }, 403);
       const body = c.req.valid('json');
-      const data = body.data ?? {};
+      const data = (body.data ?? {}) as Record<string, unknown>;
       if (typeof data !== 'object' || Array.isArray(data)) return c.json({ error: 'Formato inválido' }, 400);
+      // editor cria post/case como rascunho; quem publica é admin (edição de publicado segue publicada)
+      if (me.role === 'editor' && (collection === 'post' || collection === 'case')) {
+        const [current] = await db
+          .select({ data: schema.contentDocs.data })
+          .from(schema.contentDocs)
+          .where(and(eq(schema.contentDocs.collection, collection), eq(schema.contentDocs.key, key)));
+        const published = current
+          ? (current.data as { draft?: boolean }).draft !== true
+          : publishedInCode(collection, key);
+        if (!published) data.draft = true;
+      }
       if (JSON.stringify(data).length > CONTENT_MAX_BYTES) return c.json({ error: 'Conteúdo grande demais' }, 400);
       const values = {
         collection,

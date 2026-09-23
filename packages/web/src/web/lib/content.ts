@@ -40,6 +40,10 @@ export type Post = {
   cover: string;
   blocks: string[];
   images: string[];
+  seoTitle?: string;
+  seoDesc?: string;
+  /** rascunho salvo no painel: não aparece no site */
+  draft?: boolean;
 };
 
 const content = raw as unknown as {
@@ -108,7 +112,23 @@ export const products = withPanelEdits(content.products).map((p) =>
 export const clients = content.clients;
 export const testimonials = content.testimonials;
 export const projects = content.projects;
-export const posts = [...content.posts].sort((a, b) => b.date.localeCompare(a.date));
+/** Posts como vêm no código, sem as edições do painel (base do editor do blog). */
+export const DEFAULT_POSTS: readonly Post[] = content.posts;
+
+export const EMPTY_POST: Post = { slug: "", title: "", category: "", date: "", cover: "", blocks: [], images: [] };
+
+function postsWithPanelEdits(base: Post[]) {
+  const edits = editedDocs<Post>("post");
+  const hidden = new Set(deletedKeys("post"));
+  const known = new Set(base.map((p) => p.slug));
+  const merged = base.map((p) => (edits[p.slug] ? { ...p, ...edits[p.slug], slug: p.slug } : p));
+  for (const [slug, doc] of Object.entries(edits)) {
+    if (!known.has(slug) && doc.title && doc.date) merged.push({ ...EMPTY_POST, ...doc, slug });
+  }
+  return merged.filter((p) => !hidden.has(p.slug) && !p.draft);
+}
+
+export const posts = postsWithPanelEdits(content.posts).sort((a, b) => b.date.localeCompare(a.date));
 
 /** Endereços de produtos que foram unificados; o 301 de verdade fica no vercel.json. */
 export const productAliases: Record<string, string> = {

@@ -26,6 +26,7 @@ import { AdminVagas } from "../admin/vagas";
 import { AdminSiteSettings } from "../admin/site-settings";
 import { AdminMedia } from "../admin/media";
 import { AdminCatalog } from "../admin/catalog";
+import { AdminBlog } from "../admin/blog";
 import { Badge, Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
 import { caseStudies } from "@/lib/cases";
@@ -44,7 +45,7 @@ const NAV: NavItem[] = [
   { id: "overview", label: "Dashboard", Icon: BarChart3, area: "livre" },
   { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
   { id: "cases", label: "Cases", Icon: Newspaper, area: "conteudo" },
-  { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo", soon: true },
+  { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo" },
   { id: "produtos", label: "Catálogo", Icon: Package, area: "conteudo" },
   { id: "loja", label: "Loja", Icon: ShoppingCart, area: "loja", soon: true },
   { id: "vagas", label: "Vagas", Icon: Briefcase, area: "vagas" },
@@ -294,6 +295,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "site" && <AdminSiteSettings />}
           {current === "midia" && <AdminMedia user={user} />}
           {current === "produtos" && <AdminCatalog />}
+          {current === "blog" && <AdminBlog user={user} />}
           {current === "usuarios" && <AdminUsers me={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}
