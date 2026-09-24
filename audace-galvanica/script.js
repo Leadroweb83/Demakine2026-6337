@@ -127,6 +127,10 @@
   var motion = root.classList.contains('js-motion');
   window.__audaceMotion = true;
   var desktop = window.matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)');
+  /* Quando o GSAP + ScrollTrigger (carregado por scroll.js depois da página abrir) assume,
+     o hero e as etapas no desktop passam a ser controlados por ele */
+  function gs() { return motion && window.__audaceGsap === true; }
+  var wide = window.matchMedia('(min-width: 1024px)');
 
   /* Ordem das entradas em grupos (benefícios, etapas, rodapé) */
   function order(list) { Array.prototype.forEach.call(list, function (el, i) { el.style.setProperty('--i', i); }); }
@@ -192,7 +196,7 @@
     if (!motion) return;
 
     var big = desktop.matches;
-    if (heroPic && y < hero.offsetHeight) heroPic.style.setProperty('--hero-y', big ? (y * 0.06).toFixed(1) + 'px' : '0px');
+    if (!gs() && heroPic && y < hero.offsetHeight) heroPic.style.setProperty('--hero-y', big ? (y * 0.06).toFixed(1) + 'px' : '0px');
     if (consult) {
       var rc = consult.getBoundingClientRect();
       var pc = clamp((vh - rc.top) / (vh + rc.height)) - 0.5;
@@ -202,7 +206,7 @@
       var r = el.getBoundingClientRect();
       el.style.setProperty('--gp', clamp((vh * 0.92 - r.top) / (vh * 0.45)).toFixed(3));
     });
-    if (stepsList) {
+    if (stepsList && !(gs() && wide.matches)) {
       var rs = stepsList.getBoundingClientRect();
       stepsList.style.setProperty('--steps-p', clamp((vh * 0.8 - rs.top) / (rs.height + vh * 0.25)).toFixed(3));
       var best = null, bestD = Infinity;

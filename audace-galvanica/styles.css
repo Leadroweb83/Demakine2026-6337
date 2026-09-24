@@ -889,6 +889,24 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .site-footer__bottom { flex-direction: column; text-align: center; padding-bottom: 72px; }
 }
 
+/* GSAP + ScrollTrigger (scroll.js): apoios em CSS */
+.form-card { scale: var(--pull, 1); }
+.cta-form::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: rgba(5, 5, 6, var(--dim, 0)); }
+.btn--gold.is-lit { box-shadow: 0 0 0 1px rgba(227, 198, 129, .55), 0 14px 38px -8px rgba(195, 170, 104, .75); }
+.btn--gold.is-lit::after { animation: shineSweep 1.3s var(--ease) .1s 1; }
+@keyframes shineSweep { from { left: -60%; } to { left: 125%; } }
+.site-nav__list a.is-current { color: var(--gold-light); }
+@media (min-width: 1024px) { .site-nav__list a.is-current::after { transform: scaleX(1); } }
+.map-pin { translate: 0 var(--drop, 0px); }
+
+/* Como funciona fixa (desktop): ocupa a tela abaixo do cabeçalho, etapas centralizadas e contraste forte na ativa */
+@media (min-width: 1024px) {
+  .steps.is-pin-mode { height: auto; min-height: calc(100vh - 96px); display: flex; flex-direction: column; justify-content: center; padding-bottom: calc(24 * var(--u)); }
+  .steps.is-pin-mode .steps__list .step { transition: opacity .5s var(--ease); }
+  .steps.is-pin-mode .steps__list.has-active .step:not(.is-active) { opacity: .42; }
+  .steps.is-pin-mode .steps__list.has-active .step.is-active .step__number { box-shadow: 0 0 0 1px var(--line-gold), 0 0 24px -4px rgba(195, 170, 104, .6); }
+}
+
 /* Feixes de luz (efeito "Beams", reescrito em JS puro) sobre o degradê azul, atrás de fotos e textos */
 .beams {
   position: absolute; inset: 0; z-index: -4; width: 100%; height: 100%; pointer-events: none;

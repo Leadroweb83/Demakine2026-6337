@@ -72,6 +72,11 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   reais do mesmo anel quando houver: `images/anel/anel-bruto*` e `images/anel/anel-banhado-ouro*` (1680×944).
 - Rodapé: faixa com "© ano Audace Galvânica. Todos os direitos reservados." (ano atualizado por JS) e "Produzido por"
   com a logo da Leal MKT (link para https://lealmkt.com em nova aba).
+- Animações presas à rolagem com GSAP 3.15 + ScrollTrigger (licença padrão gratuita, hospedados em `vendor/`,
+  baixados só depois da página abrir para não competir com a foto do hero). Em `scroll.js`:
+  2 hero em camadas; 3 Como funciona fixa no desktop com as etapas acendendo uma a uma; 7 frase da consultoria
+  palavra por palavra; 8 formulário que cresce, fundo que escurece e botão que brilha no centro; 9 menu que marca a
+  seção na tela; 10 mapa com zoom e pin que cai. Sem GSAP (ou com movimento reduzido), valem as animações de script.js.
 - Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
 
 ## Decisões sobre os assets (versão anterior, histórico)
