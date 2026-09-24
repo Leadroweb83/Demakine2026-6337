@@ -13,7 +13,7 @@
   <meta property="og:description" content="Consultoria especializada e soluções em banhos para semijoias. Entenda quais acabamentos fazem sentido para sua marca, suas peças e seu momento de negócio.">
   <link rel="preload" href="fonts/libre-baskerville-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" as="image" href="images/photos/hero_galvanic_chain_4x.png" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" href="images/backgrounds/section_01_hero_bg_clean_4x.webp" fetchpriority="high">
   <link rel="stylesheet" href="styles.css">
   <script type="application/ld+json">
   {
@@ -56,13 +56,12 @@
   <main id="conteudo">
     <!-- ================= 01 HERO ================= -->
     <section class="section hero" id="hero" aria-labelledby="hero-title">
-      <div class="section__bg" aria-hidden="true">
-        <img src="images/backgrounds/section_01_hero_bg_clean_4x.png" alt="" decoding="async">
+      <div class="section__bg">
+        <picture>
+          <source type="image/webp" srcset="images/backgrounds/section_01_hero_bg_clean_4x.webp">
+          <img src="images/backgrounds/section_01_hero_bg_clean_4x.png" alt="Corrente de semijoia com banho dourado sendo retirada do tanque galvânico" width="2000" height="1179" fetchpriority="high" decoding="async">
+        </picture>
       </div>
-      <div class="hero__media">
-        <img src="images/photos/hero_galvanic_chain_4x.png" alt="Corrente de semijoia sendo retirada do banho galvânico, com reflexo dourado" fetchpriority="high" decoding="async">
-      </div>
-      <img class="geo-overlay hero__geo" src="images/overlays/hero_geo_overlay.svg" alt="" aria-hidden="true">
 
       <div class="container hero__inner">
         <div class="hero__copy">
@@ -91,15 +90,14 @@
 
     <!-- ================= 02 CONSULTORIA ================= -->
     <section class="section consult" id="consultoria" aria-labelledby="consult-title">
-      <div class="section__bg" aria-hidden="true">
-        <img src="images/backgrounds/section_02_consult_bg_clean_4x.png" alt="" loading="lazy" decoding="async">
+      <div class="section__bg">
+        <picture>
+          <source type="image/webp" srcset="images/backgrounds/section_02_consult_bg_clean_4x.webp">
+          <img src="images/backgrounds/section_02_consult_bg_clean_4x.png" alt="Modelo usando brincos, anéis e corrente de semijoias douradas" width="2000" height="798" loading="lazy" decoding="async">
+        </picture>
       </div>
-      <img class="geo-overlay consult__geo" src="images/overlays/consult_geo_overlay.svg" alt="" aria-hidden="true" loading="lazy">
 
       <div class="container split split--media-left">
-        <figure class="split__media consult__media">
-          <img src="images/photos/consult_model_4x.png" alt="Modelo usando semijoias douradas com acabamento premium" loading="lazy" decoding="async">
-        </figure>
         <div class="split__copy">
           <p class="eyebrow">CONSULTORIA AUDACE GALVÂNICA</p>
           <h2 class="display section-title" id="consult-title">Antes de escolher o banho,<br class="br-d"> entenda o que sua marca<br class="br-d"> <span class="gold">realmente precisa.</span></h2>
@@ -112,10 +110,12 @@
 
     <!-- ================= 03 ESTRATÉGIA ================= -->
     <section class="section strategy" id="estrategia" aria-labelledby="strategy-title">
-      <div class="section__bg" aria-hidden="true">
-        <img src="images/backgrounds/section_03_strategy_bg_clean_4x.png" alt="" loading="lazy" decoding="async">
+      <div class="section__bg">
+        <picture>
+          <source type="image/webp" srcset="images/backgrounds/section_03_strategy_bg_clean_4x.webp">
+          <img src="images/backgrounds/section_03_strategy_bg_clean_4x.png" alt="Anel de semijoia com banho dourado sendo inspecionado com pinça" width="2000" height="560" loading="lazy" decoding="async">
+        </picture>
       </div>
-      <img class="geo-overlay strategy__geo" src="images/overlays/strategy_geo_overlay.svg" alt="" aria-hidden="true" loading="lazy">
 
       <div class="container split split--media-right">
         <div class="split__copy">
@@ -123,9 +123,6 @@
           <p class="body-text">Nosso time conversa com você para entender<br class="br-d"> o perfil da sua marca, o posicionamento da sua<br class="br-d"> coleção, o público que deseja alcançar, a realidade<br class="br-d"> da sua operação e os resultados que espera das peças.</p>
           <p class="body-text">A partir desse diagnóstico, você recebe<br class="br-d"> uma orientação mais estratégica para definir<br class="br-d"> as melhores possibilidades de banho para o seu projeto.</p>
         </div>
-        <figure class="split__media strategy__media">
-          <img src="images/photos/inspection_ring_tweezers_4x.png" alt="Anel de semijoia sendo inspecionado com pinça para análise do acabamento" loading="lazy" decoding="async">
-        </figure>
         <ul class="side-words strategy__side-words" aria-label="Pilares da consultoria">
           <li>TÉCNICA</li>
           <li>EXPERIÊNCIA</li>
@@ -138,7 +135,10 @@
     <!-- ================= 04 DIFERENCIAIS ================= -->
     <section class="section benefits theme-light" id="diferenciais" aria-labelledby="benefits-title">
       <div class="section__bg" aria-hidden="true">
-        <img src="images/backgrounds/section_04_benefits_bg_clean_4x.png" alt="" loading="lazy" decoding="async">
+        <picture>
+          <source type="image/webp" srcset="images/backgrounds/section_04_benefits_bg_clean_4x.webp">
+          <img src="images/backgrounds/section_04_benefits_bg_clean_4x.png" alt="" width="2000" height="568" loading="lazy" decoding="async">
+        </picture>
       </div>
       <div class="container">
         <header class="benefits__head">
@@ -184,9 +184,11 @@
     <!-- ================= 05 COMO FUNCIONA ================= -->
     <section class="section steps" id="como-funciona" aria-labelledby="steps-title">
       <div class="section__bg" aria-hidden="true">
-        <img src="images/backgrounds/section_05_steps_bg_clean_4x.png" alt="" loading="lazy" decoding="async">
+        <picture>
+          <source type="image/webp" srcset="images/backgrounds/section_05_steps_bg_clean_4x.webp">
+          <img src="images/backgrounds/section_05_steps_bg_clean_4x.png" alt="" width="2000" height="710" loading="lazy" decoding="async">
+        </picture>
       </div>
-      <img class="geo-overlay steps__geo" src="images/overlays/steps_geo_overlay.svg" alt="" aria-hidden="true" loading="lazy">
       <div class="container">
         <header class="section-head">
           <p class="eyebrow">COMO FUNCIONA A CONSULTORIA</p>

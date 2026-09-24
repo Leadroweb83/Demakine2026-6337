@@ -109,9 +109,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
   background-color: var(--navy-black);
 }
 .section__bg { position: absolute; inset: 0; z-index: -3; }
+.section__bg picture { display: block; width: 100%; height: 100%; }
 .section__bg img { width: 100%; height: 100%; object-fit: cover; }
+.hero .section__bg img { object-position: 50% 45%; }
+/* O fundo entregue tem um corte reto entre o painel escuro e a foto (a ~44% da largura).
+   Na arte aprovada essa passagem é suave: este degradê só funde a divisa, sem alterar o arquivo. */
+.hero .section__bg::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(4, 14, 22, 0) 41%, #040E16 44.4%, rgba(4, 14, 22, .55) 47.5%, rgba(4, 14, 22, 0) 53%);
+}
 
-.geo-overlay { position: absolute; z-index: -1; pointer-events: none; }
 
 .display { font-family: var(--font-display); font-weight: 400; }
 .gold { color: var(--gold); }
@@ -214,9 +221,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
    01 Hero
    ========================================================================== */
 .hero { height: calc(476 * var(--u)); }
-.hero__media { position: absolute; top: 0; bottom: 0; left: calc(var(--edge) + 300 * var(--u)); right: 0; z-index: -2; }
-.hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 55% center; }
-.hero__geo { inset: 0; width: 100%; height: 100%; }
 
 .hero__inner { height: 100%; padding: calc(104 * var(--u)) 0 0 calc(55 * var(--u)); }
 .hero__copy { width: calc(340 * var(--u)); }
@@ -263,9 +267,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
    02 Consultoria
    ========================================================================== */
 .consult { height: calc(324 * var(--u)); }
-.consult__media { position: absolute; top: 0; bottom: 0; left: calc(-1 * var(--edge)); width: calc(var(--edge) + 372 * var(--u)); z-index: -2; }
-.consult__media img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 25%; }
-.consult__geo { inset: 0; width: 100%; height: 100%; }
 
 .consult .split__copy { padding: calc(40 * var(--u)) 0 0 calc(383 * var(--u)); }
 .consult .eyebrow { font-size: calc(9.5 * var(--u)); letter-spacing: .3em; }
@@ -288,12 +289,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
    03 Estratégia
    ========================================================================== */
 .strategy { height: calc(230 * var(--u)); }
-.strategy__media {
-  position: absolute; top: 0; bottom: 0; left: calc(330 * var(--u)); right: calc(-1 * var(--edge)); z-index: -2;
-  clip-path: polygon(26% 0, 100% 0, 100% 100%, 0 100%);
-}
-.strategy__media img { width: 100%; height: 100%; object-fit: cover; object-position: 70% center; }
-.strategy__geo { inset: 0; width: 100%; height: 100%; }
 
 .strategy .split__copy { padding: calc(31 * var(--u)) 0 0 calc(47 * var(--u)); }
 .strategy .section-title { font-size: calc(21 * var(--u)); line-height: calc(25 * var(--u)); }
@@ -351,7 +346,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
    05 Como funciona
    ========================================================================== */
 .steps { height: calc(277 * var(--u)); }
-.steps__geo { inset: 0; width: 100%; height: 100%; }
 .steps .section-head { text-align: center; padding-top: calc(16 * var(--u)); }
 .steps .eyebrow { font-size: calc(8.9 * var(--u)); letter-spacing: .32em; }
 .steps .section-title {
@@ -530,8 +524,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
   /* Hero */
   .hero { min-height: 100svh; display: flex; align-items: flex-end; padding: 120px 0 56px; }
-  .hero__media { left: 0; }
-  .hero__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 11, 17, .35) 0%, rgba(5, 11, 17, .75) 45%, var(--navy-black) 100%); }
+  .hero .section__bg img { object-position: 74% center; }
+  .hero .section__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 11, 17, .3) 0%, rgba(5, 11, 17, .78) 48%, var(--navy-black) 100%); }
   .hero__inner { padding: 0 var(--gutter); }
   .hero__copy { width: auto; max-width: 560px; }
   .hero__title { font-size: clamp(40px, 7.4vw, 60px); line-height: 1.02; }
@@ -543,9 +537,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .micro-benefits img { width: 26px; height: 26px; }
 
   /* Consultoria */
-  .consult { padding-bottom: 64px; }
-  .consult__media { position: relative; left: auto; width: 100%; height: auto; aspect-ratio: 4 / 3.4; }
-  .consult__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, var(--navy-black) 100%); }
+  .consult { padding-bottom: 64px; background-color: #030A10; }
+  .consult .section__bg, .strategy .section__bg { position: relative; z-index: 0; aspect-ratio: 4 / 3.2; }
+  .consult .section__bg img { object-position: 10% 30%; }
+  .strategy .section__bg img { object-position: 84% center; }
+  .consult .section__bg::after, .strategy .section__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, #030A10 100%); }
   .consult .split__copy { width: auto; padding: 32px 0 0; }
   .consult .section-title { margin-top: 14px; }
   .consult .body-text { margin-top: 18px; }
@@ -553,8 +549,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .consult .statement { margin-top: 24px; }
 
   /* Estratégia */
-  .strategy { padding-bottom: 64px; }
-  .strategy__media { position: relative; left: auto; right: auto; height: auto; aspect-ratio: 16 / 10; clip-path: none; }
+  .strategy { padding-bottom: 64px; background-color: #030A10; }
   .strategy .split__copy { padding: 36px 0 0; }
   .strategy .section-title + .body-text { margin-top: 18px; }
   .strategy .body-text + .body-text { margin-top: 14px; }

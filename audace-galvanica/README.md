@@ -21,7 +21,8 @@ icons/svg/      Ícones SVG fornecidos
 |---|---|---|
 | 0 | Preparação | concluída |
 | 1 | Identidade e estrutura | concluída (layout calibrado na arte aprovada) |
-| 2 a 8 | Seções | aguardando assets |
+| 2 a 5 | Fundos das seções 1 a 5 | aplicados; faltam ícones SVG |
+| 6 a 8 | Etapas, CTA, rodapé | aguardando assets |
 | 9 | Validação estática | pendente |
 | 10 | Motion | pendente |
 
@@ -31,6 +32,14 @@ icons/svg/      Ícones SVG fornecidos
 - Confirmar a localização "São Paulo - SP" antes de publicar no rodapé.
 - Links reais de Instagram e WhatsApp (hoje marcados com `data-pending-link`).
 - Endpoint do formulário: preencher `data-endpoint` no `<form>`. Sem ele, o formulário valida os campos mas não simula sucesso.
+
+## Decisões sobre os assets
+
+- Os fundos `section_01` a `section_03` já trazem a fotografia e as formas geométricas embutidas.
+  Por isso a página não sobrepõe `hero_galvanic_chain`, `consult_model`, `inspection_ring_tweezers`
+  nem os overlays SVG: eles duplicariam a imagem. No mobile, o próprio fundo é recortado.
+- Cada fundo é servido em WebP (arquivo original recebido) com o PNG de nome oficial como fallback.
+- Hero: o fundo tem um corte reto entre painel e foto; um degradê em CSS suaviza a divisa como na arte.
 
 ## Sistema de medidas
 
