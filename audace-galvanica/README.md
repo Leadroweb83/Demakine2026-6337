@@ -10,7 +10,7 @@ styles.css      Tokens da marca, layout e responsivo
 script.js       Menu mobile e formulário (motions só na Fase 10)
 fonts/          Libre Baskerville + Manrope auto-hospedadas (SIL OFL)
 logo/           Logo oficial, versão negativa usada na página
-images/         backgrounds/, photos/, overlays/
+images/         fotos/ (ensaio da marca), og/, overlays/
 icons/svg/      Ícones SVG fornecidos
 robots.txt      Rastreamento liberado (linha do sitemap entra com o domínio)
 404.html        Página de erro com a marca (noindex)
@@ -41,7 +41,26 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 - "Qual é a sua principal necessidade?" virou lista. As opções foram propostas pelo desenvolvimento
   e aguardam validação do cliente.
 
-## Decisões sobre os assets
+## Paleta e fotos (atualização do cliente)
+
+- Paleta aplicada em tudo o que não é texto: fundos #0A0A0A e grafite #1C1C1E, off-white #F7F6F1 nas
+  seções claras, dourados #C3AA68 e #887040 em botões, linhas, bordas e ícones, vermelho #C01920 e azul
+  #193D89 na barra de leitura e nos brilhos, cinza #4D4D4D nas bordas dos campos. **Textos, cores dos
+  textos e fontes não mudaram** (inclusive o dourado #C9A35D das frases em destaque).
+- Fotos do ensaio em `images/fotos/` (WebP 420w/700w/860w/1122w + JPG de fallback):
+  hero `kit-rodio-pedra-agua`; consultoria `modelo-semijoias-rodio-luz-azul`; estratégia
+  `processo-banho-galvanico-correntes`; etapas `modelo-semijoias-rodio-olhar`, `kit-semijoias-rodio-zirconias`,
+  `conjunto-semijoias-douradas-floral`; formulário `kit-semijoias-pedra-luz-azul`; Instagram (vitrine até o
+  Behold entrar) `modelo-semijoias-rodio-fundo-cinza`, `modelo-colar-corrente-rodio`,
+  `modelo-semijoias-rodio-fundo-azul`, `kit-semijoias-rodio-zirconias`, `conjunto-semijoias-douradas-floral`.
+- As fotos ficam do lado oposto ao texto e se fundem ao preto por máscara, mantendo as posições dos textos da arte.
+  No hero a foto fica entre o texto e as palavras laterais, para "Brilho / Qualidade..." não cobrir os brincos.
+  No celular, a foto do hero ocupa o topo e o texto entra logo abaixo.
+- Imagem de compartilhamento (OG) refeita com a foto nova do hero.
+- Os fundos e recortes anteriores (arte aprovada) saíram do ar e estão em `../audace-galvanica-fonte/imagens-anteriores/`.
+- Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
+
+## Decisões sobre os assets (versão anterior, histórico)
 
 - Os fundos `section_01` a `section_03` já trazem a fotografia e as formas geométricas embutidas.
   Por isso a página não sobrepõe `hero_galvanic_chain`, `consult_model`, `inspection_ring_tweezers`
