@@ -563,7 +563,7 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
   const busy = patch.isPending || log.isPending || remove.isPending;
   const canSeeValue = me.role === "super_admin" || lead.ownerId === me.id;
   // mesma regra de ownerChangeError na API
-  const canTransfer = me.role === "super_admin" || !lead.ownerId || lead.ownerId === me.id;
+  const canTransfer = me.role === "super_admin" || !lead.ownerId;
   const closed = current === "ganho" || current === "perdido";
 
   return (
@@ -779,7 +779,7 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
               </select>
             </label>
             {!canTransfer && (
-              <p className="mt-2 text-[12px] text-dm-ink/50">Lead de outro responsável. Só o super admin pode trocar.</p>
+              <p className="mt-2 text-[12px] text-dm-ink/50">Este lead já tem responsável. Só o super admin pode trocar.</p>
             )}
             {canTransfer && lead.ownerId !== me.id && (
               <button
