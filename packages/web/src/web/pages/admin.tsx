@@ -18,6 +18,7 @@ import {
   History,
   Signpost,
   Quote,
+  SearchCheck,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { authClient, can, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
@@ -36,6 +37,7 @@ import { AdminNotifications } from "../admin/notifications";
 import { AdminActivity } from "../admin/activity";
 import { AdminRedirects } from "../admin/redirects";
 import { AdminLists } from "../admin/lists";
+import { AdminSeo } from "../admin/seo";
 import { Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
 
@@ -60,6 +62,7 @@ const NAV: NavItem[] = [
   { id: "vagas", label: "Vagas", Icon: Briefcase, area: "vagas" },
   { id: "midia", label: "Mídia", Icon: Images, area: "conteudo" },
   { id: "site", label: "Dados do site", Icon: Sliders, area: "config" },
+  { id: "seo", label: "SEO das páginas", Icon: SearchCheck, area: "config" },
   { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config" },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
   { id: "avisos", label: "Avisos por e-mail", Icon: Bell, area: "usuarios" },
@@ -269,6 +272,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "atividades" && <AdminActivity user={user} />}
           {current === "redirecionamentos" && <AdminRedirects />}
           {current === "listas" && <AdminLists />}
+          {current === "seo" && <AdminSeo />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}
         </div>

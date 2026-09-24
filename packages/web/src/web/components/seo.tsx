@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { site } from "@/lib/site";
+import { editedDoc } from "@/lib/runtime-content";
+import { seoKey } from "@/lib/seo-pages";
 
 type SeoProps = {
   title: string;
@@ -30,7 +32,12 @@ function setLink(rel: string, href: string) {
   tag.setAttribute("href", href);
 }
 
-export function Seo({ title, description, path = "/", image, type = "website", jsonLd }: SeoProps) {
+export function Seo({ title: baseTitle, description: baseDescription, path = "/", image, type = "website", jsonLd }: SeoProps) {
+  // título e descrição editados no painel (SEO das páginas fixas) valem sobre o padrão da página
+  const edited = editedDoc<{ title?: string; description?: string }>("seo", seoKey(path));
+  const title = edited?.title?.trim() || baseTitle;
+  const description = edited?.description?.trim() || baseDescription;
+
   useEffect(() => {
     const url = `${site.url}${path}`;
     const ogImage = `${site.url}${image ?? "/og-image.png"}`;
@@ -69,12 +76,13 @@ export const organizationJsonLd = {
   url: site.url,
   logo: `${site.url}/img/site/logo-demakine.png`,
   email: site.email,
-  telephone: "+55 19 3033-9397",
+  telephone: `+55 ${site.phone.replace(/\D/g, "").replace(/^(\d{2})(\d{4,5})(\d{4})$/, "$1 $2-$3")}`,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Rua Silvino del Pietro, 212, Jd. Nova Limeira",
-    addressLocality: "Limeira",
-    addressRegion: "SP",
+    // endereço de Dados do site: "Rua X, 212, Bairro, Cidade/UF"
+    streetAddress: site.address.split(",").slice(0, -1).join(",").trim() || site.address,
+    addressLocality: (site.address.split(",").pop() ?? "").split("/")[0]!.trim() || "Limeira",
+    addressRegion: (site.address.split("/").pop() ?? "SP").trim().slice(0, 2).toUpperCase(),
     addressCountry: "BR",
   },
   sameAs: [site.social.facebook, site.social.instagram, site.social.linkedin, site.social.youtube],

@@ -10,6 +10,8 @@ export const CONTENT_COLLECTIONS: Record<string, Role[]> = {
   case: ["admin", "editor"],
   /** listas inteiras: "clientes" (logos) e "depoimentos" */
   lista: ["admin", "editor"],
+  /** título e descrição das páginas fixas (chave = caminho, ver seoKey) */
+  seo: ["admin"],
 };
 
 export const CONTENT_KEY_RE = /^[a-z0-9-]{1,100}$/;
