@@ -562,6 +562,8 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
   const current = (lead.status ?? "novo") as LeadStatus;
   const busy = patch.isPending || log.isPending || remove.isPending;
   const canSeeValue = me.role === "super_admin" || lead.ownerId === me.id;
+  // mesma regra de ownerChangeError na API
+  const canTransfer = me.role === "super_admin" || !lead.ownerId || lead.ownerId === me.id;
   const closed = current === "ganho" || current === "perdido";
 
   return (
@@ -762,19 +764,24 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
               <span className="text-[11px] font-bold uppercase tracking-wide text-dm-ink/45">Responsável</span>
               <select
                 value={lead.ownerId ?? ""}
-                disabled={busy}
+                disabled={busy || !canTransfer}
                 onChange={(e) => patch.mutate({ ownerId: e.target.value || null })}
                 className={cn(inputCls, "mt-3")}
               >
                 <option value="">Sem responsável</option>
-                {team.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
-                ))}
+                {team
+                  .filter((m) => me.role !== "vendedor" || m.id === me.id || m.id === lead.ownerId)
+                  .map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
               </select>
             </label>
-            {lead.ownerId !== me.id && (
+            {!canTransfer && (
+              <p className="mt-2 text-[12px] text-dm-ink/50">Lead de outro responsável. Só o super admin pode trocar.</p>
+            )}
+            {canTransfer && lead.ownerId !== me.id && (
               <button
                 type="button"
                 disabled={busy}

@@ -33,7 +33,7 @@ import {
   slugify,
   type JobInput,
 } from "./lib/jobs";
-import { canSeeLeadValue, isLeadStatus } from "./lib/leads";
+import { canSeeLeadValue, isLeadStatus, ownerChangeError } from "./lib/leads";
 import { buildSitemap } from "./lib/sitemap";
 import { auditMiddleware } from "./lib/audit";
 import { normalizePath, normalizeTarget } from "./lib/redirects";
@@ -841,6 +841,8 @@ const app = new Hono<Env>()
       }
 
       if (body.ownerId !== undefined && body.ownerId !== lead.ownerId) {
+        const ownerError = ownerChangeError(me, lead, body.ownerId || null);
+        if (ownerError) return c.json({ error: ownerError }, 403);
         let ownerName = 'ninguém';
         if (body.ownerId) {
           const [owner] = await db

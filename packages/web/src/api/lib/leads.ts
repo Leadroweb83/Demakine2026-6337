@@ -11,3 +11,19 @@ export const LEAD_EVENT_TYPES = ["status", "responsavel", "nota", "contato", "re
 export function canSeeLeadValue(me: { id: string; role?: string | null }, lead: { ownerId: string | null }) {
   return me.role === "super_admin" || lead.ownerId === me.id;
 }
+
+/**
+ * Troca de responsável. Sem esta trava, quem assumisse o lead de um colega passaria a ver o valor dele.
+ * Super admin troca qualquer um; os demais só mexem em lead sem dono ou no próprio,
+ * e o vendedor só assume para si (ou devolve).
+ */
+export function ownerChangeError(
+  me: { id: string; role?: string | null },
+  lead: { ownerId: string | null },
+  next: string | null,
+) {
+  if (me.role === "super_admin") return null;
+  if (lead.ownerId && lead.ownerId !== me.id) return "Este lead já tem responsável. Só o super admin pode trocar.";
+  if (me.role === "vendedor" && next && next !== me.id) return "Vendedor só assume o lead para si.";
+  return null;
+}
