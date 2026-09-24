@@ -22,7 +22,18 @@
     "name": "Audace Galvânica",
     "description": "Especialistas em banhos para semijoias. Consultoria personalizada para escolher o melhor acabamento para sua marca.",
     "serviceType": "Consultoria em banhos para semijoias",
-    "areaServed": "BR"
+    "areaServed": "BR",
+    "telephone": "+55 19 99455-5679",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Marechal Floriano Peixoto, 176 - Parque Hipolyto",
+      "addressLocality": "Limeira",
+      "addressRegion": "SP",
+      "postalCode": "13486-554",
+      "addressCountry": "BR"
+    },
+    "hasMap": "https://www.google.com/maps/search/?api=1&query=Av.+Marechal+Floriano+Peixoto,+176+-+Parque+Hipolyto,+Limeira+-+SP,+13486-554",
+    "sameAs": ["https://www.instagram.com/audacegalvanica/"]
   }
   </script>
 </head>
@@ -244,7 +255,7 @@
           <h2 class="display form-card__title" id="form-title">Vamos entender<br class="br-d"> o que suas semijoias precisam?</h2>
           <p class="form-card__subtitle">Preencha seus dados e converse com nosso time.</p>
 
-          <form class="lead-form" data-lead-form data-endpoint="" novalidate>
+          <form class="lead-form" data-lead-form data-whatsapp="5519994555679" novalidate>
             <div class="field">
               <label for="f-nome">Nome completo<span class="req" aria-hidden="true">*</span></label>
               <input id="f-nome" name="nome" type="text" autocomplete="name" placeholder="Seu nome" required>
@@ -283,7 +294,15 @@
             </div>
             <div class="field field--full">
               <label for="f-necessidade">Qual é a sua principal necessidade?<span class="req" aria-hidden="true">*</span></label>
-              <textarea id="f-necessidade" name="necessidade" rows="2" required></textarea>
+              <select id="f-necessidade" name="necessidade" required>
+                <option value="" selected disabled>Selecione</option>
+                <option>Definir o banho ideal para minha marca</option>
+                <option>Aumentar a durabilidade das peças</option>
+                <option>Melhorar o custo-benefício dos banhos</option>
+                <option>Lançar ou reposicionar uma coleção</option>
+                <option>Avaliar ou trocar de fornecedor de banho</option>
+                <option>Outra necessidade</option>
+              </select>
             </div>
             <p class="form-status" role="status" aria-live="polite" data-form-status></p>
             <button class="btn btn--gold btn--block" type="submit">
@@ -308,11 +327,15 @@
       <img class="site-footer__logo" src="logo/audace_logo_negative_240w.png" srcset="logo/audace_logo_negative_240w.png 240w, logo/audace_logo_negative_480w.png 480w" sizes="138px" alt="Audace Galvânica" width="240" height="164" loading="lazy">
       <p class="site-footer__tagline">Especialistas em banhos para semijoias.</p>
       <img class="site-footer__rule" src="images/overlays/gold_vertical_rule.svg" alt="" aria-hidden="true" loading="lazy">
-      <!-- Localização "São Paulo - SP" (ícone pin.svg) aguardando confirmação do cliente. Não publicar antes disso. -->
+      <address class="site-footer__location">
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=Av.+Marechal+Floriano+Peixoto,+176+-+Parque+Hipolyto,+Limeira+-+SP,+13486-554" target="_blank" rel="noopener" title="Av. Marechal Floriano Peixoto, 176 - Parque Hipolyto, Limeira - SP, 13486-554">
+          <img src="icons/svg/pin.svg" alt="" aria-hidden="true" width="14" height="14" loading="lazy">
+          <span>Limeira - SP</span><span class="visually-hidden">: Av. Marechal Floriano Peixoto, 176 - Parque Hipolyto, CEP 13486-554 (abre o mapa)</span>
+        </a>
+      </address>
       <ul class="site-footer__social" aria-label="Redes sociais">
-        <!-- Links reais de Instagram e WhatsApp pendentes de envio pelo cliente. -->
-        <li><a href="#" aria-label="Instagram da Audace Galvânica" data-pending-link><img src="icons/svg/instagram.svg" alt="" aria-hidden="true" width="24" height="24" loading="lazy"></a></li>
-        <li><a href="#" aria-label="WhatsApp da Audace Galvânica" data-pending-link><img src="icons/svg/whatsapp.svg" alt="" aria-hidden="true" width="24" height="24" loading="lazy"></a></li>
+        <li><a href="https://www.instagram.com/audacegalvanica/" target="_blank" rel="noopener" aria-label="Instagram da Audace Galvânica (abre em nova aba)"><img src="icons/svg/instagram.svg" alt="" aria-hidden="true" width="24" height="24" loading="lazy"></a></li>
+        <li><a href="https://wa.me/5519994555679" target="_blank" rel="noopener" aria-label="WhatsApp da Audace Galvânica: (19) 99455-5679 (abre em nova aba)"><img src="icons/svg/whatsapp.svg" alt="" aria-hidden="true" width="24" height="24" loading="lazy"></a></li>
       </ul>
     </div>
   </footer>

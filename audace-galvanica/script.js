@@ -34,8 +34,6 @@
   if (!form) return;
 
   var status = form.querySelector('[data-form-status]');
-  var submit = form.querySelector('button[type="submit"]');
-  var submitLabel = submit.firstChild.textContent;
 
   function fieldError(el, message) {
     var field = el.closest('.field');
@@ -70,8 +68,35 @@
   }
 
   form.addEventListener('blur', function (e) {
-    if (e.target.matches('input, select')) validate(e.target);
+    if (e.target.matches("input, select, textarea")) validate(e.target);
   }, true);
+
+  /* Envio: abre o WhatsApp da Audace com todos os dados preenchidos. */
+  function onlyDigits(v) { return v.replace(/\D/g, ''); }
+
+  var tel = form.querySelector('input[type="tel"]');
+  tel.addEventListener('input', function () {
+    var d = onlyDigits(tel.value).slice(0, 11);
+    var out = d;
+    if (d.length > 2) out = '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    if (d.length > 7) out = '(' + d.slice(0, 2) + ') ' + d.slice(2, d.length - 4) + '-' + d.slice(-4);
+    tel.value = out;
+  });
+
+  function buildMessage() {
+    var f = form.elements;
+    return [
+      'Olá! Quero solicitar uma consultoria de banhos para semijoias.',
+      '',
+      '*Nome:* ' + f.nome.value.trim(),
+      '*WhatsApp:* ' + f.whatsapp.value.trim(),
+      '*Marca / Empresa:* ' + f.empresa.value.trim(),
+      '*Cidade / UF:* ' + f.cidade.value.trim(),
+      '*Momento:* ' + f.momento.value,
+      '*Volume de peças:* ' + f.volume.value,
+      '*Principal necessidade:* ' + f.necessidade.value
+    ].join('\n');
+  }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -80,32 +105,10 @@
     });
     if (invalid.length) { invalid[0].focus(); return; }
 
-    var endpoint = form.dataset.endpoint;
-    if (!endpoint) {
-      // Sem integração configurada: não simular sucesso.
-      status.textContent = 'Envio indisponível no momento. A integração do formulário ainda não foi configurada.';
-      return;
-    }
-
-    submit.disabled = true;
-    submit.firstChild.textContent = 'Enviando… ';
-    status.textContent = '';
-
-    fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.fromEntries(new FormData(form)))
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error(res.status);
-        submit.firstChild.textContent = 'Consultoria solicitada ✓ ';
-        status.textContent = 'Recebemos seus dados. Nosso time entrará em contato pelo WhatsApp.';
-        form.reset();
-      })
-      .catch(function () {
-        submit.disabled = false;
-        submit.firstChild.textContent = submitLabel;
-        status.textContent = 'Não foi possível enviar agora. Tente novamente em instantes.';
-      });
+    var url = 'https://wa.me/' + form.dataset.whatsapp + '?text=' + encodeURIComponent(buildMessage());
+    var win = window.open(url, '_blank');
+    if (win) win.opener = null;
+    else window.location.href = url;   // navegador bloqueou a nova aba: abre na mesma
+    status.textContent = 'Abrimos o WhatsApp com seus dados. É só tocar em enviar para falar com nosso time.';
   });
 })();

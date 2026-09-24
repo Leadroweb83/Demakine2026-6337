@@ -295,7 +295,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .strategy .body-text { font-size: calc(12 * var(--u)); line-height: calc(15.5 * var(--u)); }
 .strategy .section-title + .body-text { margin-top: calc(10 * var(--u)); }
 .strategy .body-text + .body-text { margin-top: calc(9 * var(--u)); }
-.strategy__side-words { left: calc(673 * var(--u)); top: calc(116 * var(--u)); }
+/* no fundo entregue o anel fica mais à direita que na arte; as palavras vão para a faixa mais escura,
+   abaixo do anel (medida no fundo: brilho máx. 132 contra 227 no alto). Ajuste aprovado pelo cliente. */
+.strategy__side-words { left: calc(673 * var(--u)); top: calc(158 * var(--u)); }
 
 /* ==========================================================================
    04 Diferenciais (tema claro)
@@ -492,6 +494,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .site-footer__logo { width: calc(84 * var(--u)); height: auto; }
 .site-footer__tagline { font-size: max(calc(10.7 * var(--u)), 13px); font-weight: 500; }
 .site-footer__rule { width: auto; height: calc(22 * var(--u)); }
+.site-footer__location { font-style: normal; padding-left: calc(55 * var(--u)); }
+.site-footer__location a {
+  display: inline-flex; align-items: center; gap: calc(5 * var(--u));
+  font-size: max(calc(10.7 * var(--u)), 13px); font-weight: 500;
+}
+.site-footer__location img { width: max(calc(11 * var(--u)), 14px); height: max(calc(11 * var(--u)), 14px); }
+.site-footer__location a:hover span, .site-footer__social a:hover { color: var(--gold-light); opacity: .85; }
 .site-footer__social { grid-column: 5; display: flex; gap: calc(22 * var(--u)); }
 .site-footer__social a { display: block; }
 .site-footer__social img { width: calc(20 * var(--u)); height: calc(20 * var(--u)); min-width: 22px; min-height: 22px; }

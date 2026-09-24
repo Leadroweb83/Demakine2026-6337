@@ -26,12 +26,15 @@ icons/svg/      Ícones SVG fornecidos
 | 9 | Validação estática | pendente |
 | 10 | Motion | pendente |
 
-## Pendências do cliente
+## Dados do cliente (confirmados)
 
-- Assets em `logo/`, `reference/`, `images/` e `icons/svg/` com os nomes exatos do briefing.
-- Confirmar a localização "São Paulo - SP" antes de publicar no rodapé.
-- Links reais de Instagram e WhatsApp (hoje marcados com `data-pending-link`).
-- Endpoint do formulário: preencher `data-endpoint` no `<form>`. Sem ele, o formulário valida os campos mas não simula sucesso.
+- Endereço: Av. Marechal Floriano Peixoto, 176 - Parque Hipolyto, Limeira - SP, 13486-554.
+  Rodapé mostra "Limeira - SP" (como na arte) com link para o mapa; endereço completo no JSON-LD.
+- WhatsApp: (19) 99455-5679. Instagram: https://www.instagram.com/audacegalvanica/
+- Formulário: valida os 7 campos e abre o WhatsApp da Audace com todos os dados preenchidos
+  (`data-whatsapp` no `<form>`). Sem backend: a confirmação só diz que o WhatsApp foi aberto.
+- "Qual é a sua principal necessidade?" virou lista. As opções foram propostas pelo desenvolvimento
+  e aguardam validação do cliente.
 
 ## Decisões sobre os assets
 
@@ -42,6 +45,9 @@ icons/svg/      Ícones SVG fornecidos
   (≈640 KB no total) com o PNG de nome oficial como fallback.
 - CTA: o fundo `section_06` traz os anéis muito ampliados, com um corte vertical, atrás da frase. Um véu
   escuro em CSS garante a leitura e `cta_rings_4x` (recorte exato da arte, 390×164u) ocupa o canto inferior.
+- Logo, versão negativa: além da cor dos textos (opção B), a borda do símbolo teve a sobra do fundo branco
+  removida (cor pura + transparência) e 45 manchas de ruído < 170 px foram apagadas; glifos e estrelas intactos.
+- Estratégia: palavras laterais descem para a faixa mais escura do fundo, abaixo do anel (aprovado).
 - Logo (opção B aprovada pelo cliente): `audace_logo_negative_*` é o arquivo oficial com apenas a cor
   dos textos alterada ("Audace" #F8F6F2, "Galvânica" #BFC1C1). Símbolo, formas, proporções e
   transparência idênticos ao original. O arquivo oficial `audace_logo_transparent_4x.png` fica intacto.
