@@ -22,7 +22,7 @@ icons/svg/      Ícones SVG fornecidos
 | 0 | Preparação | concluída |
 | 1 | Identidade e estrutura | concluída (layout calibrado na arte aprovada) |
 | 2 a 5 | Hero, consultoria, estratégia, benefícios | concluídas (fundos + ícones SVG) |
-| 6 a 8 | Etapas, CTA, rodapé | aguardando assets |
+| 6 a 8 | Etapas, CTA, rodapé | concluídas (assets oficiais da Drive) |
 | 9 | Validação estática | pendente |
 | 10 | Motion | pendente |
 
@@ -38,7 +38,10 @@ icons/svg/      Ícones SVG fornecidos
 - Os fundos `section_01` a `section_03` já trazem a fotografia e as formas geométricas embutidas.
   Por isso a página não sobrepõe `hero_galvanic_chain`, `consult_model`, `inspection_ring_tweezers`
   nem os overlays SVG: eles duplicariam a imagem. No mobile, o próprio fundo é recortado.
-- Cada fundo é servido em WebP (arquivo original recebido) com o PNG de nome oficial como fallback.
+- Todos os assets vêm do pacote oficial na Drive (fundos em 3156 px). A página serve WebP em 1600w/3156w
+  (≈640 KB no total) com o PNG de nome oficial como fallback.
+- CTA: o fundo `section_06` traz os anéis muito ampliados, com um corte vertical, atrás da frase. Um véu
+  escuro em CSS garante a leitura e `cta_rings_4x` (recorte exato da arte, 390×164u) ocupa o canto inferior.
 - Logo (opção B aprovada pelo cliente): `audace_logo_negative_*` é o arquivo oficial com apenas a cor
   dos textos alterada ("Audace" #F8F6F2, "Galvânica" #BFC1C1). Símbolo, formas, proporções e
   transparência idênticos ao original. O arquivo oficial `audace_logo_transparent_4x.png` fica intacto.

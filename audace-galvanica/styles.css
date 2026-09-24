@@ -361,6 +361,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .step__visual { position: relative; padding: calc(5 * var(--u)) 0 0 calc(6 * var(--u)); }
 .step__media { height: calc(78 * var(--u)); overflow: hidden; }
+.step__media picture, .cta-form__media picture { display: block; width: 100%; height: 100%; }
 .step__media img { width: 100%; height: 100%; object-fit: cover; }
 .step__number {
   position: absolute; top: 0; left: 0; z-index: 1;
@@ -398,7 +399,18 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .cta-form__statement { padding-top: calc(24 * var(--u)); }
 .statement--large { margin: 0; font-size: calc(18.2 * var(--u)); line-height: calc(24 * var(--u)); }
 .statement--large .gold { display: block; margin-top: calc(3 * var(--u)); font-size: calc(22.4 * var(--u)); line-height: calc(30 * var(--u)); font-weight: 700; }
-.cta-form__media { position: absolute; left: calc(-1 * var(--edge)); bottom: 0; z-index: -2; width: calc(var(--edge) + 400 * var(--u)); height: calc(220 * var(--u)); }
+/* O fundo entregue traz os anéis muito ampliados (com um corte vertical) atrás da frase.
+   Um véu escuro garante a leitura e a foto cta_rings, que reproduz o recorte da arte, assume o canto inferior. */
+.cta-form .section__bg::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(9, 7, 5, .86) 0%, rgba(9, 7, 5, .74) 42%, rgba(9, 7, 5, .35) 62%, rgba(9, 7, 5, .1) 100%);
+}
+.cta-form__media {
+  position: absolute; left: calc(-1 * var(--edge)); bottom: 0; z-index: -2;
+  width: calc(var(--edge) + 390 * var(--u)); height: calc(164 * var(--u));
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%);
+          mask-image: linear-gradient(180deg, transparent 0%, #000 22%);
+}
 .cta-form__media img { width: 100%; height: 100%; object-fit: cover; }
 
 .form-card {
@@ -588,7 +600,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .statement--large .gold { font-size: 1.2em; line-height: 1.25; }
   .statement--large br { display: none; }
   .statement--large .gold { width: auto; }
-  .cta-form__media { position: relative; left: auto; width: 100%; height: auto; aspect-ratio: 16 / 9; margin-top: 28px; z-index: 0; }
+  .cta-form__media { position: relative; left: auto; width: 100%; height: auto; aspect-ratio: 1560 / 656; margin-top: 28px; z-index: 0; -webkit-mask-image: none; mask-image: none; }
   .form-card { width: 100%; min-height: 0; padding: 32px 28px; border-radius: 8px; }
   .form-card__title { margin-top: 10px; font-size: 26px; line-height: 1.25; }
   .form-card__subtitle { font-size: 15px; }
