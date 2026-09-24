@@ -639,6 +639,97 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 /* ==========================================================================
+   Seções adicionadas após a aprovação: Instagram, perguntas frequentes e mapa.
+   Não existem na arte; seguem o mesmo sistema (--u, paleta, tipografia, ritmo).
+   ========================================================================== */
+.btn--line {
+  gap: .7em; padding: 0 calc(16 * var(--u)); min-height: 44px; height: calc(29 * var(--u));
+  border: 1px solid rgba(201, 163, 93, .6); color: var(--white); background: transparent;
+  font-size: max(calc(8.5 * var(--u)), 12px); letter-spacing: .04em; text-transform: none;
+  transition: border-color .3s var(--ease), background-color .3s var(--ease), transform .35s var(--ease);
+}
+.btn--line:hover { border-color: var(--gold-light); background: rgba(201, 163, 93, .08); transform: translateY(-2px); }
+
+/* Instagram */
+.insta { background: linear-gradient(180deg, #050B11 0%, #07131E 100%); padding-block: calc(46 * var(--u)) calc(48 * var(--u)); }
+.insta__inner { padding-inline: calc(55 * var(--u)); display: grid; gap: calc(24 * var(--u)); }
+.insta__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.insta .section-title { margin-top: calc(10 * var(--u)); font-size: calc(22 * var(--u)); line-height: 1.18; }
+.insta .eyebrow, .place .eyebrow { font-size: max(calc(8 * var(--u)), 11px); color: var(--gold); letter-spacing: .34em; }
+.insta .body-text { margin-top: calc(8 * var(--u)); font-size: max(calc(10.5 * var(--u)), 15px); color: var(--muted-light); }
+.insta__fallback {
+  display: grid; justify-items: center; gap: calc(8 * var(--u)); text-align: center;
+  padding: calc(36 * var(--u)) 24px;
+  border: 1px solid rgba(201, 163, 93, .28); border-radius: calc(4 * var(--u));
+  background: radial-gradient(80% 120% at 50% 0%, rgba(201, 163, 93, .08), transparent 70%);
+  transition: border-color .3s var(--ease);
+}
+.insta__fallback:hover { border-color: rgba(201, 163, 93, .6); }
+.insta__fallback img { width: max(calc(28 * var(--u)), 36px); height: auto; }
+.insta__fallback-text { font-family: var(--font-display); font-size: max(calc(14 * var(--u)), 19px); line-height: 1.3; }
+.insta__fallback-cta { display: inline-flex; align-items: center; gap: .6em; color: var(--gold-light); font-size: max(calc(9 * var(--u)), 13px); font-weight: 600; letter-spacing: .04em; }
+.insta__fallback-cta .btn__icon { filter: invert(78%) sepia(38%) saturate(420%) hue-rotate(2deg); }
+.insta__fallback:hover .btn__icon { transform: translateX(5px); }
+.insta behold-widget { display: block; }
+
+/* Perguntas frequentes (tema claro, como Diferenciais) */
+.faq { background-color: var(--benefits-bg); color: var(--text-dark); padding-block: calc(46 * var(--u)); }
+.faq__inner { display: grid; grid-template-columns: calc(250 * var(--u)) 1fr; gap: calc(40 * var(--u)); padding-inline: calc(50 * var(--u)); align-items: start; }
+.faq__head { position: sticky; top: calc(80 * var(--u)); }
+.faq .eyebrow { font-size: max(calc(8 * var(--u)), 11px); letter-spacing: .34em; color: #6A6A6A; }
+.faq .section-title { margin-top: calc(10 * var(--u)); font-size: calc(20 * var(--u)); line-height: 1.2; font-weight: 500; color: #1B1B1B; }
+.faq__cta { display: inline-flex; align-items: center; gap: .6em; margin-top: calc(16 * var(--u)); color: #8A6A2F; font-weight: 700; font-size: max(calc(9 * var(--u)), 13px); letter-spacing: .02em; }
+.faq__cta .btn__icon { filter: invert(38%) sepia(52%) saturate(520%) hue-rotate(6deg) brightness(.9); }
+.faq__cta:hover .btn__icon { transform: translateX(5px); }
+.faq__list { border-top: 1px solid rgba(154, 117, 54, .35); }
+.faq__item { border-bottom: 1px solid rgba(154, 117, 54, .35); }
+.faq__item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: calc(12 * var(--u)) 0; cursor: pointer; list-style: none;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: ""; flex: none; width: 12px; height: 12px;
+  background: linear-gradient(#9A7536, #9A7536) center / 100% 1.5px no-repeat, linear-gradient(#9A7536, #9A7536) center / 1.5px 100% no-repeat;
+  transition: transform .35s var(--ease);
+}
+.faq__item[open] summary::after { transform: rotate(45deg); }
+.faq__q { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: max(calc(11.5 * var(--u)), 17px); line-height: 1.35; color: #1B1B1B; }
+.faq__item summary:hover .faq__q { color: #8A6A2F; }
+.faq__a { padding: 0 calc(28 * var(--u)) calc(14 * var(--u)) 0; max-width: 68ch; font-size: max(calc(9.6 * var(--u)), 15px); line-height: 1.65; color: #4A4A4A; }
+
+/* Onde estamos */
+.place { background: #050B11; padding-block: calc(46 * var(--u)); }
+.place__inner { display: grid; grid-template-columns: calc(260 * var(--u)) 1fr; gap: calc(40 * var(--u)); padding-inline: calc(55 * var(--u)); align-items: center; }
+.place .section-title { margin-top: calc(10 * var(--u)); font-size: calc(22 * var(--u)); line-height: 1.18; }
+.place__address { margin-top: calc(16 * var(--u)); font-style: normal; font-size: max(calc(10.5 * var(--u)), 15px); line-height: 1.6; color: #E4E4E2; padding-left: calc(12 * var(--u)); border-left: 1px solid var(--gold); }
+.place__phone { margin-top: calc(10 * var(--u)); font-size: max(calc(10 * var(--u)), 15px); color: var(--muted-light); }
+.place__phone a { color: var(--gold-light); font-weight: 600; }
+.place__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: calc(18 * var(--u)); }
+.place__actions .btn--gold { height: calc(29 * var(--u)); min-height: 44px; padding: 0 calc(16 * var(--u)); font-size: max(calc(8.5 * var(--u)), 12px); }
+.place__map {
+  position: relative; aspect-ratio: 16 / 10; overflow: hidden;
+  border: 1px solid rgba(201, 163, 93, .35); border-radius: calc(4 * var(--u)); background: #0B1620;
+}
+.place__map iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+  /* deixa o mapa no tom azul-noite da página */
+  filter: invert(.9) hue-rotate(180deg) saturate(.55) brightness(.95) contrast(.92);
+}
+
+@media (max-width: 1023px) {
+  .insta, .faq, .place { padding-block: 64px; }
+  .insta__inner, .faq__inner, .place__inner { padding-inline: var(--gutter); grid-template-columns: 1fr; gap: 32px; }
+  .insta .section-title, .faq .section-title, .place .section-title { font-size: clamp(28px, 4.6vw, 38px); }
+  .faq__head { position: static; }
+  .faq__item summary { padding: 18px 0; }
+  .faq__a { padding: 0 0 18px; }
+  .insta__fallback { padding: 44px 20px; }
+  .btn--line, .place__actions .btn--gold { height: 48px; padding: 0 22px; font-size: 13px; }
+  .place__map { aspect-ratio: 4 / 3.2; }
+}
+
+/* ==========================================================================
    Fase 10: motion
    Estados iniciais só existem sob .js-motion (definida no <head> quando há JS,
    IntersectionObserver e o usuário não pediu movimento reduzido). Sem isso,

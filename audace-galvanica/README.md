@@ -87,9 +87,23 @@ Regras: estados iniciais só sob `.js-motion`, definida no `<head>` quando há J
 o usuário não pediu movimento reduzido; se `script.js` não carregar em 4 s, tudo aparece. Só transform e
 opacity animam; parallax e luz do cursor apenas em desktop com mouse.
 
+## Seções adicionadas após a aprovação
+
+Ordem final: hero, consultoria, estratégia, diferenciais, como funciona, **Instagram**, formulário,
+**perguntas frequentes**, **onde estamos (mapa)**, rodapé. As três novas não existem na arte e seguem
+o mesmo sistema visual.
+
+- Instagram (feed automático via Behold): crie o feed em https://behold.so conectando @audacegalvanica,
+  copie o Feed ID e cole em `data-behold-feed-id` no `index.html`. Sem ID, a seção mostra um cartão com
+  link para o perfil (nenhuma imagem inventada). O widget só carrega quando a seção se aproxima da tela.
+- Perguntas frequentes: 6 perguntas com dados estruturados FAQPage. As respostas 4 (ouro, prata e ródio)
+  e 5 (durabilidade) são informação técnica geral do setor e **devem ser validadas pelo time técnico**.
+- Onde estamos: mapa do Google (iframe com carregamento tardio, em tom escuro), endereço completo,
+  WhatsApp e botão "Como chegar".
+
 ## SEO (auditoria pré-lançamento)
 
-Feito: title (40) e description (155) no tamanho; um H1 e hierarquia H2/H3 correta; 100% das imagens com
+Feito: title com Limeira-SP (54) e description (155) no tamanho; um H1 e hierarquia H2/H3 correta; 100% das imagens com
 alt ou alt vazio decorativo e dimensões; JSON-LD ProfessionalService com endereço, telefone, contato,
 serviço e Instagram; meta robots com prévia grande de imagem; Open Graph e Twitter Card com imagem
 1200×630; robots.txt; 404 com a marca; arte e arquivos-fonte fora da pasta publicada.

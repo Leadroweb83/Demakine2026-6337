@@ -221,3 +221,27 @@
   window.addEventListener('resize', onScroll);
   update();
 })();
+
+/* ---------- Instagram: feed automático (Behold) ----------
+   Com o ID do feed em data-behold-feed-id, o widget carrega quando a seção se aproxima
+   da tela e substitui o cartão com o link do perfil. Sem ID, o cartão fica. */
+(function () {
+  'use strict';
+  var box = document.querySelector('[data-insta-feed]');
+  if (!box) return;
+  var id = (box.getAttribute('data-behold-feed-id') || '').trim();
+  if (!id) return;
+  function load() {
+    var sc = document.createElement('script');
+    sc.type = 'module'; sc.src = 'https://w.behold.so/widget.js';
+    document.head.appendChild(sc);
+    var w = document.createElement('behold-widget');
+    w.setAttribute('feed-id', id);
+    box.innerHTML = '';
+    box.appendChild(w);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); load(); } }, { rootMargin: '400px 0px' });
+    io.observe(box);
+  } else load();
+})();
