@@ -49,6 +49,23 @@ export const contentDocs = pgTable(
   (t) => [primaryKey({ columns: [t.collection, t.key] })],
 );
 
+/** Registro de atividades do painel: quem alterou o quê e quando (sem valores sensíveis). */
+export const auditLog = pgTable(
+  "audit_log",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id"),
+    userName: text("user_name"),
+    userRole: text("user_role"),
+    method: text("method").notNull(),
+    path: text("path").notNull(),
+    summary: text("summary").notNull(),
+    status: integer("status").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("audit_log_created_idx").on(t.createdAt)],
+);
+
 /** Configurações internas do painel (nunca vão para o site): avisos por e-mail etc. */
 export const appSettings = pgTable("app_settings", {
   key: text("key").primaryKey(),

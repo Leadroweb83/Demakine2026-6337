@@ -57,6 +57,13 @@
       "when": 1790221880286,
       "tag": "0007_app_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790222041068,
+      "tag": "0008_audit_log",
+      "breakpoints": true
     }
   ]
 }

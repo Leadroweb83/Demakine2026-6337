@@ -35,6 +35,7 @@ import {
 } from "./lib/jobs";
 import { canSeeLeadValue, isLeadStatus } from "./lib/leads";
 import { buildSitemap } from "./lib/sitemap";
+import { auditMiddleware } from "./lib/audit";
 import { emailConfigured, emailLayout, sendEmail } from "./lib/email";
 import {
   DEFAULT_NOTIFY,
@@ -60,6 +61,7 @@ const app = new Hono<Env>()
   .on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw))
   .basePath('api')
   .use(authMiddleware)
+  .use('/admin/*', auditMiddleware)
   .get('/ping', (c) => c.json({ message: `Pong! ${Date.now()}` }, 200))
   .get('/health', (c) => c.json({ status: 'ok' }, 200))
   .post('/leads', async (c) => {
@@ -532,6 +534,16 @@ const app = new Hono<Env>()
     await db.delete(schema.media).where(eq(schema.media.id, id));
     await s3.send(new DeleteObjectCommand({ Bucket: MEDIA_BUCKET, Key: item.key })).catch(() => undefined);
     return c.json({ ok: true }, 200);
+  })
+  // ------------------------------------------------------ registro de atividades
+  .get('/admin/atividades', requireAuth, async (c) => {
+    const me = c.get('user')!;
+    const rows = await db.select().from(schema.auditLog).orderBy(desc(schema.auditLog.createdAt)).limit(1000);
+    // super admin vê tudo; admin vê o próprio e o dos editores; os demais só o próprio
+    const visible = rows.filter((r) =>
+      me.role === 'super_admin' ? true : me.role === 'admin' ? r.userId === me.id || r.userRole === 'editor' : r.userId === me.id,
+    );
+    return c.json({ items: visible.slice(0, 400) }, 200);
   })
   // ------------------------------------------------ rotina diária (Vercel Cron)
   .get('/cron/diario', async (c) => {

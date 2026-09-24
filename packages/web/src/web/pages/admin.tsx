@@ -15,6 +15,7 @@ import {
   Briefcase,
   Menu,
   Bell,
+  History,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { authClient, can, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
@@ -30,6 +31,7 @@ import { AdminCatalog } from "../admin/catalog";
 import { AdminBlog } from "../admin/blog";
 import { AdminCases } from "../admin/cases";
 import { AdminNotifications } from "../admin/notifications";
+import { AdminActivity } from "../admin/activity";
 import { Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
 
@@ -55,6 +57,7 @@ const NAV: NavItem[] = [
   { id: "site", label: "Dados do site", Icon: Sliders, area: "config" },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
   { id: "avisos", label: "Avisos por e-mail", Icon: Bell, area: "usuarios" },
+  { id: "atividades", label: "Atividades", Icon: History, area: "livre" },
   { id: "conta", label: "Minha conta", Icon: UserCircle2, area: "livre" },
 ];
 
@@ -257,6 +260,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "blog" && <AdminBlog user={user} />}
           {current === "usuarios" && <AdminUsers me={user} />}
           {current === "avisos" && <AdminNotifications />}
+          {current === "atividades" && <AdminActivity user={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}
         </div>
