@@ -1,4 +1,5 @@
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { MapEmbed } from "@/components/map-embed";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
@@ -155,13 +156,7 @@ export default function Contato() {
 
       <Section className="pt-0">
         <Reveal className="overflow-hidden rounded-2xl border border-dm-line">
-          <iframe
-            title="Localização da Demakine em Limeira/SP"
-            src="https://www.google.com/maps?q=Rua%20Silvino%20del%20Pietro%2C%20212%20-%20Jd.%20Nova%20Limeira%20-%20Limeira%20SP&output=embed"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="h-[380px] w-full border-0 md:h-[440px]"
-          />
+          <MapEmbed className="h-[380px] md:h-[440px]" />
         </Reveal>
         <div className="mt-8 text-center">
           <BtnWhats href={waLink("Olá! Quero um orçamento de equipamento Demakine.")}>

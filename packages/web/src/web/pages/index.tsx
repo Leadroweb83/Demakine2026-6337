@@ -18,6 +18,7 @@ import {
   Truck,
   Wrench,
 } from "lucide-react";
+import { MapEmbed } from "@/components/map-embed";
 import { Seo, organizationJsonLd, websiteJsonLd } from "@/components/seo";
 import {
   CineRule,
@@ -496,13 +497,7 @@ export default function Home() {
                     Me leve até lá!
                   </a>
                 </div>
-                <iframe
-                  src={site.mapsEmbed}
-                  title="Mapa da fábrica Demakine em Limeira/SP"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="h-[210px] w-full border-0 grayscale-[0.35] contrast-[1.05]"
-                />
+                <MapEmbed tone="dark" className="h-[210px]" />
               </div>
             </Reveal>
 
