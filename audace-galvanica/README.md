@@ -50,9 +50,9 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 - Fotos do ensaio em `images/fotos/` (WebP 420w/700w/860w/1122w + JPG de fallback):
   hero `kit-rodio-pedra-agua`; consultoria `modelo-semijoias-rodio-luz-azul`; estratégia
   `processo-banho-galvanico-correntes`; etapas `modelo-semijoias-rodio-olhar`, `kit-semijoias-rodio-zirconias`,
-  `conjunto-semijoias-douradas-floral`; formulário `kit-semijoias-pedra-luz-azul`; Instagram (vitrine até o
-  Behold entrar) `modelo-semijoias-rodio-fundo-cinza`, `modelo-colar-corrente-rodio`,
-  `modelo-semijoias-rodio-fundo-azul`, `kit-semijoias-rodio-zirconias`, `conjunto-semijoias-douradas-floral`.
+  `conjunto-semijoias-douradas-floral`; formulário `kit-semijoias-pedra-luz-azul`; fundo do Instagram
+  `modelo-colar-corrente-rodio` e fundo de Onde estamos `modelo-semijoias-rodio-fundo-azul`, com véu grafite #1C1C1E
+  e azul #193D89 (a vitrine de fotos no Instagram foi retirada a pedido do cliente).
 - As fotos ficam do lado oposto ao texto e se fundem ao preto por máscara, mantendo as posições dos textos da arte.
   No hero a foto fica entre o texto e as palavras laterais, para "Brilho / Qualidade..." não cobrir os brincos.
   No celular, a foto do hero ocupa o topo e o texto entra logo abaixo.
