@@ -75,6 +75,7 @@ export function describe(method: string, path: string, body: Record<string, unkn
   if (p === "/admin/change-password") return "Trocou a própria senha";
   if (p === "/admin/avatar") return "Trocou a foto de perfil";
   if (p === "/admin/avisos") return "Alterou os avisos por e-mail";
+  if (p === "/admin/dashboard/acesso") return "Alterou o que cada papel vê no Dashboard";
   if (p === "/admin/avisos/teste") return "Enviou um e-mail de teste";
   if ((m = p.match(/^\/admin\/redirecionamentos(?:\/(\d+))?$/))) {
     return method === "DELETE" ? `Apagou o redirecionamento #${m[1]}` : m[1] ? `Editou o redirecionamento #${m[1]}` : `Criou o redirecionamento ${String(body.from ?? "")}`;

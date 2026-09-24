@@ -34,6 +34,7 @@ import {
   type JobInput,
 } from "./lib/jobs";
 import { canSeeLeadValue, isLeadStatus, ownerChangeError } from "./lib/leads";
+import { TEAM_VIEW, blockedFor, cleanAccess, getDashboardAccess, saveDashboardAccess, stripDashboard } from "./lib/dashboard-access";
 import { buildSitemap } from "./lib/sitemap";
 import { auditMiddleware } from "./lib/audit";
 import { normalizePath, normalizeTarget } from "./lib/redirects";
@@ -929,8 +930,10 @@ const app = new Hono<Env>()
   .get('/admin/dashboard', requireRole('admin', 'vendedor'), async (c) => {
     const rawDays = Number(c.req.query('dias') ?? '90');
     const days = Number.isFinite(rawDays) && rawDays >= 0 ? Math.min(rawDays, 3650) : 90;
-    const onlyMine = c.req.query('escopo') === 'meus';
     const me = c.get('user')!;
+    // o super admin decide o que cada papel vê; sem "equipe", o papel só enxerga os próprios leads
+    const blocked = blockedFor(await getDashboardAccess(), me.role);
+    const onlyMine = c.req.query('escopo') === 'meus' || blocked.includes(TEAM_VIEW);
     const now = Date.now();
     const allRows = await db.select().from(schema.leads).where(isNull(schema.leads.deletedAt));
     const rows = onlyMine ? allRows.filter((r) => r.ownerId === me.id) : allRows;
@@ -1151,8 +1154,7 @@ const app = new Hono<Env>()
         ownerName: r.ownerId ? userName.get(r.ownerId) ?? null : null,
       }));
 
-    return c.json(
-      {
+    const payload = {
         days,
         scope: onlyMine ? 'meus' : 'todos',
         generatedAt: new Date().toISOString(),
@@ -1192,10 +1194,23 @@ const app = new Hono<Env>()
         recent,
         money,
         followUps,
-      },
-      200,
-    );
+      };
+    return c.json(stripDashboard(payload, blocked), 200);
   })
+  // ------------------------------------------------ o que cada papel vê no dashboard
+  .get('/admin/dashboard/acesso', requireRole(), async (c) => {
+    return c.json({ access: await getDashboardAccess() }, 200);
+  })
+  .put(
+    '/admin/dashboard/acesso',
+    requireRole(),
+    validator('json', (v) => (v ?? {}) as { access?: unknown }),
+    async (c) => {
+      const access = cleanAccess(c.req.valid('json').access);
+      await saveDashboardAccess(access, c.get('user')!.id);
+      return c.json({ access }, 200);
+    },
+  )
   .post('/admin/change-password', requireAuth, async (c) => {
     const body = await c.req.json<{ currentPassword: string; newPassword: string }>();
     if (!body.newPassword || body.newPassword.length < 8) {

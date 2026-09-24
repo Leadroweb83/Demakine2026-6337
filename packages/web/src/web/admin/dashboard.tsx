@@ -12,6 +12,7 @@ import {
   Package,
   RefreshCw,
   Settings2,
+  ShieldCheck,
   Target,
   TriangleAlert,
   Trophy,
@@ -39,6 +40,7 @@ import { STATUS_META, statusMeta } from "./lead-status";
 import { hasPhone, whatsappHref, type LeadsFilter } from "./leads";
 import { UserAvatar } from "./avatar";
 import { DashboardCustomizer } from "./customize";
+import { DashboardAccessPanel } from "./dashboard-access";
 import { CARD_BLOCKS, SIZE_CLASS, resolveLayout, type DashboardLayout } from "./layout";
 import { cn } from "@/lib/utils";
 
@@ -86,6 +88,7 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
   const [days, setDays] = useState<number>(readPeriod);
   const [scope, setScope] = useState<"todos" | "meus">("todos");
   const [editing, setEditing] = useState(false);
+  const [accessOpen, setAccessOpen] = useState(false);
   const qc = useQueryClient();
 
   const prefs = useQuery({
@@ -196,6 +199,9 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
   }
 
   const { kpi } = data;
+  // blocos que o super admin tirou deste papel: os dados nem vêm do servidor
+  const blocked: string[] = data.blocked ?? [];
+  const teamView = !blocked.includes("equipe");
   const shownDays = data.days;
   const period = PERIODS.find((p) => p.days === shownDays) ?? PERIODS[2];
   const funnelContacted = data.byStatus
@@ -718,6 +724,22 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
           <p className="mt-1 max-w-3xl text-[14px] leading-relaxed text-dm-ink/65">{insight}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {user.role === "super_admin" && (
+            <button
+              type="button"
+              onClick={() => setAccessOpen((v) => !v)}
+              aria-pressed={accessOpen}
+              className={cn(
+                "flex items-center gap-2 rounded-full border px-3.5 py-2 text-[12px] font-semibold transition-colors",
+                accessOpen
+                  ? "border-dm-blue bg-dm-blue-soft text-dm-blue"
+                  : "border-black/10 bg-white text-dm-ink/65 hover:bg-black/[0.03]",
+              )}
+            >
+              <ShieldCheck size={14} />
+              Acesso por papel
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setEditing((v) => !v)}
@@ -760,26 +782,32 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
             </button>
           ))}
         </div>
-        <div aria-label="Quais leads" className="flex rounded-full border border-black/10 bg-white p-1">
-          {(
-            [
-              ["todos", "Todos os leads"],
-              ["meus", "Meus leads"],
-            ] as const
-          ).map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              aria-pressed={scope === id}
-              onClick={() => setScope(id)}
-              className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
-                scope === id ? "bg-dm-blue-deep text-white" : "text-dm-ink/60 hover:bg-black/[0.04] hover:text-dm-ink"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        {teamView ? (
+          <div aria-label="Quais leads" className="flex rounded-full border border-black/10 bg-white p-1">
+            {(
+              [
+                ["todos", "Todos os leads"],
+                ["meus", "Meus leads"],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                aria-pressed={scope === id}
+                onClick={() => setScope(id)}
+                className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
+                  scope === id ? "bg-dm-blue-deep text-white" : "text-dm-ink/60 hover:bg-black/[0.04] hover:text-dm-ink"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <span className="rounded-full bg-black/[0.05] px-3.5 py-2 text-[12.5px] font-semibold text-dm-ink/60">
+            Só os seus leads
+          </span>
+        )}
       </div>
 
       <div
@@ -793,8 +821,11 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
         </div>
       )}
 
+      {accessOpen && <DashboardAccessPanel onClose={() => setAccessOpen(false)} />}
+
       {editing && (
         <DashboardCustomizer
+          blocked={blocked}
           layout={layout}
           saving={saveLayout.isPending}
           onSave={(next) => saveLayout.mutate(next)}
@@ -804,7 +835,7 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {layout.order
-          .filter((id) => id in kpiNodes && !layout.hidden.includes(id))
+          .filter((id) => id in kpiNodes && !layout.hidden.includes(id) && !blocked.includes(id))
           .map((id) => (
             <div key={id} className="min-w-0 [&>*]:h-full">
               {kpiNodes[id]}
@@ -814,7 +845,7 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
 
       <div className="grid gap-4 lg:grid-flow-row-dense lg:grid-cols-12">
         {layout.order
-          .filter((id) => id in cardNodes && !layout.hidden.includes(id))
+          .filter((id) => id in cardNodes && !layout.hidden.includes(id) && !blocked.includes(id))
           .map((id) => (
             <div key={id} className={cn("min-w-0 [&>*]:h-full", SIZE_CLASS[cardSize[id] ?? "M"])}>
               {cardNodes[id]}

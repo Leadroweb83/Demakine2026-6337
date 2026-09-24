@@ -125,11 +125,14 @@ function SortableGroup({
 }
 
 export function DashboardCustomizer({
+  blocked = [],
   layout,
   saving,
   onSave,
   onCancel,
 }: {
+  /** blocos que o super admin tirou deste papel: não aparecem para escolher */
+  blocked?: string[];
   layout: DashboardLayout;
   saving: boolean;
   onSave: (layout: DashboardLayout) => void;
@@ -142,7 +145,10 @@ export function DashboardCustomizer({
   const cardOrder = useRef<string[]>([]);
 
   const byId = (list: readonly Block[], order: string[]) =>
-    order.map((id) => list.find((b) => b.id === id)).filter((b): b is Block => Boolean(b));
+    order
+      .filter((id) => !blocked.includes(id))
+      .map((id) => list.find((b) => b.id === id))
+      .filter((b): b is Block => Boolean(b));
   const kpis = useMemo(() => byId(KPI_BLOCKS, base.order), [base]);
   const cards = useMemo(() => byId(CARD_BLOCKS, base.order), [base]);
 
