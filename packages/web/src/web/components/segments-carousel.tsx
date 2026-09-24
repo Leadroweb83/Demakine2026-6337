@@ -134,7 +134,7 @@ export function SegmentsCarousel() {
           return (
             <Link
               key={c.slug}
-              href={`/produtos/${c.productSlug}`}
+              href={c.page ?? `/produtos/${c.productSlug}`}
               ref={(el: HTMLAnchorElement | null) => {
                 cardRefs.current[i] = el;
               }}
@@ -165,7 +165,7 @@ export function SegmentsCarousel() {
                   className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-bold"
                   style={{ color: c.color }}
                 >
-                  {c.product}
+                  {c.page ? `Soluções para ${c.name.toLowerCase()}` : c.product}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </p>
               </div>

@@ -27,17 +27,20 @@ export type Segment = {
   text: string;
   product: string;
   productSlug: string;
+  /** página própria do segmento, quando existe (o cartão leva para ela em vez do produto) */
+  page?: string;
 };
 
 export const segmentList: Segment[] = [
   {
     name: "Alimentício",
     slug: "alimenticio",
-    color: "#c2410c",
+    color: "#4d7c0f",
     icon: UtensilsCrossed,
     text: "Linhas de montagem e conferência com correia atóxica e limpeza fácil.",
     product: "Esteira para Cesta Básica",
     productSlug: "esteira-transportadora-para-cesta-basica",
+    page: "/segmentos/alimentos-e-racao",
   },
   {
     name: "Agronegócio",
@@ -47,6 +50,7 @@ export const segmentList: Segment[] = [
     text: "Grãos, sementes e fertilizantes do recebimento ao carregamento.",
     product: "Esteira para Granel",
     productSlug: "esteira-transportadora-para-granel",
+    page: "/agro",
   },
   {
     name: "Reciclagem",
@@ -56,15 +60,17 @@ export const segmentList: Segment[] = [
     text: "Triagem de resíduos com velocidade ajustada ao ritmo da equipe.",
     product: "Esteira para Reciclagem e Triagem",
     productSlug: "esteira-transportadora-para-reciclagem-triagem",
+    page: "/segmentos/reciclagem-e-residuos",
   },
   {
     name: "Metalúrgico",
     slug: "metalurgico",
-    color: "#475569",
+    color: "#c2410c",
     icon: Factory,
     text: "Peças e fardos entre setores, com estrutura reforçada.",
     product: "Esteira Transportadora Horizontal",
     productSlug: "esteira-transportadora-horizontal",
+    page: "/segmentos/metalurgico",
   },
   {
     name: "Farmacêutico",
@@ -74,6 +80,7 @@ export const segmentList: Segment[] = [
     text: "Caixas e pacotes na expedição, com transporte suave e contínuo.",
     product: "Esteira para Caixas e Pacotes",
     productSlug: "esteira-transportadora-de-caixas",
+    page: "/segmentos/farmaceutico",
   },
   {
     name: "Plástico e Embalagens",
@@ -83,6 +90,7 @@ export const segmentList: Segment[] = [
     text: "Layouts com curva e mudança de nível em espaços apertados.",
     product: "Esteira Transportadora Articulada",
     productSlug: "esteira-transportadora-articulada",
+    page: "/segmentos/plastico-e-embalagens",
   },
   {
     name: "Logística e Armazenagem",
@@ -92,6 +100,7 @@ export const segmentList: Segment[] = [
     text: "Carga e descarga de caminhão com equipamento móvel de pátio.",
     product: "Esteira Transportadora Dalla",
     productSlug: "esteira-transportadora-dalla",
+    page: "/segmentos/logistica-e-distribuicao",
   },
   {
     name: "Automotivo",

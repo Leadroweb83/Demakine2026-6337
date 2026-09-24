@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { categories, productsByCategory } from "@/lib/content";
-import { segmentList } from "@/lib/segments";
 import { segmentLps } from "@/lib/segmentos-lp";
 import { cn } from "@/lib/utils";
 
@@ -102,6 +101,7 @@ export function ProductsMega({ onNavigate }: { onNavigate?: () => void }) {
                   onClick={onNavigate}
                   className="inline-flex items-center gap-1.5 rounded-full border border-dm-blue/25 bg-dm-blue-soft px-2.5 py-1.5 text-[12.5px] font-bold text-dm-blue transition-colors hover:border-dm-blue/60"
                 >
+                  <span className="h-2 w-2 rounded-full" style={{ background: s.color }} aria-hidden="true" />
                   {s.name}
                 </Link>
               ))}
@@ -112,21 +112,6 @@ export function ProductsMega({ onNavigate }: { onNavigate?: () => void }) {
               >
                 Agro e grãos
               </Link>
-              {segmentList.slice(0, 6).map((s) => {
-                const Icon = s.icon;
-                return (
-                  <Link
-                    key={s.slug}
-                    href={`/produtos/${s.productSlug}`}
-                    onClick={onNavigate}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-dm-line px-2.5 py-1.5 text-[12.5px] font-semibold text-dm-ink/75 transition-colors hover:border-transparent"
-                    style={{ color: s.color }}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    {s.name}
-                  </Link>
-                );
-              })}
             </div>
           </div>
         </div>

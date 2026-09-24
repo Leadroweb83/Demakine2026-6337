@@ -1,11 +1,11 @@
 import { Link, useParams } from "wouter";
-import { ArrowRight, AlertTriangle, Search } from "lucide-react";
+import type { CSSProperties } from "react";
+import { ArrowRight, AlertTriangle, Check, ChevronRight, Search } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { clipDescription, fitTitle } from "@/lib/seo-text";
 import {
   Section,
   SectionHead,
-  PageHero,
   ProductCard,
   BtnWhats,
   BtnGhost,
@@ -16,7 +16,8 @@ import { Reveal } from "@/components/reveal";
 import { FaqAccordion } from "@/components/faq";
 import { LeadForm } from "@/components/lead-form";
 import { getProduct } from "@/lib/content";
-import { getSegmentLp, segmentLps } from "@/lib/segmentos-lp";
+import { getSegmentLp, segmentLps, type SegmentLp } from "@/lib/segmentos-lp";
+import { DEFAULT_SEGMENT_THEME, SEGMENT_THEMES, type SegmentTheme } from "@/lib/segment-themes";
 import { site, waLink } from "@/lib/site";
 
 function SegmentoNaoEncontrado() {
@@ -43,6 +44,108 @@ function SegmentoNaoEncontrado() {
   );
 }
 
+/** Variáveis de cor do tema (usadas pelas classes .seg-* em styles.css). */
+function themeVars(t: SegmentTheme) {
+  return {
+    "--seg-base": t.base,
+    "--seg-deep": t.deep,
+    "--seg-glow": t.glow,
+    "--seg-accent": t.accent,
+    "--seg-ink": t.accentInk,
+  } as CSSProperties;
+}
+
+/** Título com o trecho do setor pintado na cor de destaque. */
+function HighlightTitle({ title, highlight, color }: { title: string; highlight: string; color: string }) {
+  const at = highlight ? title.toLowerCase().indexOf(highlight.toLowerCase()) : -1;
+  if (at < 0) return <>{title}</>;
+  return (
+    <>
+      {title.slice(0, at)}
+      <span style={{ color }}>{title.slice(at, at + highlight.length)}</span>
+      {title.slice(at + highlight.length)}
+    </>
+  );
+}
+
+/** Topo do segmento no espírito da página Agro: fundo escuro da cor do setor e textura do material. */
+function SegmentHero({ lp, theme, waMsg }: { lp: SegmentLp; theme: SegmentTheme; waMsg: string }) {
+  return (
+    <section className="seg" style={themeVars(theme)}>
+      <div className="seg-bg" />
+      <div className="seg-beam" />
+      <div className={`seg-tex seg-tex-${theme.texture}`} aria-hidden="true" />
+
+      <div className="dm-container relative pb-16 pt-7 md:pb-20 md:pt-9">
+        <nav aria-label="Você está aqui" className="flex flex-wrap items-center gap-1.5 text-[13px] text-white/60">
+          <Link href="/" className="hover:text-white">
+            Home
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5 text-white/35" />
+          <span>Segmentos</span>
+          <ChevronRight className="h-3.5 w-3.5 text-white/35" />
+          <span className="font-semibold text-white">{lp.name}</span>
+        </nav>
+
+        <div className="mt-9 grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+          <div>
+            <span className="seg-tag">
+              <span>Segmento · {lp.name}</span>
+            </span>
+            <h1 className="mt-6 font-display text-[2.15rem] font-extrabold leading-[1.08] tracking-tight text-white sm:text-[2.6rem] xl:text-[3rem]">
+              <HighlightTitle title={lp.title} highlight={theme.highlight} color={theme.accent} />
+            </h1>
+            <div className="seg-rule mt-6" />
+            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/78">{lp.intro}</p>
+            <ul className="seg-bullets mt-7">
+              {theme.bullets.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+            </ul>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <BtnWhats href={waLink(waMsg)} className="cine-shine">
+                Falar com um especialista
+              </BtnWhats>
+              <BtnGhost dark href="#orcamento">
+                Receber proposta técnica
+              </BtnGhost>
+            </div>
+          </div>
+
+          <Reveal i={1}>
+            <figure className="relative overflow-hidden rounded-3xl border border-white/12 bg-white">
+              <img
+                src={lp.hero}
+                alt={`${lp.name}: equipamento Demakine`}
+                className="h-[340px] w-full object-contain p-6 md:h-[440px]"
+                width={800}
+                height={600}
+              />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/55 to-transparent p-6 pt-14">
+                <p className="text-[12.5px] font-bold uppercase tracking-[0.16em]" style={{ color: theme.accent }}>
+                  Equipamento Demakine
+                </p>
+                <p className="mt-1.5 text-[15px] text-white/90">{theme.note}</p>
+              </figcaption>
+            </figure>
+          </Reveal>
+        </div>
+      </div>
+
+      <div className="relative border-t border-white/10 bg-black/25">
+        <div className="dm-container flex flex-wrap items-center gap-x-10 gap-y-4 py-5">
+          {theme.strip.map((t) => (
+            <span key={t} className="flex items-center gap-2.5 text-[13px] uppercase tracking-[0.12em] text-white/70">
+              <Check className="h-4 w-4" style={{ color: theme.accent }} />
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Segmento() {
   const { slug } = useParams<{ slug: string }>();
   const lp = getSegmentLp(slug ?? "");
@@ -51,7 +154,8 @@ export default function Segmento() {
 
   const products = lp.products.map((s) => getProduct(s)).filter((p) => Boolean(p));
   const others = segmentLps.filter((s) => s.slug !== lp.slug);
-  const waMsg = `Olá! Preciso de equipamento para ${lp.name.toLowerCase()}.`;
+  const theme = SEGMENT_THEMES[lp.slug] ?? DEFAULT_SEGMENT_THEME;
+  const waMsg = `Olá! Preciso de equipamento para ${theme.sector}.`;
 
   return (
     <>
@@ -75,13 +179,7 @@ export default function Segmento() {
         }}
       />
 
-      <PageHero
-        eyebrow={lp.eyebrow}
-        title={lp.title}
-        text={lp.intro}
-        image={lp.hero}
-        crumbs={[{ label: "Segmentos" }, { label: lp.name }]}
-      />
+      <SegmentHero lp={lp} theme={theme} waMsg={waMsg} />
 
       {/* dores do setor */}
       <Section tone="white">
@@ -109,7 +207,10 @@ export default function Segmento() {
       </Section>
 
       {/* fluxo do material */}
-      <Section tone="deep">
+      <section className="seg py-16 md:py-24" style={themeVars(theme)}>
+        <div className="seg-bg" />
+        <div className={`seg-tex seg-tex-${theme.texture}`} aria-hidden="true" />
+        <div className="dm-container relative">
         <SectionHead
           dark
           eyebrow="Fluxo do material"
@@ -122,7 +223,7 @@ export default function Segmento() {
               <div className="flex h-full flex-col rounded-2xl border border-white/12 bg-white/[0.04] p-5">
                 <span
                   className="font-mono text-[12px] font-bold tracking-widest"
-                  style={{ color: lp.color }}
+                  style={{ color: theme.accent }}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -138,13 +239,14 @@ export default function Segmento() {
             Dimensionar no simulador
           </BtnGhost>
         </div>
-      </Section>
+        </div>
+      </section>
 
       {/* produtos indicados */}
       <Section tone="surface">
         <SectionHead
           eyebrow="Equipamentos indicados"
-          title={`Linha usada em ${lp.name.toLowerCase()}`}
+          title={`Equipamentos para ${theme.sector}`}
           text="Todos fabricados na nossa unidade em Limeira/SP e adaptáveis ao seu material, comprimento e altura."
           action={
             <BtnGhost to="/produtos">
@@ -234,6 +336,7 @@ export default function Segmento() {
               href={`/segmentos/${s.slug}`}
               className="inline-flex items-center gap-2 rounded-full border border-dm-line px-4 py-2.5 text-[14.5px] font-semibold text-dm-ink/80 transition-colors hover:border-dm-blue/40 hover:text-dm-blue"
             >
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: s.color }} aria-hidden="true" />
               {s.name}
               <ArrowRight className="h-4 w-4" />
             </Link>

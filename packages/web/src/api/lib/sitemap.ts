@@ -1,5 +1,6 @@
 import content from "../../web/data/content.json";
 import { DEFAULT_CASES } from "../../web/lib/cases";
+import { segmentLps } from "../../web/lib/segmentos-lp";
 
 const ORIGIN = "https://www.demakine.com.br";
 
@@ -8,8 +9,8 @@ const STATIC_PAGES = [
   "/", "/produtos", "/projetos-especiais", "/a-empresa", "/clientes", "/assistencia-tecnica", "/blog",
   "/faq", "/downloads", "/ferramentas", "/agro", "/contato", "/vagas", "/cases",
   "/politica-de-privacidade", "/termos-de-uso",
-  "/segmentos/fertilizantes-e-insumos", "/segmentos/reciclagem-e-residuos", "/segmentos/construcao-e-mineracao",
-  "/segmentos/alimentos-e-racao", "/segmentos/logistica-e-distribuicao",
+  // páginas de segmento vêm da lista do site (segmento novo entra sozinho)
+  ...segmentLps.map((s) => `/segmentos/${s.slug}`),
   "/export?lang=es", "/export?lang=en",
 ];
 

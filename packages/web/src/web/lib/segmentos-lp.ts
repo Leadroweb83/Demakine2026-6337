@@ -166,7 +166,7 @@ export const segmentLps: SegmentLp[] = [
     intro:
       "Agregado é o material mais severo que existe para um transportador: abrasivo, com carga de impacto na alimentação e volume alto por hora. O que segura isso é estrutura reforçada e perfil de correia que aumenta o volume transportado por metro.",
     hero: "/img/produtos/esteira-transportadora-para-granel/10.webp",
-    color: "#b45309",
+    color: "#a16207",
     pains: [
       {
         title: "Abrasão que come a correia",
@@ -228,7 +228,7 @@ export const segmentLps: SegmentLp[] = [
     intro:
       "Aqui a exigência muda de natureza: o que pesa é material de contato adequado, facilidade de higienização e transporte suave o suficiente para não danificar o produto. Vale para linha de montagem de cesta básica, hortifrúti, ração e farelo.",
     hero: "/img/produtos/esteira-transportadora-para-cesta-basica/1.webp",
-    color: "#15803d",
+    color: "#4d7c0f",
     pains: [
       {
         title: "Correia que não pode ser qualquer uma",
@@ -344,6 +344,193 @@ export const segmentLps: SegmentLp[] = [
       "esteira transportadora para centro de distribuição",
       "transportador de caixas para galpão",
       "esteira articulada para logística",
+    ],
+  },
+  {
+    slug: "metalurgico",
+    name: "Metalúrgico",
+    title: "Esteiras para peças e linhas da indústria metalúrgica",
+    eyebrow: "Segmento",
+    intro:
+      "Peça metálica é pesada, pode vir com óleo e aresta viva e precisa passar de uma operação para a outra sem parar a linha. O transportador certo é dimensionado pelo peso por metro, pelo tipo de peça e pelo espaço entre as máquinas.",
+    hero: "/img/produtos/esteira-transportadora-horizontal/2.webp",
+    color: "#c2410c",
+    pains: [
+      {
+        title: "Peça pesada carregada no braço",
+        text: "Levar peça usinada ou estampada de uma máquina para a outra no braço cansa a equipe, gera afastamento e ainda marca a peça. Transportador entre operações tira esse vaivém.",
+      },
+      {
+        title: "Óleo e aresta que acabam com a correia",
+        text: "Correia comum não aguenta fluido de corte nem canto vivo. Dependendo da peça, o certo é correia específica ou transportador de roletes, e isso se define no projeto.",
+      },
+      {
+        title: "Pouco espaço entre as máquinas",
+        text: "Linha montada ao longo dos anos raramente tem corredor reto. Esteira com curva, articulação ou mudança de nível encaixa onde a reta não cabe.",
+      },
+      {
+        title: "Expedição que vira gargalo",
+        text: "Caixa de peça pronta empilhada no chão esperando o carregamento atrasa o caminhão. Esteira até a doca mantém o fluxo do fim de linha.",
+      },
+    ],
+    chain: [
+      { step: "Recebimento", text: "Chegada de matéria-prima e componentes para o estoque." },
+      { step: "Entre operações", text: "Peça seguindo da usinagem, estampagem ou solda para a próxima etapa." },
+      { step: "Inspeção", text: "Posto de conferência e acabamento na altura certa para a equipe." },
+      { step: "Embalagem", text: "Peça pronta indo para a caixa ou o palete." },
+      { step: "Expedição", text: "Caixas seguindo até a doca e o caminhão." },
+    ],
+    products: [
+      "esteira-transportadora-horizontal",
+      "esteira-transportadora-articulada",
+      "esteira-transportadora-de-caixas",
+      "esteira-transportadora-dalla",
+      "rosca-transportadora",
+    ],
+    faq: [
+      {
+        q: "A esteira aguenta peça pesada?",
+        a: "Aguenta, desde que seja dimensionada para isso. A estrutura, os roletes ou a correia e o motor são definidos pelo peso por metro e pelo ritmo da linha. Informe o peso da peça e quantas passam por hora.",
+      },
+      {
+        q: "O que é melhor: correia ou roletes?",
+        a: "Peça de base plana e caixa costumam ir bem em roletes. Peça pequena, irregular ou com óleo pede correia específica. A engenharia indica a partir de uma foto ou do desenho da peça.",
+      },
+      {
+        q: "Dá para transportar cavaco ou limalha?",
+        a: "Depende do tipo e da quantidade. É um caso de projeto, então mande a descrição do material para a engenharia avaliar a rosca ou o transportador certo.",
+      },
+    ],
+    searchTerms: [
+      "esteira transportadora para peças metálicas",
+      "transportador de roletes para indústria",
+      "esteira para linha de usinagem",
+      "esteira para estamparia",
+    ],
+  },
+  {
+    slug: "farmaceutico",
+    name: "Farmacêutico",
+    title: "Esteiras para embalagem e expedição farmacêutica",
+    eyebrow: "Segmento",
+    intro:
+      "Na indústria e na distribuição farmacêutica, o que mais se movimenta é caixa: saindo da embalagem, passando pela conferência e seguindo para a expedição. O transportador precisa ser fácil de limpar, ter a altura certa para a equipe e caber na área disponível.",
+    hero: "/img/produtos/esteira-transportadora-de-caixas/2.webp",
+    color: "#0e7490",
+    pains: [
+      {
+        title: "Caixa carregada no braço no fim da linha",
+        text: "Depois da embalagem, alguém leva caixa por caixa até o palete. É o trabalho repetitivo que mais cansa e mais afasta. Esteira no fim de linha resolve.",
+      },
+      {
+        title: "Conferência em posto improvisado",
+        text: "Conferir pedido em mesa baixa ou no chão gera erro e dor nas costas. Esteira com altura pensada para a equipe vira um posto de conferência de verdade.",
+      },
+      {
+        title: "Área que exige limpeza fácil",
+        text: "Superfície com canto que acumula pó não serve para área controlada. Estrutura e acabamento, inclusive em inox, são definidos no projeto conforme a área.",
+      },
+      {
+        title: "Separação de pedidos lenta no CD",
+        text: "Distribuidora que separa muitos pedidos pequenos perde tempo andando com caixa. Transporte contínuo entre separação, conferência e expedição encurta o caminho.",
+      },
+    ],
+    chain: [
+      { step: "Embalagem", text: "Produto embalado saindo da linha em caixa." },
+      { step: "Conferência", text: "Posto com altura certa para conferir o pedido." },
+      { step: "Paletização", text: "Caixas chegando ao palete sem carregar." },
+      { step: "Expedição", text: "Carga seguindo até a doca e o caminhão." },
+      { step: "Distribuição", text: "No CD, transporte entre separação e expedição." },
+    ],
+    products: [
+      "esteira-transportadora-de-caixas",
+      "esteira-transportadora-horizontal",
+      "esteira-transportadora-articulada",
+      "esteira-transportadora-para-cesta-basica",
+      "esteira-transportadora-dalla",
+    ],
+    faq: [
+      {
+        q: "Vocês fazem esteira em inox?",
+        a: "Fazem. A Demakine já entregou equipamentos em inox sanitário em projetos especiais. Material e acabamento são definidos conforme a área onde a esteira vai trabalhar.",
+      },
+      {
+        q: "A esteira se encaixa na linha de embalagem que já existe?",
+        a: "É feita sob medida para isso: altura, largura e comprimento seguem a sua linha. Mande as medidas ou uma foto do local.",
+      },
+      {
+        q: "Serve para centro de distribuição de medicamentos?",
+        a: "Serve. Esteira de caixas e esteira articulada levam o volume entre separação, conferência e expedição e reduzem o vaivém da equipe.",
+      },
+    ],
+    searchTerms: [
+      "esteira transportadora para indústria farmacêutica",
+      "esteira para expedição de caixas",
+      "esteira transportadora em inox",
+      "transportador para distribuidora de medicamentos",
+    ],
+  },
+  {
+    slug: "plastico-e-embalagens",
+    name: "Plástico e embalagens",
+    title: "Resina, peças e embalagens na indústria do plástico",
+    eyebrow: "Segmento",
+    intro:
+      "Na indústria do plástico, o material chega em saco de resina, entra na máquina, sai como peça e segue embalado. Cada passagem feita no braço custa tempo e gente. Rosca e esteira certas ligam essas etapas.",
+    hero: "/img/produtos/rosca-transportadora/1.webp",
+    color: "#7c3aed",
+    pains: [
+      {
+        title: "Saco de resina erguido até o funil",
+        text: "Abastecer injetora ou extrusora erguendo saco de 25 kg até o funil é esforço repetido o turno inteiro. Rosca transportadora leva o granulado até a máquina.",
+      },
+      {
+        title: "Peça acumulando na saída da máquina",
+        text: "Peça caindo direto na caixa ao pé da injetora vira gargalo e amassa. Esteira na saída leva a peça para resfriar, conferir ou embalar.",
+      },
+      {
+        title: "Moído voltando ao processo",
+        text: "O material moído que volta para a mistura também precisa de transporte. Rosca ou calha fechada evitam derramar e sujar o chão.",
+      },
+      {
+        title: "Fardo e caixa parados na expedição",
+        text: "Embalagem pronta empilhada no chão esperando o caminhão ocupa espaço e atrasa a carga. Esteira até a doca mantém o fluxo.",
+      },
+    ],
+    chain: [
+      { step: "Recebimento", text: "Resina em saco ou big bag chegando ao estoque." },
+      { step: "Abastecimento", text: "Rosca levando o granulado até a máquina." },
+      { step: "Saída da peça", text: "Esteira recebendo a peça da injetora ou da extrusora." },
+      { step: "Embalagem", text: "Peça seguindo para caixa, saco ou fardo." },
+      { step: "Expedição", text: "Carga pronta indo até o caminhão." },
+    ],
+    products: [
+      "rosca-transportadora",
+      "calha-transportadora",
+      "esteira-transportadora-horizontal",
+      "esteira-transportadora-articulada",
+      "esteira-transportadora-de-caixas",
+      "elevador-de-canecas",
+    ],
+    faq: [
+      {
+        q: "A rosca serve para resina granulada?",
+        a: "Serve. A rosca transportadora é usada no transporte contínuo de resina plástica granulada, e o diâmetro e o comprimento são definidos pela quantidade que a máquina consome.",
+      },
+      {
+        q: "Dá para colocar esteira na saída da injetora?",
+        a: "Dá. Altura, largura e velocidade são ajustadas à máquina e à peça. Mande o modelo da injetora ou uma foto do local.",
+      },
+      {
+        q: "E material em pó ou moído?",
+        a: "Depende da granulometria e de quanto o material solta pó. Nesses casos a engenharia avalia rosca fechada ou calha para evitar sujeira.",
+      },
+    ],
+    searchTerms: [
+      "rosca transportadora para resina plástica",
+      "esteira para saída de injetora",
+      "transportador para indústria do plástico",
+      "alimentador de resina para extrusora",
     ],
   },
 ];
