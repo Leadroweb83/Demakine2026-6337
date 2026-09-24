@@ -12,6 +12,8 @@ export const CONTENT_COLLECTIONS: Record<string, Role[]> = {
   lista: ["admin", "editor"],
   /** título e descrição das páginas fixas (chave = caminho, ver seoKey) */
   seo: ["admin"],
+  /** textos da home e vitrine de campeãs (chave "main") */
+  home: ["admin", "editor"],
 };
 
 export const CONTENT_KEY_RE = /^[a-z0-9-]{1,100}$/;

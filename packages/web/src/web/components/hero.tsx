@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { home } from "@/lib/home";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { ArrowRight, ShieldCheck, Wrench, Truck, Factory } from "lucide-react";
 import { BtnGhost, BtnPrimary } from "./kit";
@@ -106,7 +107,7 @@ export function HomeHero() {
               <span className="mt-2 block font-display text-[0.42em] font-extrabold normal-case leading-tight tracking-normal text-white/85 md:text-[0.36em]">
                 para{" "}
                 <Rotator
-                  words={["grãos", "fertilizantes", "reciclagem", "construção", "alimentos"]}
+                  words={home.heroWords}
                 />
               </span>
             </h1>
@@ -114,9 +115,7 @@ export function HomeHero() {
             <CineRule className="mt-6" />
 
             <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-white/72 md:text-lg">
-              Esteiras transportadoras, roscas, elevadores, máquinas de costurar sacos e projetos
-              especiais fabricados sob medida na nossa fábrica em Limeira/SP. Menos gente carregando
-              no braço, mais produtividade na linha.
+              {home.heroText}
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -132,7 +131,7 @@ export function HomeHero() {
               href="/agro"
               className="mt-6 inline-flex items-center gap-2 text-[14px] font-semibold text-[#e8c469] transition-colors hover:text-white"
             >
-              É do agro? Veja a linha para grãos, fertilizantes e ração
+              {home.agroLink}
               <ArrowRight className="h-4 w-4" />
             </a>
 

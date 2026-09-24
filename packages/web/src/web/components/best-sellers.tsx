@@ -5,17 +5,13 @@ import { BtnPrimary, BtnWhats } from "@/components/kit";
 import { CineBullets, CineRule, CineSection, CineShot, CineStat, CineTag, CineTitle } from "@/components/cine";
 import { artigo, getProduct } from "@/lib/content";
 import { waLink } from "@/lib/site";
+import { home } from "@/lib/home";
 import { cn } from "@/lib/utils";
 
 const INTERVAL = 10; // segundos por produto
 
-/** As campeãs da vitrine; `lines` é o título quebrado em duas linhas e `tab` o nome curto. */
-const SLIDES = [
-  { slug: "esteira-transportadora-para-sacaria", lines: ["Esteira para", "sacaria e fardos"], tab: "Sacaria" },
-  { slug: "esteira-transportadora-para-granel", lines: ["Esteira em V", "para granel"], tab: "Granel" },
-  { slug: "esteira-transportadora-horizontal", lines: ["Esteira", "horizontal"], tab: "Horizontal" },
-  { slug: "rosca-transportadora", lines: ["Rosca", "transportadora"], tab: "Rosca" },
-];
+/** As campeãs da vitrine vêm de lib/home.ts (editáveis no painel, Home). */
+const SLIDES = home.bestSellers.filter((s) => getProduct(s.slug)); // produto oculto no catálogo sai da vitrine
 
 type Product = NonNullable<ReturnType<typeof getProduct>>;
 
