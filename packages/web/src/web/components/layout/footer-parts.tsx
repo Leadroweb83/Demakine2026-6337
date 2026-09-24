@@ -61,7 +61,7 @@ export function FooterSearch() {
             setQuery(e.target.value);
             setOpen(true);
           }}
-          placeholder={`Buscar entre as ${products.length} máquinas`}
+          placeholder="Buscar equipamento"
           autoComplete="off"
           className="w-full rounded-full border border-white/15 bg-white/[0.06] py-3.5 pl-11 pr-4 text-[14.5px] text-white outline-none transition-colors placeholder:text-white/55 focus:border-dm-green/70 focus:bg-white/[0.09]"
         />
@@ -332,28 +332,16 @@ export function LocalBusinessBlock({ cnpj }: { cnpj?: string }) {
     <div
       itemScope
       itemType="https://schema.org/LocalBusiness"
-      className="grid gap-x-8 gap-y-3 text-[13px] leading-relaxed text-white/60 md:grid-cols-3"
+      className="grid gap-x-8 gap-y-3 text-[13px] leading-relaxed text-white/60 md:grid-cols-2"
     >
       <meta itemProp="image" content={`${site.url}/img/site/logo-blue.webp`} />
       <meta itemProp="priceRange" content="$$" />
       <link itemProp="url" href={site.url} />
 
-      <p>
-        <span className="block text-[11.5px] font-bold uppercase tracking-wider text-white/60">
-          Razão social
-        </span>
-        <span itemProp="legalName" className="text-white/65">
-          {site.legal}
-        </span>
-        <span className="hidden" itemProp="name">
-          {site.name}
-        </span>
-        {cnpj && (
-          <span className="mt-1 block" itemProp="taxID">
-            CNPJ {cnpj}
-          </span>
-        )}
-      </p>
+      {/* razão social fora da vista (pedido do cliente), mas ainda nos dados para o Google */}
+      <meta itemProp="legalName" content={site.legal} />
+      <meta itemProp="name" content={site.name} />
+      {cnpj && <meta itemProp="taxID" content={cnpj} />}
 
       <p itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
         <span className="block text-[11.5px] font-bold uppercase tracking-wider text-white/60">
