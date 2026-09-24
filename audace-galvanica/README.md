@@ -59,7 +59,10 @@ icons/svg/      Ícones SVG fornecidos
 - Textos seguem `copy/copy.json` do pacote na Drive (descrições dos benefícios em minúscula; todos os
   campos do formulário obrigatórios). "Qual é a sua principal necessidade?" segue como texto livre
   porque o copy.json pede um select mas não traz as opções.
-- Hero: o fundo tem um corte reto entre painel e foto; um degradê em CSS suaviza a divisa como na arte.
+- Hero e consultoria reconstruídos a partir da própria arte aprovada: o fundo `section_01` do pacote trazia
+  a corrente ampliada fora do enquadramento aprovado e o `section_02` uma forma geométrica serrilhada que
+  não existe na arte. As áreas de texto da arte foram removidas por preenchimento (OpenCV Telea) sobre
+  fundo desfocado; hero usa o painel escuro do pacote à esquerda. Depois, Real-ESRGAN x4.
 
 ## Sistema de medidas
 

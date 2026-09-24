@@ -113,14 +113,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .section__bg picture { display: block; width: 100%; height: 100%; }
 .section__bg img { width: 100%; height: 100%; object-fit: cover; }
 .hero .section__bg img { object-position: 50% 45%; }
-/* O fundo entregue tem um corte reto entre o painel escuro e a foto (a ~44% da largura).
-   Na arte aprovada essa passagem é suave: este degradê só funde a divisa, sem alterar o arquivo. */
-.hero .section__bg::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(90deg, rgba(4, 14, 22, 0) 41%, #040E16 44.4%, rgba(4, 14, 22, .55) 47.5%, rgba(4, 14, 22, 0) 53%);
-}
-
-
 .display { font-family: var(--font-display); font-weight: 400; }
 .gold { color: var(--gold); }
 
