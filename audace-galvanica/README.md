@@ -14,6 +14,7 @@ images/         backgrounds/, photos/, overlays/
 icons/svg/      Ícones SVG fornecidos
 robots.txt      Rastreamento liberado (linha do sitemap entra com o domínio)
 404.html        Página de erro com a marca (noindex)
+vercel.json     Vercel: noindex só em *.vercel.app (link de teste) e cache longo para imagens/fontes
 ```
 
 Fora da pasta publicada, em `../audace-galvanica-fonte/`: a arte aprovada (`reference/`), os arquivos
