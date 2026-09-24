@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link } from "wouter";
 import { useMutation } from "@tanstack/react-query";
+import { track } from "@/lib/tracking";
 import { Check, FileText, Loader2, Paperclip, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -66,6 +67,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
         throw new Error(body.error ?? "Não foi possível enviar. Tente de novo.");
       }
     },
+    onSuccess: () => track("job_application", { job: jobSlug ?? "banco-de-talentos" }),
     onError: (e) => setError(e.message),
   });
 

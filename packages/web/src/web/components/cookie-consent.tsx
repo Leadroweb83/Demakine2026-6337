@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Cookie, X } from "lucide-react";
+import { applyConsent } from "@/lib/tracking";
 
 const KEY = "demakine_cookie_consent";
 export const COOKIE_PREFS_EVENT = "demakine:open-cookie-prefs";
@@ -42,6 +43,7 @@ export function CookieConsent() {
 
   const decide = (choice: Choice) => {
     window.localStorage.setItem(KEY, choice);
+    applyConsent(choice);
     setOpen(false);
   };
 
@@ -72,8 +74,9 @@ export function CookieConsent() {
             A gente usa cookies para melhorar o site
           </p>
           <p className="mt-2 text-[14px] leading-relaxed text-dm-gray">
-            Os essenciais mantêm o site funcionando e não podem ser desativados. Os de medição nos
-            mostram quais equipamentos geram mais procura, e só ligam se você aceitar. Detalhes na{" "}
+            Os essenciais mantêm o site funcionando e não podem ser desativados. Os de medição e
+            anúncios (Google) mostram quais equipamentos geram mais procura e medem nossas campanhas, e
+            só ligam se você aceitar. Detalhes na{" "}
             <Link
               href="/politica-de-privacidade"
               className="font-semibold text-dm-blue hover:underline"

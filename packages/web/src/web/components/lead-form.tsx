@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { track } from "@/lib/tracking";
 import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
@@ -67,7 +68,10 @@ export function LeadForm({
       return res.json();
     },
     onError: () => setError("Não foi possível enviar. Tente pelo WhatsApp."),
-    onSuccess: () => onSuccess?.(),
+    onSuccess: () => {
+      track("generate_lead", { form_source: source, product: product ?? null });
+      onSuccess?.();
+    },
   });
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>

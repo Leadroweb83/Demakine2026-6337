@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Seo, organizationJsonLd } from "@/components/seo";
 import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
+import { track } from "@/lib/tracking";
 import { Reveal } from "@/components/reveal";
 import { api } from "@/lib/api";
 import { getProduct } from "@/lib/content";
@@ -82,6 +83,7 @@ function ExportForm({ lang }: { lang: ExportLang }) {
       if (!res.ok) throw new Error("fail");
       return res.json();
     },
+    onSuccess: () => track("generate_lead", { form_source: `export-${lang}`, product: "Export inquiry" }),
     onError: () => setError(t.fail),
   });
 

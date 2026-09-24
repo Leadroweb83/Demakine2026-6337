@@ -1,5 +1,6 @@
-import { lazy, Suspense, useEffect, type ComponentType } from "react";
-import { Redirect, Route, Switch } from "wouter";
+import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
+import { Redirect, Route, Switch, useLocation } from "wouter";
+import { track } from "./lib/tracking";
 import { RedirectGate } from "./components/redirect-gate";
 import { endFirstPaint } from "./components/reveal";
 import { Provider } from "./components/provider";
@@ -142,6 +143,18 @@ function Site() {
 function App() {
   // depois do primeiro desenho, seções que entram na tela voltam a animar (ver components/reveal.tsx)
   useEffect(() => endFirstPaint(), []);
+  // troca de página dentro do site (sem recarregar) vira page_view_spa no GTM
+  const [location] = useLocation();
+  const firstView = useRef(true);
+  useEffect(() => {
+    if (firstView.current) {
+      firstView.current = false;
+      return;
+    }
+    // espera a página nova (carregada sob demanda) trocar o título
+    const t = window.setTimeout(() => track("page_view_spa", { page_path: location, page_title: document.title }), 400);
+    return () => window.clearTimeout(t);
+  }, [location]);
   return (
     <Provider>
       <CompareProvider>

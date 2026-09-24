@@ -10,12 +10,15 @@ import "@fontsource/anton";
 import "@fontsource-variable/jetbrains-mono";
 import "./styles.css";
 import { loadRuntimeContent, runtimeContent } from "./lib/runtime-content";
+import { initTracking } from "./lib/tracking";
 
 /**
  * Sem await no nível de cima deste arquivo: as páginas (lazy) importam o React deste mesmo arquivo
  * de entrada, e um await aqui esperando por elas deixaria um esperando o outro para sempre.
  */
 async function start() {
+	// medição (GTM e Google Ads) só carrega se o visitante já tinha aceitado os cookies
+	initTracking();
 	// O conteúdo editado no painel precisa estar pronto antes de o app (e content.ts/site.ts) carregar.
 	await loadRuntimeContent();
 	const { default: App, preloadRoute, prefetchRoutes } = await import("./app.tsx");
