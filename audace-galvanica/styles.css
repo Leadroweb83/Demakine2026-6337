@@ -260,7 +260,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   color: var(--white);
   max-width: calc(110 * var(--u));
 }
-.micro-benefits img { width: calc(26 * var(--u)); height: calc(26 * var(--u)); flex: none; }
+.micro-benefits img { width: calc(33 * var(--u)); height: calc(33 * var(--u)); margin: calc(-3.5 * var(--u)) calc(-3.5 * var(--u)); flex: none; }
 .hero__side-words { left: calc(673 * var(--u)); top: calc(231 * var(--u)); }
 
 /* ==========================================================================
@@ -326,9 +326,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   grid-template-columns: calc(113.5 * var(--u)) calc(126.5 * var(--u)) calc(123.5 * var(--u)) calc(136.5 * var(--u)) calc(140 * var(--u)) auto;
   padding: calc(20 * var(--u)) 0 0 calc(37.5 * var(--u));
 }
-.benefit__icon { width: calc(30 * var(--u)); height: calc(30 * var(--u)); }
+/* os SVGs têm ~12% de respiro interno no viewBox; a caixa maior deixa o traço visível no tamanho da arte */
+.benefit__icon { width: calc(38 * var(--u)); height: calc(38 * var(--u)); margin: calc(-4 * var(--u)) 0 0 calc(-4 * var(--u)); }
 .benefit__title {
-  margin-top: calc(10 * var(--u));
+  margin-top: calc(6 * var(--u));
   font-family: var(--font-display);
   font-size: calc(10 * var(--u));
   line-height: calc(14 * var(--u));

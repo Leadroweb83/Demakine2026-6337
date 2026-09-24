@@ -150,32 +150,32 @@
           <li class="benefit">
             <img class="benefit__icon" src="icons/svg/lightbulb.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
             <h3 class="benefit__title">Mais clareza<br class="br-d"> para decidir</h3>
-            <p class="benefit__body">Quais banhos fazem<br class="br-d"> sentido para sua marca<br class="br-d"> e suas peças.</p>
+            <p class="benefit__body">quais banhos fazem<br class="br-d"> sentido para sua marca<br class="br-d"> e suas peças.</p>
           </li>
           <li class="benefit">
             <img class="benefit__icon" src="icons/svg/target.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
             <h3 class="benefit__title">Investimento<br class="br-d"> mais assertivo</h3>
-            <p class="benefit__body">Evitando escolhas<br class="br-d"> baseadas apenas em<br class="br-d"> preço ou padrão<br class="br-d"> de mercado.</p>
+            <p class="benefit__body">evitando escolhas<br class="br-d"> baseadas apenas em<br class="br-d"> preço ou padrão<br class="br-d"> de mercado.</p>
           </li>
           <li class="benefit">
             <img class="benefit__icon" src="icons/svg/users.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
             <h3 class="benefit__title">Orientação<br class="br-d"> personalizada</h3>
-            <p class="benefit__body">Considerando as<br class="br-d"> características e<br class="br-d"> objetivos do seu negócio.</p>
+            <p class="benefit__body">considerando as<br class="br-d"> características e<br class="br-d"> objetivos do seu negócio.</p>
           </li>
           <li class="benefit">
             <img class="benefit__icon" src="icons/svg/diamond.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
             <h3 class="benefit__title">Mais coerência<br class="br-d"> entre produto<br class="br-d"> e posicionamento</h3>
-            <p class="benefit__body">Para que o acabamento<br class="br-d"> das peças converse<br class="br-d"> com a identidade da marca.</p>
+            <p class="benefit__body">para que o acabamento<br class="br-d"> das peças converse<br class="br-d"> com a identidade da marca.</p>
           </li>
           <li class="benefit">
             <img class="benefit__icon" src="icons/svg/chart.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
             <h3 class="benefit__title">Conhecimento<br class="br-d"> para planejar melhor</h3>
-            <p class="benefit__body">Entendendo possibilidades,<br class="br-d"> características e cuidados<br class="br-d"> dos diferentes tipos<br class="br-d"> de banho.</p>
+            <p class="benefit__body">entendendo possibilidades,<br class="br-d"> características e cuidados<br class="br-d"> dos diferentes tipos<br class="br-d"> de banho.</p>
           </li>
           <li class="benefit">
             <img class="benefit__icon" src="icons/svg/gear.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
             <h3 class="benefit__title">Conversa com<br class="br-d"> quem entende</h3>
-            <p class="benefit__body">Com experiência prática<br class="br-d"> em galvanoplastia<br class="br-d"> de semijoias.</p>
+            <p class="benefit__body">com experiência prática<br class="br-d"> em galvanoplastia<br class="br-d"> de semijoias.</p>
           </li>
         </ul>
       </div>
@@ -268,9 +268,9 @@
               </select>
             </div>
             <div class="field">
-              <label for="f-volume">Volume aproximado de peças</label>
-              <select id="f-volume" name="volume">
-                <option value="" selected>Selecione</option>
+              <label for="f-volume">Volume aproximado de peças<span class="req" aria-hidden="true">*</span></label>
+              <select id="f-volume" name="volume" required>
+                <option value="" selected disabled>Selecione</option>
                 <option>Ainda não sei</option>
                 <option>Até 100 peças</option>
                 <option>101 a 500 peças</option>
@@ -279,8 +279,8 @@
               </select>
             </div>
             <div class="field field--full">
-              <label for="f-necessidade">Qual é a sua principal necessidade?</label>
-              <textarea id="f-necessidade" name="necessidade" rows="2"></textarea>
+              <label for="f-necessidade">Qual é a sua principal necessidade?<span class="req" aria-hidden="true">*</span></label>
+              <textarea id="f-necessidade" name="necessidade" rows="2" required></textarea>
             </div>
             <p class="form-status" role="status" aria-live="polite" data-form-status></p>
             <button class="btn btn--gold btn--block" type="submit">

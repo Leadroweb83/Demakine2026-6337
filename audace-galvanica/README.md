@@ -21,7 +21,7 @@ icons/svg/      Ícones SVG fornecidos
 |---|---|---|
 | 0 | Preparação | concluída |
 | 1 | Identidade e estrutura | concluída (layout calibrado na arte aprovada) |
-| 2 a 5 | Fundos das seções 1 a 5 | aplicados; faltam ícones SVG |
+| 2 a 5 | Hero, consultoria, estratégia, benefícios | concluídas (fundos + ícones SVG) |
 | 6 a 8 | Etapas, CTA, rodapé | aguardando assets |
 | 9 | Validação estática | pendente |
 | 10 | Motion | pendente |
@@ -42,6 +42,9 @@ icons/svg/      Ícones SVG fornecidos
 - Logo (opção B aprovada pelo cliente): `audace_logo_negative_*` é o arquivo oficial com apenas a cor
   dos textos alterada ("Audace" #F8F6F2, "Galvânica" #BFC1C1). Símbolo, formas, proporções e
   transparência idênticos ao original. O arquivo oficial `audace_logo_transparent_4x.png` fica intacto.
+- Textos seguem `copy/copy.json` do pacote na Drive (descrições dos benefícios em minúscula; todos os
+  campos do formulário obrigatórios). "Qual é a sua principal necessidade?" segue como texto livre
+  porque o copy.json pede um select mas não traz as opções.
 - Hero: o fundo tem um corte reto entre painel e foto; um degradê em CSS suaviza a divisa como na arte.
 
 ## Sistema de medidas
