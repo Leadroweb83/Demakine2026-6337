@@ -25,6 +25,7 @@
 }
 
 :root {
+  color-scheme: dark;
   /* Marca */
   --navy-black: #050B11;
   --deep-navy: #07131E;
