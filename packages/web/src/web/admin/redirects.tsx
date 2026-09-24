@@ -131,7 +131,7 @@ export function AdminRedirects() {
             <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dm-ink/40" />
             <input value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Buscar endereço" aria-label="Buscar redirecionamento" className={cn(inputCls, "pl-10")} />
           </label>
-          <span className="text-[13px] text-dm-ink/55">{q.data?.length ?? 0} cadastrados</span>
+          <span className="text-[13px] text-dm-ink/55">{q.isPending ? "Carregando..." : `${q.data?.length ?? 0} cadastrados`}</span>
         </div>
         <ul className="divide-y divide-black/5 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
           {items.map((i) => (
