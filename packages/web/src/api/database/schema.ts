@@ -21,6 +21,13 @@ export const leads = pgTable("leads", {
   lastContactAt: timestamp("last_contact_at", { withTimezone: true }),
   /** motivo da perda, obrigatorio ao marcar perdido */
   lossReason: text("loss_reason"),
+  /** próximo retorno combinado com o cliente */
+  nextActionAt: timestamp("next_action_at", { withTimezone: true }),
+  nextActionNote: text("next_action_note"),
+  /** valor da proposta em reais (inteiro); só o dono do lead e o super admin veem */
+  proposalValue: integer("proposal_value"),
+  /** quando virou ganho, para o fechado do mês */
+  wonAt: timestamp("won_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

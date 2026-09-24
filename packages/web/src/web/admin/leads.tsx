@@ -2,7 +2,10 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  CalendarClock,
   Download,
+  Lock,
+  Wallet,
   LayoutGrid,
   List,
   Mail,
@@ -33,9 +36,24 @@ type Lead = {
   lossReason: string | null;
   firstContactAt: string | null;
   lastContactAt: string | null;
+  nextActionAt: string | null;
+  nextActionNote: string | null;
+  /** null quando não há valor ou quando o usuário não pode ver (valueHidden) */
+  proposalValue: number | null;
+  valueHidden: boolean;
   attachments: string | null;
   createdAt: string;
 };
+
+const brl = (v: number) => `R$ ${v.toLocaleString("pt-BR")}`;
+const todayKey = () => new Date().toLocaleDateString("en-CA");
+const followState = (iso: string | null) => {
+  if (!iso) return null;
+  const k = new Date(iso).toLocaleDateString("en-CA");
+  return k < todayKey() ? "atrasado" : k === todayKey() ? "hoje" : "futuro";
+};
+const followLabel = (iso: string) =>
+  new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
 type Member = { id: string; name: string; image: string | null; role: string | null };
 
@@ -121,6 +139,8 @@ function exportCsv(leads: Lead[], team: Member[]) {
     ["Motivo da perda", (l) => l.lossReason ?? ""],
     ["Responsável", (l) => (l.ownerId ? owner.get(l.ownerId) ?? "" : "")],
     ["Primeiro contato", (l) => (l.firstContactAt ? new Date(l.firstContactAt).toLocaleString("pt-BR") : "")],
+    ["Próximo retorno", (l) => (l.nextActionAt ? new Date(l.nextActionAt).toLocaleString("pt-BR") : "")],
+    ["Valor da proposta (R$)", (l) => (l.proposalValue != null ? String(l.proposalValue) : "")],
     ["Mensagem", (l) => l.message ?? ""],
   ];
   const cell = (v: string) => `"${v.replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
@@ -307,7 +327,13 @@ export function AdminLeads({ user, initial }: { user: PanelUser; initial?: Leads
                             {l.company || l.product || l.city || "-"}
                           </p>
                           <p className="mt-2 flex items-center gap-2 text-[11.5px] text-dm-ink/45">
-                            <span className="shrink-0">{ageLabel(l.createdAt)}</span>
+                            {followState(l.nextActionAt) === "atrasado" || followState(l.nextActionAt) === "hoje" ? (
+                              <span className={cn("shrink-0 font-bold", followState(l.nextActionAt) === "atrasado" ? "text-dm-red" : "text-dm-blue")}>
+                                {followState(l.nextActionAt) === "atrasado" ? "retorno atrasado" : "retorno hoje"}
+                              </span>
+                            ) : (
+                              <span className="shrink-0">{ageLabel(l.createdAt)}</span>
+                            )}
                             <span className="truncate">· {l.source ?? "site"}</span>
                             <span className="ml-auto shrink-0">
                               {m ? (
@@ -336,12 +362,14 @@ export function AdminLeads({ user, initial }: { user: PanelUser; initial?: Leads
               {leads.length ? "Nenhum lead com esse filtro." : "Nenhum lead recebido ainda."}
             </p>
           ) : (
-            <table className="w-full min-w-[1000px] text-left text-[13.5px]">
+            <table className="w-full min-w-[1180px] text-left text-[13.5px]">
               <thead className="bg-dm-surface text-[11px] font-bold uppercase tracking-wide text-dm-ink/55">
                 <tr>
                   <th className="px-5 py-3">Nome</th>
                   <th className="px-5 py-3">Status</th>
                   <th className="px-5 py-3">Responsável</th>
+                  <th className="px-5 py-3">Retorno</th>
+                  <th className="px-5 py-3">Valor</th>
                   <th className="px-5 py-3">Telefone</th>
                   <th className="px-5 py-3">Cidade</th>
                   <th className="px-5 py-3">Interesse</th>
@@ -385,6 +413,32 @@ export function AdminLeads({ user, initial }: { user: PanelUser; initial?: Leads
                           <span className="text-[12.5px] font-semibold text-dm-red">Sem responsável</span>
                         )}
                       </td>
+                      <td className="whitespace-nowrap px-5 py-4 text-[12.5px]">
+                        {lead.nextActionAt ? (
+                          <span
+                            className={cn(
+                              "font-semibold",
+                              followState(lead.nextActionAt) === "atrasado" ? "text-dm-red" : followState(lead.nextActionAt) === "hoje" ? "text-dm-blue" : "text-dm-ink/60",
+                            )}
+                          >
+                            {followState(lead.nextActionAt) === "atrasado" ? "Atrasado · " : ""}
+                            {followLabel(lead.nextActionAt)}
+                          </span>
+                        ) : (
+                          <span className="text-dm-ink/35">-</span>
+                        )}
+                      </td>
+                      <td className="whitespace-nowrap px-5 py-4 text-[13px]">
+                        {lead.proposalValue != null ? (
+                          <span className="font-semibold text-dm-ink">{brl(lead.proposalValue)}</span>
+                        ) : lead.valueHidden ? (
+                          <span className="inline-flex items-center gap-1 text-dm-ink/40" title="Só o responsável vê o valor">
+                            <Lock className="h-3.5 w-3.5" /> oculto
+                          </span>
+                        ) : (
+                          <span className="text-dm-ink/35">-</span>
+                        )}
+                      </td>
                       <td className="whitespace-nowrap px-5 py-4 text-dm-ink/70">{lead.phone}</td>
                       <td className="px-5 py-4 text-dm-ink/70">{lead.city || "-"}</td>
                       <td className="px-5 py-4 text-dm-ink/70">{lead.product || "-"}</td>
@@ -416,6 +470,8 @@ const EVENT_META: Record<string, { label: string; Icon: typeof NotebookPen }> = 
   responsavel: { label: "Responsável", Icon: UserRound },
   nota: { label: "Anotação", Icon: NotebookPen },
   contato: { label: "Contato feito", Icon: PhoneCall },
+  retorno: { label: "Retorno agendado", Icon: CalendarClock },
+  valor: { label: "Valor da proposta", Icon: Wallet },
 };
 
 function eventText(e: LeadEvent) {
@@ -423,6 +479,7 @@ function eventText(e: LeadEvent) {
     return e.text.replace(/\b(novo|em_contato|ganho|perdido)\b/g, (s) => statusMeta(s).label);
   }
   if (e.type === "responsavel") return `Responsável: ${e.text ?? "ninguém"}`;
+  if (e.type === "valor") return e.text ?? "Valor atualizado (visível só para o responsável)";
   return e.text ?? "";
 }
 
@@ -449,7 +506,14 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
   };
 
   const patch = useMutation({
-    mutationFn: async (body: { status?: string; ownerId?: string | null; lossReason?: string }) => {
+    mutationFn: async (body: {
+      status?: string;
+      ownerId?: string | null;
+      lossReason?: string;
+      nextActionAt?: string | null;
+      nextActionNote?: string | null;
+      proposalValue?: number | null;
+    }) => {
       const res = await api.admin.leads[":id"].$patch({ param: { id: String(lead.id) }, json: body });
       if (!res.ok) {
         const b = (await res.json().catch(() => ({}))) as { error?: string };
@@ -483,6 +547,8 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
 
   const current = (lead.status ?? "novo") as LeadStatus;
   const busy = patch.isPending || log.isPending;
+  const canSeeValue = me.role === "super_admin" || lead.ownerId === me.id;
+  const closed = current === "ganho" || current === "perdido";
 
   return (
     <div className="space-y-4">
@@ -706,9 +772,153 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
             )}
           </Card>
 
+          {!closed && <FollowUpCard lead={lead} busy={busy} onSave={(b) => patch.mutate(b)} />}
+
+          <Card>
+            <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-dm-ink/45">
+              <Wallet className="h-3.5 w-3.5" /> Valor da proposta
+            </p>
+            {canSeeValue ? (
+              <ValueEditor value={lead.proposalValue} busy={busy} won={current === "ganho"} onSave={(v) => patch.mutate({ proposalValue: v })} />
+            ) : (
+              <p className="mt-3 flex items-start gap-2 text-[13px] leading-relaxed text-dm-ink/60">
+                <Lock className="mt-0.5 h-4 w-4 shrink-0" />
+                {lead.ownerId
+                  ? "O valor fica visível só para o responsável pelo lead e para o super admin."
+                  : "Assuma o lead para registrar o valor da proposta."}
+              </p>
+            )}
+          </Card>
+
           {error && <p className="text-[13px] font-semibold text-dm-red">{error}</p>}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** "AAAA-MM-DDTHH:mm" no horário local, para o campo datetime-local. */
+const toLocalInput = (d: Date) => {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
+const at9 = (daysAhead: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() + daysAhead);
+  d.setHours(9, 0, 0, 0);
+  return d;
+};
+
+const nextMonday = () => {
+  const d = at9(1);
+  while (d.getDay() !== 1) d.setDate(d.getDate() + 1);
+  return d;
+};
+
+function FollowUpCard({
+  lead,
+  busy,
+  onSave,
+}: {
+  lead: Lead;
+  busy: boolean;
+  onSave: (b: { nextActionAt: string | null; nextActionNote?: string | null }) => void;
+}) {
+  const [when, setWhen] = useState(lead.nextActionAt ? toLocalInput(new Date(lead.nextActionAt)) : "");
+  const [note, setNote] = useState(lead.nextActionNote ?? "");
+  const state = followState(lead.nextActionAt);
+
+  return (
+    <Card>
+      <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-dm-ink/45">
+        <CalendarClock className="h-3.5 w-3.5" /> Próximo retorno
+      </p>
+      {lead.nextActionAt && (
+        <p className={cn("mt-2 text-[13px] font-semibold", state === "atrasado" ? "text-dm-red" : "text-dm-ink/70")}>
+          {state === "atrasado" ? "Atrasado: " : "Agendado: "}
+          {followLabel(lead.nextActionAt)}
+          {lead.nextActionNote ? ` · ${lead.nextActionNote}` : ""}
+        </p>
+      )}
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {(
+          [
+            ["Amanhã 9h", at9(1)],
+            ["Em 3 dias", at9(3)],
+            ["Próx. segunda", nextMonday()],
+          ] as const
+        ).map(([label, d]) => (
+          <button
+            key={label}
+            type="button"
+            onClick={() => setWhen(toLocalInput(d))}
+            className="rounded-full border border-black/10 px-3 py-1.5 text-[12px] font-semibold text-dm-ink/70 hover:border-dm-blue/40 hover:text-dm-blue"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} aria-label="Data e hora do retorno" className={cn(inputCls, "mt-3")} />
+      <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="O que fazer: mandar proposta, ligar..." aria-label="O que fazer no retorno" className={cn(inputCls, "mt-2")} />
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Btn disabled={busy || !when} onClick={() => onSave({ nextActionAt: new Date(when).toISOString(), nextActionNote: note })}>
+          Agendar
+        </Btn>
+        {lead.nextActionAt && (
+          <Btn
+            tone="ghost"
+            disabled={busy}
+            onClick={() => {
+              setWhen("");
+              setNote("");
+              onSave({ nextActionAt: null });
+            }}
+          >
+            Cancelar retorno
+          </Btn>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+function ValueEditor({
+  value,
+  busy,
+  won,
+  onSave,
+}: {
+  value: number | null;
+  busy: boolean;
+  won: boolean;
+  onSave: (v: number | null) => void;
+}) {
+  const [text, setText] = useState(value != null ? String(value) : "");
+  const parsed = text.trim() ? Number(text.replace(/\./g, "").replace(",", ".")) : null;
+  const invalid = parsed !== null && (!Number.isFinite(parsed) || parsed < 0);
+  const changed = (parsed === null ? null : Math.round(parsed)) !== value;
+
+  return (
+    <div className="mt-3">
+      {value != null && <p className="text-[22px] font-extrabold text-dm-ink">{brl(value)}</p>}
+      <p className="mt-1 text-[12px] text-dm-ink/50">
+        {won ? "Valor da venda fechada: entra no \"Fechado no mês\"." : "Entra no \"Em negociação\" do dashboard."}
+      </p>
+      <div className="mt-3 flex gap-2">
+        <input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          inputMode="numeric"
+          placeholder="Ex.: 48500"
+          aria-label="Valor da proposta em reais"
+          className={inputCls}
+        />
+        <Btn disabled={busy || invalid || !changed} onClick={() => onSave(parsed === null ? null : Math.round(parsed))}>
+          Salvar
+        </Btn>
+      </div>
+      {invalid && <p className="mt-1 text-[12px] font-semibold text-dm-red">Digite só números, em reais.</p>}
     </div>
   );
 }

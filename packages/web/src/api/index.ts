@@ -33,7 +33,7 @@ import {
   slugify,
   type JobInput,
 } from "./lib/jobs";
-import { isLeadStatus } from "./lib/leads";
+import { canSeeLeadValue, isLeadStatus } from "./lib/leads";
 import { buildSitemap } from "./lib/sitemap";
 import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection, publishedInCode } from "./lib/content-docs";
 
@@ -411,7 +411,13 @@ const app = new Hono<Env>()
     return c.json({ url }, 200);
   })
   .get('/admin/leads', requireRole('admin', 'vendedor'), async (c) => {
-    const leads = await db.select().from(schema.leads).orderBy(desc(schema.leads.createdAt));
+    const me = c.get('user')!;
+    const rows = await db.select().from(schema.leads).orderBy(desc(schema.leads.createdAt));
+    // o valor de quem não pode ver nem sai do servidor
+    const leads = rows.map((l) => {
+      const visible = canSeeLeadValue(me, l);
+      return { ...l, proposalValue: visible ? l.proposalValue : null, valueHidden: !visible && l.proposalValue != null };
+    });
     return c.json({ leads }, 200);
   })
   // ------------------------------------------------------ biblioteca de mídia
@@ -610,12 +616,25 @@ const app = new Hono<Env>()
       .leftJoin(schema.user, eq(schema.leadEvents.userId, schema.user.id))
       .where(eq(schema.leadEvents.leadId, id))
       .orderBy(desc(schema.leadEvents.createdAt));
-    return c.json({ events }, 200);
+    const [lead] = await db.select({ ownerId: schema.leads.ownerId }).from(schema.leads).where(eq(schema.leads.id, id));
+    const visible = lead ? canSeeLeadValue(c.get('user')!, lead) : false;
+    return c.json({ events: events.map((e) => (e.type === 'valor' && !visible ? { ...e, text: null } : e)) }, 200);
   })
   .patch(
     '/admin/leads/:id',
     requireRole('admin', 'vendedor'),
-    validator('json', (v) => (v ?? {}) as { status?: string; ownerId?: string | null; lossReason?: string | null }),
+    validator(
+      'json',
+      (v) =>
+        (v ?? {}) as {
+          status?: string;
+          ownerId?: string | null;
+          lossReason?: string | null;
+          nextActionAt?: string | null;
+          nextActionNote?: string | null;
+          proposalValue?: number | null;
+        },
+    ),
     async (c) => {
       const id = Number(c.req.param('id'));
       const me = c.get('user')!;
@@ -635,6 +654,12 @@ const app = new Hono<Env>()
         }
         patch.status = body.status;
         patch.lossReason = body.status === 'perdido' ? reason : null;
+        patch.wonAt = body.status === 'ganho' ? now : null;
+        // lead fechado não precisa mais de retorno agendado
+        if (body.status === 'ganho' || body.status === 'perdido') {
+          patch.nextActionAt = null;
+          patch.nextActionNote = null;
+        }
         // sair de "novo" conta como primeiro contato, para o tempo médio do dashboard
         if (body.status !== 'novo' && !lead.firstContactAt) {
           patch.firstContactAt = now;
@@ -658,6 +683,36 @@ const app = new Hono<Env>()
         }
         patch.ownerId = body.ownerId || null;
         events.push({ type: 'responsavel', text: ownerName });
+      }
+
+      if (body.nextActionAt !== undefined) {
+        const when = body.nextActionAt ? new Date(body.nextActionAt) : null;
+        if (when && Number.isNaN(when.getTime())) return c.json({ error: 'Data de retorno inválida' }, 400);
+        const note = body.nextActionNote?.trim().slice(0, 300) || null;
+        patch.nextActionAt = when;
+        patch.nextActionNote = when ? note : null;
+        events.push({
+          type: 'retorno',
+          text: when
+            ? `${when.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' })}${note ? ` · ${note}` : ''}`
+            : 'retorno cancelado',
+        });
+      }
+
+      if (body.proposalValue !== undefined) {
+        const owner = patch.ownerId !== undefined ? patch.ownerId : lead.ownerId;
+        if (!canSeeLeadValue(me, { ownerId: owner ?? null })) {
+          return c.json({ error: 'Só o responsável pelo lead registra o valor' }, 403);
+        }
+        const v = body.proposalValue;
+        if (v !== null && (!Number.isFinite(v) || v < 0 || v > 1_000_000_000)) {
+          return c.json({ error: 'Valor inválido' }, 400);
+        }
+        patch.proposalValue = v === null ? null : Math.round(v);
+        events.push({
+          type: 'valor',
+          text: v === null ? 'valor removido' : `R$ ${Math.round(v).toLocaleString('pt-BR')}`,
+        });
       }
 
       if (!Object.keys(patch).length) return c.json({ ok: true }, 200);
@@ -888,6 +943,43 @@ const app = new Hono<Env>()
     const isOpen = (r: (typeof rows)[number]) =>
       (r.status ?? 'novo') === 'novo' || r.status === 'em_contato';
 
+    // dinheiro: super admin vê a empresa; os demais só os próprios leads (regra de canSeeLeadValue)
+    const moneyRows = me.role === 'super_admin' && !onlyMine ? allRows : allRows.filter((r) => r.ownerId === me.id);
+    const sum = (list: typeof rows) => list.reduce((acc, r) => acc + (r.proposalValue ?? 0), 0);
+    const monthNow = monthKey(today.year, today.month);
+    const inMonth = (d: Date | null) => (d ? (() => { const x = sp(d); return monthKey(x.year, x.month) === monthNow; })() : false);
+    const openWithValue = moneyRows.filter((r) => isOpen(r) && r.proposalValue != null);
+    const wonMonth = moneyRows.filter((r) => r.status === 'ganho' && inMonth(r.wonAt));
+    const wonPeriod = moneyRows.filter((r) => r.status === 'ganho' && r.wonAt && inPeriod(at(r.wonAt)));
+    const money = {
+      scope: me.role === 'super_admin' && !onlyMine ? 'empresa' : 'meus',
+      openValue: sum(openWithValue),
+      openCount: openWithValue.length,
+      wonMonthValue: sum(wonMonth),
+      wonMonthCount: wonMonth.length,
+      wonPeriodValue: sum(wonPeriod),
+      avgTicket: wonPeriod.length ? Math.round(sum(wonPeriod) / wonPeriod.length) : null,
+    };
+
+    // retornos: os meus; o super admin vê os de todos com o nome do responsável
+    const followBase = me.role === 'super_admin' && !onlyMine ? allRows : allRows.filter((r) => r.ownerId === me.id);
+    const todayKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date(now));
+    const dayKey = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(d);
+    const followUps = followBase
+      .filter((r) => r.nextActionAt && isOpen(r) && dayKey(r.nextActionAt) <= todayKey)
+      .sort((a, b) => at(a.nextActionAt) - at(b.nextActionAt))
+      .slice(0, 20)
+      .map((r) => ({
+        id: r.id,
+        name: r.name,
+        company: r.company,
+        phone: r.phone,
+        nextActionAt: r.nextActionAt,
+        nextActionNote: r.nextActionNote,
+        overdue: dayKey(r.nextActionAt!) < todayKey,
+        ownerName: r.ownerId ? userName.get(r.ownerId) ?? null : null,
+      }));
+
     return c.json(
       {
         days,
@@ -927,6 +1019,8 @@ const app = new Hono<Env>()
         unassigned,
         stale,
         recent,
+        money,
+        followUps,
       },
       200,
     );

@@ -168,6 +168,7 @@ export function KpiTile({
   label,
   value,
   decimals = 0,
+  prefix = "",
   suffix = "",
   delta,
   deltaUnit = "%",
@@ -180,11 +181,13 @@ export function KpiTile({
   label: string;
   value: number | null;
   decimals?: number;
+  prefix?: string;
   suffix?: string;
-  delta: number | null;
+  /** undefined esconde a linha de comparação (indicador sem período anterior) */
+  delta?: number | null;
   deltaUnit?: "%" | " pts" | "h" | "";
   goodWhen?: "up" | "down";
-  compareLabel: string;
+  compareLabel?: string;
   footnote?: ReactNode;
   Icon: typeof BarChart3;
   accent: string;
@@ -214,11 +217,13 @@ export function KpiTile({
           <span className="text-[15px] font-semibold text-dm-ink/40">sem dados ainda</span>
         ) : (
           <>
+            {prefix && <span className="mr-1 text-[20px] font-semibold text-dm-ink/60">{prefix}</span>}
             <AnimatedNumber value={value} decimals={decimals} />
             {suffix && <span className="ml-0.5 text-[20px] font-semibold text-dm-ink/60">{suffix}</span>}
           </>
         )}
       </p>
+      {delta !== undefined && (
       <p className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12px]">
         {deltaText ? (
           <span
@@ -234,6 +239,7 @@ export function KpiTile({
         )}
         {deltaText && <span className="text-dm-ink/45">{compareLabel}</span>}
       </p>
+      )}
       {footnote && <div className="mt-2 text-[12px] text-dm-ink/60">{footnote}</div>}
     </div>
   );

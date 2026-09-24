@@ -4,9 +4,12 @@ export const KPI_BLOCKS = [
   { id: "kpi-conversao", title: "Taxa de conversão" },
   { id: "kpi-aberto", title: "Em aberto" },
   { id: "kpi-contato", title: "Tempo até o 1º contato" },
+  { id: "kpi-negociacao", title: "Em negociação (R$)" },
+  { id: "kpi-fechado", title: "Fechado no mês (R$)" },
 ] as const;
 
 export const CARD_BLOCKS = [
+  { id: "retornos", title: "Retornos de hoje", size: "M" },
   { id: "mensal", title: "Leads por mês", size: "M" },
   { id: "status", title: "Status dos leads", size: "M" },
   { id: "funil", title: "Funil do período", size: "M" },

@@ -1,9 +1,11 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  CalendarCheck,
   CalendarClock,
   Clock3,
   Flame,
+  HandCoins,
   Inbox,
   MapPin,
   MessageCircle,
@@ -15,6 +17,7 @@ import {
   Trophy,
   UserRound,
   Users,
+  Wallet,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { ROLE_LABEL, can, type PanelUser } from "../lib/auth";
@@ -292,9 +295,100 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
         footnote={<span>Média entre a chegada e o primeiro contato registrado</span>}
       />
     ),
+    "kpi-negociacao": (
+      <KpiTile
+        label="Em negociação"
+        prefix="R$"
+        value={data.money.openValue}
+        Icon={HandCoins}
+        accent={STATUS_META.em_contato.color}
+        footnote={
+          data.money.openCount ? (
+            <span>
+              {data.money.openCount} {data.money.openCount === 1 ? "proposta aberta" : "propostas abertas"} ·{" "}
+              {data.money.scope === "empresa" ? "toda a empresa" : "só seus leads"}
+            </span>
+          ) : (
+            <span>Registre o valor da proposta na ficha do lead</span>
+          )
+        }
+      />
+    ),
+    "kpi-fechado": (
+      <KpiTile
+        label="Fechado no mês"
+        prefix="R$"
+        value={data.money.wonMonthValue}
+        Icon={Wallet}
+        accent={STATUS_META.ganho.color}
+        footnote={
+          <span>
+            {data.money.wonMonthCount} {data.money.wonMonthCount === 1 ? "venda" : "vendas"} no mês
+            {data.money.avgTicket ? ` · ticket médio R$ ${data.money.avgTicket.toLocaleString("pt-BR")} no período` : ""}
+            {data.money.scope === "empresa" ? " · toda a empresa" : " · só seus leads"}
+          </span>
+        }
+      />
+    ),
   };
 
   const cardNodes: Record<string, ReactNode> = {
+    retornos: (
+      <ChartCard
+        title="Retornos de hoje"
+        hint={
+          data.money.scope === "empresa"
+            ? "Retornos agendados para hoje e os atrasados, de toda a equipe."
+            : "Seus retornos agendados para hoje e os atrasados."
+        }
+      >
+        {data.followUps.length === 0 ? (
+          <EmptyState
+            icon={<CalendarCheck size={28} />}
+            title="Nenhum retorno para hoje"
+            text="Na ficha do lead, agende o próximo contato e ele aparece aqui no dia."
+          />
+        ) : (
+          <ul className="divide-y divide-black/5">
+            {data.followUps.map((f) => (
+              <li key={f.id} className="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <span
+                  className={cn(
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                    f.overdue ? "bg-dm-red/10 text-dm-red" : "bg-dm-blue-soft text-dm-blue",
+                  )}
+                >
+                  <CalendarClock size={17} />
+                </span>
+                <button type="button" onClick={() => onGo("leads", { term: f.name })} className="min-w-0 flex-1 text-left">
+                  <span className="block truncate text-[13.5px] font-bold text-dm-ink hover:underline">
+                    {f.name}
+                    {f.company ? <span className="font-medium text-dm-ink/55"> · {f.company}</span> : null}
+                  </span>
+                  <span className="block truncate text-[12px] text-dm-ink/50">
+                    {f.overdue
+                      ? `Atrasado desde ${new Date(f.nextActionAt!).toLocaleDateString("pt-BR")}`
+                      : `Hoje às ${new Date(f.nextActionAt!).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`}
+                    {f.nextActionNote ? ` · ${f.nextActionNote}` : ""}
+                    {data.money.scope === "empresa" && f.ownerName ? ` · ${f.ownerName.split(" ")[0]}` : ""}
+                  </span>
+                </button>
+                {hasPhone(f.phone) && (
+                  <a
+                    href={whatsappHref(f.phone, f.name)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full bg-dm-green px-3 py-1.5 text-[11.5px] font-bold uppercase tracking-wide text-white hover:bg-dm-green-dark"
+                  >
+                    WhatsApp
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </ChartCard>
+    ),
     mensal: (
       <ChartCard
         title="Leads por mês"
@@ -708,7 +802,7 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
         />
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {layout.order
           .filter((id) => id in kpiNodes && !layout.hidden.includes(id))
           .map((id) => (
