@@ -34,17 +34,28 @@ export function Spin360({
     onIndexChange?.(n);
   };
 
-  // pré-carrega as fotos para o giro não piscar
+  // as outras fotos só baixam depois que a página carregou (a primeira é a imagem principal, LCP);
+  // o giro automático começa quando elas já estão no cache, para não piscar
+  const [warm, setWarm] = useState(false);
   useEffect(() => {
-    images.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
+    const warmUp = () => {
+      images.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+      setWarm(true);
+    };
+    if (document.readyState === "complete") {
+      const t = window.setTimeout(warmUp, 300);
+      return () => window.clearTimeout(t);
+    }
+    window.addEventListener("load", warmUp, { once: true });
+    return () => window.removeEventListener("load", warmUp);
   }, [images]);
 
   // auto-spin lento enquanto ninguém interagiu, para mostrar que gira
   useEffect(() => {
-    if (touched || images.length < 2) return;
+    if (!warm || touched || images.length < 2) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
     auto.current = window.setInterval(() => {
@@ -53,7 +64,7 @@ export function Spin360({
     return () => {
       if (auto.current) window.clearInterval(auto.current);
     };
-  }, [touched, images.length]);
+  }, [warm, touched, images.length]);
 
   const fromX = (clientX: number) => {
     const el = boxRef.current;
@@ -65,6 +76,7 @@ export function Spin360({
 
   const engage = () => {
     setTouched(true);
+    setWarm(true);
     if (auto.current) window.clearInterval(auto.current);
   };
 
@@ -90,7 +102,9 @@ export function Spin360({
         {images.map((src, idx) => (
           <img
             key={src}
-            src={src}
+            // só a primeira foto baixa de início: as outras disputariam a conexão com ela (LCP)
+            src={idx === 0 || warm ? src : undefined}
+            fetchPriority={idx === 0 ? "high" : "low"}
             alt={idx === 0 ? alt : ""}
             className={cn(
               "aspect-[4/3] w-full object-cover transition-opacity duration-100",

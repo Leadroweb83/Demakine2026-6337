@@ -2,6 +2,7 @@ import { Link, useParams } from "wouter";
 import { RedirectGate } from "@/components/redirect-gate";
 import { AlertTriangle, ArrowRight, BadgeCheck, Calculator, Check, Info, Quote } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { clipDescription, fitTitle } from "@/lib/seo-text";
 import {
   BtnGhost,
   BtnWhats,
@@ -54,8 +55,8 @@ export default function CaseStudyPage() {
   return (
     <>
       <Seo
-        title={`${item.title} | Aplicações Demakine`}
-        description={item.intro.slice(0, 155)}
+        title={fitTitle(item.title, [" | Aplicações Demakine", " | Demakine"])}
+        description={clipDescription(item.intro)}
         path={`/cases/${item.slug}`}
         image={item.image}
       />

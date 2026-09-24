@@ -45,14 +45,14 @@ export default function AEmpresa() {
         title="A Empresa | Demakine Equipamentos Agroindustriais"
         description="Há mais de 15 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio. Missão, visão, valores e propósito social."
         path="/a-empresa"
-        image="/img/site/fabrica.jpg"
+        image="/img/site/fabrica.webp"
       />
 
       <PageHero
         eyebrow="A Empresa"
         title="Transformando o setor agroindustrial desde a nossa fábrica em Limeira"
         text="Mais de 15 anos criando soluções inteligentes para indústrias que buscam agilidade e alto desempenho nos seus processos de produção."
-        image="/img/site/fabrica.jpg"
+        image="/img/site/fabrica.webp"
         crumbs={[{ label: "A Empresa" }]}
       />
 
@@ -107,13 +107,13 @@ export default function AEmpresa() {
 
           <Reveal i={1} className="grid gap-4">
             <img
-              src="/img/site/fabrica.jpg"
+              src="/img/site/fabrica.webp"
               alt="Fábrica Demakine"
               loading="lazy"
               className="w-full rounded-2xl object-cover"
             />
             <img
-              src="/img/site/oficina.jpg"
+              src="/img/site/oficina.webp"
               alt="Equipamento Demakine em produção na oficina"
               loading="lazy"
               className="w-full rounded-2xl object-cover"

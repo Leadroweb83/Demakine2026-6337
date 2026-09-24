@@ -3,6 +3,7 @@ import { RedirectGate } from "@/components/redirect-gate";
 import { useQuery } from "@tanstack/react-query";
 import { Briefcase, CalendarClock, Check, MapPin, Wallet } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { clipDescription } from "@/lib/seo-text";
 import { BtnGhost, BtnPrimary, PageHero, Section } from "@/components/kit";
 import { ApplicationForm } from "@/components/application-form";
 import { api } from "@/lib/api";
@@ -49,7 +50,7 @@ function jobPostingLd(job: PublicJob) {
       "@type": "Organization",
       name: site.name,
       sameAs: site.url,
-      logo: `${site.url}/img/site/logo-blue.png`,
+      logo: `${site.url}/img/site/logo-blue.webp`,
     },
     jobLocation: {
       "@type": "Place",
@@ -113,7 +114,9 @@ export default function Vaga() {
     <>
       <Seo
         title={`Vaga de ${job.title} em ${job.location} | Demakine`}
-        description={job.summary}
+        description={clipDescription(
+          `${job.summary.replace(/\.?\s*$/, ".")} Vaga na Demakine em ${job.location}: veja requisitos, benefícios e candidate-se pelo site.`,
+        )}
         path={`/vagas/${job.slug}`}
         jsonLd={job.open ? jobPostingLd(job) : undefined}
       />
@@ -122,7 +125,7 @@ export default function Vaga() {
         eyebrow={job.area}
         title={job.title}
         text={job.summary}
-        image="/img/site/fabrica.jpg"
+        image="/img/site/fabrica.webp"
         crumbs={[{ label: "Vagas", to: "/vagas" }, { label: job.title }]}
       />
 

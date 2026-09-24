@@ -111,7 +111,7 @@ export function AdminCases({ user }: { user: PanelUser }) {
           return (
             <Card key={r.slug} className={cn(r.hidden && "opacity-60")}>
               <div className="flex items-start gap-4">
-                <img src={r.item.image || "/img/site/hero.jpg"} alt="" className="h-16 w-24 shrink-0 rounded-lg object-cover" />
+                <img src={r.item.image || "/img/site/hero.webp"} alt="" className="h-16 w-24 shrink-0 rounded-lg object-cover" />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <Badge>{r.item.segment || "Sem setor"}</Badge>

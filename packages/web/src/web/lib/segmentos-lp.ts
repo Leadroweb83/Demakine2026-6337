@@ -40,7 +40,7 @@ export const segmentLps: SegmentLp[] = [
     eyebrow: "Segmento",
     intro:
       "Fertilizante é abrasivo, higroscópico e pesado. O equipamento que atende esse material precisa de correia e revestimento escolhidos para não empastar, estrutura que aguenta carga concentrada e acesso fácil para limpeza entre produtos diferentes.",
-    hero: "/img/produtos/esteira-transportadora-para-granel/1.jpg",
+    hero: "/img/produtos/esteira-transportadora-para-granel/1.webp",
     color: "#b45309",
     pains: [
       {
@@ -103,7 +103,7 @@ export const segmentLps: SegmentLp[] = [
     eyebrow: "Segmento",
     intro:
       "Em triagem, o equipamento não é só transporte: é o posto de trabalho. Altura, largura e velocidade da correia definem quanto a equipe consegue separar por hora e se ela termina o turno inteira.",
-    hero: "/img/produtos/esteira-transportadora-para-reciclagem-triagem/1.jpg",
+    hero: "/img/produtos/esteira-transportadora-para-reciclagem-triagem/1.webp",
     color: "#0f766e",
     pains: [
       {
@@ -165,7 +165,7 @@ export const segmentLps: SegmentLp[] = [
     eyebrow: "Segmento",
     intro:
       "Agregado é o material mais severo que existe para um transportador: abrasivo, com carga de impacto na alimentação e volume alto por hora. O que segura isso é estrutura reforçada e perfil de correia que aumenta o volume transportado por metro.",
-    hero: "/img/produtos/esteira-transportadora-para-granel/10.jpg",
+    hero: "/img/produtos/esteira-transportadora-para-granel/10.webp",
     color: "#d97706",
     pains: [
       {
@@ -227,7 +227,7 @@ export const segmentLps: SegmentLp[] = [
     eyebrow: "Segmento",
     intro:
       "Aqui a exigência muda de natureza: o que pesa é material de contato adequado, facilidade de higienização e transporte suave o suficiente para não danificar o produto. Vale para linha de montagem de cesta básica, hortifrúti, ração e farelo.",
-    hero: "/img/produtos/esteira-transportadora-para-cesta-basica/1.jpg",
+    hero: "/img/produtos/esteira-transportadora-para-cesta-basica/1.webp",
     color: "#15803d",
     pains: [
       {
@@ -290,7 +290,7 @@ export const segmentLps: SegmentLp[] = [
     eyebrow: "Segmento",
     intro:
       "Em logística o gargalo tem endereço: a doca. Carga e descarga manual de caminhão é o ponto que trava o giro, gasta equipe e gera afastamento. Equipamento móvel de pátio e linha interna resolvem esse trecho.",
-    hero: "/img/produtos/esteira-transportadora-dalla/1.jpg",
+    hero: "/img/produtos/esteira-transportadora-dalla/1.webp",
     color: "#103d94",
     pains: [
       {

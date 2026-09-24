@@ -51,7 +51,7 @@ export default function AssistenciaTecnica() {
         eyebrow="Assistência Técnica · SAC"
         title="Suporte que não termina na entrega do equipamento"
         text="Da concepção ao pós-venda, acompanhamos o desempenho de cada máquina. Equipe especializada e parcerias técnicas em todo o território nacional."
-        image="/img/site/projetos.jpg"
+        image="/img/site/projetos.webp"
         crumbs={[{ label: "Assistência Técnica" }]}
       />
 

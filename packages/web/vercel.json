@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "buildCommand": "vite build && vite build --ssr src/web/entry-server.tsx --outDir dist-ssr && bun vite/prerender.ts && bun build src/api/index.ts --outdir server-build --target node --format esm --packages external",
+  "buildCommand": "bun vite/optimize-images.ts && vite build && vite build --ssr src/web/entry-server.tsx --outDir dist-ssr && bun vite/prerender.ts && bun build src/api/index.ts --outdir server-build --target node --format esm --packages external",
   "outputDirectory": "dist",
   "regions": [
     "gru1"

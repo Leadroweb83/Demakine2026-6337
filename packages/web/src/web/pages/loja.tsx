@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 /* --------------------------------------------------------------------- hero */
 
 function Hero() {
-  const hero = "/img/produtos/esteira-transportadora-para-sacaria/1.jpg";
+  const hero = "/img/produtos/esteira-transportadora-para-sacaria/1.webp";
 
   return (
     <section className="relative overflow-hidden border-b border-dm-line bg-white">
@@ -452,7 +452,7 @@ const kits = [
     items: ["Costuradeira GK-26", "2 cones de linha 200g", "Cartela de agulhas"],
     price: 1449,
     save: 180,
-    image: "/img/produtos/maquina-de-costurar-sacos-gk-26/1.jpg",
+    image: "/img/produtos/maquina-de-costurar-sacos-gk-26/1.webp",
   },
   {
     code: "KT.02",
@@ -460,7 +460,7 @@ const kits = [
     items: ["Roletes de carga", "Raspador de correia", "Kit de emenda"],
     price: 890,
     save: 150,
-    image: "/img/produtos/esteira-transportadora-horizontal/6.jpg",
+    image: "/img/produtos/esteira-transportadora-horizontal/6.webp",
   },
   {
     code: "KT.03",
@@ -468,7 +468,7 @@ const kits = [
     items: ["4 cones de linha", "Agulhas de reposição", "Óleo lubrificante"],
     price: 189,
     save: 40,
-    image: "/img/produtos/linha-fio-para-costura-de-sacaria/1.jpg",
+    image: "/img/produtos/linha-fio-para-costura-de-sacaria/1.webp",
   },
 ];
 

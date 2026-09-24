@@ -187,7 +187,7 @@ export default function ExportLanding() {
         path={`/export?lang=${lang}`}
         alternates={LANGUAGE_ALTERNATES}
         lang={c.htmlLang}
-        image="/img/produtos/esteira-transportadora-para-granel/1.jpg"
+        image="/img/produtos/esteira-transportadora-para-granel/1.webp"
       />
 
       {/* header próprio */}
@@ -221,7 +221,7 @@ export default function ExportLanding() {
       {/* hero */}
       <section className="relative overflow-hidden bg-dm-blue-deep">
         <img
-          src="/img/produtos/esteira-transportadora-para-granel/1.jpg"
+          src="/img/produtos/esteira-transportadora-para-granel/1.webp"
           alt=""
           className="absolute inset-0 h-full w-full object-cover opacity-30"
         />

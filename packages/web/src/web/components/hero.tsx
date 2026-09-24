@@ -67,7 +67,7 @@ export function HomeHero() {
         style={reduce ? still : { y: mediaY, scale: mediaScale }}
         className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.3]"
         src="/video/hero-loop.mp4"
-        poster="/img/site/hero.jpg"
+        poster="/img/site/hero.webp"
         autoPlay
         muted
         loop

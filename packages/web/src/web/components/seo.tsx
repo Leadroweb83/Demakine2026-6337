@@ -3,6 +3,7 @@ import { site } from "@/lib/site";
 import { editedDoc } from "@/lib/runtime-content";
 import { seoKey } from "@/lib/seo-pages";
 import { ssrHead } from "@/lib/ssr-head";
+import { shareImage } from "@/lib/images";
 
 type SeoProps = {
   title: string;
@@ -73,7 +74,8 @@ export function Seo({
   const title = edited?.title?.trim() || baseTitle;
   const description = edited?.description?.trim() || baseDescription;
   const url = `${site.url}${path}`;
-  const ogImage = /^https?:\/\//.test(image ?? "") ? image! : `${site.url}${image ?? "/og-image.png"}`;
+  // compartilhamento usa o JPG/PNG original: LinkedIn e outros não mostram WebP
+  const ogImage = /^https?:\/\//.test(image ?? "") ? image! : `${site.url}${shareImage(image ?? "/og-image.jpg")}`;
   const meta: Meta[] = [
     ["name", "description", description],
     ["property", "og:title", title],
@@ -154,7 +156,7 @@ export const organizationJsonLd = {
   name: site.legal,
   alternateName: site.name,
   url: site.url,
-  logo: `${site.url}/img/site/logo-demakine.png`,
+  logo: `${site.url}/img/site/logo-demakine.webp`,
   email: site.email,
   telephone: `+55 ${site.phone.replace(/\D/g, "").replace(/^(\d{2})(\d{4,5})(\d{4})$/, "$1 $2-$3")}`,
   address: {

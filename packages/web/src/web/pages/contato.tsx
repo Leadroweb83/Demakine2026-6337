@@ -25,7 +25,7 @@ export default function Contato() {
         eyebrow="Contato"
         title="Fale com a Demakine"
         text="Dúvidas, orçamentos ou assistência técnica: nossa equipe está preparada para atender por telefone, WhatsApp ou e-mail."
-        image="/img/site/fabrica.jpg"
+        image="/img/site/fabrica.webp"
         crumbs={[{ label: "Contato" }]}
       />
 

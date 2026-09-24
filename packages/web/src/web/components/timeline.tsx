@@ -15,31 +15,31 @@ const steps: Step[] = [
     n: "01",
     title: "Levantamento",
     text: "Entendemos material, volume por hora, distância, altura e o espaço disponível. Quando faz sentido, vamos até a planta medir.",
-    image: "/img/projetos/granel-moega-especial/1.jpg",
+    image: "/img/projetos/granel-moega-especial/1.webp",
   },
   {
     n: "02",
     title: "Projeto e aprovação",
     text: "A engenharia define comprimento, inclinação, correia, motorização e acessórios. Você aprova o desenho antes de qualquer corte.",
-    image: "/img/site/oficina.jpg",
+    image: "/img/site/oficina.webp",
   },
   {
     n: "03",
     title: "Fabricação",
     text: "Corte, dobra, solda, usinagem e montagem na nossa fábrica em Limeira/SP, com inspeção em cada etapa.",
-    image: "/img/site/fabrica.jpg",
+    image: "/img/site/fabrica.webp",
   },
   {
     n: "04",
     title: "Pintura e testes",
     text: "Tratamento da superfície, pintura industrial e teste da máquina rodando antes de sair. Nada embarca sem funcionar.",
-    image: "/img/projetos/esteira-em-z/1.jpg",
+    image: "/img/projetos/esteira-em-z/1.webp",
   },
   {
     n: "05",
     title: "Entrega e pós-venda",
     text: "Logística acompanhada, orientação de instalação e assistência técnica própria para peças, ajustes e manutenção.",
-    image: "/img/projetos/esteira-galvanizada-elevacao-correia-taliscada/1.jpg",
+    image: "/img/projetos/esteira-galvanizada-elevacao-correia-taliscada/1.webp",
   },
 ];
 

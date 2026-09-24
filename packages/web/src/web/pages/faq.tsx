@@ -11,7 +11,7 @@ export default function Faq() {
     <>
       <Seo
         title="Perguntas frequentes | Demakine"
-        description="Prazo, frete, correia, inclinação, instalação, peças de reposição e assistência técnica: as dúvidas que mais recebemos sobre esteiras, roscas, elevadores e empacotamento."
+        description="Prazo, frete, correia, inclinação, instalação, peças e assistência técnica: as dúvidas mais comuns sobre esteiras, roscas, elevadores e empacotamento."
         path="/faq"
         jsonLd={faqJsonLd(faqFlat)}
       />
@@ -20,7 +20,7 @@ export default function Faq() {
         eyebrow="Perguntas frequentes"
         title="As dúvidas que mais chegam na fábrica"
         text="Reunimos aqui o que o comprador industrial pergunta antes de fechar: como funciona o orçamento, como escolher correia e capacidade, o que preparar para instalar e como funciona a assistência depois da entrega."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Perguntas frequentes" }]}
       />
 

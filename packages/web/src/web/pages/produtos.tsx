@@ -37,7 +37,7 @@ export default function Produtos() {
     <>
       <Seo
         title="Catálogo de Equipamentos | Demakine"
-        description={`${products.length} equipamentos agroindustriais: esteiras transportadoras, roscas, elevadores de canecas e de sacaria, máquinas de costurar sacos e peneiras. Especificações, modelos e capacidades.`}
+        description={`${products.length} equipamentos agroindustriais: esteiras, roscas, elevadores, máquinas de costurar sacos e peneiras, com modelos, medidas e capacidades.`}
         path="/produtos"
       />
 
@@ -45,7 +45,7 @@ export default function Produtos() {
         eyebrow="Catálogo"
         title="Equipamentos para transportar, elevar, empacotar e costurar"
         text="Todos os modelos são fabricados na nossa unidade em Limeira/SP e podem ser adaptados ao seu layout, material e capacidade."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Produtos" }]}
       />
 

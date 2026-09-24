@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { clipDescription, fitTitle } from "@/lib/seo-text";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import { Breadcrumb, BtnGhost, BtnPrimary, BtnWhats, CtaBand, ProductCard, Section } from "@/components/kit";
@@ -71,7 +72,7 @@ export default function Produto() {
 
   if (!product) return <NotFound />;
 
-  const images = product.images.length ? product.images : ["/img/site/hero.jpg"];
+  const images = product.images.length ? product.images : ["/img/site/hero.webp"];
   const current = images[Math.min(active, images.length - 1)];
   const related = relatedProducts(product, 4);
   // esconde colunas sem informação real (ex: "Definir" em todos os modelos)
@@ -534,8 +535,8 @@ export default function Produto() {
   return (
     <>
       <Seo
-        title={product.seoTitle ?? `${product.name} | Demakine`}
-        description={product.seoDesc ?? product.summary.slice(0, 180)}
+        title={product.seoTitle ?? fitTitle(product.name, [" | Demakine"])}
+        description={product.seoDesc ?? clipDescription(product.summary)}
         path={`/produtos/${product.slug}`}
         image={images[0]}
         type="product"

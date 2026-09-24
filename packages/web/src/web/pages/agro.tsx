@@ -108,7 +108,7 @@ function AgroHero() {
             <div className="relative overflow-hidden rounded-3xl border border-white/12">
               <motion.img
                 style={reduce ? {} : { y: imgY }}
-                src="/img/site/projetos.jpg"
+                src="/img/site/projetos.webp"
                 alt="Esteira transportadora Demakine com moega instalada em operação"
                 className="h-[420px] w-full object-cover md:h-[520px]"
                 loading="eager"
@@ -167,8 +167,8 @@ export default function Agro() {
   return (
     <>
       <Seo
-        title="Equipamentos para o Agro: Esteiras, Roscas e Elevadores | Demakine"
-        description="Linha agro Demakine: esteiras transportadoras, roscas, elevadores de canecas e máquinas de costurar sacos para grãos, fertilizantes, sementes, ração e hortifrúti. Fabricação sob medida em Limeira/SP com entrega em todo o Brasil."
+        title="Equipamentos para o Agro: Esteiras e Roscas | Demakine"
+        description="Esteiras, roscas, elevadores de canecas e máquinas de costurar sacos para grãos, fertilizantes, sementes, ração e hortifrúti. Sob medida, em Limeira/SP."
         path="/agro"
       />
 

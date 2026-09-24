@@ -90,7 +90,7 @@ export function AgroBand() {
                 className="group relative flex h-full min-h-[200px] flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-[#e8c469]/45"
               >
                 <img
-                  src="/img/site/agro-esteira-cut.png"
+                  src="/img/site/agro-esteira-cut.webp"
                   alt="Esteira transportadora para granel Demakine"
                   loading="lazy"
                   className="cine-float pointer-events-none absolute -right-4 -top-1 w-[104%] max-w-none drop-shadow-[0_18px_28px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-[1.04]"

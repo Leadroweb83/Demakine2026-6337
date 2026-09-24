@@ -523,12 +523,12 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Demakine | Esteiras, Roscas, Elevadores e Máquinas de Costurar Sacos"
-        description="Fábrica de esteiras transportadoras, roscas, elevadores, máquinas de costurar sacos e projetos especiais sob medida. +15 anos e 7.000 máquinas entregues em todo o Brasil. Limeira/SP."
+        title="Demakine | Esteiras Transportadoras, Roscas e Elevadores"
+        description="Fábrica de esteiras transportadoras, roscas, elevadores e máquinas de costurar sacos sob medida. Mais de 15 anos e 7.000 máquinas entregues. Limeira/SP."
         path="/"
         jsonLd={organizationJsonLd}
         alternates={LANGUAGE_ALTERNATES}
-        preloadImage="/img/site/hero.jpg"
+        preloadImage="/img/site/hero.webp"
       />
 
       <HomeHero />

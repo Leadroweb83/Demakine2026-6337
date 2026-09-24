@@ -30,7 +30,7 @@ export default function Clientes() {
         eyebrow="Nossos clientes"
         title="Quem está por trás da nossa história"
         text="Indústrias de diferentes portes e segmentos em todo o Brasil. Mais do que equipamentos, entregamos consultoria técnica, agilidade e suporte pós-venda."
-        image="/img/site/fabrica.jpg"
+        image="/img/site/fabrica.webp"
         crumbs={[{ label: "Clientes" }]}
       />
 

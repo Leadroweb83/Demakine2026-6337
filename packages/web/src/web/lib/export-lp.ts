@@ -47,9 +47,9 @@ export const exportCopy: Record<ExportLang, ExportCopy> = {
   es: {
     langLabel: "Español",
     htmlLang: "es",
-    seoTitle: "Demakine | Transportadores y equipos agroindustriales fabricados en Brasil",
+    seoTitle: "Transportadores y Equipos Agroindustriales | Demakine",
     seoDescription:
-      "Fábrica brasileña de cintas transportadoras, tornillos, elevadores de cangilones y máquinas de coser sacos. Ingeniería propia en Limeira, São Paulo, y equipos a medida para exportación.",
+      "Fábrica brasileña de cintas transportadoras, tornillos, elevadores de cangilones y máquinas de coser sacos. Equipos a medida para exportación.",
     eyebrow: "Exportación",
     title: "Equipos de transporte agroindustrial fabricados en Brasil",
     intro:
@@ -139,9 +139,9 @@ export const exportCopy: Record<ExportLang, ExportCopy> = {
   en: {
     langLabel: "English",
     htmlLang: "en",
-    seoTitle: "Demakine | Conveyors and agro-industrial equipment made in Brazil",
+    seoTitle: "Conveyors and Agro-Industrial Equipment | Demakine",
     seoDescription:
-      "Brazilian manufacturer of belt conveyors, screw conveyors, bucket elevators and bag closing machines. In-house engineering in Limeira, São Paulo, with custom equipment for export.",
+      "Brazilian manufacturer of belt conveyors, screw conveyors, bucket elevators and bag closing machines, with custom equipment built for export.",
     eyebrow: "Export",
     title: "Agro-industrial handling equipment made in Brazil",
     intro:

@@ -59,7 +59,7 @@ export default function Vagas() {
         eyebrow="Trabalhe conosco"
         title="Vem ser Demakine"
         text="Acreditamos que o crescimento de uma empresa começa pelas pessoas. Por isso valorizamos cada talento e investimos em um ambiente colaborativo, seguro e estimulante."
-        image="/img/site/fabrica.jpg"
+        image="/img/site/fabrica.webp"
         crumbs={[{ label: "Vagas" }]}
       />
 

@@ -78,7 +78,7 @@ export default function Downloads() {
   return (
     <>
       <Seo
-        title="Central de materiais: catálogo, checklists e guias | Demakine"
+        title="Catálogo, Checklists e Guias para Baixar | Demakine"
         description="Baixe o catálogo Demakine, o checklist de manutenção para imprimir, o guia de correias por aplicação e o checklist antes de comprar uma esteira transportadora."
         path="/downloads"
       />
@@ -87,7 +87,7 @@ export default function Downloads() {
         eyebrow="Central de materiais"
         title="Catálogo, checklists e guias técnicos"
         text="Material para você comparar modelos, conferir dimensões, treinar sua equipe na manutenção e apresentar a solução internamente. Download direto, sem enrolação."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Downloads" }]}
       />
 

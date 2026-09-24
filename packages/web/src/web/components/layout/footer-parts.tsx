@@ -334,7 +334,7 @@ export function LocalBusinessBlock({ cnpj }: { cnpj?: string }) {
       itemType="https://schema.org/LocalBusiness"
       className="grid gap-x-8 gap-y-3 text-[13px] leading-relaxed text-white/45 md:grid-cols-3"
     >
-      <meta itemProp="image" content={`${site.url}/img/site/logo-blue.png`} />
+      <meta itemProp="image" content={`${site.url}/img/site/logo-blue.webp`} />
       <meta itemProp="priceRange" content="$$" />
       <link itemProp="url" href={site.url} />
 

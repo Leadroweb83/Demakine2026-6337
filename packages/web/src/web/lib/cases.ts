@@ -17,6 +17,7 @@
 
 import type { RoiInput } from "./engine";
 import { deletedKeys, editedDocs } from "./runtime-content";
+import { toWebp } from "./images";
 
 export type CasePending = {
   /** o que falta ser preenchido pelo cliente */
@@ -117,7 +118,7 @@ export const DEFAULT_CASES: CaseStudy[] = [
     eyebrow: "Aplicação típica",
     intro:
       "Configuração usada quando a cooperativa recebe carreta na moega, precisa elevar o grão para o silo e fechar sacaria no fim da linha, tudo no mesmo galpão e sem parar na safra.",
-    image: "/img/produtos/elevador-de-canecas/1.jpg",
+    image: "/img/produtos/elevador-de-canecas/1.webp",
     challenge: [
       "Descarga concentrada em poucas semanas de safra, com fila de caminhão no pátio.",
       "Elevação do grão até a boca do silo feita com equipamento improvisado ou no braço.",
@@ -166,7 +167,7 @@ export const DEFAULT_CASES: CaseStudy[] = [
     eyebrow: "Aplicação típica",
     intro:
       "Configuração para central de triagem onde a esteira é o posto de trabalho da equipe: a altura, a largura e a velocidade da correia definem quanto sai separado por hora.",
-    image: "/img/produtos/esteira-transportadora-para-reciclagem-triagem/1.jpg",
+    image: "/img/produtos/esteira-transportadora-para-reciclagem-triagem/1.webp",
     challenge: [
       "Material heterogêneo chegando em volume irregular ao longo do turno.",
       "Equipe separando no chão ou em bancada, com esforço e postura ruins.",
@@ -213,7 +214,7 @@ export const DEFAULT_CASES: CaseStudy[] = [
     eyebrow: "Aplicação típica",
     intro:
       "Configuração de fim de linha para fábrica de ração: sacaria saindo da ensacadeira, costura, transporte até a expedição e carregamento do caminhão.",
-    image: "/img/produtos/esteira-transportadora-para-sacaria/1.jpg",
+    image: "/img/produtos/esteira-transportadora-para-sacaria/1.webp",
     challenge: [
       "Saco saindo da ensacadeira e sendo carregado no braço até o palete.",
       "Costura manual travando a linha e gerando saco rompido no transporte.",
@@ -261,7 +262,7 @@ export const DEFAULT_CASES: CaseStudy[] = [
     eyebrow: "Aplicação típica",
     intro:
       "Configuração para doca onde a carreta é descarregada volume por volume: esteira móvel entrando no baú e transporte contínuo até a separação.",
-    image: "/img/produtos/esteira-transportadora-para-cesta-basica/1.jpg",
+    image: "/img/produtos/esteira-transportadora-para-cesta-basica/1.webp",
     challenge: [
       "Descarga de carreta feita em corrente humana, com volume passando de mão em mão.",
       "Tempo de doca alto e caminhão parado esperando liberação.",
@@ -328,7 +329,7 @@ function withPanelEdits(base: CaseStudy[]) {
   return merged.filter((c) => !hidden.has(c.slug) && !c.draft);
 }
 
-export const caseStudies = withPanelEdits(DEFAULT_CASES);
+export const caseStudies = withPanelEdits(DEFAULT_CASES).map((c) => ({ ...c, image: toWebp(c.image) }));
 
 export function getCase(slug: string) {
   return caseStudies.find((c) => c.slug === slug);

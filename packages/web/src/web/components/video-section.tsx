@@ -62,7 +62,7 @@ export function VideoSection() {
                   className="group relative block h-full w-full"
                 >
                   <img
-                    src="/img/site/video-institucional-cover.jpg"
+                    src="/img/site/video-institucional-cover.webp"
                     alt="Vista aérea da fábrica Demakine em Limeira/SP"
                     loading="lazy"
                     className="h-full w-full object-cover opacity-85 transition-all duration-500 group-hover:scale-[1.03] group-hover:opacity-100"

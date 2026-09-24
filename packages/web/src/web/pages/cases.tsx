@@ -10,7 +10,7 @@ export default function Cases() {
     <>
       <Seo
         title="Aplicações e cases | Demakine"
-        description="Configurações de equipamento que a Demakine entrega por tipo de operação: recebimento de grãos, triagem de resíduos, ensaque de ração e descarga em centro de distribuição."
+        description="Equipamentos Demakine por tipo de operação: recebimento de grãos, triagem de resíduos, ensaque de ração e descarga de caminhão em centro de distribuição."
         path="/cases"
       />
 

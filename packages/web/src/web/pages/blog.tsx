@@ -30,7 +30,7 @@ export default function Blog() {
         eyebrow="Blog"
         title="Conteúdo técnico de quem fabrica os equipamentos"
         text="Guias práticos, checklists de manutenção e novidades da Demakine nas principais feiras do agronegócio brasileiro."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Blog" }]}
       />
 

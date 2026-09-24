@@ -111,7 +111,7 @@ function LegalPage({
             ? "O que coletamos, por que coletamos, com quem compartilhamos e como você pede acesso, correção ou exclusão dos seus dados."
             : "As regras de uso deste site, o que vale como compromisso comercial e o que é apenas estimativa técnica."
         }
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: title }]}
       />
 

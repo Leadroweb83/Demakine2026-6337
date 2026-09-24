@@ -130,7 +130,7 @@ export function AdminBlog({ user }: { user: PanelUser }) {
         <ul className="divide-y divide-black/5">
           {rows.map((r) => (
             <li key={r.slug} className={cn("flex flex-wrap items-center gap-4 px-5 py-3.5", r.hidden && "opacity-55")}>
-              <img src={r.post.cover || "/img/site/hero.jpg"} alt="" className="h-14 w-24 shrink-0 rounded-lg bg-dm-surface object-cover" />
+              <img src={r.post.cover || "/img/site/hero.webp"} alt="" className="h-14 w-24 shrink-0 rounded-lg bg-dm-surface object-cover" />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-[14.5px] font-bold text-dm-ink">{r.post.title || "(sem título)"}</p>

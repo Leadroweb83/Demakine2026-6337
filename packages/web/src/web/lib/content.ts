@@ -1,5 +1,6 @@
 import raw from "../data/content.json";
 import { deletedKeys, editedDocs } from "./runtime-content";
+import { toWebp } from "./images";
 
 export type Category = {
   slug: string;
@@ -69,7 +70,7 @@ const FEATURED_ORDER = [
 export const categories = content.categories;
 
 /** Produto ainda sem foto própria usa a foto da fábrica, para nenhuma vitrine quebrar. */
-const FALLBACK_IMAGE = "/img/site/hero.jpg";
+const FALLBACK_IMAGE = "/img/site/hero.webp";
 
 /** Produtos como vêm no código, sem as edições do painel (base do editor de catálogo). */
 export const DEFAULT_PRODUCTS: readonly Product[] = content.products;
@@ -101,7 +102,7 @@ function withPanelEdits(base: Product[]) {
 }
 
 export const products = withPanelEdits(content.products).map((p) =>
-  p.images.length ? p : { ...p, images: [FALLBACK_IMAGE] },
+  p.images.length ? { ...p, images: p.images.map((i) => toWebp(i)) } : { ...p, images: [FALLBACK_IMAGE] },
 ).sort((a, b) => {
   const ia = FEATURED_ORDER.indexOf(a.slug);
   const ib = FEATURED_ORDER.indexOf(b.slug);
@@ -114,7 +115,10 @@ export const DEFAULT_CLIENTS: readonly Client[] = content.clients;
 export const DEFAULT_TESTIMONIALS: readonly Testimonial[] = content.testimonials;
 
 /** Lista inteira editada no painel substitui a do código (coleção "lista"). */
-export const clients = editedDocs<{ items: Client[] }>("lista").clientes?.items ?? content.clients;
+export const clients = (editedDocs<{ items: Client[] }>("lista").clientes?.items ?? content.clients).map((c) => ({
+  ...c,
+  logo: toWebp(c.logo),
+}));
 export const testimonials = editedDocs<{ items: Testimonial[] }>("lista").depoimentos?.items ?? content.testimonials;
 export const projects = content.projects;
 /** Posts como vêm no código, sem as edições do painel (base do editor do blog). */
@@ -133,7 +137,9 @@ function postsWithPanelEdits(base: Post[]) {
   return merged.filter((p) => !hidden.has(p.slug) && !p.draft);
 }
 
-export const posts = postsWithPanelEdits(content.posts).sort((a, b) => b.date.localeCompare(a.date));
+export const posts = postsWithPanelEdits(content.posts)
+  .map((p) => ({ ...p, cover: toWebp(p.cover), images: p.images.map((i) => toWebp(i)) }))
+  .sort((a, b) => b.date.localeCompare(a.date));
 
 /** Endereços de produtos que foram unificados; o 301 de verdade fica no vercel.json. */
 export const productAliases: Record<string, string> = {

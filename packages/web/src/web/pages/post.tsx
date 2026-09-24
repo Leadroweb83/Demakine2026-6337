@@ -1,6 +1,7 @@
 import { Link, useParams } from "wouter";
 import { RedirectGate } from "@/components/redirect-gate";
 import { Seo } from "@/components/seo";
+import { clipDescription, fitTitle } from "@/lib/seo-text";
 import { Reveal } from "@/components/reveal";
 import { Breadcrumb, BtnPrimary, BtnWhats, CtaBand, Section } from "@/components/kit";
 import { ShareBar } from "@/components/share";
@@ -42,8 +43,8 @@ export default function Post() {
   return (
     <>
       <Seo
-        title={post.seoTitle || `${post.title} | Blog Demakine`}
-        description={post.seoDesc || intro.slice(0, 180)}
+        title={post.seoTitle || fitTitle(post.title, [" | Blog Demakine", " | Demakine"])}
+        description={post.seoDesc || clipDescription(post.blocks.filter((b) => !b.startsWith("#")).join(" ") || intro)}
         path={`/blog/${post.slug}`}
         image={post.cover}
         type="article"
@@ -58,7 +59,7 @@ export default function Post() {
           publisher: {
             "@type": "Organization",
             name: site.legal,
-            logo: { "@type": "ImageObject", url: `${site.url}/img/site/logo-demakine.png` },
+            logo: { "@type": "ImageObject", url: `${site.url}/img/site/logo-demakine.webp` },
           },
         }}
       />

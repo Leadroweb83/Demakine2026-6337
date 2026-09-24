@@ -153,7 +153,7 @@ export function AdminCatalog() {
           {shown.map((r) => (
             <li key={r.slug} className={cn("flex flex-wrap items-center gap-4 px-5 py-3.5", r.hidden && "opacity-55")}>
               <img
-                src={r.product.images[0] ?? "/img/site/hero.jpg"}
+                src={r.product.images[0] ?? "/img/site/hero.webp"}
                 alt=""
                 className="h-14 w-20 shrink-0 rounded-lg border border-black/5 bg-dm-surface object-contain"
               />

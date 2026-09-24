@@ -65,16 +65,16 @@ export default function ProjetosEspeciais() {
     <>
       <Seo
         title="Projetos Especiais: Equipamentos sob medida | Demakine"
-        description="Esteiras em Z, moegas para big bag, inox sanitário, galvanizadas, com trilho e contador de sacos. Mais de 20 configurações especiais projetadas e entregues pela Demakine."
+        description="Esteiras em Z, moegas para big bag, inox sanitário, galvanizadas, com trilho e contador de sacos: mais de 20 projetos especiais entregues pela Demakine."
         path="/projetos-especiais"
-        image="/img/site/projetos.jpg"
+        image="/img/site/projetos.webp"
       />
 
       <PageHero
         eyebrow="Engenharia sob medida"
         title="Projetos especiais para processos que não cabem no padrão"
         text="Adaptar uma linha, automatizar uma etapa ou integrar novos equipamentos: transformamos a sua necessidade em máquina projetada, fabricada e testada."
-        image="/img/site/projetos.jpg"
+        image="/img/site/projetos.webp"
         crumbs={[{ label: "Projetos Especiais" }]}
       />
 

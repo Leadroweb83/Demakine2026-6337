@@ -1,6 +1,7 @@
 import { Link, useParams } from "wouter";
 import { ArrowRight, AlertTriangle, Search } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { clipDescription, fitTitle } from "@/lib/seo-text";
 import {
   Section,
   SectionHead,
@@ -55,8 +56,8 @@ export default function Segmento() {
   return (
     <>
       <Seo
-        title={`${lp.title} | Demakine`}
-        description={lp.intro.slice(0, 155)}
+        title={fitTitle(lp.title, [" | Demakine"])}
+        description={clipDescription(lp.intro)}
         path={`/segmentos/${lp.slug}`}
         image={lp.hero}
         jsonLd={{
