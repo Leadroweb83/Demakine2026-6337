@@ -54,6 +54,7 @@ import {
 } from "@/lib/content";
 import { segments, site, waLink } from "@/lib/site";
 import { PageSections, type Block } from "@/lib/page-layout";
+import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
 
 const categoryIcons: Record<string, typeof Cog> = {
   "esteiras-transportadoras": Truck,
@@ -526,6 +527,8 @@ export default function Home() {
         description="Fábrica de esteiras transportadoras, roscas, elevadores, máquinas de costurar sacos e projetos especiais sob medida. +15 anos e 7.000 máquinas entregues em todo o Brasil. Limeira/SP."
         path="/"
         jsonLd={organizationJsonLd}
+        alternates={LANGUAGE_ALTERNATES}
+        preloadImage="/img/site/hero.jpg"
       />
 
       <HomeHero />

@@ -6,6 +6,8 @@
 export type RuntimeContent = {
   docs: Record<string, Record<string, unknown>>;
   deleted: Record<string, string[]>;
+  /** muda a cada edição no painel (ver api/lib/content-snapshot.ts) */
+  version?: string;
 };
 
 const EMPTY: RuntimeContent = { docs: {}, deleted: {} };
@@ -28,16 +30,26 @@ export function deletedKeys(collection: string): string[] {
   return runtimeContent().deleted[collection] ?? [];
 }
 
-/** Busca o conteúdo editado; se a API não responder a tempo, o site segue com o padrão. */
+/**
+ * Busca o conteúdo editado; se a API não responder a tempo, usa a cópia gravada no build da
+ * página pré-renderizada (conteudo-<versão>.json) e, sem ela, o padrão do código.
+ */
 export async function loadRuntimeContent(timeoutMs = 2500) {
   const g = globalThis as { __DM_CONTENT__?: RuntimeContent | null };
-  try {
+  const get = async (url: string) => {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-    const res = await fetch("/api/conteudo", { signal: ctrl.signal });
-    clearTimeout(timer);
-    g.__DM_CONTENT__ = res.ok ? ((await res.json()) as RuntimeContent) : null;
-  } catch {
-    g.__DM_CONTENT__ = null;
-  }
+    try {
+      const res = await fetch(url, { signal: ctrl.signal });
+      return res.ok ? ((await res.json()) as RuntimeContent) : null;
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+  g.__DM_CONTENT__ = await get("/api/conteudo");
+  // versão usada na pré-renderização (este arquivo também entra no código do servidor, sem window)
+  const built = (globalThis as { __DM_SSR__?: { version?: string } }).__DM_SSR__?.version;
+  if (!g.__DM_CONTENT__ && built && built !== "padrao") g.__DM_CONTENT__ = await get(`/conteudo-${built}.json`);
 }

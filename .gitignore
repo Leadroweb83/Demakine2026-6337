@@ -75,3 +75,6 @@ packages/mobile/scripts/*
 
 # API empacotada para a Vercel (gerada no build)
 packages/web/server-build
+
+# pré-renderização (vite/prerender.ts)
+packages/web/dist-ssr

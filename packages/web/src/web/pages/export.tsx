@@ -3,7 +3,8 @@
  * Fica fora do Shell em português: header e footer próprios, no idioma escolhido.
  * O idioma vem de ?lang=es|en (default es) e o toggle troca sem recarregar.
  */
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
+import { useSearch } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import {
   ArrowRight,
@@ -18,6 +19,7 @@ import {
   Phone,
 } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
 import { Reveal } from "@/components/reveal";
 import { api } from "@/lib/api";
 import { getProduct } from "@/lib/content";
@@ -163,35 +165,11 @@ function ExportForm({ lang }: { lang: ExportLang }) {
 }
 
 export default function ExportLanding() {
-  const initial: ExportLang = useMemo(() => {
-    const q = new URLSearchParams(window.location.search).get("lang");
-    return q === "en" ? "en" : "es";
-  }, []);
+  // idioma pelo endereço (?lang=en); sem parâmetro, espanhol. useSearch funciona também na pré-renderização
+  const search = useSearch();
+  const initial: ExportLang = new URLSearchParams(search).get("lang") === "en" ? "en" : "es";
   const [lang, setLang] = useState<ExportLang>(initial);
   const c = exportCopy[lang];
-
-  // hreflang das duas versões + lang do documento
-  useEffect(() => {
-    document.documentElement.lang = c.htmlLang;
-    const made: HTMLLinkElement[] = [];
-    for (const [code, href] of [
-      ["es", `${site.url}/export?lang=es`],
-      ["en", `${site.url}/export?lang=en`],
-      ["x-default", `${site.url}/export?lang=en`],
-      ["pt-BR", site.url],
-    ]) {
-      const link = document.createElement("link");
-      link.rel = "alternate";
-      link.hreflang = code!;
-      link.href = href!;
-      document.head.appendChild(link);
-      made.push(link);
-    }
-    return () => {
-      document.documentElement.lang = "pt-BR";
-      made.forEach((l) => l.remove());
-    };
-  }, [c.htmlLang]);
 
   const switchLang = () => {
     const next: ExportLang = lang === "es" ? "en" : "es";
@@ -207,6 +185,8 @@ export default function ExportLanding() {
         title={c.seoTitle}
         description={c.seoDescription}
         path={`/export?lang=${lang}`}
+        alternates={LANGUAGE_ALTERNATES}
+        lang={c.htmlLang}
         image="/img/produtos/esteira-transportadora-para-granel/1.jpg"
       />
 

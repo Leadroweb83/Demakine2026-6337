@@ -1,36 +1,86 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, type ComponentType } from "react";
 import { Redirect, Route, Switch } from "wouter";
 import { RedirectGate } from "./components/redirect-gate";
+import { endFirstPaint } from "./components/reveal";
 import { Provider } from "./components/provider";
 import { CompareProvider } from "./components/compare";
 import { ScrollProgress, StickyCta } from "./components/sticky-cta";
 import { CookieConsent } from "./components/cookie-consent";
 import { Shell } from "./components/layout/shell";
 import { BtnPrimary, Section } from "./components/kit";
-import Home from "./pages/index";
-import Produtos from "./pages/produtos";
-import Produto from "./pages/produto";
-import ProjetosEspeciais from "./pages/projetos-especiais";
-import AEmpresa from "./pages/a-empresa";
-import Clientes from "./pages/clientes";
-import AssistenciaTecnica from "./pages/assistencia-tecnica";
-import Blog from "./pages/blog";
-import Post from "./pages/post";
-import Downloads from "./pages/downloads";
-import Faq from "./pages/faq";
-import Ferramentas from "./pages/ferramentas";
-import Agro from "./pages/agro";
-import Segmento from "./pages/segmento";
-import Cases from "./pages/cases";
-import CaseStudyPage from "./pages/case";
-import Contato from "./pages/contato";
-import Vagas from "./pages/vagas";
-import Vaga from "./pages/vaga";
+
+/**
+ * Cada página é um arquivo separado: quem abre a home não baixa o código do blog, das vagas etc.
+ * O HTML pré-renderizado já traz o conteúdo; o código da página chega antes de hidratar
+ * (preloadRoute em main.tsx) e o das demais é baixado em segundo plano (prefetchRoutes).
+ */
+type Loader = () => Promise<{ default: ComponentType }>;
+const named = (load: () => Promise<Record<string, unknown>>, name: string): Loader => () =>
+  load().then((m) => ({ default: m[name] as ComponentType }));
+
+const ROUTES: [pattern: RegExp, load: Loader][] = [
+  [/^\/$/, () => import("./pages/index")],
+  [/^\/produtos$/, () => import("./pages/produtos")],
+  [/^\/produtos\/[^/]+$/, () => import("./pages/produto")],
+  [/^\/projetos-especiais$/, () => import("./pages/projetos-especiais")],
+  [/^\/a-empresa$/, () => import("./pages/a-empresa")],
+  [/^\/clientes$/, () => import("./pages/clientes")],
+  [/^\/assistencia-tecnica$/, () => import("./pages/assistencia-tecnica")],
+  [/^\/blog$/, () => import("./pages/blog")],
+  [/^\/blog\/[^/]+$/, () => import("./pages/post")],
+  [/^\/downloads$/, () => import("./pages/downloads")],
+  [/^\/faq$/, () => import("./pages/faq")],
+  [/^\/ferramentas$/, () => import("./pages/ferramentas")],
+  [/^\/agro$/, () => import("./pages/agro")],
+  [/^\/segmentos\/[^/]+$/, () => import("./pages/segmento")],
+  [/^\/cases$/, () => import("./pages/cases")],
+  [/^\/cases\/[^/]+$/, () => import("./pages/case")],
+  [/^\/contato$/, () => import("./pages/contato")],
+  [/^\/vagas$/, () => import("./pages/vagas")],
+  [/^\/vagas\/[^/]+$/, () => import("./pages/vaga")],
+  [/^\/export$/, () => import("./pages/export")],
+  [/^\/politica-de-privacidade$/, named(() => import("./pages/legal"), "PoliticaDePrivacidade")],
+  [/^\/termos-de-uso$/, named(() => import("./pages/legal"), "TermosDeUso")],
+];
+const page = (i: number) => lazy(ROUTES[i]![1]);
+
+/** Baixa o código da página do endereço (antes de hidratar o HTML pré-renderizado). */
+export function preloadRoute(path: string) {
+  return ROUTES.find(([re]) => re.test(path))?.[1]() ?? Promise.resolve();
+}
+
+/** Depois que a página abriu, baixa as outras sem pressa: a navegação no site continua instantânea. */
+export function prefetchRoutes() {
+  const run = () => ROUTES.forEach(([, load]) => void load().catch(() => undefined));
+  if ("requestIdleCallback" in window) window.requestIdleCallback(run, { timeout: 4000 });
+  else setTimeout(run, 2500);
+}
+
+const Home = page(0);
+const Produtos = page(1);
+const Produto = page(2);
+const ProjetosEspeciais = page(3);
+const AEmpresa = page(4);
+const Clientes = page(5);
+const AssistenciaTecnica = page(6);
+const Blog = page(7);
+const Post = page(8);
+const Downloads = page(9);
+const Faq = page(10);
+const Ferramentas = page(11);
+const Agro = page(12);
+const Segmento = page(13);
+const Cases = page(14);
+const CaseStudyPage = page(15);
+const Contato = page(16);
+const Vagas = page(17);
+const Vaga = page(18);
+const ExportLanding = page(19);
+const PoliticaDePrivacidade = page(20);
+const TermosDeUso = page(21);
 // painel e loja só baixam quando alguém abre essas páginas: o visitante do site não carrega esse código
 const Admin = lazy(() => import("./pages/admin"));
 const Loja = lazy(() => import("./pages/loja"));
-import ExportLanding from "./pages/export";
-import { PoliticaDePrivacidade, TermosDeUso } from "./pages/legal";
 
 function NotFound() {
   return (
@@ -56,6 +106,7 @@ function NotFound() {
 function Site() {
   return (
     <Shell>
+      <Suspense fallback={<div className="min-h-[60vh]" />}>
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/produtos" component={Produtos} />
@@ -83,11 +134,14 @@ function Site() {
         <Route path="/termos-de-uso" component={TermosDeUso} />
         <Route component={NotFound} />
       </Switch>
+      </Suspense>
     </Shell>
   );
 }
 
 function App() {
+  // depois do primeiro desenho, seções que entram na tela voltam a animar (ver components/reveal.tsx)
+  useEffect(() => endFirstPaint(), []);
   return (
     <Provider>
       <CompareProvider>
@@ -103,7 +157,11 @@ function App() {
               <Loja />
             </Suspense>
           </Route>
-          <Route path="/export" component={ExportLanding} />
+          <Route path="/export">
+            <Suspense fallback={null}>
+              <ExportLanding />
+            </Suspense>
+          </Route>
           <Route component={Site} />
         </Switch>
         <StickyCta />

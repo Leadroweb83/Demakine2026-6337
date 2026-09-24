@@ -34,6 +34,7 @@ import {
   type JobInput,
 } from "./lib/jobs";
 import { canSeeLeadValue, isLeadStatus, ownerChangeError } from "./lib/leads";
+import { getContentSnapshot } from "./lib/content-snapshot";
 import { TEAM_VIEW, blockedFor, cleanAccess, getDashboardAccess, saveDashboardAccess, stripDashboard } from "./lib/dashboard-access";
 import { buildSitemap } from "./lib/sitemap";
 import { auditMiddleware } from "./lib/audit";
@@ -164,18 +165,12 @@ const app = new Hono<Env>()
   })
   // -------------------------------------------------- conteúdo editável (site)
   .get('/conteudo', async (c) => {
-    const rows = await db.select().from(schema.contentDocs);
-    const out: Record<string, Record<string, unknown>> = {};
-    const deleted: Record<string, string[]> = {};
-    for (const r of rows) {
-      if (r.deleted) (deleted[r.collection] ??= []).push(r.key);
-      else (out[r.collection] ??= {})[r.key] = r.data;
-    }
+    const snapshot = await getContentSnapshot();
     // navegador sempre confere; só a borda da Vercel guarda (30 s): edição aparece em até ~1 min.
     // stale-while-revalidate no Cache-Control valeria também no navegador e mostraria versão velha.
     c.header('Cache-Control', 'public, max-age=0, must-revalidate');
     c.header('CDN-Cache-Control', 'public, s-maxage=30, stale-while-revalidate=300');
-    return c.json({ docs: out, deleted }, 200);
+    return c.json(snapshot, 200);
   })
   // ------------------------------------------------------------------ vagas
   .get('/vagas', async (c) => {

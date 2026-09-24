@@ -2,6 +2,7 @@ import { createMiddleware } from "hono/factory";
 import { db } from "../database";
 import * as schema from "../database/schema";
 import type { SessionUser } from "../middleware/auth";
+import { affectsSite, requestPublish } from "./publish";
 
 /** Rotas que mudam só preferência pessoal ou preparam envio: não entram no registro. */
 const SKIP = [/\/admin\/preferences$/, /\/presign$/, /\/admin\/avatar\/presign$/];
@@ -86,7 +87,7 @@ export function describe(method: string, path: string, body: Record<string, unkn
   return `${method} ${p}`;
 }
 
-/** Registra toda alteração bem-sucedida feita no painel. */
+/** Registra toda alteração bem-sucedida feita no painel (e republica o site quando ela aparece nas páginas). */
 export const auditMiddleware = createMiddleware(async (c, next) => {
   await next();
   const method = c.req.method;
@@ -115,5 +116,13 @@ export const auditMiddleware = createMiddleware(async (c, next) => {
     });
   } catch (err) {
     console.error("[auditoria] falhou", err);
+  }
+  // conteúdo que aparece nas páginas pré-renderizadas: pede um novo build (ver lib/publish.ts)
+  if (affectsSite(path)) {
+    try {
+      await requestPublish();
+    } catch (err) {
+      console.error("[publicacao] falhou", err);
+    }
   }
 });

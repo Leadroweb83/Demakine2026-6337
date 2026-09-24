@@ -5,7 +5,8 @@ import { Seo } from "./seo";
 /** Reserva do middleware da Vercel: se o endereço tem redirecionamento cadastrado, vai para o destino. */
 function useRedirectFallback() {
   const [location, navigate] = useLocation();
-  const [checking, setChecking] = useState(true);
+  // HTML pré-renderizado (build) e a primeira hidratação já mostram o conteúdo; a conferência roda depois
+  const [checking, setChecking] = useState(() => typeof window !== "undefined" && !window.__DM_SSR__);
   useEffect(() => {
     let alive = true;
     let path = location;

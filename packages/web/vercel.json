@@ -1,11 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "buildCommand": "vite build && bun build src/api/index.ts --outdir server-build --target node --format esm --packages external",
+  "buildCommand": "vite build && vite build --ssr src/web/entry-server.tsx --outDir dist-ssr && bun vite/prerender.ts && bun build src/api/index.ts --outdir server-build --target node --format esm --packages external",
   "outputDirectory": "dist",
   "regions": [
     "gru1"
   ],
+  "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/produtos/esteira-transportadora-em-v",
@@ -28,8 +30,20 @@
       "destination": "/api?__path=$1"
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/admin",
+      "destination": "/_app.html"
+    },
+    {
+      "source": "/admin/(.*)",
+      "destination": "/_app.html"
+    },
+    {
+      "source": "/loja",
+      "destination": "/_app.html"
+    },
+    {
+      "source": "/loja/(.*)",
+      "destination": "/_app.html"
     }
   ],
   "crons": [
@@ -37,6 +51,5 @@
       "path": "/api/cron/diario",
       "schedule": "0 11 * * *"
     }
-  ],
-  "trailingSlash": false
+  ]
 }

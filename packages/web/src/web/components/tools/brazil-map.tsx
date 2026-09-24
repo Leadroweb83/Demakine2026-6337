@@ -96,10 +96,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
               onClick={() => byState[uf] && setActive(uf)}
               tabIndex={byState[uf] ? 0 : -1}
             >
-              <title>
-                {s.name}
-                {byState[uf] ? `: ${byState[uf].count} cliente(s)` : ""}
-              </title>
+              <title>{`${s.name}${byState[uf] ? `: ${byState[uf].count} cliente(s)` : ""}`}</title>
             </path>
           ))}
 
