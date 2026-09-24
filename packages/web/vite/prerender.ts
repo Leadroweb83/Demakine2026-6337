@@ -120,7 +120,7 @@ async function main() {
   let template = await readFile(path.join(DIST, "index.html"), "utf8");
   if (!template.includes('<div id="root"></div>')) template = await readFile(path.join(DIST, "_app.html"), "utf8");
   if (!template.includes('<div id="root"></div>')) throw new Error("molde sem <div id=\"root\"></div>: rode o vite build antes");
-  // casca do app sem pré-renderização: painel e loja (vercel.json reescreve para cá)
+  // casca do app sem pré-renderização: painel e loja (vercel.json reescreve para /_app)
   await writeFile(path.join(DIST, "_app.html"), template);
 
   const { snapshot, sitemap, jobs, started, fromDb } = await loadData();

@@ -31,25 +31,36 @@
     },
     {
       "source": "/admin",
-      "destination": "/_app.html"
+      "destination": "/_app"
     },
     {
       "source": "/admin/(.*)",
-      "destination": "/_app.html"
+      "destination": "/_app"
     },
     {
       "source": "/loja",
-      "destination": "/_app.html"
+      "destination": "/_app"
     },
     {
       "source": "/loja/(.*)",
-      "destination": "/_app.html"
+      "destination": "/_app"
     }
   ],
   "crons": [
     {
       "path": "/api/cron/diario",
       "schedule": "0 11 * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/_app",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ]
 }
