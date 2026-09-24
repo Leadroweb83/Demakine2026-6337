@@ -11,6 +11,9 @@ const COLLECTION: Record<string, string> = {
   produto: "o produto",
   post: "o post",
   case: "o case",
+  lista: "a lista",
+  seo: "o SEO da página",
+  home: "a home",
 };
 
 /** Só os nomes dos campos enviados: valores (senha, valor de proposta, texto) nunca vão para o registro. */
@@ -40,7 +43,7 @@ export function describe(method: string, path: string, body: Record<string, unkn
   let m: RegExpMatchArray | null;
 
   if ((m = p.match(/^\/admin\/conteudo\/([^/]+)\/([^/]+)$/))) {
-    const what = `${COLLECTION[m[1]!] ?? m[1]} ${m[1] === "site" ? "" : m[2]}`.trim();
+    const what = `${COLLECTION[m[1]!] ?? m[1]} ${m[1] === "site" || m[1] === "home" ? "" : m[2]}`.trim();
     if (method === "DELETE") return `Voltou ao original ${what}`;
     if (body.deleted === true) return `Ocultou ${what}`;
     return `Editou ${what}`;
@@ -48,17 +51,19 @@ export function describe(method: string, path: string, body: Record<string, unkn
   if ((m = p.match(/^\/admin\/leads\/(\d+)\/eventos$/))) {
     return body.type === "contato" ? `Registrou contato no lead #${m[1]}` : `Anotou no lead #${m[1]}`;
   }
-  if ((m = p.match(/^\/admin\/leads\/(\d+)$/))) return `Atualizou o lead #${m[1]}${fields(keys)}`;
+  if ((m = p.match(/^\/admin\/leads\/(\d+)$/))) {
+    return method === "DELETE" ? `Mandou o lead #${m[1]} para a lixeira` : `Atualizou o lead #${m[1]}${fields(keys)}`;
+  }
   if ((m = p.match(/^\/admin\/vagas\/(\d+)$/))) {
-    return method === "DELETE" ? `Apagou a vaga #${m[1]}` : `Editou a vaga #${m[1]}${fields(keys)}`;
+    return method === "DELETE" ? `Mandou a vaga #${m[1]} para a lixeira` : `Editou a vaga #${m[1]}${fields(keys)}`;
   }
   if (p === "/admin/vagas") return `Criou a vaga "${String(body.title ?? "").slice(0, 60)}"`;
   if ((m = p.match(/^\/admin\/candidaturas\/(\d+)$/))) {
-    return method === "DELETE" ? `Apagou a candidatura #${m[1]}` : `Atualizou a candidatura #${m[1]}${fields(keys)}`;
+    return method === "DELETE" ? `Mandou a candidatura #${m[1]} para a lixeira` : `Atualizou a candidatura #${m[1]}${fields(keys)}`;
   }
   if (p === "/admin/midia") return `Enviou a imagem "${String(body.name ?? "").slice(0, 60)}"`;
   if ((m = p.match(/^\/admin\/midia\/(\d+)$/))) {
-    return method === "DELETE" ? `Apagou a imagem #${m[1]}` : `Editou a imagem #${m[1]}${fields(keys)}`;
+    return method === "DELETE" ? `Mandou a imagem #${m[1]} para a lixeira` : `Editou a imagem #${m[1]}${fields(keys)}`;
   }
   if (p === "/admin/users") return `Criou o usuário ${String(body.email ?? "")}`;
   if ((m = p.match(/^\/admin\/users\/([^/]+)\/password$/))) return `Trocou a senha de outro usuário`;

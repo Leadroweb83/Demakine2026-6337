@@ -28,6 +28,9 @@ export const leads = pgTable("leads", {
   proposalValue: integer("proposal_value"),
   /** quando virou ganho, para o fechado do mês */
   wonAt: timestamp("won_at", { withTimezone: true }),
+  /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  deletedBy: text("deleted_by"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -97,6 +100,9 @@ export const media = pgTable("media", {
   height: integer("height"),
   size: integer("size"),
   uploadedBy: text("uploaded_by"),
+  /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  deletedBy: text("deleted_by"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -136,6 +142,9 @@ export const jobs = pgTable("jobs", {
   status: text("status").default("aberta").notNull(),
   /** último dia para se candidatar (inclusive) */
   deadline: date("deadline"),
+  /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  deletedBy: text("deleted_by"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
@@ -159,6 +168,9 @@ export const applications = pgTable(
     status: text("status").default("recebido").notNull(),
     notes: text("notes"),
     consentAt: timestamp("consent_at", { withTimezone: true }).notNull(),
+    /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    deletedBy: text("deleted_by"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("applications_job_idx").on(t.jobId)],

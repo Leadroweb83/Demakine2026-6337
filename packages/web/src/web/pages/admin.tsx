@@ -20,6 +20,7 @@ import {
   Quote,
   SearchCheck,
   House,
+  Trash2,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { authClient, can, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
@@ -40,6 +41,7 @@ import { AdminRedirects } from "../admin/redirects";
 import { AdminLists } from "../admin/lists";
 import { AdminSeo } from "../admin/seo";
 import { AdminHome } from "../admin/home";
+import { AdminTrash } from "../admin/trash";
 import { Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
 
@@ -70,6 +72,7 @@ const NAV: NavItem[] = [
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
   { id: "avisos", label: "Avisos por e-mail", Icon: Bell, area: "usuarios" },
   { id: "atividades", label: "Atividades", Icon: History, area: "livre" },
+  { id: "lixeira", label: "Lixeira", Icon: Trash2, area: "config" },
   { id: "conta", label: "Minha conta", Icon: UserCircle2, area: "livre" },
 ];
 
@@ -277,6 +280,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "listas" && <AdminLists />}
           {current === "seo" && <AdminSeo />}
           {current === "home" && <AdminHome />}
+          {current === "lixeira" && <AdminTrash user={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}
         </div>

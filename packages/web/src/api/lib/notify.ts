@@ -1,4 +1,4 @@
-import { and, eq, gte, inArray, isNotNull, lt } from "drizzle-orm";
+import { and, eq, gte, inArray, isNotNull, isNull, lt } from "drizzle-orm";
 import { db } from "../database";
 import * as schema from "../database/schema";
 import { emailFields, emailLayout, escapeHtml, sendEmail } from "./email";
@@ -103,6 +103,7 @@ export async function sendDailyFollowUps() {
         isNotNull(schema.leads.ownerId),
         lt(schema.leads.nextActionAt, endOfToday),
         inArray(schema.leads.status, ["novo", "em_contato"]),
+        isNull(schema.leads.deletedAt),
       ),
     );
   if (!due.length) return { sent: 0 };
@@ -154,11 +155,13 @@ export async function sendMonthlyReport(ref = new Date()) {
   const received = await db
     .select()
     .from(schema.leads)
-    .where(and(gte(schema.leads.createdAt, start), lt(schema.leads.createdAt, end)));
+    .where(and(gte(schema.leads.createdAt, start), lt(schema.leads.createdAt, end), isNull(schema.leads.deletedAt)));
   const won = await db
     .select()
     .from(schema.leads)
-    .where(and(eq(schema.leads.status, "ganho"), gte(schema.leads.wonAt, start), lt(schema.leads.wonAt, end)));
+    .where(
+      and(eq(schema.leads.status, "ganho"), gte(schema.leads.wonAt, start), lt(schema.leads.wonAt, end), isNull(schema.leads.deletedAt)),
+    );
   const lost = received.filter((l) => l.status === "perdido").length;
   const wonValue = won.reduce((a, l) => a + (l.proposalValue ?? 0), 0);
   const top = (key: (l: (typeof received)[number]) => string | null) => {
@@ -172,7 +175,9 @@ export async function sendMonthlyReport(ref = new Date()) {
   const applications = await db
     .select({ id: schema.applications.id })
     .from(schema.applications)
-    .where(and(gte(schema.applications.createdAt, start), lt(schema.applications.createdAt, end)));
+    .where(
+      and(gte(schema.applications.createdAt, start), lt(schema.applications.createdAt, end), isNull(schema.applications.deletedAt)),
+    );
 
   const r = await sendEmail({
     to: cfg.reportEmails,

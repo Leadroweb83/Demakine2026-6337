@@ -20,7 +20,7 @@ import {
 } from "./lib/s3";
 import { db } from "./database";
 import * as schema from "./database/schema";
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { auth } from "./auth";
 import { authMiddleware, requireAuth, requireRole, type SessionUser } from "./middleware/auth";
 import { createPanelUser, isRole, randomPassword, setUserPassword } from "./lib/users";
@@ -37,6 +37,7 @@ import { canSeeLeadValue, isLeadStatus } from "./lib/leads";
 import { buildSitemap } from "./lib/sitemap";
 import { auditMiddleware } from "./lib/audit";
 import { normalizePath, normalizeTarget } from "./lib/redirects";
+import { TRASH_DAYS, destroy, isTrashType, listTrash, purgeTrash, restoreFromTrash } from "./lib/trash";
 import { emailConfigured, emailLayout, sendEmail } from "./lib/email";
 import {
   DEFAULT_NOTIFY,
@@ -148,7 +149,7 @@ const app = new Hono<Env>()
   })
   .get('/sitemap.xml', async (c) => {
     const docs = await db.select().from(schema.contentDocs);
-    const jobs = (await db.select().from(schema.jobs)).filter(isJobOpen);
+    const jobs = (await db.select().from(schema.jobs).where(isNull(schema.jobs.deletedAt))).filter(isJobOpen);
     c.header('Content-Type', 'application/xml; charset=utf-8');
     c.header('Cache-Control', 'public, max-age=0, must-revalidate');
     c.header('CDN-Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
@@ -177,12 +178,15 @@ const app = new Hono<Env>()
   })
   // ------------------------------------------------------------------ vagas
   .get('/vagas', async (c) => {
-    const rows = await db.select().from(schema.jobs).orderBy(desc(schema.jobs.createdAt));
+    const rows = await db.select().from(schema.jobs).where(isNull(schema.jobs.deletedAt)).orderBy(desc(schema.jobs.createdAt));
     const jobs = rows.filter(isJobOpen).map(publicJob);
     return c.json({ jobs }, 200);
   })
   .get('/vagas/:slug', async (c) => {
-    const [job] = await db.select().from(schema.jobs).where(eq(schema.jobs.slug, c.req.param('slug')));
+    const [job] = await db
+      .select()
+      .from(schema.jobs)
+      .where(and(eq(schema.jobs.slug, c.req.param('slug')), isNull(schema.jobs.deletedAt)));
     if (!job) return c.json({ error: 'Vaga não encontrada' }, 404);
     return c.json({ job: publicJob(job) }, 200);
   })
@@ -246,7 +250,10 @@ const app = new Hono<Env>()
     let jobId: number | null = null;
     let jobTitle: string | null = null;
     if (body.jobSlug) {
-      const [job] = await db.select().from(schema.jobs).where(eq(schema.jobs.slug, body.jobSlug));
+      const [job] = await db
+        .select()
+        .from(schema.jobs)
+        .where(and(eq(schema.jobs.slug, body.jobSlug), isNull(schema.jobs.deletedAt)));
       if (!job || !isJobOpen(job)) return c.json({ error: 'Esta vaga não está mais aberta' }, 400);
       jobId = job.id;
       jobTitle = job.title;
@@ -301,11 +308,12 @@ const app = new Hono<Env>()
   .get('/admin/vagas', requireRole('admin', 'editor', 'rh'), async (c) => {
     const role = c.get('user')!.role;
     const seesCandidates = role === 'super_admin' || role === 'admin' || role === 'rh';
-    const jobs = await db.select().from(schema.jobs).orderBy(desc(schema.jobs.createdAt));
+    const jobs = await db.select().from(schema.jobs).where(isNull(schema.jobs.deletedAt)).orderBy(desc(schema.jobs.createdAt));
     const counts = seesCandidates
       ? await db
           .select({ jobId: schema.applications.jobId, total: sql<number>`count(*)::int` })
           .from(schema.applications)
+          .where(isNull(schema.applications.deletedAt))
           .groupBy(schema.applications.jobId)
       : [];
     const byJob = new Map(counts.map((r) => [r.jobId, r.total]));
@@ -355,18 +363,19 @@ const app = new Hono<Env>()
     const [used] = await db
       .select({ total: sql<number>`count(*)::int` })
       .from(schema.applications)
-      .where(eq(schema.applications.jobId, id));
+      .where(and(eq(schema.applications.jobId, id), isNull(schema.applications.deletedAt)));
     if ((used?.total ?? 0) > 0) {
       return c.json({ error: 'Esta vaga tem candidatos. Encerre a vaga em vez de apagar.' }, 409);
     }
-    await db.delete(schema.jobs).where(eq(schema.jobs.id, id));
+    // vai para a lixeira (30 dias)
+    await db.update(schema.jobs).set({ deletedAt: new Date(), deletedBy: c.get('user')!.id }).where(eq(schema.jobs.id, id));
     return c.json({ ok: true }, 200);
   })
   .get('/admin/candidaturas/novas', requireRole('admin', 'rh'), async (c) => {
     const [row] = await db
       .select({ total: sql<number>`count(*)::int` })
       .from(schema.applications)
-      .where(eq(schema.applications.status, 'recebido'));
+      .where(and(eq(schema.applications.status, 'recebido'), isNull(schema.applications.deletedAt)));
     return c.json({ total: row?.total ?? 0 }, 200);
   })
   .get('/admin/candidaturas', requireRole('admin', 'rh'), async (c) => {
@@ -378,6 +387,7 @@ const app = new Hono<Env>()
       })
       .from(schema.applications)
       .leftJoin(schema.jobs, eq(schema.applications.jobId, schema.jobs.id))
+      .where(isNull(schema.applications.deletedAt))
       .orderBy(desc(schema.applications.createdAt));
     return c.json(
       { applications: rows.map((r) => ({ ...r.application, jobTitle: r.jobTitle, jobSlug: r.jobSlug })) },
@@ -406,15 +416,11 @@ const app = new Hono<Env>()
   )
   .delete('/admin/candidaturas/:id', requireRole('admin', 'rh'), async (c) => {
     const id = Number(c.req.param('id'));
-    const [row] = await db
-      .delete(schema.applications)
-      .where(eq(schema.applications.id, id))
-      .returning({ resumeKey: schema.applications.resumeKey });
-    if (row?.resumeKey) {
-      await s3
-        .send(new DeleteObjectCommand({ Bucket: RESUME_BUCKET, Key: row.resumeKey }))
-        .catch(() => undefined);
-    }
+    // vai para a lixeira; o currículo só é apagado quando sair de vez (30 dias ou apagar definitivo)
+    await db
+      .update(schema.applications)
+      .set({ deletedAt: new Date(), deletedBy: c.get('user')!.id })
+      .where(eq(schema.applications.id, id));
     return c.json({ ok: true }, 200);
   })
   .get('/admin/curriculo/:id', requireRole('admin', 'rh'), async (c) => {
@@ -437,7 +443,7 @@ const app = new Hono<Env>()
   })
   .get('/admin/leads', requireRole('admin', 'vendedor'), async (c) => {
     const me = c.get('user')!;
-    const rows = await db.select().from(schema.leads).orderBy(desc(schema.leads.createdAt));
+    const rows = await db.select().from(schema.leads).where(isNull(schema.leads.deletedAt)).orderBy(desc(schema.leads.createdAt));
     // o valor de quem não pode ver nem sai do servidor
     const leads = rows.map((l) => {
       const visible = canSeeLeadValue(me, l);
@@ -463,6 +469,7 @@ const app = new Hono<Env>()
       })
       .from(schema.media)
       .leftJoin(schema.user, eq(schema.media.uploadedBy, schema.user.id))
+      .where(isNull(schema.media.deletedAt))
       .orderBy(desc(schema.media.createdAt));
     return c.json({ items }, 200);
   })
@@ -538,8 +545,8 @@ const app = new Hono<Env>()
     if (me.role === 'editor' && item.uploadedBy !== me.id) {
       return c.json({ error: 'O editor só apaga imagens que ele mesmo enviou' }, 403);
     }
-    await db.delete(schema.media).where(eq(schema.media.id, id));
-    await s3.send(new DeleteObjectCommand({ Bucket: MEDIA_BUCKET, Key: item.key })).catch(() => undefined);
+    // vai para a lixeira: o arquivo continua no ar até sair de vez
+    await db.update(schema.media).set({ deletedAt: new Date(), deletedBy: me.id }).where(eq(schema.media.id, id));
     return c.json({ ok: true }, 200);
   })
   // ------------------------------------------------------- redirecionamentos
@@ -598,6 +605,36 @@ const app = new Hono<Env>()
     await db.delete(schema.redirects).where(eq(schema.redirects.id, Number(c.req.param('id'))));
     return c.json({ ok: true }, 200);
   })
+  // ------------------------------------------------------------------ lixeira
+  .get('/admin/lixeira', requireRole('admin'), async (c) => {
+    const users = await db.select({ id: schema.user.id, name: schema.user.name }).from(schema.user);
+    const names = new Map(users.map((u) => [u.id, u.name]));
+    const items = (await listTrash()).map((i) => ({
+      ...i,
+      deletedByName: i.deletedBy ? names.get(i.deletedBy) ?? null : null,
+      daysLeft: Math.max(0, TRASH_DAYS - Math.floor((Date.now() - i.deletedAt.getTime()) / 864e5)),
+    }));
+    return c.json({ items, days: TRASH_DAYS }, 200);
+  })
+  .post('/admin/lixeira/:type/:id/restaurar', requireRole('admin'), async (c) => {
+    const type = c.req.param('type');
+    if (!isTrashType(type)) return c.json({ error: 'Tipo inválido' }, 400);
+    await restoreFromTrash(type, Number(c.req.param('id')));
+    return c.json({ ok: true }, 200);
+  })
+  .delete('/admin/lixeira/:type/:id', requireRole(), async (c) => {
+    const type = c.req.param('type');
+    if (!isTrashType(type)) return c.json({ error: 'Tipo inválido' }, 400);
+    const n = await destroy(type, [Number(c.req.param('id'))]);
+    return n ? c.json({ ok: true }, 200) : c.json({ error: 'Item não está na lixeira' }, 404);
+  })
+  .delete('/admin/leads/:id', requireRole('admin'), async (c) => {
+    await db
+      .update(schema.leads)
+      .set({ deletedAt: new Date(), deletedBy: c.get('user')!.id })
+      .where(eq(schema.leads.id, Number(c.req.param('id'))));
+    return c.json({ ok: true }, 200);
+  })
   // ------------------------------------------------------ registro de atividades
   .get('/admin/atividades', requireAuth, async (c) => {
     const me = c.get('user')!;
@@ -615,7 +652,8 @@ const app = new Hono<Env>()
     const day = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', day: '2-digit' }).format(new Date()));
     const followUps = await sendDailyFollowUps();
     const report = day === 1 ? await sendMonthlyReport() : null;
-    return c.json({ ok: true, followUps, report }, 200);
+    const purged = await purgeTrash();
+    return c.json({ ok: true, followUps, report, purged }, 200);
   })
   // ---------------------------------------------- avisos por e-mail (super admin)
   .get('/admin/avisos', requireRole(), async (c) => {
@@ -892,7 +930,7 @@ const app = new Hono<Env>()
     const onlyMine = c.req.query('escopo') === 'meus';
     const me = c.get('user')!;
     const now = Date.now();
-    const allRows = await db.select().from(schema.leads);
+    const allRows = await db.select().from(schema.leads).where(isNull(schema.leads.deletedAt));
     const rows = onlyMine ? allRows.filter((r) => r.ownerId === me.id) : allRows;
     const users = await db
       .select({ id: schema.user.id, name: schema.user.name, image: schema.user.image })

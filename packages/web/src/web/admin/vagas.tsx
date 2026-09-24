@@ -442,7 +442,7 @@ function JobEditor({
               type="button"
               disabled={remove.isPending}
               onClick={() => {
-                if (confirm(`Apagar a vaga "${job.title}"? Se ela já tem candidatos, encerre em vez de apagar.`)) {
+                if (confirm(`Mandar a vaga "${job.title}" para a lixeira? Se ela já tem candidatos, encerre em vez de apagar.`)) {
                   remove.mutate();
                 }
               }}
@@ -753,11 +753,11 @@ function CandidateDetail({ app, onClose }: { app: Application; onClose: () => vo
             type="button"
             disabled={remove.isPending}
             onClick={() => {
-              if (confirm(`Apagar a candidatura de ${app.name} e o currículo? Não dá para desfazer.`)) remove.mutate();
+              if (confirm(`Mandar a candidatura de ${app.name} para a lixeira? Em 30 dias ela e o currículo são apagados de vez.`)) remove.mutate();
             }}
             className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold uppercase tracking-wide text-dm-red hover:bg-dm-red/10"
           >
-            <Trash2 className="h-4 w-4" /> Apagar candidatura (LGPD)
+            <Trash2 className="h-4 w-4" /> Apagar candidatura
           </button>
         </div>
       </div>

@@ -215,7 +215,7 @@ function MediaCard({ item, canDelete }: { item: MediaItem; canDelete: boolean })
             <button
               type="button"
               disabled={remove.isPending}
-              onClick={() => confirm(`Apagar "${item.name}"? Se ela estiver em algum produto ou post, a imagem some de lá.`) && remove.mutate()}
+              onClick={() => confirm(`Mandar "${item.name}" para a lixeira? Ela continua no ar por 30 dias e dá para restaurar.`) && remove.mutate()}
               className="ml-auto rounded-md p-1.5 text-dm-red/70 hover:bg-dm-red/10 hover:text-dm-red"
               title="Apagar"
             >

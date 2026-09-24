@@ -12,6 +12,7 @@ import {
   MessageCircle,
   NotebookPen,
   PhoneCall,
+  Trash2,
   UserRound,
 } from "lucide-react";
 import { api } from "../lib/api";
@@ -545,8 +546,21 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
     onError: (e) => setError(e.message),
   });
 
+  const remove = useMutation({
+    mutationFn: async () => {
+      const res = await api.admin.leads[":id"].$delete({ param: { id: String(lead.id) } });
+      if (!res.ok) throw new Error("Não foi possível apagar");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-leads"] });
+      qc.invalidateQueries({ queryKey: ["admin-dashboard"] });
+      onClose();
+    },
+    onError: (e) => setError(e.message),
+  });
+
   const current = (lead.status ?? "novo") as LeadStatus;
-  const busy = patch.isPending || log.isPending;
+  const busy = patch.isPending || log.isPending || remove.isPending;
   const canSeeValue = me.role === "super_admin" || lead.ownerId === me.id;
   const closed = current === "ganho" || current === "perdido";
 
@@ -791,6 +805,17 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
           </Card>
 
           {error && <p className="text-[13px] font-semibold text-dm-red">{error}</p>}
+
+          {(me.role === "super_admin" || me.role === "admin") && (
+            <button
+              type="button"
+              disabled={remove.isPending}
+              onClick={() => confirm(`Mandar o lead ${lead.name} para a lixeira? Dá para restaurar por 30 dias.`) && remove.mutate()}
+              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold uppercase tracking-wide text-dm-red hover:bg-dm-red/10"
+            >
+              <Trash2 className="h-4 w-4" /> Apagar lead
+            </button>
+          )}
         </div>
       </div>
     </div>
