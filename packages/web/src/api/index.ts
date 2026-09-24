@@ -35,6 +35,17 @@ import {
 } from "./lib/jobs";
 import { canSeeLeadValue, isLeadStatus } from "./lib/leads";
 import { buildSitemap } from "./lib/sitemap";
+import { emailConfigured, emailLayout, sendEmail } from "./lib/email";
+import {
+  DEFAULT_NOTIFY,
+  getNotifySettings,
+  notifyNewApplication,
+  notifyNewLead,
+  safely,
+  sendDailyFollowUps,
+  sendMonthlyReport,
+  type NotifySettings,
+} from "./lib/notify";
 import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection, publishedInCode } from "./lib/content-docs";
 
 type Env = {
@@ -86,6 +97,8 @@ const app = new Hono<Env>()
       })
       .returning();
 
+    // na Vercel a função encerra ao responder: o aviso precisa terminar antes
+    if (lead) await safely(() => notifyNewLead(lead));
     return c.json({ lead }, 201);
   })
   .post('/newsletter', async (c) => {
@@ -222,13 +235,15 @@ const app = new Hono<Env>()
     }
 
     let jobId: number | null = null;
+    let jobTitle: string | null = null;
     if (body.jobSlug) {
       const [job] = await db.select().from(schema.jobs).where(eq(schema.jobs.slug, body.jobSlug));
       if (!job || !isJobOpen(job)) return c.json({ error: 'Esta vaga não está mais aberta' }, 400);
       jobId = job.id;
+      jobTitle = job.title;
     }
 
-    await db.insert(schema.applications).values({
+    const [created] = await db.insert(schema.applications).values({
       jobId,
       name,
       email,
@@ -240,7 +255,8 @@ const app = new Hono<Env>()
       resumeKey,
       status: jobId ? 'recebido' : 'banco',
       consentAt: new Date(),
-    });
+    }).returning();
+    if (created) await safely(() => notifyNewApplication(created, jobTitle));
     return c.json({ ok: true }, 201);
   })
   // ---------------------------------------------------------------- painel
@@ -516,6 +532,46 @@ const app = new Hono<Env>()
     await db.delete(schema.media).where(eq(schema.media.id, id));
     await s3.send(new DeleteObjectCommand({ Bucket: MEDIA_BUCKET, Key: item.key })).catch(() => undefined);
     return c.json({ ok: true }, 200);
+  })
+  // ------------------------------------------------ rotina diária (Vercel Cron)
+  .get('/cron/diario', async (c) => {
+    const secret = process.env.CRON_SECRET;
+    if (!secret || c.req.header('authorization') !== `Bearer ${secret}`) return c.json({ error: 'Não autorizado' }, 401);
+    const day = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', day: '2-digit' }).format(new Date()));
+    const followUps = await sendDailyFollowUps();
+    const report = day === 1 ? await sendMonthlyReport() : null;
+    return c.json({ ok: true, followUps, report }, 200);
+  })
+  // ---------------------------------------------- avisos por e-mail (super admin)
+  .get('/admin/avisos', requireRole(), async (c) => {
+    return c.json({ settings: await getNotifySettings(), configured: emailConfigured() }, 200);
+  })
+  .put('/admin/avisos', requireRole(), validator('json', (v) => (v ?? {}) as Partial<NotifySettings>), async (c) => {
+    const body = c.req.valid('json');
+    const emails = (v: unknown) =>
+      Array.isArray(v)
+        ? [...new Set(v.map((x) => String(x).trim().toLowerCase()).filter((x) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x)))].slice(0, 20)
+        : [];
+    const value: NotifySettings = {
+      leadEmails: emails(body.leadEmails),
+      applicationEmails: emails(body.applicationEmails),
+      reportEmails: emails(body.reportEmails),
+      dailyFollowUps: body.dailyFollowUps ?? DEFAULT_NOTIFY.dailyFollowUps,
+    };
+    await db
+      .insert(schema.appSettings)
+      .values({ key: 'notificacoes', value, updatedBy: c.get('user')!.id, updatedAt: new Date() })
+      .onConflictDoUpdate({ target: schema.appSettings.key, set: { value, updatedBy: c.get('user')!.id, updatedAt: new Date() } });
+    return c.json({ settings: value }, 200);
+  })
+  .post('/admin/avisos/teste', requireRole(), async (c) => {
+    const me = c.get('user')!;
+    const r = await sendEmail({
+      to: [me.email],
+      subject: 'Teste de aviso do painel Demakine',
+      html: emailLayout('Os avisos por e-mail estão funcionando', '<p style="font-size:14px;margin:0">Se você recebeu esta mensagem, o painel consegue enviar os avisos de lead, candidatura, retornos e o relatório mensal.</p>'),
+    });
+    return c.json(r, r.sent ? 200 : 400);
   })
   // -------------------------------------------------- conteúdo editável (painel)
   .get('/admin/conteudo/:collection', requireAuth, async (c) => {

@@ -49,6 +49,14 @@ export const contentDocs = pgTable(
   (t) => [primaryKey({ columns: [t.collection, t.key] })],
 );
 
+/** Configurações internas do painel (nunca vão para o site): avisos por e-mail etc. */
+export const appSettings = pgTable("app_settings", {
+  key: text("key").primaryKey(),
+  value: jsonb("value").notNull(),
+  updatedBy: text("updated_by"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 /** Biblioteca de mídia: imagens no bucket público "midia", usadas por catálogo, blog e cases. */
 export const media = pgTable("media", {
   id: serial("id").primaryKey(),
