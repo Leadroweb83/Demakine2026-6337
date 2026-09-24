@@ -39,6 +39,9 @@ icons/svg/      Ícones SVG fornecidos
   Por isso a página não sobrepõe `hero_galvanic_chain`, `consult_model`, `inspection_ring_tweezers`
   nem os overlays SVG: eles duplicariam a imagem. No mobile, o próprio fundo é recortado.
 - Cada fundo é servido em WebP (arquivo original recebido) com o PNG de nome oficial como fallback.
+- Logo (opção B aprovada pelo cliente): `audace_logo_negative_*` é o arquivo oficial com apenas a cor
+  dos textos alterada ("Audace" #F8F6F2, "Galvânica" #BFC1C1). Símbolo, formas, proporções e
+  transparência idênticos ao original. O arquivo oficial `audace_logo_transparent_4x.png` fica intacto.
 - Hero: o fundo tem um corte reto entre painel e foto; um degradê em CSS suaviza a divisa como na arte.
 
 ## Sistema de medidas
