@@ -43,6 +43,11 @@ icons/svg/      Ícones SVG fornecidos
   nem os overlays SVG: eles duplicariam a imagem. No mobile, o próprio fundo é recortado.
 - Todos os assets vêm do pacote oficial na Drive (fundos em 3156 px). A página serve WebP em 1600w/3156w
   (≈640 KB no total) com o PNG de nome oficial como fallback.
+- Nitidez (aprovado pelo cliente): os arquivos "4x" do pacote eram só a arte de 789 px ampliada (medido:
+  0,08/255 de detalhe a mais). Hero, consultoria, estratégia, CTA, anéis e etapas foram reconstruídos com
+  super-resolução Real-ESRGAN x4plus (ONNX, CPU), a partir do tamanho real de cada imagem. A IA recria
+  texturas finas; feições e composição não mudam. Os arquivos originais do pacote ficam em `images/originais/`.
+  Fundos servidos em WebP 900w/1600w/3156w.
 - CTA: o fundo `section_06` traz os anéis muito ampliados, com um corte vertical, atrás da frase. Um véu
   escuro em CSS garante a leitura e `cta_rings_4x` (recorte exato da arte, 390×164u) ocupa o canto inferior.
 - Logo, versão negativa: além da cor dos textos (opção B), a borda do símbolo teve a sobra do fundo branco
