@@ -1,0 +1,7 @@
+# Audace Galvânica | banhos para semijoias
+User-agent: *
+Allow: /
+Disallow: /404.html
+
+# Sitemap: incluir a URL absoluta quando o domínio definitivo estiver no ar
+# Sitemap: https://DOMINIO-DEFINITIVO/sitemap.xml

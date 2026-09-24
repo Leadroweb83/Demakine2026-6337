@@ -9,11 +9,15 @@ index.html      Estrutura semântica com todos os textos em HTML real
 styles.css      Tokens da marca, layout e responsivo
 script.js       Menu mobile e formulário (motions só na Fase 10)
 fonts/          Libre Baskerville + Manrope auto-hospedadas (SIL OFL)
-logo/           Logo oficial (não redesenhar)
-reference/      approved_layout_reference.png
+logo/           Logo oficial, versão negativa usada na página
 images/         backgrounds/, photos/, overlays/
 icons/svg/      Ícones SVG fornecidos
+robots.txt      Rastreamento liberado (linha do sitemap entra com o domínio)
+404.html        Página de erro com a marca (noindex)
 ```
+
+Fora da pasta publicada, em `../audace-galvanica-fonte/`: a arte aprovada (`reference/`), os arquivos
+originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada disso vai para o ar.
 
 ## Status das fases
 
@@ -46,7 +50,7 @@ icons/svg/      Ícones SVG fornecidos
 - Nitidez (aprovado pelo cliente): os arquivos "4x" do pacote eram só a arte de 789 px ampliada (medido:
   0,08/255 de detalhe a mais). Hero, consultoria, estratégia, CTA, anéis e etapas foram reconstruídos com
   super-resolução Real-ESRGAN x4plus (ONNX, CPU), a partir do tamanho real de cada imagem. A IA recria
-  texturas finas; feições e composição não mudam. Os arquivos originais do pacote ficam em `images/originais/`.
+  texturas finas; feições e composição não mudam. Os arquivos originais do pacote ficam em `../audace-galvanica-fonte/originais/`.
   Fundos servidos em WebP 900w/1600w/3156w.
 - CTA: o fundo `section_06` traz os anéis muito ampliados, com um corte vertical, atrás da frase. Um véu
   escuro em CSS garante a leitura e `cta_rings_4x` (recorte exato da arte, 390×164u) ocupa o canto inferior.
@@ -82,6 +86,19 @@ no fundo), 10/37 (as seções já fazem a transição de tom), 12 (a estratégia
 Regras: estados iniciais só sob `.js-motion`, definida no `<head>` quando há JS, IntersectionObserver e
 o usuário não pediu movimento reduzido; se `script.js` não carregar em 4 s, tudo aparece. Só transform e
 opacity animam; parallax e luz do cursor apenas em desktop com mouse.
+
+## SEO (auditoria pré-lançamento)
+
+Feito: title (40) e description (155) no tamanho; um H1 e hierarquia H2/H3 correta; 100% das imagens com
+alt ou alt vazio decorativo e dimensões; JSON-LD ProfessionalService com endereço, telefone, contato,
+serviço e Instagram; meta robots com prévia grande de imagem; Open Graph e Twitter Card com imagem
+1200×630; robots.txt; 404 com a marca; arte e arquivos-fonte fora da pasta publicada.
+Lighthouse SEO 100.
+
+Pendente do domínio definitivo: `<link rel="canonical">`, `og:url`, `og:image`/`twitter:image` com URL
+absoluta, `url`/`logo`/`image` no JSON-LD, `sitemap.xml` + linha no robots.txt, redirecionamentos 301
+(http→https e www↔sem www), cabeçalhos de cache/compressão no servidor e conferir que o noindex do
+endereço de teste não vai para produção.
 
 ## Sistema de medidas
 
