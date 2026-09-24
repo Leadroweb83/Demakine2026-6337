@@ -2,6 +2,7 @@ import { Link, useParams } from "wouter";
 import { RedirectGate } from "@/components/redirect-gate";
 import { AlertTriangle, ArrowRight, BadgeCheck, Calculator, Check, Info, Quote } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { articleJsonLd } from "@/lib/schema";
 import { clipDescription, fitTitle } from "@/lib/seo-text";
 import {
   BtnGhost,
@@ -59,6 +60,12 @@ export default function CaseStudyPage() {
         description={clipDescription(item.intro)}
         path={`/cases/${item.slug}`}
         image={item.image}
+        jsonLd={articleJsonLd({
+          title: item.title,
+          description: clipDescription(item.intro),
+          path: `/cases/${item.slug}`,
+          image: item.image,
+        })}
       />
 
       <PageHero

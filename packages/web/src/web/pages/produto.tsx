@@ -623,7 +623,7 @@ export default function Produto() {
 
             {product.applications.length > 0 && (
               <div className="mt-6">
-                <p className="eyebrow text-dm-ink/45">Aplicações</p>
+                <p className="eyebrow text-dm-ink/60">Aplicações</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {product.applications.map((a) => (
                     <span

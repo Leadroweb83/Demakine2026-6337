@@ -52,6 +52,29 @@ function setLink(rel: string, href: string) {
   tag.setAttribute("href", href);
 }
 
+/** Páginas-mãe que existem no site (a trilha só passa por elas). */
+const PARENTS: Record<string, string> = {
+  "/produtos": "Produtos",
+  "/blog": "Blog",
+  "/cases": "Aplicações e cases",
+  "/vagas": "Vagas",
+};
+
+/** Trilha "Início > Produtos > Esteira Dalla" em BreadcrumbList, montada pelo endereço e pelo título. */
+function breadcrumbJsonLd(path: string, title: string) {
+  const clean = path.split("?")[0]!;
+  if (clean === "/" || clean.startsWith("/export")) return null;
+  const parent = "/" + clean.split("/")[1];
+  const items = [{ name: "Início", url: `${site.url}/` }];
+  if (parent !== clean && PARENTS[parent]) items.push({ name: PARENTS[parent], url: `${site.url}${parent}` });
+  items.push({ name: title.split(" | ")[0]!.trim(), url: `${site.url}${clean}` });
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, item: it.url })),
+  };
+}
+
 /** Dados estruturados e hreflang vindos da pré-renderização: o primeiro Seo no navegador assume o lugar deles. */
 function dropPrerendered(selector: string) {
   document.head.querySelectorAll(`${selector}[data-ssr]`).forEach((el) => el.remove());
@@ -106,6 +129,8 @@ export function Seo({
     if (lang) head.htmlLang = lang;
     if (preloadImage) head.preloadImage = preloadImage;
     if (jsonLd) head.jsonLd.push(jsonLd);
+    const crumbs = noindex ? null : breadcrumbJsonLd(path, title);
+    if (crumbs) head.jsonLd.push(crumbs);
   }
 
   useEffect(() => {
@@ -137,6 +162,16 @@ export function Seo({
     };
   }, [alternatesKey, lang]);
 
+  const crumbsKey = noindex ? "" : JSON.stringify(breadcrumbJsonLd(path, title) ?? "");
+  useEffect(() => {
+    if (!crumbsKey || crumbsKey === '""') return;
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.textContent = crumbsKey;
+    document.head.appendChild(script);
+    return () => script.remove();
+  }, [crumbsKey]);
+
   useEffect(() => {
     dropPrerendered('script[type="application/ld+json"]');
     if (!jsonLd) return;
@@ -150,13 +185,30 @@ export function Seo({
   return null;
 }
 
+/** "07h30 às 17h30" -> ["07:30", "17:30"] (horário de Dados do site) */
+function hoursRange(text: string) {
+  const m = text.match(/(\d{1,2})h(\d{2})?\D+(\d{1,2})h(\d{2})?/);
+  if (!m) return null;
+  const hhmm = (h: string, min?: string) => `${h.padStart(2, "0")}:${min ?? "00"}`;
+  return [hhmm(m[1]!, m[2]), hhmm(m[3]!, m[4])] as const;
+}
+
+const monThu = hoursRange(site.hours.monThu);
+const fri = hoursRange(site.hours.fri);
+
+/**
+ * A empresa: organização e negócio local (fábrica em Limeira), com endereço, telefone e horário.
+ * Vai na home; é o que o Google usa para o painel da empresa e para a busca local.
+ */
 export const organizationJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": ["Organization", "LocalBusiness"],
+  "@id": `${site.url}/#empresa`,
   name: site.legal,
   alternateName: site.name,
   url: site.url,
-  logo: `${site.url}/img/site/logo-demakine.webp`,
+  logo: `${site.url}/img/site/logo-demakine.png`,
+  image: `${site.url}/og-image.jpg`,
   email: site.email,
   telephone: `+55 ${site.phone.replace(/\D/g, "").replace(/^(\d{2})(\d{4,5})(\d{4})$/, "$1 $2-$3")}`,
   address: {
@@ -167,5 +219,21 @@ export const organizationJsonLd = {
     addressRegion: (site.address.split("/").pop() ?? "SP").trim().slice(0, 2).toUpperCase(),
     addressCountry: "BR",
   },
-  sameAs: [site.social.facebook, site.social.instagram, site.social.linkedin, site.social.youtube],
+  areaServed: { "@type": "Country", name: "Brasil" },
+  openingHoursSpecification: [
+    monThu && { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"], opens: monThu[0], closes: monThu[1] },
+    fri && { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: fri[0], closes: fri[1] },
+  ].filter(Boolean),
+  sameAs: [site.social.facebook, site.social.instagram, site.social.linkedin, site.social.youtube].filter(Boolean),
+};
+
+/** O site em si (nome que o Google mostra acima do resultado). */
+export const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${site.url}/#site`,
+  name: site.name,
+  url: site.url,
+  inLanguage: "pt-BR",
+  publisher: { "@id": `${site.url}/#empresa` },
 };

@@ -48,7 +48,7 @@ export default function Contato() {
                 <span>
                   <span className="block text-[16px] font-bold text-dm-ink">WhatsApp comercial</span>
                   <span className="block text-[15px] text-dm-gray">{site.mobile}</span>
-                  <span className="mt-1 block text-[13.5px] text-dm-gray/80">
+                  <span className="mt-1 block text-[13.5px] text-dm-gray">
                     Resposta no horário comercial
                   </span>
                 </span>

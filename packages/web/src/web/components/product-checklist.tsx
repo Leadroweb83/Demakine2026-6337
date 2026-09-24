@@ -69,7 +69,7 @@ function ChecklistCard({
             <motion.li
               key={t}
               className="flex gap-3 text-[14.5px] leading-relaxed text-dm-ink/80"
-              initial={reduce ? false : { opacity: 0.35, x: -6 }}
+              initial={reduce ? false : { opacity: 0.75, x: -6 }}
               animate={on ? { opacity: 1, x: 0 } : undefined}
               transition={{ duration: 0.3, delay }}
             >

@@ -123,7 +123,7 @@ export const segmentList: Segment[] = [
   {
     name: "Construção",
     slug: "construcao",
-    color: "#d97706",
+    color: "#b45309",
     icon: HardHat,
     text: "Areia, brita e agregados com maior volume por metro de correia.",
     product: "Esteira Transportadora em V para Granel",

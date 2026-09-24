@@ -310,7 +310,7 @@ export function TestimonialGrid({ limit = 6, start = 0 }: { limit?: number; star
       {list.map((t, idx) => (
         <Reveal key={`${t.name}-${idx}`} i={idx % 3} className="h-full">
           <figure className="flex h-full flex-col rounded-2xl border border-dm-line bg-white p-6">
-            <div className="flex gap-0.5 text-dm-red" aria-label="5 de 5">
+            <div className="flex gap-0.5 text-dm-red" role="img" aria-label="5 de 5">
               {Array.from({ length: 5 }).map((_, s) => (
                 <svg key={s} viewBox="0 0 20 20" className="h-4 w-4 fill-current">
                   <path d="M10 1.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L10 14.9l-5.25 2.75 1-5.85L1.5 7.65l5.9-.85L10 1.5z" />

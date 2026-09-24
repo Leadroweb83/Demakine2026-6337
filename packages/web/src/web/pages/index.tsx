@@ -18,7 +18,7 @@ import {
   Truck,
   Wrench,
 } from "lucide-react";
-import { Seo, organizationJsonLd } from "@/components/seo";
+import { Seo, organizationJsonLd, websiteJsonLd } from "@/components/seo";
 import {
   CineRule,
   CineSection,
@@ -526,7 +526,7 @@ export default function Home() {
         title="Demakine | Esteiras Transportadoras, Roscas e Elevadores"
         description="Fábrica de esteiras transportadoras, roscas, elevadores e máquinas de costurar sacos sob medida. Mais de 15 anos e 7.000 máquinas entregues. Limeira/SP."
         path="/"
-        jsonLd={organizationJsonLd}
+        jsonLd={[organizationJsonLd, websiteJsonLd]}
         alternates={LANGUAGE_ALTERNATES}
         preloadImage="/img/site/hero.webp"
       />

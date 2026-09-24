@@ -166,7 +166,7 @@ export const segmentLps: SegmentLp[] = [
     intro:
       "Agregado é o material mais severo que existe para um transportador: abrasivo, com carga de impacto na alimentação e volume alto por hora. O que segura isso é estrutura reforçada e perfil de correia que aumenta o volume transportado por metro.",
     hero: "/img/produtos/esteira-transportadora-para-granel/10.webp",
-    color: "#d97706",
+    color: "#b45309",
     pains: [
       {
         title: "Abrasão que come a correia",

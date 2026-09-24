@@ -1,5 +1,6 @@
 import { Compass, HeartHandshake, Target } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { aboutPageJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { ClientsMarquee, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
@@ -46,6 +47,9 @@ export default function AEmpresa() {
         description="Há mais de 15 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio. Missão, visão, valores e propósito social."
         path="/a-empresa"
         image="/img/site/fabrica.webp"
+        jsonLd={aboutPageJsonLd(
+          "Há mais de 15 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio.",
+        )}
       />
 
       <PageHero

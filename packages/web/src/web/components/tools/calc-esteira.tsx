@@ -161,7 +161,7 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
           </Link>
         </div>
 
-        <p className={cn("mt-4 text-[12.5px]", dark ? "text-white/40" : "text-dm-gray/80")}>
+        <p className={cn("mt-4 text-[12.5px]", dark ? "text-white/40" : "text-dm-gray")}>
           Valores de referência das tabelas de fábrica. A confirmação final é feita pela nossa
           engenharia com os dados da sua linha.
         </p>

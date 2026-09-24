@@ -18,7 +18,7 @@ import {
   MessageCircle,
   Phone,
 } from "lucide-react";
-import { Seo } from "@/components/seo";
+import { Seo, organizationJsonLd } from "@/components/seo";
 import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
 import { Reveal } from "@/components/reveal";
 import { api } from "@/lib/api";
@@ -186,6 +186,7 @@ export default function ExportLanding() {
         description={c.seoDescription}
         path={`/export?lang=${lang}`}
         alternates={LANGUAGE_ALTERNATES}
+        jsonLd={organizationJsonLd}
         lang={c.htmlLang}
         image="/img/produtos/esteira-transportadora-para-granel/1.webp"
       />

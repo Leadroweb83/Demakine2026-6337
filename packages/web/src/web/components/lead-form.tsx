@@ -251,7 +251,7 @@ export function LeadForm({
         {send.isPending ? "Enviando..." : buttonLabel}
       </button>
 
-      <p className={cn("mt-3 text-center text-[12.5px]", dark ? "text-white/40" : "text-dm-gray/80")}>
+      <p className={cn("mt-3 text-center text-[12.5px]", dark ? "text-white/40" : "text-dm-gray")}>
         Resposta em até 1 dia útil. Seus dados não são compartilhados.
       </p>
     </form>

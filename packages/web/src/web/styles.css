@@ -1030,6 +1030,10 @@
   pointer-events: none;
   user-select: none;
 }
+/* marca d'água decorativa: o texto vem do CSS para não contar como conteúdo (leitor de tela, busca) */
+.dm-wordmark-text::before {
+  content: "DEMAKINE";
+}
 .dm-wordmark-text {
   position: absolute;
   left: 50%;

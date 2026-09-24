@@ -58,12 +58,12 @@ export function VideoSection() {
                 <button
                   type="button"
                   onClick={() => setPlaying(true)}
-                  aria-label="Assistir ao vídeo institucional da Demakine"
                   className="group relative block h-full w-full"
                 >
+                  <span className="sr-only">Assistir ao </span>
                   <img
                     src="/img/site/video-institucional-cover.webp"
-                    alt="Vista aérea da fábrica Demakine em Limeira/SP"
+                    alt=""
                     loading="lazy"
                     className="h-full w-full object-cover opacity-85 transition-all duration-500 group-hover:scale-[1.03] group-hover:opacity-100"
                   />

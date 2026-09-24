@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useSearch } from "wouter";
 import { Search, X } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { itemListJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
 import { CtaBand, PageHero, ProductCard, Section } from "@/components/kit";
 import { categories, categoryName, products } from "@/lib/content";
@@ -39,6 +40,10 @@ export default function Produtos() {
         title="Catálogo de Equipamentos | Demakine"
         description={`${products.length} equipamentos agroindustriais: esteiras, roscas, elevadores, máquinas de costurar sacos e peneiras, com modelos, medidas e capacidades.`}
         path="/produtos"
+        jsonLd={itemListJsonLd(
+          "Catálogo de equipamentos Demakine",
+          products.map((p) => ({ name: p.name, path: `/produtos/${p.slug}`, image: p.images[0] })),
+        )}
       />
 
       <PageHero

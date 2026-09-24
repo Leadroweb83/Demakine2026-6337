@@ -106,7 +106,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="eyebrow text-white/45">Equipamentos</h3>
+            <h3 className="eyebrow text-white/60">Equipamentos</h3>
             <ul className="mt-5 space-y-2.5 text-[15px] text-white/70">
               {top.map((item) => (
                 <li key={item.key}>
@@ -124,7 +124,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="eyebrow text-white/45">Institucional</h3>
+            <h3 className="eyebrow text-white/60">Institucional</h3>
             <ul className="mt-5 space-y-2.5 text-[15px] text-white/70">
               {nav.slice(1).map((item) => (
                 <li key={item.to}>
@@ -157,7 +157,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="eyebrow text-white/45">Segmentos</h3>
+            <h3 className="eyebrow text-white/60">Segmentos</h3>
             <ul className="mt-5 space-y-2.5 text-[15px] text-white/70">
               {segmentLps.map((s) => (
                 <li key={s.slug}>
@@ -175,10 +175,10 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="eyebrow text-white/45">Contato</h3>
+            <h3 className="eyebrow text-white/60">Contato</h3>
             <ul className="mt-5 space-y-4 text-[15px] text-white/70">
               <li className="flex gap-3">
-                <Phone className="mt-1 h-4 w-4 shrink-0 text-white/40" />
+                <Phone className="mt-1 h-4 w-4 shrink-0 text-white/60" />
                 <span>
                   <a href={site.phoneHref} className="block hover:text-white">
                     {site.phone}
@@ -189,13 +189,13 @@ export function Footer() {
                 </span>
               </li>
               <li className="flex gap-3">
-                <Mail className="mt-1 h-4 w-4 shrink-0 text-white/40" />
+                <Mail className="mt-1 h-4 w-4 shrink-0 text-white/60" />
                 <a href={`mailto:${site.email}`} className="hover:text-white">
                   {site.email}
                 </a>
               </li>
               <li className="flex gap-3">
-                <MapPin className="mt-1 h-4 w-4 shrink-0 text-white/40" />
+                <MapPin className="mt-1 h-4 w-4 shrink-0 text-white/60" />
                 <span>
                   <a href={site.mapsUrl} target="_blank" rel="noreferrer" className="hover:text-white">
                     {site.address}
@@ -225,7 +225,7 @@ export function Footer() {
           <NewsletterBox />
         </div>
 
-        <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-[13px] text-white/45">
+        <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-[13px] text-white/60">
           {categories.map((c) => (
             <Link key={c.slug} href={`/produtos?cat=${c.slug}`} className="hover:text-white/80">
               {c.name}
@@ -237,7 +237,7 @@ export function Footer() {
           <LocalBusinessBlock cnpj={site.cnpj} />
         </div>
 
-        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-6 text-[13px] text-white/45">
+        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-6 text-[13px] text-white/60">
           <Link href="/politica-de-privacidade" className="hover:text-white">
             Política de Privacidade
           </Link>
@@ -251,9 +251,18 @@ export function Footer() {
           >
             Preferências de cookies
           </button>
+          {/* versões para exportação: sem este link a página ficava sem nenhuma entrada no site */}
+          <span className="flex gap-3 md:ml-auto">
+            <Link href="/export?lang=en" hrefLang="en" lang="en" className="hover:text-white">
+              English
+            </Link>
+            <Link href="/export?lang=es" hrefLang="es" lang="es" className="hover:text-white">
+              Español
+            </Link>
+          </span>
         </div>
 
-        <div className="mt-5 flex flex-col gap-2 text-[13px] text-white/40 md:flex-row md:items-center md:justify-between">
+        <div className="mt-5 flex flex-col gap-2 text-[13px] text-white/60 md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {site.legal}. Todos os direitos reservados.
           </p>

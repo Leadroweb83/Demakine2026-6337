@@ -143,7 +143,6 @@ export function BestSellers() {
               type="button"
               onClick={() => go(i)}
               aria-current={i === active}
-              aria-label={`Mostrar ${s.product.name}`}
               className={cn(
                 "group relative flex-1 overflow-hidden rounded-xl border px-3 pb-3 pt-4 text-left transition-colors",
                 i === active ? "border-white/30 bg-white/[0.08]" : "border-white/10 hover:border-white/25",
@@ -163,16 +162,18 @@ export function BestSellers() {
                   />
                 )}
               </span>
-              <span className="block text-[10.5px] font-bold uppercase tracking-[0.14em] text-white/40">
+              <span className="block text-[10.5px] font-bold uppercase tracking-[0.14em] text-white/60">
                 0{i + 1}
               </span>
               <span
                 className={cn(
                   "mt-1 block truncate text-[13px] font-bold sm:text-[14px]",
-                  i === active ? "text-white" : "text-white/55 group-hover:text-white/80",
+                  i === active ? "text-white" : "text-white/60 group-hover:text-white/80",
                 )}
               >
                 {s.tab}
+                {/* nome completo para leitor de tela: o texto visível vem primeiro, como exige a regra de rótulo */}
+                <span className="sr-only">: {s.product.name}</span>
               </span>
             </button>
           ))}
