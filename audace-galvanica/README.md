@@ -102,6 +102,13 @@ o mesmo sistema visual.
 - Onde estamos: mapa do Google (iframe com carregamento tardio, em tom escuro), endereço completo,
   WhatsApp e botão "Como chegar".
 
+## Publicação (teste)
+
+Vercel, projeto `audace-galvanica` (conta Leandrweb83), raiz `audace-galvanica/`, saída `.`, sem build.
+Link público de teste: https://audace-galvanica-leandrweb83.vercel.app (noindex via `vercel.json`).
+O projeto não está ligado ao Git para deploy automático: cada atualização é publicada sob demanda.
+Proteção de acesso da Vercel desligada a pedido do cliente (link público).
+
 ## SEO (auditoria pré-lançamento)
 
 Feito: title com Limeira-SP (54) e description (155) no tamanho; um H1 e hierarquia H2/H3 correta; 100% das imagens com
