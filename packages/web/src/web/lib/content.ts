@@ -109,8 +109,13 @@ export const products = withPanelEdits(content.products).map((p) =>
   return a.name.localeCompare(b.name, "pt-BR");
 });
 
-export const clients = content.clients;
-export const testimonials = content.testimonials;
+/** Listas como vêm no código (base do editor de depoimentos e clientes). */
+export const DEFAULT_CLIENTS: readonly Client[] = content.clients;
+export const DEFAULT_TESTIMONIALS: readonly Testimonial[] = content.testimonials;
+
+/** Lista inteira editada no painel substitui a do código (coleção "lista"). */
+export const clients = editedDocs<{ items: Client[] }>("lista").clientes?.items ?? content.clients;
+export const testimonials = editedDocs<{ items: Testimonial[] }>("lista").depoimentos?.items ?? content.testimonials;
 export const projects = content.projects;
 /** Posts como vêm no código, sem as edições do painel (base do editor do blog). */
 export const DEFAULT_POSTS: readonly Post[] = content.posts;

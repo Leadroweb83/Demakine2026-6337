@@ -8,6 +8,8 @@ export const CONTENT_COLLECTIONS: Record<string, Role[]> = {
   produto: ["admin", "editor"],
   post: ["admin", "editor"],
   case: ["admin", "editor"],
+  /** listas inteiras: "clientes" (logos) e "depoimentos" */
+  lista: ["admin", "editor"],
 };
 
 export const CONTENT_KEY_RE = /^[a-z0-9-]{1,100}$/;
