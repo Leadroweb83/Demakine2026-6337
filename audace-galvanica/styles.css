@@ -817,6 +817,58 @@ button, input, select, textarea { font: inherit; color: inherit; }
   }
 }
 
+/* Antes e depois: slider de comparação (componente "Image Comparison Slider" reescrito em JS puro) */
+.compare {
+  padding-block: calc(46 * var(--u)) calc(40 * var(--u));
+  background:
+    radial-gradient(50% 60% at 50% 62%, rgba(195, 170, 104, .14), transparent 70%),
+    radial-gradient(60% 50% at 50% 0%, rgba(25, 61, 137, .28), transparent 70%),
+    var(--bg);
+}
+.compare__inner { display: grid; justify-items: center; gap: calc(22 * var(--u)); padding-inline: calc(55 * var(--u)); text-align: center; }
+.compare .eyebrow { font-size: max(calc(8 * var(--u)), 11px); color: var(--gold); letter-spacing: .34em; }
+.compare .section-title { margin-top: calc(10 * var(--u)); font-size: calc(22 * var(--u)); line-height: 1.18; }
+.compare .body-text { margin: calc(8 * var(--u)) auto 0; font-size: max(calc(10.5 * var(--u)), 15px); color: var(--muted-light); }
+.compare__frame {
+  --pos: 50%;
+  position: relative; width: min(100%, calc(560 * var(--u))); aspect-ratio: 1680 / 944; overflow: hidden;
+  border: 1px solid rgba(195, 170, 104, .45); border-radius: calc(6 * var(--u));
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .95), 0 0 0 1px rgba(0, 0, 0, .4);
+  cursor: ew-resize; touch-action: pan-y; user-select: none; -webkit-user-select: none;
+}
+.compare__frame picture, .compare__frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.compare__before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.compare__handle {
+  position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; transform: translateX(-50%); pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--line-gold) 12%, var(--line-gold) 88%, transparent);
+  box-shadow: 0 0 14px rgba(195, 170, 104, .6);
+}
+.compare__knob {
+  position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
+  transform: translate(-50%, -50%); background: var(--gold-gradient); color: #141414;
+  box-shadow: 0 8px 22px -6px rgba(0, 0, 0, .8); transition: transform .25s var(--ease);
+}
+.compare__frame.is-dragging .compare__knob { transform: translate(-50%, -50%) scale(1.1); }
+.compare__label {
+  position: absolute; top: 14px; padding: 6px 12px; border-radius: 999px; pointer-events: none;
+  background: rgba(10, 10, 10, .72); border: 1px solid rgba(195, 170, 104, .4);
+  font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--white);
+}
+.compare__label--before { left: 14px; }
+.compare__label--after { right: 14px; }
+.compare__range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
+.compare__frame:has(.compare__range:focus-visible) { box-shadow: var(--focus-ring); }
+.compare__note { font-size: 12px; color: var(--eyebrow-muted); }
+@media (max-width: 1023px) {
+  .compare { padding-block: 64px; }
+  .compare__inner { padding-inline: var(--gutter); gap: 28px; }
+  .compare .section-title { font-size: clamp(28px, 4.6vw, 38px); }
+  .compare__frame { width: calc(100% + 2 * var(--gutter)); max-width: 760px; border-radius: 0; border-inline: 0; }
+  .compare__label { top: 10px; font-size: 10px; padding: 5px 10px; }
+  .compare__label--before { left: 10px; }
+  .compare__label--after { right: 10px; }
+}
+
 /* Feixes de luz (efeito "Beams", reescrito em JS puro) sobre o degradê azul, atrás de fotos e textos */
 .beams {
   position: absolute; inset: 0; z-index: -4; width: 100%; height: 100%; pointer-events: none;

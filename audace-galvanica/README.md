@@ -65,6 +65,11 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   pausa com a aba oculta e fica parado com movimento reduzido). Cores no azul da paleta, com alguns feixes dourados.
 - Mapa: pin com o símbolo da logo (recortado do arquivo oficial, sem redesenho) sobre o centro do mapa, cobrindo o
   marcador padrão. O mapa não arrasta; o clique abre o perfil no Google Maps.
+- Antes e depois (entre Como funciona e Instagram): slider de comparação (componente "Image Comparison Slider"
+  reescrito em JS puro: arrastar com mouse/toque, setas do teclado num campo de faixa acessível, varredura curta
+  na primeira exibição). As duas imagens do anel foram **geradas com IA no Canva a pedido do cliente** (a bruta é
+  uma edição da dourada, mesmo enquadramento) e a seção diz "Imagem ilustrativa do processo". Trocar por fotos
+  reais do mesmo anel quando houver: `images/anel/anel-bruto*` e `images/anel/anel-banhado-ouro*` (1680×944).
 - Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
 
 ## Decisões sobre os assets (versão anterior, histórico)

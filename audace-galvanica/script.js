@@ -344,3 +344,57 @@
     t = setTimeout(function () { list.forEach(function (b) { b.resize(); }); }, 200);
   });
 })();
+
+/* ---------- Antes e depois: slider de comparação ----------
+   Versão em JS puro do componente "Image Comparison Slider": arrastar (mouse ou toque)
+   ou usar as setas do teclado no campo de faixa acessível. Na primeira vez que aparece,
+   o divisor faz uma varredura curta para mostrar que pode ser arrastado. */
+(function () {
+  'use strict';
+  var frame = document.querySelector('[data-compare]');
+  if (!frame) return;
+  var range = frame.querySelector('.compare__range');
+  var dragging = false;
+
+  function set(p) {
+    p = Math.max(0, Math.min(100, p));
+    frame.style.setProperty('--pos', p + '%');
+    range.value = Math.round(p);
+  }
+  function fromX(x) { var r = frame.getBoundingClientRect(); set((x - r.left) / r.width * 100); }
+
+  frame.addEventListener('pointerdown', function (e) {
+    dragging = true; frame.classList.add('is-dragging');
+    frame.setPointerCapture(e.pointerId); fromX(e.clientX);
+  });
+  frame.addEventListener('pointermove', function (e) { if (dragging) fromX(e.clientX); });
+  function stop() { dragging = false; frame.classList.remove('is-dragging'); }
+  frame.addEventListener('pointerup', stop);
+  frame.addEventListener('pointercancel', stop);
+  range.addEventListener('input', function () { set(+range.value); });
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (en) {
+    if (!en[0].isIntersecting) return;
+    io.disconnect();
+    var keys = [[0, 50], [900, 22], [1900, 78], [2800, 50]], t0 = null;
+    function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+    function step(ts) {
+      if (dragging) return;
+      if (t0 === null) t0 = ts;
+      var t = ts - t0 - 400;
+      if (t < 0) return requestAnimationFrame(step);
+      for (var i = 1; i < keys.length; i++) {
+        if (t <= keys[i][0]) {
+          var a = keys[i - 1], b = keys[i], k = ease((t - a[0]) / (b[0] - a[0]));
+          set(a[1] + (b[1] - a[1]) * k);
+          return requestAnimationFrame(step);
+        }
+      }
+      set(50);
+    }
+    requestAnimationFrame(step);
+  }, { threshold: 0.5 });
+  io.observe(frame);
+})();
