@@ -824,6 +824,7 @@ export default function Loja() {
         title="Loja Técnica Demakine | Peças, correias e consumíveis direto da fábrica"
         description="Compre peça de reposição, correia, linha e equipamento de movimentação direto da fábrica Demakine, em Limeira/SP. Pix com desconto, cartão em 12x e boleto para CNPJ."
         path="/loja"
+        noindex
       />
 
       <ShopTicker />

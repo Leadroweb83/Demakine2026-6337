@@ -21,9 +21,9 @@
   --color-ag-gold: #d8a02a;
   --color-ag-cream: #f5f2e7;
 
-  --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Montserrat Variable", "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans Variable", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 @layer base {

@@ -214,7 +214,7 @@ export default function ExportLanding() {
       <header className="sticky top-0 z-40 border-b border-dm-line bg-white/95 backdrop-blur">
         <div className="dm-container flex h-16 items-center justify-between gap-4">
           <a href="/" className="flex items-center gap-3">
-            <img src="/img/site/logo-blue.png" alt="Demakine" className="h-8 w-auto object-contain" />
+            <img src="/img/site/logo-blue.webp" width={293} height={80} alt="Demakine" className="h-8 w-auto object-contain" />
           </a>
           <div className="flex items-center gap-2.5">
             <button

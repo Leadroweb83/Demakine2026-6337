@@ -79,7 +79,9 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <div>
             <img
-              src="/img/site/logo-white.png"
+              src="/img/site/logo-white.webp"
+              width={293}
+              height={80}
               alt="Demakine"
               className="h-9 w-auto object-contain"
             />

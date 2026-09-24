@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
+import { Seo } from "./seo";
 
 /** Reserva do middleware da Vercel: se o endereço tem redirecionamento cadastrado, vai para o destino. */
 function useRedirectFallback() {
@@ -42,6 +43,17 @@ function useRedirectFallback() {
 /** Antes de mostrar "não encontrado", confere se o endereço tem redirecionamento cadastrado no painel. */
 export function RedirectGate({ children }: { children: ReactNode }) {
   const checking = useRedirectFallback();
+  const [location] = useLocation();
   if (checking) return <div className="min-h-[50vh]" aria-busy="true" />;
-  return <>{children}</>;
+  return (
+    <>
+      <Seo
+        title="Página não encontrada | Demakine"
+        description="O endereço acessado não existe ou foi movido. Veja o catálogo de equipamentos da Demakine."
+        path={location}
+        noindex
+      />
+      {children}
+    </>
+  );
 }

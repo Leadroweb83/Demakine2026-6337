@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Redirect, Route, Switch } from "wouter";
 import { RedirectGate } from "./components/redirect-gate";
 import { Provider } from "./components/provider";
@@ -25,8 +26,9 @@ import CaseStudyPage from "./pages/case";
 import Contato from "./pages/contato";
 import Vagas from "./pages/vagas";
 import Vaga from "./pages/vaga";
-import Admin from "./pages/admin";
-import Loja from "./pages/loja";
+// painel e loja só baixam quando alguém abre essas páginas: o visitante do site não carrega esse código
+const Admin = lazy(() => import("./pages/admin"));
+const Loja = lazy(() => import("./pages/loja"));
 import ExportLanding from "./pages/export";
 import { PoliticaDePrivacidade, TermosDeUso } from "./pages/legal";
 
@@ -91,8 +93,16 @@ function App() {
       <CompareProvider>
         <ScrollProgress />
         <Switch>
-          <Route path="/admin" component={Admin} />
-          <Route path="/loja" component={Loja} />
+          <Route path="/admin">
+            <Suspense fallback={null}>
+              <Admin />
+            </Suspense>
+          </Route>
+          <Route path="/loja">
+            <Suspense fallback={null}>
+              <Loja />
+            </Suspense>
+          </Route>
           <Route path="/export" component={ExportLanding} />
           <Route component={Site} />
         </Switch>

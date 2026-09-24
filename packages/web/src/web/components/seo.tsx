@@ -10,6 +10,8 @@ type SeoProps = {
   image?: string;
   type?: "website" | "article" | "product";
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** página que não deve ir para o Google (404, loja ainda não lançada) */
+  noindex?: boolean;
 };
 
 function setMeta(attr: "name" | "property", key: string, value: string) {
@@ -22,6 +24,14 @@ function setMeta(attr: "name" | "property", key: string, value: string) {
   tag.setAttribute("content", value);
 }
 
+/** Aviso "não indexar": liga nas páginas marcadas e sai nas demais (o site troca de página sem recarregar). */
+function setRobots(noindex: boolean) {
+  const tag = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]');
+  if (!noindex) return tag?.remove();
+  if (tag) tag.setAttribute("content", "noindex, follow");
+  else setMeta("name", "robots", "noindex, follow");
+}
+
 function setLink(rel: string, href: string) {
   let tag = document.head.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
   if (!tag) {
@@ -32,7 +42,15 @@ function setLink(rel: string, href: string) {
   tag.setAttribute("href", href);
 }
 
-export function Seo({ title: baseTitle, description: baseDescription, path = "/", image, type = "website", jsonLd }: SeoProps) {
+export function Seo({
+  title: baseTitle,
+  description: baseDescription,
+  path = "/",
+  image,
+  type = "website",
+  jsonLd,
+  noindex = false,
+}: SeoProps) {
   // título e descrição editados no painel (SEO das páginas fixas) valem sobre o padrão da página
   const edited = editedDoc<{ title?: string; description?: string }>("seo", seoKey(path));
   const title = edited?.title?.trim() || baseTitle;
@@ -44,7 +62,10 @@ export function Seo({ title: baseTitle, description: baseDescription, path = "/"
 
     document.title = title;
     setMeta("name", "description", description);
-    setLink("canonical", url);
+    setRobots(noindex);
+    // página fora do Google não aponta canonical (um 404 não pode herdar o endereço da página anterior)
+    if (noindex) document.head.querySelector('link[rel="canonical"]')?.remove();
+    else setLink("canonical", url);
     setMeta("property", "og:title", title);
     setMeta("property", "og:description", description);
     setMeta("property", "og:url", url);
@@ -54,7 +75,7 @@ export function Seo({ title: baseTitle, description: baseDescription, path = "/"
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
     setMeta("name", "twitter:image", ogImage);
-  }, [title, description, path, image, type]);
+  }, [title, description, path, image, type, noindex]);
 
   useEffect(() => {
     if (!jsonLd) return;

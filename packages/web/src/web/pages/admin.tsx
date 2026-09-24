@@ -152,7 +152,9 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           <div className="flex items-center justify-between px-4 py-5">
             {!collapsed && (
               <img
-                src="/img/site/logo-white.png"
+                src="/img/site/logo-white.webp"
+                width={293}
+                height={80}
                 alt="Demakine"
                 className="h-8 w-auto object-contain"
               />
@@ -250,7 +252,9 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
             <Menu size={20} />
           </button>
           <img
-            src="/img/site/logo-white.png"
+            src="/img/site/logo-white.webp"
+            width={293}
+            height={80}
             alt="Demakine"
             className="h-7 w-auto object-contain"
           />

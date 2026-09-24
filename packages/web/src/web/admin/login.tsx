@@ -39,7 +39,9 @@ export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
         className="relative w-full max-w-[400px] rounded-3xl bg-white p-8 shadow-2xl"
       >
         <img
-          src="/img/site/logo-blue.png"
+          src="/img/site/logo-blue.webp"
+          width={293}
+          height={80}
           alt="Demakine"
           className="mx-auto h-10 w-auto object-contain"
         />

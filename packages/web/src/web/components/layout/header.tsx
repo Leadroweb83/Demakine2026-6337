@@ -140,7 +140,9 @@ export function Header() {
         <div className="dm-container flex h-[68px] items-center gap-6">
           <Link href="/" className="shrink-0" aria-label="Demakine, página inicial">
             <img
-              src="/img/site/logo-blue.png"
+              src="/img/site/logo-blue.webp"
+              width={293}
+              height={80}
               alt="Demakine Equipamentos Agroindustriais"
               className="h-8 w-auto object-contain md:h-9"
             />
