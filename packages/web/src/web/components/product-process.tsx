@@ -10,11 +10,11 @@ const ICONS: Record<ProcessStep["icon"], typeof Vibrate> = {
   ensaque: PackageCheck,
 };
 
-export function ProductProcess({ process }: { process: Process }) {
+export function ProductProcess({ process, tone = "white" }: { process: Process; tone?: "white" | "surface" }) {
   const max = Math.max(...(process.capacity?.rows.map((r) => r.value) ?? [1]));
 
   return (
-    <Section>
+    <Section tone={tone}>
       <Reveal>
         <p className="eyebrow text-dm-blue">Como funciona</p>
         <h2 className="h2 mt-3">{process.title}</h2>

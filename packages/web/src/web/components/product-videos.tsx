@@ -11,7 +11,15 @@ import { cn } from "@/lib/utils";
  * Vídeos do produto em facade: a capa é local e o iframe do YouTube (modo sem cookies)
  * só carrega depois do clique, então nada de terceiro roda antes do visitante escolher.
  */
-export function ProductVideos({ productName, videos }: { productName: string; videos: ProductVideo[] }) {
+export function ProductVideos({
+  productName,
+  videos,
+  tone = "white",
+}: {
+  productName: string;
+  videos: ProductVideo[];
+  tone?: "white" | "surface";
+}) {
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState(false);
   const video = videos[current];
@@ -24,7 +32,7 @@ export function ProductVideos({ productName, videos }: { productName: string; vi
   };
 
   return (
-    <Section>
+    <Section tone={tone}>
       <div className="grid items-start gap-10 lg:grid-cols-[1.35fr_1fr] lg:gap-14">
         <Reveal>
           <div className="overflow-hidden rounded-2xl border border-dm-line bg-black shadow-[0_24px_60px_rgba(10,31,61,0.18)]">

@@ -14,7 +14,10 @@ const COLLECTION: Record<string, string> = {
   lista: "a lista",
   seo: "o SEO da página",
   home: "a home",
+  layout: "a ordem das seções",
 };
+
+const LAYOUT_PAGE: Record<string, string> = { home: "da home", produto: "das páginas de produto" };
 
 /** Só os nomes dos campos enviados: valores (senha, valor de proposta, texto) nunca vão para o registro. */
 const FIELD: Record<string, string> = {
@@ -43,7 +46,8 @@ export function describe(method: string, path: string, body: Record<string, unkn
   let m: RegExpMatchArray | null;
 
   if ((m = p.match(/^\/admin\/conteudo\/([^/]+)\/([^/]+)$/))) {
-    const what = `${COLLECTION[m[1]!] ?? m[1]} ${m[1] === "site" || m[1] === "home" ? "" : m[2]}`.trim();
+    const suffix = m[1] === "site" || m[1] === "home" ? "" : m[1] === "layout" ? LAYOUT_PAGE[m[2]!] ?? m[2] : m[2];
+    const what = `${COLLECTION[m[1]!] ?? m[1]} ${suffix}`.trim();
     if (method === "DELETE") return `Voltou ao original ${what}`;
     if (body.deleted === true) return `Ocultou ${what}`;
     return `Editou ${what}`;

@@ -14,6 +14,8 @@ export const CONTENT_COLLECTIONS: Record<string, Role[]> = {
   seo: ["admin"],
   /** textos da home e vitrine de campeãs (chave "main") */
   home: ["admin", "editor"],
+  /** ordem e visibilidade das seções: chaves "home" e "produto" (ver web/lib/page-layout) */
+  layout: ["admin", "editor"],
 };
 
 export const CONTENT_KEY_RE = /^[a-z0-9-]{1,100}$/;

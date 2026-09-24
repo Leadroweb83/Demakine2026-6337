@@ -20,6 +20,7 @@ import {
   Quote,
   SearchCheck,
   House,
+  ListOrdered,
   Trash2,
 } from "lucide-react";
 import { api } from "../lib/api";
@@ -41,6 +42,7 @@ import { AdminRedirects } from "../admin/redirects";
 import { AdminLists } from "../admin/lists";
 import { AdminSeo } from "../admin/seo";
 import { AdminHome } from "../admin/home";
+import { AdminSections } from "../admin/sections";
 import { AdminTrash } from "../admin/trash";
 import { Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
@@ -59,6 +61,7 @@ const NAV: NavItem[] = [
   { id: "overview", label: "Dashboard", Icon: BarChart3, area: "livre" },
   { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
   { id: "home", label: "Home", Icon: House, area: "conteudo" },
+  { id: "secoes", label: "Ordem das seções", Icon: ListOrdered, area: "conteudo" },
   { id: "cases", label: "Cases", Icon: Newspaper, area: "conteudo" },
   { id: "listas", label: "Clientes e depoimentos", Icon: Quote, area: "conteudo" },
   { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo" },
@@ -280,6 +283,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "listas" && <AdminLists />}
           {current === "seo" && <AdminSeo />}
           {current === "home" && <AdminHome />}
+          {current === "secoes" && <AdminSections />}
           {current === "lixeira" && <AdminTrash user={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}
