@@ -36,6 +36,7 @@ import {
 import { canSeeLeadValue, isLeadStatus } from "./lib/leads";
 import { buildSitemap } from "./lib/sitemap";
 import { auditMiddleware } from "./lib/audit";
+import { normalizePath, normalizeTarget } from "./lib/redirects";
 import { emailConfigured, emailLayout, sendEmail } from "./lib/email";
 import {
   DEFAULT_NOTIFY,
@@ -152,6 +153,12 @@ const app = new Hono<Env>()
     c.header('Cache-Control', 'public, max-age=0, must-revalidate');
     c.header('CDN-Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
     return c.body(buildSitemap(docs, jobs));
+  })
+  .get('/redirects', async (c) => {
+    const rows = await db.select().from(schema.redirects);
+    c.header('Cache-Control', 'public, max-age=0, must-revalidate');
+    c.header('CDN-Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
+    return c.json({ items: rows.map((r) => ({ from: r.fromPath, to: r.toPath, permanent: r.permanent })) }, 200);
   })
   // -------------------------------------------------- conteúdo editável (site)
   .get('/conteudo', async (c) => {
@@ -533,6 +540,62 @@ const app = new Hono<Env>()
     }
     await db.delete(schema.media).where(eq(schema.media.id, id));
     await s3.send(new DeleteObjectCommand({ Bucket: MEDIA_BUCKET, Key: item.key })).catch(() => undefined);
+    return c.json({ ok: true }, 200);
+  })
+  // ------------------------------------------------------- redirecionamentos
+  .get('/admin/redirecionamentos', requireRole('admin'), async (c) => {
+    const items = await db.select().from(schema.redirects).orderBy(desc(schema.redirects.updatedAt));
+    return c.json({ items }, 200);
+  })
+  .post(
+    '/admin/redirecionamentos',
+    requireRole('admin'),
+    validator('json', (v) => (v ?? {}) as { from?: string; to?: string; permanent?: boolean; note?: string }),
+    async (c) => {
+      const body = c.req.valid('json');
+      const from = normalizePath(body.from ?? '');
+      const to = normalizeTarget(body.to ?? '');
+      if (!from || from === '/') return c.json({ error: 'Endereço antigo inválido' }, 400);
+      if (!to) return c.json({ error: 'Destino inválido: use /caminho ou https://...' }, 400);
+      if (normalizePath(to) === from) return c.json({ error: 'O destino é igual à origem' }, 400);
+      const [item] = await db
+        .insert(schema.redirects)
+        .values({ fromPath: from, toPath: to, permanent: body.permanent !== false, note: body.note?.trim().slice(0, 200) || null, createdBy: c.get('user')!.id })
+        .onConflictDoUpdate({
+          target: schema.redirects.fromPath,
+          set: { toPath: to, permanent: body.permanent !== false, note: body.note?.trim().slice(0, 200) || null, updatedAt: new Date() },
+        })
+        .returning();
+      return c.json({ item }, 201);
+    },
+  )
+  .post(
+    '/admin/redirecionamentos/lote',
+    requireRole('admin'),
+    validator('json', (v) => (v ?? {}) as { text?: string }),
+    async (c) => {
+      // uma linha por redirecionamento: "antigo -> novo" (também aceita tab, ; ou espaço)
+      const lines = (c.req.valid('json').text ?? '').split('\n').map((l) => l.trim()).filter(Boolean).slice(0, 500);
+      const ok: { from: string; to: string }[] = [];
+      const bad: string[] = [];
+      for (const line of lines) {
+        const parts = line.split(/\s*(?:->|=>|\t|;|\s)\s*/).filter(Boolean);
+        const from = normalizePath(parts[0] ?? '');
+        const to = normalizeTarget(parts[1] ?? '');
+        if (!from || from === '/' || !to || normalizePath(to) === from) bad.push(line);
+        else ok.push({ from, to });
+      }
+      for (const r of ok) {
+        await db
+          .insert(schema.redirects)
+          .values({ fromPath: r.from, toPath: r.to, permanent: true, createdBy: c.get('user')!.id, note: 'importado em lote' })
+          .onConflictDoUpdate({ target: schema.redirects.fromPath, set: { toPath: r.to, updatedAt: new Date() } });
+      }
+      return c.json({ saved: ok.length, invalid: bad }, 200);
+    },
+  )
+  .delete('/admin/redirecionamentos/:id', requireRole('admin'), async (c) => {
+    await db.delete(schema.redirects).where(eq(schema.redirects.id, Number(c.req.param('id'))));
     return c.json({ ok: true }, 200);
   })
   // ------------------------------------------------------ registro de atividades

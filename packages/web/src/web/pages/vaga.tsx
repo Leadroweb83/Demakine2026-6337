@@ -1,4 +1,5 @@
 import { useParams } from "wouter";
+import { RedirectGate } from "@/components/redirect-gate";
 import { useQuery } from "@tanstack/react-query";
 import { Briefcase, CalendarClock, Check, MapPin, Wallet } from "lucide-react";
 import { Seo } from "@/components/seo";
@@ -86,16 +87,18 @@ export default function Vaga() {
   const job = jobQuery.data;
   if (!job) {
     return (
-      <Section>
-        <h1 className="h2">Vaga não encontrada</h1>
-        <p className="mt-3 text-[16px] text-dm-gray">
-          Ela pode ter sido encerrada. Veja as vagas abertas ou cadastre seu currículo no banco de
-          talentos.
-        </p>
-        <div className="mt-6">
-          <BtnPrimary to="/vagas">Ver vagas abertas</BtnPrimary>
-        </div>
-      </Section>
+      <RedirectGate>
+        <Section>
+          <h1 className="h2">Vaga não encontrada</h1>
+          <p className="mt-3 text-[16px] text-dm-gray">
+            Ela pode ter sido encerrada. Veja as vagas abertas ou cadastre seu currículo no banco de
+            talentos.
+          </p>
+          <div className="mt-6">
+            <BtnPrimary to="/vagas">Ver vagas abertas</BtnPrimary>
+          </div>
+        </Section>
+      </RedirectGate>
     );
   }
 

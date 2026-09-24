@@ -49,6 +49,18 @@ export const contentDocs = pgTable(
   (t) => [primaryKey({ columns: [t.collection, t.key] })],
 );
 
+/** Redirecionamentos (301/302) aplicados pelo middleware da Vercel: endereço antigo -> novo. */
+export const redirects = pgTable("redirects", {
+  id: serial("id").primaryKey(),
+  fromPath: text("from_path").notNull().unique(),
+  toPath: text("to_path").notNull(),
+  permanent: boolean("permanent").default(true).notNull(),
+  note: text("note"),
+  createdBy: text("created_by"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 /** Registro de atividades do painel: quem alterou o quê e quando (sem valores sensíveis). */
 export const auditLog = pgTable(
   "audit_log",

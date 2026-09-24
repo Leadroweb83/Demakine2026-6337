@@ -1,4 +1,5 @@
 import { Link, useParams } from "wouter";
+import { RedirectGate } from "@/components/redirect-gate";
 import { AlertTriangle, ArrowRight, BadgeCheck, Calculator, Check, Info, Quote } from "lucide-react";
 import { Seo } from "@/components/seo";
 import {
@@ -23,22 +24,24 @@ export default function CaseStudyPage() {
 
   if (!item) {
     return (
-      <Section>
-        <p className="eyebrow text-dm-blue">Aplicações</p>
-        <h1 className="h2 mt-3">Aplicação não encontrada</h1>
-        <div className="mt-8 flex flex-wrap gap-3">
-          {caseStudies.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/cases/${c.slug}`}
-              className="inline-flex items-center gap-2 rounded-full border border-dm-line px-4 py-2.5 text-[14.5px] font-semibold text-dm-ink/80 hover:border-dm-blue/40 hover:text-dm-blue"
-            >
-              {c.title}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          ))}
-        </div>
-      </Section>
+      <RedirectGate>
+        <Section>
+          <p className="eyebrow text-dm-blue">Aplicações</p>
+          <h1 className="h2 mt-3">Aplicação não encontrada</h1>
+          <div className="mt-8 flex flex-wrap gap-3">
+            {caseStudies.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/cases/${c.slug}`}
+                className="inline-flex items-center gap-2 rounded-full border border-dm-line px-4 py-2.5 text-[14.5px] font-semibold text-dm-ink/80 hover:border-dm-blue/40 hover:text-dm-blue"
+              >
+                {c.title}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ))}
+          </div>
+        </Section>
+      </RedirectGate>
     );
   }
 

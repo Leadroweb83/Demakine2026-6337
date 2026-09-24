@@ -37,5 +37,6 @@
       "path": "/api/cron/diario",
       "schedule": "0 11 * * *"
     }
-  ]
+  ],
+  "trailingSlash": false
 }

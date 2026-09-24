@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { RedirectGate } from "@/components/redirect-gate";
 import { Link, useParams } from "wouter";
 import {
   AlertTriangle,
@@ -41,15 +42,17 @@ import { cn } from "@/lib/utils";
 
 function NotFound() {
   return (
-    <Section>
-      <h1 className="h2">Equipamento não encontrado</h1>
-      <p className="mt-3 text-[16px] text-dm-gray">
-        Esse item pode ter mudado de endereço. Veja o catálogo completo.
-      </p>
-      <div className="mt-6">
-        <BtnPrimary to="/produtos">Ir para o catálogo</BtnPrimary>
-      </div>
-    </Section>
+    <RedirectGate>
+      <Section>
+        <h1 className="h2">Equipamento não encontrado</h1>
+        <p className="mt-3 text-[16px] text-dm-gray">
+          Esse item pode ter mudado de endereço. Veja o catálogo completo.
+        </p>
+        <div className="mt-6">
+          <BtnPrimary to="/produtos">Ir para o catálogo</BtnPrimary>
+        </div>
+      </Section>
+    </RedirectGate>
   );
 }
 

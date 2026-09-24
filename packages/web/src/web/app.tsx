@@ -1,4 +1,5 @@
 import { Redirect, Route, Switch } from "wouter";
+import { RedirectGate } from "./components/redirect-gate";
 import { Provider } from "./components/provider";
 import { CompareProvider } from "./components/compare";
 import { ScrollProgress, StickyCta } from "./components/sticky-cta";
@@ -31,20 +32,22 @@ import { PoliticaDePrivacidade, TermosDeUso } from "./pages/legal";
 
 function NotFound() {
   return (
-    <Section>
-      <p className="eyebrow text-dm-blue">Erro 404</p>
-      <h1 className="h2 mt-3">Página não encontrada</h1>
-      <p className="mt-4 max-w-xl text-[16.5px] text-dm-gray">
-        O endereço que você acessou não existe ou foi movido. Veja o catálogo de equipamentos ou fale
-        com um especialista.
-      </p>
-      <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-        <BtnPrimary to="/produtos">Ver catálogo</BtnPrimary>
-        <BtnPrimary to="/contato" className="bg-dm-blue hover:bg-[#0d3480]">
-          Falar com a Demakine
-        </BtnPrimary>
-      </div>
-    </Section>
+    <RedirectGate>
+      <Section>
+        <p className="eyebrow text-dm-blue">Erro 404</p>
+        <h1 className="h2 mt-3">Página não encontrada</h1>
+        <p className="mt-4 max-w-xl text-[16.5px] text-dm-gray">
+          O endereço que você acessou não existe ou foi movido. Veja o catálogo de equipamentos ou fale
+          com um especialista.
+        </p>
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <BtnPrimary to="/produtos">Ver catálogo</BtnPrimary>
+          <BtnPrimary to="/contato" className="bg-dm-blue hover:bg-[#0d3480]">
+            Falar com a Demakine
+          </BtnPrimary>
+        </div>
+      </Section>
+    </RedirectGate>
   );
 }
 

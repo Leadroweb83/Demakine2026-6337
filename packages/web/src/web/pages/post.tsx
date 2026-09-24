@@ -1,4 +1,5 @@
 import { Link, useParams } from "wouter";
+import { RedirectGate } from "@/components/redirect-gate";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { Breadcrumb, BtnPrimary, BtnWhats, CtaBand, Section } from "@/components/kit";
@@ -15,13 +16,15 @@ export default function Post() {
 
   if (!post) {
     return (
-      <Section>
-        <h1 className="h2">Artigo não encontrado</h1>
-        <p className="mt-3 text-[16px] text-dm-gray">Veja os artigos publicados no nosso blog.</p>
-        <div className="mt-6">
-          <BtnPrimary to="/blog">Ir para o blog</BtnPrimary>
-        </div>
-      </Section>
+      <RedirectGate>
+        <Section>
+          <h1 className="h2">Artigo não encontrado</h1>
+          <p className="mt-3 text-[16px] text-dm-gray">Veja os artigos publicados no nosso blog.</p>
+          <div className="mt-6">
+            <BtnPrimary to="/blog">Ir para o blog</BtnPrimary>
+          </div>
+        </Section>
+      </RedirectGate>
     );
   }
 
