@@ -245,3 +245,102 @@
     io.observe(box);
   } else load();
 })();
+
+/* ---------- Feixes de luz nos fundos azuis ----------
+   Versão em JS puro do componente "Beams Background": feixes inclinados que sobem,
+   pulsam e se desfocam. Cores puxadas para o azul #193D89 da paleta, com alguns
+   feixes dourados. Desenha em baixa resolução (o desfoque esconde) e só anima
+   quando a seção está na tela; com movimento reduzido fica um quadro parado. */
+(function () {
+  'use strict';
+  var canvases = document.querySelectorAll('[data-beams]');
+  if (!canvases.length || !window.requestAnimationFrame) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SCALE = 0.25;
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function Beams(canvas) {
+    this.c = canvas; this.ctx = canvas.getContext('2d'); this.beams = []; this.running = false; this.raf = 0;
+    this.visible = false;
+    this.resize();
+  }
+  Beams.prototype.make = function (i, n, fromBottom) {
+    var W = this.W, H = this.H, k = SCALE;
+    var gold = i % 7 === 3;
+    var col = i % 3, sp = W / 3;
+    return {
+      x: fromBottom ? col * sp + sp / 2 + (Math.random() - 0.5) * sp * 0.5 : rand(-W * 0.25, W * 1.25),
+      y: fromBottom ? H + 100 * k : rand(-H * 0.25, H * 1.25),
+      w: (fromBottom ? rand(100, 200) : rand(30, 90)) * k * 1.4,
+      len: H * 2.5,
+      angle: rand(-35, -25) * Math.PI / 180,
+      speed: rand(0.5, 1.1) * k * 1.6,
+      op: gold ? rand(0.10, 0.16) : rand(0.16, 0.28),
+      hue: gold ? 42 : 205 + (i * 30) / n,
+      sat: gold ? 55 : 75,
+      pulse: rand(0, Math.PI * 2), ps: rand(0.02, 0.05)
+    };
+  };
+  Beams.prototype.resize = function () {
+    var r = this.c.getBoundingClientRect();
+    this.W = Math.max(1, Math.round(r.width * SCALE));
+    this.H = Math.max(1, Math.round(r.height * SCALE));
+    this.c.width = this.W; this.c.height = this.H;
+    var n = r.width < 768 ? 14 : 26;
+    this.beams = [];
+    for (var i = 0; i < n; i++) this.beams.push(this.make(i, n, false));
+    this.draw(false);
+  };
+  Beams.prototype.draw = function (move) {
+    var ctx = this.ctx, n = this.beams.length;
+    ctx.clearRect(0, 0, this.W, this.H);
+    for (var i = 0; i < n; i++) {
+      var b = this.beams[i];
+      if (move) {
+        b.y -= b.speed; b.pulse += b.ps;
+        if (b.y + b.len < -100 * SCALE) this.beams[i] = b = this.make(i, n, true);
+      }
+      var o = b.op * (0.8 + Math.sin(b.pulse) * 0.2);
+      var c = 'hsla(' + b.hue + ',' + b.sat + '%,60%,';
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.angle);
+      var g = ctx.createLinearGradient(0, 0, 0, b.len);
+      g.addColorStop(0, c + '0)'); g.addColorStop(0.1, c + o * 0.5 + ')');
+      g.addColorStop(0.4, c + o + ')'); g.addColorStop(0.6, c + o + ')');
+      g.addColorStop(0.9, c + o * 0.5 + ')'); g.addColorStop(1, c + '0)');
+      ctx.fillStyle = g; ctx.fillRect(-b.w / 2, 0, b.w, b.len);
+      ctx.restore();
+    }
+  };
+  Beams.prototype.loop = function () {
+    var self = this;
+    if (!self.running) return;
+    self.draw(true);
+    self.raf = requestAnimationFrame(function () { self.loop(); });
+  };
+  Beams.prototype.set = function (on) {
+    if (reduce || on === this.running) return;
+    this.running = on;
+    if (on) this.loop(); else cancelAnimationFrame(this.raf);
+  };
+
+  var list = Array.prototype.map.call(canvases, function (c) { var b = new Beams(c); c.classList.add('is-on'); return b; });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        list.forEach(function (b) { if (b.c === e.target) { b.visible = e.isIntersecting; b.set(b.visible && !document.hidden); } });
+      });
+    }, { rootMargin: '100px 0px' });
+    list.forEach(function (b) { io.observe(b.c); });
+  } else list.forEach(function (b) { b.visible = true; b.set(true); });
+
+  document.addEventListener('visibilitychange', function () {
+    list.forEach(function (b) { b.set(b.visible && !document.hidden); });
+  });
+  var t;
+  window.addEventListener('resize', function () {
+    clearTimeout(t);
+    t = setTimeout(function () { list.forEach(function (b) { b.resize(); }); }, 200);
+  });
+})();

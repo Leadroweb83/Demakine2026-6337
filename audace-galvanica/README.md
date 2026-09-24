@@ -59,6 +59,12 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 - Imagem de compartilhamento (OG) refeita com a foto nova do hero.
 - Os fundos e recortes anteriores (arte aprovada) saíram do ar e estão em `../audace-galvanica-fonte/imagens-anteriores/`.
 - Consultoria e Como funciona: fundo em degradê grafite #1C1C1E para azul #193D89.
+- Feixes de luz (componente "Beams Background" pedido pelo cliente) nas seções azuis: Consultoria, Como funciona,
+  Instagram e Onde estamos. O original é React + Tailwind + motion; o site é HTML/CSS/JS puro por regra do briefing,
+  então foi reescrito em JS puro (canvas em 1/4 da resolução com desfoque em CSS, anima só com a seção na tela,
+  pausa com a aba oculta e fica parado com movimento reduzido). Cores no azul da paleta, com alguns feixes dourados.
+- Mapa: pin com o símbolo da logo (recortado do arquivo oficial, sem redesenho) sobre o centro do mapa, cobrindo o
+  marcador padrão. O mapa não arrasta; o clique abre o perfil no Google Maps.
 - Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
 
 ## Decisões sobre os assets (versão anterior, histórico)
