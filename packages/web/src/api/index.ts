@@ -35,6 +35,7 @@ import {
 } from "./lib/jobs";
 import { canSeeLeadValue, isLeadStatus, ownerChangeError } from "./lib/leads";
 import { getContentSnapshot } from "./lib/content-snapshot";
+import { purgeOldVisits, recordPageView, visitsSummary } from "./lib/visits";
 import { TEAM_VIEW, blockedFor, cleanAccess, getDashboardAccess, saveDashboardAccess, stripDashboard } from "./lib/dashboard-access";
 import { buildSitemap } from "./lib/sitemap";
 import { auditMiddleware } from "./lib/audit";
@@ -60,6 +61,9 @@ type Env = {
   };
 };
 
+/** texto vindo do navegador: sem espaço sobrando e com tamanho máximo, vazio vira null */
+const clipText = (v: unknown, max: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : null);
+
 const app = new Hono<Env>()
   .use(cors({ origin: (origin) => origin ?? "*", credentials: true, exposeHeaders: ["set-auth-token"] }))
   .on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw))
@@ -79,6 +83,8 @@ const app = new Hono<Env>()
       message?: string;
       source?: string;
       attachments?: string[];
+      /** origem da visita que gerou o pedido (lib/visits.ts no site) */
+      traffic?: { source?: unknown; landing?: unknown; campaign?: unknown } | null;
     }>();
 
     if (!body.name || !body.phone) {
@@ -100,12 +106,26 @@ const app = new Hono<Env>()
           Array.isArray(body.attachments) && body.attachments.length
             ? JSON.stringify(body.attachments.slice(0, 3))
             : null,
+        trafficSource: clipText(body.traffic?.source, 40),
+        landingPath: clipText(body.traffic?.landing, 300),
+        utmCampaign: clipText(body.traffic?.campaign, 120),
       })
       .returning();
 
     // na Vercel a função encerra ao responder: o aviso precisa terminar antes
     if (lead) await safely(() => notifyNewLead(lead));
-    return c.json({ lead }, 201);
+    // o formulário só precisa saber que chegou: dados internos do lead não voltam para o navegador
+    return c.json({ lead: { id: lead!.id } }, 201);
+  })
+  // ------------------------------------------------ medição própria de visitas
+  .post('/v', async (c) => {
+    try {
+      const body = JSON.parse(await c.req.text()) as Parameters<typeof recordPageView>[1];
+      await recordPageView(c.req.raw.headers, body);
+    } catch {
+      /* visita mal formada: ignora sem erro, a medição não pode atrapalhar o site */
+    }
+    return c.body(null, 204);
   })
   .post('/newsletter', async (c) => {
     const body = await c.req.json<{ email: string; source?: string }>();
@@ -649,7 +669,8 @@ const app = new Hono<Env>()
     const followUps = await sendDailyFollowUps();
     const report = day === 1 ? await sendMonthlyReport() : null;
     const purged = await purgeTrash();
-    return c.json({ ok: true, followUps, report, purged }, 200);
+    const oldVisits = await purgeOldVisits();
+    return c.json({ ok: true, followUps, report, purged, oldVisits }, 200);
   })
   // ---------------------------------------------- avisos por e-mail (super admin)
   .get('/admin/avisos', requireRole(), async (c) => {
@@ -1191,6 +1212,12 @@ const app = new Hono<Env>()
         followUps,
       };
     return c.json(stripDashboard(payload, blocked), 200);
+  })
+  // ------------------------------------------------------------ visitas do site
+  .get('/admin/visitas', requireRole('admin'), async (c) => {
+    const raw = Number(c.req.query('dias') ?? '30');
+    const days = Number.isFinite(raw) ? Math.min(Math.max(Math.round(raw), 1), 365) : 30;
+    return c.json(await visitsSummary(days), 200);
   })
   // ------------------------------------------------ o que cada papel vê no dashboard
   .get('/admin/dashboard/acesso', requireRole(), async (c) => {

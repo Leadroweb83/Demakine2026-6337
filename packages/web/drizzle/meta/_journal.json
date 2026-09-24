@@ -78,6 +78,13 @@
       "when": 1790232055989,
       "tag": "0010_lixeira",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1790276889520,
+      "tag": "0011_visitas",
+      "breakpoints": true
     }
   ]
 }

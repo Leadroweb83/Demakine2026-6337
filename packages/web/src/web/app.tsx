@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 import { track } from "./lib/tracking";
+import { recordView } from "./lib/visits";
 import { RedirectGate } from "./components/redirect-gate";
 import { endFirstPaint } from "./components/reveal";
 import { Provider } from "./components/provider";
@@ -145,6 +146,8 @@ function App() {
   useEffect(() => endFirstPaint(), []);
   // troca de página dentro do site (sem recarregar) vira page_view_spa no GTM
   const [location] = useLocation();
+  // medição própria (painel > Visitas): toda página vista, inclusive a primeira
+  useEffect(() => recordView(location), [location]);
   const firstView = useRef(true);
   useEffect(() => {
     if (firstView.current) {

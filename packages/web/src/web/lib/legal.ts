@@ -107,6 +107,10 @@ export const privacySections: LegalSection[] = [
         kind: "p",
         text: "Os cookies de medição e anúncios são do Google (Google Tag Manager, Google Analytics e Google Ads). Servem para entender quais páginas e produtos são mais procurados e para medir o resultado das nossas campanhas, inclusive quando alguém pede orçamento pelo site ou pelo WhatsApp. Eles só são ativados depois que você aceita no banner, e você pode mudar de ideia a qualquer momento pelo link \"Preferências de cookies\", no rodapé, ou apagando os cookies do navegador.",
       },
+      {
+        kind: "p",
+        text: "Além disso, contamos as visitas com uma medição própria, sem cookies: a página vista, de onde você chegou (por exemplo, uma busca no Google), o tipo de aparelho e a cidade aproximada pela conexão. O endereço IP não é guardado e não dá para identificar você nem acompanhar suas visitas de um dia para o outro. Esses números servem só para melhorar o site e ficam guardados por até 13 meses.",
+      },
     ],
   },
   {

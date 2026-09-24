@@ -31,6 +31,11 @@ export const leads = pgTable("leads", {
   /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
   deletedBy: text("deleted_by"),
+  /** de onde veio a visita que gerou o lead (Google, Instagram, anúncio...), ver lib/visits.ts */
+  trafficSource: text("traffic_source"),
+  /** primeira página vista na visita */
+  landingPath: text("landing_path"),
+  utmCampaign: text("utm_campaign"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -177,3 +182,31 @@ export const applications = pgTable(
 );
 
 export * from "./auth-schema";
+
+/**
+ * Visitas ao site (medição própria, sem cookie). visitor é um hash do IP + navegador com uma chave
+ * que troca todo dia: conta visitantes únicos do dia sem guardar IP nem permitir seguir a pessoa.
+ */
+export const pageViews = pgTable(
+  "page_views",
+  {
+    id: serial("id").primaryKey(),
+    path: text("path").notNull(),
+    visitor: text("visitor").notNull(),
+    /** google, instagram, direto, anuncio-google... (lib/visits.ts classifySource) */
+    source: text("source").notNull(),
+    referrerHost: text("referrer_host"),
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    /** celular | tablet | computador */
+    device: text("device").notNull(),
+    country: text("country"),
+    region: text("region"),
+    city: text("city"),
+    /** primeira página da visita (a pessoa chegou por ela) */
+    entry: boolean("entry").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("page_views_created_idx").on(t.createdAt)],
+);

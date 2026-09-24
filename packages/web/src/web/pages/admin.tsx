@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  Activity,
   BarChart3,
   ChevronLeft,
   ClipboardList,
@@ -43,6 +44,7 @@ import { AdminLists } from "../admin/lists";
 import { AdminSeo } from "../admin/seo";
 import { AdminHome } from "../admin/home";
 import { AdminSections } from "../admin/sections";
+import { AdminVisits } from "../admin/visits";
 import { AdminTrash } from "../admin/trash";
 import { Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
@@ -59,6 +61,7 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { id: "overview", label: "Dashboard", Icon: BarChart3, area: "livre" },
+  { id: "visitas", label: "Visitas do site", Icon: Activity, area: "config" },
   { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
   { id: "home", label: "Home", Icon: House, area: "conteudo" },
   { id: "secoes", label: "Ordem das seções", Icon: ListOrdered, area: "conteudo" },
@@ -288,6 +291,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "seo" && <AdminSeo />}
           {current === "home" && <AdminHome />}
           {current === "secoes" && <AdminSections />}
+          {current === "visitas" && <AdminVisits />}
           {current === "lixeira" && <AdminTrash user={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}

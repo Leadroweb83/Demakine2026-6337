@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { track } from "@/lib/tracking";
+import { visitAttribution } from "@/lib/visits";
 import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
@@ -62,7 +63,7 @@ export function LeadForm({
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product, source, attachments: shots.map((s) => s.key) },
+        json: { ...form, product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();

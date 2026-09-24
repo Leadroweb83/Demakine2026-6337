@@ -21,6 +21,7 @@ import {
 import { Seo, organizationJsonLd } from "@/components/seo";
 import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
 import { track } from "@/lib/tracking";
+import { visitAttribution } from "@/lib/visits";
 import { Reveal } from "@/components/reveal";
 import { api } from "@/lib/api";
 import { getProduct } from "@/lib/content";
@@ -78,7 +79,7 @@ function ExportForm({ lang }: { lang: ExportLang }) {
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product: "Export inquiry", source: `export-${lang}` },
+        json: { ...form, product: "Export inquiry", source: `export-${lang}`, traffic: visitAttribution() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();

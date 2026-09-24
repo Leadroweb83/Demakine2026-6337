@@ -12,10 +12,10 @@ const MARK_GREEN = STATUS_META.ganho.color;
 const fmt = (n: number, decimals = 0) =>
   n.toLocaleString("pt-BR", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
-const plural = (n: number, one: string, many: string) => `${fmt(n)} ${n === 1 ? one : many}`;
+export const plural = (n: number, one: string, many: string) => `${fmt(n)} ${n === 1 ? one : many}`;
 
 /** Teto "redondo" do eixo para contagens: 4, 8, 10, 20, 50... */
-function niceScale(max: number) {
+export function niceScale(max: number) {
   if (max <= 4) return { top: 4, step: 1 };
   const raw = max / 4;
   const pow = 10 ** Math.floor(Math.log10(raw));
@@ -591,10 +591,18 @@ export function LeadsMap({
   byState,
   unknown,
   onSelect,
+  noun = ["lead", "leads"],
+  emptyText = "Nenhum lead do período com estado identificado.",
+  unknownText = (n: number) => `${plural(n, "lead sem", "leads sem")} UF na cidade digitada (ex.: "Limeira/SP").`,
 }: {
   byState: { label: string; total: number }[];
   unknown: number;
-  onSelect: (uf: string) => void;
+  /** sem onSelect o mapa só mostra (tela Visitas) */
+  onSelect?: (uf: string) => void;
+  /** o que está sendo contado, no singular e no plural */
+  noun?: [string, string];
+  emptyText?: string;
+  unknownText?: (n: number) => string;
 }) {
   const [active, setActive] = useState<string | null>(null);
   const counts = useMemo(() => new Map(byState.map((s) => [s.label, s.total])), [byState]);
@@ -612,17 +620,17 @@ export function LeadsMap({
                 key={uf}
                 d={s.d}
                 tabIndex={v ? 0 : -1}
-                aria-label={`${s.name}: ${plural(v, "lead", "leads")}`}
+                aria-label={`${s.name}: ${plural(v, noun[0], noun[1])}`}
                 fill={v ? heat(v / max) : "#eef1f6"}
                 stroke="#ffffff"
                 strokeWidth={1.2}
-                className={`outline-none transition-opacity ${v ? "cursor-pointer" : ""}`}
+                className={`outline-none transition-opacity ${v && onSelect ? "cursor-pointer" : ""}`}
                 style={{ opacity: active && active !== uf ? 0.55 : 1 }}
                 onMouseEnter={() => setActive(uf)}
                 onMouseLeave={() => setActive(null)}
                 onFocus={() => setActive(uf)}
                 onBlur={() => setActive(null)}
-                onClick={() => v && onSelect(uf)}
+                onClick={() => v && onSelect?.(uf)}
               />
             );
           })}
@@ -630,7 +638,7 @@ export function LeadsMap({
         {activeName && (
           <span className="pointer-events-none absolute left-2 top-2 rounded-lg bg-dm-ink px-2.5 py-1.5 shadow-lg">
             <span className="block text-[12.5px] font-bold text-white">
-              {plural(counts.get(active!) ?? 0, "lead", "leads")}
+              {plural(counts.get(active!) ?? 0, noun[0], noun[1])}
             </span>
             <span className="block text-[11px] text-white/65">{activeName}</span>
           </span>
@@ -640,17 +648,10 @@ export function LeadsMap({
         <RankList
           data={byState.slice(0, 6).map((s) => ({ label: s.label, value: s.total, sub: brMap.states[s.label]?.name }))}
           onSelect={onSelect}
-          empty={
-            <p className="text-[12.5px] leading-relaxed text-dm-ink/55">
-              Nenhum lead do período com estado identificado.
-            </p>
-          }
+          valueLabel={(v) => plural(v, noun[0], noun[1])}
+          empty={<p className="text-[12.5px] leading-relaxed text-dm-ink/55">{emptyText}</p>}
         />
-        {unknown > 0 && (
-          <p className="mt-3 px-2 text-[11.5px] leading-relaxed text-dm-ink/45">
-            {plural(unknown, "lead sem", "leads sem")} UF na cidade digitada (ex.: "Limeira/SP").
-          </p>
-        )}
+        {unknown > 0 && <p className="mt-3 px-2 text-[11.5px] leading-relaxed text-dm-ink/45">{unknownText(unknown)}</p>}
       </div>
     </div>
   );
