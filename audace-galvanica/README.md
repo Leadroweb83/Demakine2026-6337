@@ -70,6 +70,8 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   na primeira exibição). As duas imagens do anel foram **geradas com IA no Canva a pedido do cliente** (a bruta é
   uma edição da dourada, mesmo enquadramento) e a seção diz "Imagem ilustrativa do processo". Trocar por fotos
   reais do mesmo anel quando houver: `images/anel/anel-bruto*` e `images/anel/anel-banhado-ouro*` (1680×944).
+- Rodapé: faixa com "© ano Audace Galvânica. Todos os direitos reservados." (ano atualizado por JS) e "Produzido por"
+  com a logo da Leal MKT (link para https://lealmkt.com em nova aba).
 - Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
 
 ## Decisões sobre os assets (versão anterior, histórico)

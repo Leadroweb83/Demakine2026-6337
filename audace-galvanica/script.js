@@ -398,3 +398,9 @@
   }, { threshold: 0.5 });
   io.observe(frame);
 })();
+
+/* Ano do copyright sempre atual */
+(function () {
+  var y = document.querySelector('[data-year]');
+  if (y) y.textContent = new Date().getFullYear();
+})();
