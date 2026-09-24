@@ -38,7 +38,7 @@ export default function Produtos() {
     <>
       <Seo
         title="Catálogo de Equipamentos | Demakine"
-        description={`${products.length} equipamentos agroindustriais: esteiras, roscas, elevadores, máquinas de costurar sacos e peneiras, com modelos, medidas e capacidades.`}
+        description={`Mais de ${products.length} equipamentos agroindustriais: esteiras, roscas, elevadores, máquinas de costurar sacos e peneiras, com modelos, medidas e capacidades.`}
         path="/produtos"
         jsonLd={itemListJsonLd(
           "Catálogo de equipamentos Demakine",
