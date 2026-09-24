@@ -18,6 +18,16 @@
   <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" as="image" type="image/webp" imagesrcset="images/backgrounds/section_01_hero_bg_clean_4x_900w.webp 900w, images/backgrounds/section_01_hero_bg_clean_4x_1600w.webp 1600w, images/backgrounds/section_01_hero_bg_clean_4x_3156w.webp 3156w" imagesizes="100vw" fetchpriority="high">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    /* Liga as animações antes da primeira pintura. Trava: sem script.js em 4s, tudo aparece. */
+    (function (d) {
+      var r = d.documentElement; r.classList.add('js');
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        r.classList.add('js-motion');
+        setTimeout(function () { if (!window.__audaceMotion) r.classList.remove('js-motion'); }, 4000);
+      }
+    })(document);
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -79,21 +89,21 @@
 
       <div class="container hero__inner">
         <div class="hero__copy">
-          <h1 class="display hero__title" id="hero-title">O banho certo <span class="gold">valoriza a sua marca.</span></h1>
-          <p class="hero__subtitle">Especialistas em banhos<br class="br-d"> para semijoias.</p>
-          <p class="hero__body">Receba uma consultoria personalizada<br class="br-d"> para tomar decisões mais seguras, aumentar<br class="br-d"> o valor das suas peças e encontrar o melhor<br class="br-d"> acabamento para o seu negócio.</p>
-          <a class="btn btn--gold" href="#formulario">
+          <h1 class="display hero__title" id="hero-title"><span class="title-line"><span>O banho certo</span></span> <span class="title-line gold"><span>valoriza a sua marca.</span></span></h1>
+          <p class="hero__subtitle" data-reveal style="--i:2">Especialistas em banhos<br class="br-d"> para semijoias.</p>
+          <p class="hero__body" data-reveal style="--i:3">Receba uma consultoria personalizada<br class="br-d"> para tomar decisões mais seguras, aumentar<br class="br-d"> o valor das suas peças e encontrar o melhor<br class="br-d"> acabamento para o seu negócio.</p>
+          <a class="btn btn--gold btn--shine" href="#formulario" data-reveal style="--i:4">
             QUERO MINHA CONSULTORIA
             <img class="btn__icon" src="icons/svg/arrow_right.svg" alt="" aria-hidden="true" width="16" height="16">
           </a>
-          <ul class="micro-benefits">
+          <ul class="micro-benefits" data-reveal style="--i:5">
             <li><img src="icons/svg/diamond.svg" alt="" aria-hidden="true" width="22" height="22"><span>Orientação especializada</span></li>
             <li><img src="icons/svg/users.svg" alt="" aria-hidden="true" width="22" height="22"><span>Atendimento personalizado</span></li>
             <li><img src="icons/svg/gear.svg" alt="" aria-hidden="true" width="22" height="22"><span>Foco em semijoias</span></li>
           </ul>
         </div>
 
-        <ul class="side-words hero__side-words" aria-label="Atributos do banho">
+        <ul class="side-words hero__side-words" data-credits aria-label="Atributos do banho">
           <li>BRILHO</li>
           <li>QUALIDADE</li>
           <li>DURABILIDADE</li>
@@ -113,11 +123,11 @@
 
       <div class="container split split--media-left">
         <div class="split__copy">
-          <p class="eyebrow">CONSULTORIA AUDACE GALVÂNICA</p>
-          <h2 class="display section-title" id="consult-title">Antes de escolher o banho,<br class="br-d"> entenda o que sua marca<br class="br-d"> <span class="gold">realmente precisa.</span></h2>
-          <p class="body-text">Uma consultoria especializada para ajudar você a tomar<br class="br-d"> decisões mais assertivas sobre os banhos das suas semijoias —<br class="br-d"> considerando sua marca, seu mercado, seu produto e o momento<br class="br-d"> do seu negócio.</p>
-          <span class="gold-rule" aria-hidden="true"></span>
-          <p class="statement">Na Audace, o banho não começa no tanque. <span class="gold">Começa na compreensão da sua necessidade.</span></p>
+          <p class="eyebrow" data-reveal>CONSULTORIA AUDACE GALVÂNICA</p>
+          <h2 class="display section-title" id="consult-title" data-reveal style="--i:1">Antes de escolher o banho,<br class="br-d"> entenda o que sua marca<br class="br-d"> <span class="gold">realmente precisa.</span></h2>
+          <p class="body-text" data-reveal style="--i:2">Uma consultoria especializada para ajudar você a tomar<br class="br-d"> decisões mais assertivas sobre os banhos das suas semijoias —<br class="br-d"> considerando sua marca, seu mercado, seu produto e o momento<br class="br-d"> do seu negócio.</p>
+          <span class="gold-rule" aria-hidden="true" data-reveal style="--i:3"></span>
+          <p class="statement" data-reveal data-gold-progress style="--i:4">Na Audace, o banho não começa no tanque. <span class="gold">Começa na compreensão da sua necessidade.</span></p>
         </div>
       </div>
     </section>
@@ -133,11 +143,11 @@
 
       <div class="container split split--media-right">
         <div class="split__copy">
-          <h2 class="display section-title" id="strategy-title">Uma conversa estratégica<br class="br-d"> para <span class="gold">o seu negócio.</span></h2>
-          <p class="body-text">Nosso time conversa com você para entender<br class="br-d"> o perfil da sua marca, o posicionamento da sua<br class="br-d"> coleção, o público que deseja alcançar, a realidade<br class="br-d"> da sua operação e os resultados que espera das peças.</p>
-          <p class="body-text">A partir desse diagnóstico, você recebe<br class="br-d"> uma orientação mais estratégica para definir<br class="br-d"> as melhores possibilidades de banho para o seu projeto.</p>
+          <h2 class="display section-title" id="strategy-title" data-reveal>Uma conversa estratégica<br class="br-d"> para <span class="gold">o seu negócio.</span></h2>
+          <p class="body-text" data-reveal style="--i:2">Nosso time conversa com você para entender<br class="br-d"> o perfil da sua marca, o posicionamento da sua<br class="br-d"> coleção, o público que deseja alcançar, a realidade<br class="br-d"> da sua operação e os resultados que espera das peças.</p>
+          <p class="body-text" data-reveal style="--i:2">A partir desse diagnóstico, você recebe<br class="br-d"> uma orientação mais estratégica para definir<br class="br-d"> as melhores possibilidades de banho para o seu projeto.</p>
         </div>
-        <ul class="side-words strategy__side-words" aria-label="Pilares da consultoria">
+        <ul class="side-words strategy__side-words" data-credits aria-label="Pilares da consultoria">
           <li>TÉCNICA</li>
           <li>EXPERIÊNCIA</li>
           <li>ESTRATÉGIA</li>
@@ -155,39 +165,39 @@
         </picture>
       </div>
       <div class="container">
-        <header class="benefits__head">
+        <header class="benefits__head" data-reveal>
           <p class="eyebrow benefits__eyebrow">O QUE VOCÊ GANHA<br class="br-d"> COM A CONSULTORIA?</p>
           <span class="benefits__rule" aria-hidden="true"></span>
           <h2 class="display section-title" id="benefits-title">Mais clareza, segurança e estratégia<br class="br-d"> para o seu projeto de semijoias.</h2>
         </header>
         <ul class="benefits__grid">
-          <li class="benefit">
-            <img class="benefit__icon" src="icons/svg/lightbulb.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
+          <li class="benefit" data-reveal>
+            <svg class="benefit__icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#c9a35d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M20 28a12 12 0 1 1 24 0c0 6-4 9-7 13H27c-3-4-7-7-7-13zM27 47h10M29 53h6"/><path pathLength="1" d="M32 5v6M8 28h6M50 28h6M14 11l5 5M50 11l-5 5"/></g></svg>
             <h3 class="benefit__title">Mais clareza<br class="br-d"> para decidir</h3>
             <p class="benefit__body">quais banhos fazem<br class="br-d"> sentido para sua marca<br class="br-d"> e suas peças.</p>
           </li>
-          <li class="benefit">
-            <img class="benefit__icon" src="icons/svg/target.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
+          <li class="benefit" data-reveal>
+            <svg class="benefit__icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#c9a35d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="30" cy="34" r="20"/><circle pathLength="1" cx="30" cy="34" r="11"/><circle pathLength="1" cx="30" cy="34" r="3"/><path pathLength="1" d="M33 31 53 11M43 11h10v10"/></g></svg>
             <h3 class="benefit__title">Investimento<br class="br-d"> mais assertivo</h3>
             <p class="benefit__body">evitando escolhas<br class="br-d"> baseadas apenas em<br class="br-d"> preço ou padrão<br class="br-d"> de mercado.</p>
           </li>
-          <li class="benefit">
-            <img class="benefit__icon" src="icons/svg/users.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
+          <li class="benefit" data-reveal>
+            <svg class="benefit__icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#c9a35d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="25" cy="22" r="8"/><circle pathLength="1" cx="43" cy="25" r="6"/><path pathLength="1" d="M10 49c0-9 6-15 15-15s15 6 15 15v3H10zM38 37c8 0 14 5 14 13v2H40"/></g></svg>
             <h3 class="benefit__title">Orientação<br class="br-d"> personalizada</h3>
             <p class="benefit__body">considerando as<br class="br-d"> características e<br class="br-d"> objetivos do seu negócio.</p>
           </li>
-          <li class="benefit">
-            <img class="benefit__icon" src="icons/svg/diamond.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
+          <li class="benefit" data-reveal>
+            <svg class="benefit__icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#c9a35d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 23 21 12h22l9 11-20 29z"/><path pathLength="1" d="M12 23h40M21 12l11 40 11-40M21 23h22"/></g></svg>
             <h3 class="benefit__title">Mais coerência<br class="br-d"> entre produto<br class="br-d"> e posicionamento</h3>
             <p class="benefit__body">para que o acabamento<br class="br-d"> das peças converse<br class="br-d"> com a identidade da marca.</p>
           </li>
-          <li class="benefit">
-            <img class="benefit__icon" src="icons/svg/chart.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
+          <li class="benefit" data-reveal>
+            <svg class="benefit__icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#c9a35d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M10 54h44"/><rect pathLength="1" x="14" y="37" width="8" height="17"/><rect pathLength="1" x="28" y="27" width="8" height="27"/><rect pathLength="1" x="42" y="16" width="8" height="38"/></g></svg>
             <h3 class="benefit__title">Conhecimento<br class="br-d"> para planejar melhor</h3>
             <p class="benefit__body">entendendo possibilidades,<br class="br-d"> características e cuidados<br class="br-d"> dos diferentes tipos<br class="br-d"> de banho.</p>
           </li>
-          <li class="benefit">
-            <img class="benefit__icon" src="icons/svg/gear.svg" alt="" aria-hidden="true" width="40" height="40" loading="lazy">
+          <li class="benefit" data-reveal>
+            <svg class="benefit__icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#c9a35d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="32" cy="32" r="8"/><path pathLength="1" d="M32 8v7M32 49v7M8 32h7M49 32h7M15 15l5 5M44 44l5 5M49 15l-5 5M20 44l-5 5"/><circle pathLength="1" cx="32" cy="32" r="19"/></g></svg>
             <h3 class="benefit__title">Conversa com<br class="br-d"> quem entende</h3>
             <p class="benefit__body">com experiência prática<br class="br-d"> em galvanoplastia<br class="br-d"> de semijoias.</p>
           </li>
@@ -204,12 +214,12 @@
         </picture>
       </div>
       <div class="container">
-        <header class="section-head">
+        <header class="section-head" data-reveal>
           <p class="eyebrow">COMO FUNCIONA A CONSULTORIA</p>
           <h2 class="display section-title" id="steps-title">Três etapas para decisões mais seguras<br class="br-d"> e alinhadas com o seu negócio.</h2>
         </header>
-        <ol class="steps__list">
-          <li class="step">
+        <ol class="steps__list" data-steps>
+          <li class="step" data-reveal>
             <div class="step__visual">
               <span class="step__number" aria-hidden="true">01</span>
               <figure class="step__media"><picture><source type="image/webp" srcset="images/photos/step_01_brand_sketch_4x.webp"><img src="images/photos/step_01_brand_sketch_4x.png" alt="Esboço de identidade de marca de semijoias sobre a mesa" width="792" height="332" loading="lazy" decoding="async"></picture></figure>
@@ -217,7 +227,7 @@
             <h3 class="step__title"><span class="visually-hidden">Etapa 1: </span>Entendemos<br class="br-d"> sua marca</h3>
             <p class="step__body">Conversamos sobre o seu<br class="br-d"> posicionamento, público,<br class="br-d"> estilo das peças e objetivos.</p>
           </li>
-          <li class="step">
+          <li class="step" data-reveal>
             <div class="step__visual">
               <span class="step__number" aria-hidden="true">02</span>
               <figure class="step__media"><picture><source type="image/webp" srcset="images/photos/step_02_chain_analysis_4x.webp"><img src="images/photos/step_02_chain_analysis_4x.png" alt="Análise técnica de uma corrente de semijoia" width="868" height="312" loading="lazy" decoding="async"></picture></figure>
@@ -225,7 +235,7 @@
             <h3 class="step__title"><span class="visually-hidden">Etapa 2: </span>Analisamos<br class="br-d"> o projeto</h3>
             <p class="step__body">Avaliamos suas peças,<br class="br-d"> sua operação e o momento<br class="br-d"> do seu negócio.</p>
           </li>
-          <li class="step">
+          <li class="step" data-reveal>
             <div class="step__visual">
               <span class="step__number" aria-hidden="true">03</span>
               <figure class="step__media"><picture><source type="image/webp" srcset="images/photos/step_03_ring_options_4x.webp"><img src="images/photos/step_03_ring_options_4x.png" alt="Opções de anéis com diferentes acabamentos de banho" width="684" height="316" loading="lazy" decoding="async"></picture></figure>
@@ -247,13 +257,13 @@
       </div>
       <div class="container split split--form">
         <div class="cta-form__statement">
-          <p class="display statement statement--large">Seu banho não precisa<br class="br-d"> seguir uma receita pronta. <span class="gold">Precisa fazer sentido<br class="br-d"> para o seu negócio.</span></p>
+          <p class="display statement statement--large" data-reveal data-gold-progress>Seu banho não precisa<br class="br-d"> seguir uma receita pronta. <span class="gold">Precisa fazer sentido<br class="br-d"> para o seu negócio.</span></p>
           <figure class="cta-form__media">
             <picture><source type="image/webp" srcset="images/photos/cta_rings_4x.webp"><img src="images/photos/cta_rings_4x.png" alt="Anéis de semijoia com banho dourado em destaque" width="1560" height="656" loading="lazy" decoding="async"></picture>
           </figure>
         </div>
 
-        <div class="form-card">
+        <div class="form-card" data-reveal data-depth>
           <p class="eyebrow">SOLICITE SUA CONSULTORIA</p>
           <h2 class="display form-card__title" id="form-title">Vamos entender<br class="br-d"> o que suas semijoias precisam?</h2>
           <p class="form-card__subtitle">Preencha seus dados e converse com nosso time.</p>
@@ -308,8 +318,8 @@
               </select>
             </div>
             <p class="form-status" role="status" aria-live="polite" data-form-status></p>
-            <button class="btn btn--gold btn--block" type="submit">
-              SOLICITAR CONSULTORIA
+            <button class="btn btn--gold btn--block btn--shine" type="submit" data-pulse>
+              <span class="btn__label">SOLICITAR CONSULTORIA</span>
               <img class="btn__icon" src="icons/svg/arrow_right.svg" alt="" aria-hidden="true" width="16" height="16">
             </button>
           </form>
@@ -326,7 +336,7 @@
           <img src="images/backgrounds/section_07_footer_bg_clean_4x.png" alt="" width="3156" height="496" loading="lazy" decoding="async">
         </picture>
     </div>
-    <div class="container site-footer__inner">
+    <div class="container site-footer__inner" data-reveal-group>
       <picture><source type="image/webp" srcset="logo/audace_logo_negative_240w.webp 240w, logo/audace_logo_negative_480w.webp 480w" sizes="138px"><img class="site-footer__logo" src="logo/audace_logo_negative_240w.png" srcset="logo/audace_logo_negative_240w.png 240w, logo/audace_logo_negative_480w.png 480w" sizes="138px" alt="Audace Galvânica" width="240" height="164" loading="lazy"></picture>
       <p class="site-footer__tagline">Especialistas em banhos para semijoias.</p>
       <img class="site-footer__rule" src="images/overlays/gold_vertical_rule.svg" alt="" aria-hidden="true" loading="lazy">
@@ -342,6 +352,11 @@
       </ul>
     </div>
   </footer>
+
+  <div class="read-progress" aria-hidden="true"></div>
+  <a class="wa-float" href="https://wa.me/5519994555679" target="_blank" rel="noopener" aria-label="Falar com a Audace no WhatsApp (abre em nova aba)" data-wa-float>
+    <img src="icons/svg/whatsapp.svg" alt="" aria-hidden="true" width="26" height="26">
+  </a>
 
   <script src="script.js" defer></script>
 </body>

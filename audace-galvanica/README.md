@@ -24,7 +24,7 @@ icons/svg/      Ícones SVG fornecidos
 | 2 a 5 | Hero, consultoria, estratégia, benefícios | concluídas (fundos + ícones SVG) |
 | 6 a 8 | Etapas, CTA, rodapé | concluídas (assets oficiais da Drive) |
 | 9 | Validação estática | concluída: 390, 820, 1024, 1262, 1440 e 1920 px; Lighthouse 100/100/100/100 (desktop) e 99/100/100/100 (mobile) |
-| 10 | Motion | pendente |
+| 10 | Motion | concluída: Tier 1 + parte do Tier 2 (ver abaixo); Lighthouse mantido, CLS 0 |
 
 ## Dados do cliente (confirmados)
 
@@ -63,6 +63,25 @@ icons/svg/      Ícones SVG fornecidos
   a corrente ampliada fora do enquadramento aprovado e o `section_02` uma forma geométrica serrilhada que
   não existe na arte. As áreas de texto da arte foram removidas por preenchimento (OpenCV Telea) sobre
   fundo desfocado; hero usa o painel escuro do pacote à esquerda. Depois, Real-ESRGAN x4.
+
+## Motion (Fase 10)
+
+Implementados (números do briefing): 1 parallax do hero, 2 zoom lento, 3 título por máscara, 5 brilho no CTA,
+6 micro-lift, 9 parallax da modelo, 11/24 dourado progressivo, 13 palavras laterais em sequência, 14 ícones
+desenhados, 15 benefícios em sequência, 16 hover dos benefícios, 17 números por máscara, 18 linha de progresso
+das etapas, 19 cortina nas fotos, 20 etapa ativa, 21 luz do cursor nas joias, 25 entrada do formulário,
+26 foco dourado nos campos, 28 estado do envio, 29 barra de leitura, 30 entrada do logo, 31/32 cabeçalho
+de vidro compacto, 33 sublinhado do menu, 35 grão, 36 brilho atmosférico, 38 fade das imagens, 39 âncoras
+suaves com compensação, 40 WhatsApp flutuante, 41 pulso único do CTA, 43 rodapé em sequência, 44 hover social,
+45 movimento reduzido.
+
+Fora de propósito: 4 e 42 (reflexo/varredura extra competiria com o brilho do CTA), 8 (as formas já estão
+no fundo), 10/37 (as seções já fazem a transição de tom), 12 (a estratégia já tem a entrada do texto),
+23 (a seção do CTA é curta demais para texto fixo na rolagem), 34 (cursor customizado atrapalha o uso).
+
+Regras: estados iniciais só sob `.js-motion`, definida no `<head>` quando há JS, IntersectionObserver e
+o usuário não pediu movimento reduzido; se `script.js` não carregar em 4 s, tudo aparece. Só transform e
+opacity animam; parallax e luz do cursor apenas em desktop com mouse.
 
 ## Sistema de medidas
 

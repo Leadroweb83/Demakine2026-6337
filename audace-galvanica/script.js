@@ -1,5 +1,5 @@
 /* Audace Galvânica | interações
-   Fase 0: apenas menu mobile e formulário. Motions entram na Fase 10. */
+   Menu mobile, formulário (WhatsApp) e motion (Fase 10). */
 (function () {
   'use strict';
 
@@ -110,5 +110,114 @@
     if (win) win.opener = null;
     else window.location.href = url;   // navegador bloqueou a nova aba: abre na mesma
     status.textContent = 'Abrimos o WhatsApp com seus dados. É só tocar em enviar para falar com nosso time.';
+    var label = form.querySelector('.btn__label');
+    if (label) {
+      label.textContent = 'Abrindo WhatsApp…';
+      setTimeout(function () { label.textContent = 'SOLICITAR CONSULTORIA'; }, 1800);
+    }
   });
+})();
+
+/* ---------- Fase 10: motion ----------
+   Tudo aqui é progressivo: sem .js-motion (sem JS, sem IntersectionObserver ou com
+   movimento reduzido), só o cabeçalho, a barra de leitura e o WhatsApp flutuante funcionam. */
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var motion = root.classList.contains('js-motion');
+  window.__audaceMotion = true;
+  var desktop = window.matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)');
+
+  /* Ordem das entradas em grupos (benefícios, etapas, rodapé) */
+  function order(list) { Array.prototype.forEach.call(list, function (el, i) { el.style.setProperty('--i', i); }); }
+  order(document.querySelectorAll('.benefit'));
+  order(document.querySelectorAll('.step'));
+  var foot = document.querySelector('[data-reveal-group]');
+  if (foot) Array.prototype.forEach.call(foot.children, function (el, i) { el.setAttribute('data-reveal', ''); el.style.setProperty('--i', i); });
+
+  /* Entradas por viewport */
+  if (motion) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        if (e.target.hasAttribute('data-depth')) {
+          var btn = e.target.querySelector('[data-pulse]');
+          if (btn) btn.classList.add('pulse');
+        }
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    document.querySelectorAll('[data-reveal], [data-credits]').forEach(function (el) { io.observe(el); });
+
+    /* 38. Fade das imagens só depois de carregar */
+    document.querySelectorAll('img[loading="lazy"]').forEach(function (img) {
+      function done() { img.classList.add('is-loaded'); }
+      if (img.complete) done(); else { img.addEventListener('load', done); img.addEventListener('error', done); }
+    });
+
+    /* 21. Luz que acompanha o cursor sobre as joias */
+    document.querySelectorAll('.step__media, .cta-form').forEach(function (el) {
+      var target = el.classList.contains('cta-form') ? el.querySelector('.cta-form__media') : el;
+      if (!target) return;
+      el.addEventListener('pointermove', function (ev) {
+        if (!desktop.matches) return;
+        var r = target.getBoundingClientRect();
+        target.style.setProperty('--lx', ((ev.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+        target.style.setProperty('--ly', ((ev.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+      });
+    });
+  }
+
+  /* Rolagem: cabeçalho, barra de leitura, WhatsApp, parallax, dourado progressivo e etapas */
+  var header = document.querySelector('[data-header]');
+  var hero = document.getElementById('hero');
+  var wa = document.querySelector('[data-wa-float]');
+  var heroPic = document.querySelector('.hero .section__bg picture');
+  var consult = document.querySelector('.consult');
+  var golds = document.querySelectorAll('[data-gold-progress]');
+  var stepsList = document.querySelector('[data-steps]');
+  var steps = stepsList ? stepsList.querySelectorAll('.step') : [];
+  var ticking = false;
+
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+  function update() {
+    ticking = false;
+    var y = window.scrollY, vh = window.innerHeight;
+    var max = document.documentElement.scrollHeight - vh;
+    header.classList.toggle('is-scrolled', y > 40);
+    root.style.setProperty('--read', max > 0 ? (y / max).toFixed(4) : 0);
+    if (wa && hero) wa.classList.toggle('is-visible', y > hero.offsetHeight * 0.8);
+    if (!motion) return;
+
+    var big = desktop.matches;
+    if (heroPic && y < hero.offsetHeight) heroPic.style.setProperty('--hero-y', big ? (y * 0.06).toFixed(1) + 'px' : '0px');
+    if (consult) {
+      var rc = consult.getBoundingClientRect();
+      var pc = clamp((vh - rc.top) / (vh + rc.height)) - 0.5;
+      consult.style.setProperty('--consult-y', big ? (pc * -26).toFixed(1) + 'px' : '0px');
+    }
+    golds.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--gp', clamp((vh * 0.92 - r.top) / (vh * 0.45)).toFixed(3));
+    });
+    if (stepsList) {
+      var rs = stepsList.getBoundingClientRect();
+      stepsList.style.setProperty('--steps-p', clamp((vh * 0.8 - rs.top) / (rs.height + vh * 0.25)).toFixed(3));
+      var best = null, bestD = Infinity;
+      steps.forEach(function (s) {
+        var r = s.getBoundingClientRect();
+        var d = Math.abs(r.top + r.height / 2 - vh / 2);
+        if (d < bestD) { bestD = d; best = s; }
+      });
+      var near = rs.top < vh * 0.85 && rs.bottom > vh * 0.15;
+      stepsList.classList.toggle('has-active', near);
+      steps.forEach(function (s) { s.classList.toggle('is-active', near && s === best); });
+    }
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
 })();
