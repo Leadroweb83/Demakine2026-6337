@@ -119,7 +119,8 @@ o mesmo sistema visual.
   link para o perfil (nenhuma imagem inventada). O widget só carrega quando a seção se aproxima da tela.
 - Perguntas frequentes: 6 perguntas com dados estruturados FAQPage. As respostas 4 (ouro, prata e ródio)
   e 5 (durabilidade) são informação técnica geral do setor e **devem ser validadas pelo time técnico**.
-- Onde estamos: mapa do Google (iframe com carregamento tardio, em tom escuro), endereço completo,
+- Onde estamos: mapa do Google colorido apontando para o perfil "AUDACE GALVÂNICA - Banho de Semijoias"
+  (Google Meu Negócio /g/11x8qrw4_f, também no sameAs do JSON-LD), endereço completo,
   WhatsApp e botão "Como chegar".
 
 ## Publicação (teste)
