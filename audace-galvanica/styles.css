@@ -177,6 +177,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   padding: calc(18 * var(--u)) calc(41 * var(--u)) 0 calc(54 * var(--u));
 }
 .site-header__logo { flex: none; width: calc(86 * var(--u)); }
+.site-header__logo picture, .site-footer__inner > picture { display: block; }
 .site-header__logo img { width: 100%; height: auto; }
 
 .site-nav {
@@ -516,7 +517,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .section { height: auto; }
 
   /* Header + menu mobile */
-  .site-header__inner { align-items: center; padding: 16px 0 0; }
+  .site-header__inner { align-items: center; padding: 16px var(--gutter) 0; }
   .site-header__logo { width: 96px; }
   .nav-toggle { display: block; }
   .site-nav {

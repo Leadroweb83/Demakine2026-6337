@@ -23,7 +23,7 @@ icons/svg/      Ícones SVG fornecidos
 | 1 | Identidade e estrutura | concluída (layout calibrado na arte aprovada) |
 | 2 a 5 | Hero, consultoria, estratégia, benefícios | concluídas (fundos + ícones SVG) |
 | 6 a 8 | Etapas, CTA, rodapé | concluídas (assets oficiais da Drive) |
-| 9 | Validação estática | pendente |
+| 9 | Validação estática | concluída: 390, 820, 1024, 1262, 1440 e 1920 px; Lighthouse 100/100/100/100 (desktop) e 99/100/100/100 (mobile) |
 | 10 | Motion | pendente |
 
 ## Dados do cliente (confirmados)
