@@ -58,7 +58,7 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   No celular, a foto do hero ocupa o topo e o texto entra logo abaixo.
 - Imagem de compartilhamento (OG) refeita com a foto nova do hero.
 - Os fundos e recortes anteriores (arte aprovada) saíram do ar e estão em `../audace-galvanica-fonte/imagens-anteriores/`.
-- Consultoria (abaixo do hero): fundo em degradê grafite #1C1C1E para azul #193D89.
+- Consultoria e Como funciona: fundo em degradê grafite #1C1C1E para azul #193D89.
 - Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
 
 ## Decisões sobre os assets (versão anterior, histórico)
