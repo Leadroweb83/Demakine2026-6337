@@ -216,7 +216,19 @@
 
   /* Anel e brinco 3D (three.js, vendor/joias3d.min.js): descem do hero até mergulhar atrás de Diferenciais.
      Só com animações ligadas; sem GPU real ou em aparelho lento, não aparecem. */
-  if (motion) {
+  function hasRealGpu() {
+    if (/[?&]3d=force\b/.test(location.search)) return true;
+    try {
+      var c = document.createElement('canvas');
+      var g = c.getContext('webgl2') || c.getContext('webgl');
+      if (!g) return false;
+      var d = g.getExtension('WEBGL_debug_renderer_info');
+      var n = String(d ? g.getParameter(d.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER));
+      var lose = g.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+      return !/swiftshader|llvmpipe|softpipe|software|basic render/i.test(n);
+    } catch (e) { return false; }
+  }
+  if (motion && hasRealGpu()) {
     import('./vendor/joias3d.min.js')
       .then(function (m) { m.initJoias({ gsap: gsap, ScrollTrigger: ST }); })
       .catch(function () {});
