@@ -39,7 +39,7 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 - Formulário: valida os 7 campos e abre o WhatsApp da Audace com todos os dados preenchidos
   (`data-whatsapp` no `<form>`). Sem backend: a confirmação só diz que o WhatsApp foi aberto.
 - "Qual é a sua principal necessidade?" virou lista. As opções foram propostas pelo desenvolvimento
-  e aguardam validação do cliente.
+  e aprovadas pelo cliente.
 
 ## Paleta e fotos (atualização do cliente)
 
@@ -68,8 +68,7 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 - Antes e depois (entre Como funciona e Instagram): slider de comparação (componente "Image Comparison Slider"
   reescrito em JS puro: arrastar com mouse/toque, setas do teclado num campo de faixa acessível, varredura curta
   na primeira exibição). As duas imagens do anel foram **geradas com IA no Canva a pedido do cliente** (a bruta é
-  uma edição da dourada, mesmo enquadramento) e a seção diz "Imagem ilustrativa do processo". Trocar por fotos
-  reais do mesmo anel quando houver: `images/anel/anel-bruto*` e `images/anel/anel-banhado-ouro*` (1680×944).
+  uma edição da dourada, mesmo enquadramento) e a seção diz "Imagem ilustrativa do processo". O cliente optou por manter as imagens de IA. Se um dia houver fotos reais do mesmo anel, substituir: `images/anel/anel-bruto*` e `images/anel/anel-banhado-ouro*` (1680×944).
 - Rodapé: faixa com "© ano Audace Galvânica. Todos os direitos reservados." (ano atualizado por JS) e "Produzido por"
   com a logo da Leal MKT (link para https://lealmkt.com em nova aba).
 - Animações presas à rolagem com GSAP 3.15 + ScrollTrigger (licença padrão gratuita, hospedados em `vendor/`,
@@ -136,7 +135,7 @@ o mesmo sistema visual.
   copie o Feed ID e cole em `data-behold-feed-id` no `index.html`. Sem ID, a seção mostra um cartão com
   link para o perfil (nenhuma imagem inventada). O widget só carrega quando a seção se aproxima da tela.
 - Perguntas frequentes: 6 perguntas com dados estruturados FAQPage. As respostas 4 (ouro, prata e ródio)
-  e 5 (durabilidade) são informação técnica geral do setor e **devem ser validadas pelo time técnico**.
+  e 5 (durabilidade) foram validadas pelo cliente.
 - Onde estamos: mapa do Google colorido apontando para o perfil "AUDACE GALVÂNICA - Banho de Semijoias"
   (Google Meu Negócio /g/11x8qrw4_f, também no sameAs do JSON-LD), endereço completo,
   WhatsApp e botão "Como chegar".
