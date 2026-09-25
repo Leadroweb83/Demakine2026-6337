@@ -39,7 +39,7 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 - Formulário: valida os 7 campos, envia um e-mail organizado (tabela, via FormSubmit) e abre o WhatsApp da Audace
   com os dados. O e-mail identifica a origem ("Landing page Audace Galvânica" + utm_*/gclid/fbclid) e traz data/hora
   e link para responder pelo WhatsApp; a mensagem do WhatsApp termina com "Enviado pela landing page".
-  **Pendente:** preencher `data-email` no `<form>` com o e-mail do cliente; no primeiro envio o FormSubmit manda um
+  E-mail de destino (`data-email` no `<form>`): daniel@audacegalvanica.com.br. No primeiro envio o FormSubmit manda um
   e-mail de ativação para esse endereço (clicar em "Activate Form" uma única vez). Campo `_honey` barra robôs.
 - "Qual é a sua principal necessidade?" virou lista. As opções foram propostas pelo desenvolvimento
   e aprovadas pelo cliente.
