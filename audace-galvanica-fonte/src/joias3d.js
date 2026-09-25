@@ -92,8 +92,7 @@ function makeEarring(metal) {
 }
 
 /* ---------- coreografia ----------
-   1) Hero: as peças ficam na faixa escura da direita e recebem o banho de ouro enquanto o hero rola.
-   2) Antes e depois: voltam nas laterais da imagem principal, com 15% delas atrás da imagem,
+   Antes e depois: voltam nas laterais da imagem principal, com 15% delas atrás da imagem,
       e se transformam do bruto ao ouro conforme a seção entra na tela. Entre as duas, não aparecem. */
 const HERO = {
   big: { ring: [0.905, 0.27], ear: [0.9, 0.77], size: 150 },
@@ -174,7 +173,7 @@ export function initJoias(opts) {
     metal.clearcoat = MathUtils.lerp(0, 0.5, g);
   }
   function stage() {
-    if (heroEl) { const r = heroEl.getBoundingClientRect(); if (r.bottom > 0) return 'hero'; }
+    /* hero sem peças (retiradas a pedido do cliente): elas aparecem só no Antes e depois */
     if (frameEl) { const r = frameEl.getBoundingClientRect(); if (r.top < H + 120 && r.bottom > -160) return 'compare'; }
     return 'none';
   }

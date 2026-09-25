@@ -94,16 +94,59 @@
       '*Cidade / UF:* ' + f.cidade.value.trim(),
       '*Momento:* ' + f.momento.value,
       '*Volume de peças:* ' + f.volume.value,
-      '*Principal necessidade:* ' + f.necessidade.value
+      '*Principal necessidade:* ' + f.necessidade.value,
+      '',
+      '_Enviado pela landing page Audace Galvânica_'
     ].join('\n');
+  }
+
+  /* Origem do pedido: landing page + parâmetros de campanha (utm_*, gclid, fbclid), se houver */
+  function origin() {
+    var q = new URLSearchParams(location.search), parts = [];
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'].forEach(function (k) {
+      if (q.get(k)) parts.push(k + '=' + q.get(k));
+    });
+    return 'Landing page Audace Galvânica (' + location.host + ')' + (parts.length ? ' | ' + parts.join(' | ') : '');
+  }
+
+  /* E-mail organizado (tabela) para a caixa do cliente, sem esperar resposta: o WhatsApp abre na hora */
+  function sendEmail() {
+    var to = (form.getAttribute('data-email') || '').trim();
+    if (!to || !window.fetch) return;
+    var f = form.elements;
+    var now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    var data = {
+      _subject: 'Nova solicitação de consultoria | Landing Page Audace Galvânica | ' + f.nome.value.trim(),
+      _template: 'table',
+      _captcha: 'false',
+      'Origem': origin(),
+      'Data e hora': now,
+      'Nome completo': f.nome.value.trim(),
+      'WhatsApp': f.whatsapp.value.trim(),
+      'Marca / Empresa': f.empresa.value.trim(),
+      'Cidade / UF': f.cidade.value.trim(),
+      'Momento': f.momento.value,
+      'Volume aproximado de peças': f.volume.value,
+      'Principal necessidade': f.necessidade.value,
+      'Responder pelo WhatsApp': 'https://wa.me/55' + onlyDigits(f.whatsapp.value)
+    };
+    try {
+      fetch('https://formsubmit.co/ajax/' + encodeURIComponent(to), {
+        method: 'POST', keepalive: true,
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      }).catch(function () {});
+    } catch (err) { /* segue para o WhatsApp */ }
   }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (form.elements._honey && form.elements._honey.value) return; // robô
     var invalid = Array.prototype.filter.call(form.elements, function (el) {
       return el.matches && el.matches('input, select, textarea') && !validate(el);
     });
     if (invalid.length) { invalid[0].focus(); return; }
+    sendEmail();
 
     var url = 'https://wa.me/' + form.dataset.whatsapp + '?text=' + encodeURIComponent(buildMessage());
     var win = window.open(url, '_blank');

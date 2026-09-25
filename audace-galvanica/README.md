@@ -36,8 +36,11 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 - Endereço: Av. Marechal Floriano Peixoto, 176 - Parque Hipolyto, Limeira - SP, 13486-554.
   Rodapé mostra "Limeira - SP" (como na arte) com link para o mapa; endereço completo no JSON-LD.
 - WhatsApp: (19) 99455-5679. Instagram: https://www.instagram.com/audacegalvanica/
-- Formulário: valida os 7 campos e abre o WhatsApp da Audace com todos os dados preenchidos
-  (`data-whatsapp` no `<form>`). Sem backend: a confirmação só diz que o WhatsApp foi aberto.
+- Formulário: valida os 7 campos, envia um e-mail organizado (tabela, via FormSubmit) e abre o WhatsApp da Audace
+  com os dados. O e-mail identifica a origem ("Landing page Audace Galvânica" + utm_*/gclid/fbclid) e traz data/hora
+  e link para responder pelo WhatsApp; a mensagem do WhatsApp termina com "Enviado pela landing page".
+  **Pendente:** preencher `data-email` no `<form>` com o e-mail do cliente; no primeiro envio o FormSubmit manda um
+  e-mail de ativação para esse endereço (clicar em "Activate Form" uma única vez). Campo `_honey` barra robôs.
 - "Qual é a sua principal necessidade?" virou lista. As opções foram propostas pelo desenvolvimento
   e aprovadas pelo cliente.
 
@@ -78,8 +81,7 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   seção na tela; 10 mapa com zoom e pin que cai. Sem GSAP (ou com movimento reduzido), valem as animações de script.js.
 - Anel e brinco 3D (three.js, feitos em código): anel de dois fios torcidos com bordas de milgrain; brinco com
   tarraxa em cúpula, coroa de bolinhas, argola e pingente em gota com moldura dupla, contorno de bolinhas e filigrana.
-  Movimento lento. No hero ficam na faixa escura da direita e recebem o banho de ouro durante a "janela que se abre".
-  Voltam no Antes e depois, nas laterais da imagem principal (no celular, abaixo dela) com 15% atrás da imagem, indo
+  Movimento lento. Retiradas do hero a pedido do cliente; aparecem só no Antes e depois, nas laterais da imagem principal (no celular, abaixo dela) com 15% atrás da imagem, indo
   do bruto ao ouro conforme a seção entra. Fonte: `../audace-galvanica-fonte/src/joias3d.js`
   (`npm install && npm run build:3d` gera `vendor/joias3d.min.js`). Só baixa com GPU real, depois da página abrir;
   vigia de quadros e movimento reduzido desligam. Teste sem GPU: `?3d=force`.
@@ -160,7 +162,7 @@ o mesmo sistema visual.
 ## Publicação (teste)
 
 Vercel, projeto `audace-galvanica` (conta Leandrweb83), raiz `audace-galvanica/`, saída `.`, sem build.
-Link público de teste: https://audace-galvanica-leandrweb83.vercel.app (noindex via `vercel.json`).
+Link público de teste: https://audacegalvanica.vercel.app (também https://audace-galvanica.vercel.app) (noindex via `vercel.json`).
 O projeto não está ligado ao Git para deploy automático: cada atualização é publicada sob demanda.
 Proteção de acesso da Vercel desligada a pedido do cliente (link público).
 
