@@ -78,10 +78,7 @@
       if (!ctx.conditions.big && !ctx.conditions.small) return;
 
       /* 2. Hero em camadas: foto desce devagar, texto sobe mais rápido, palavras laterais somem por último */
-      var hero = gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
-      hero.to('.hero .section__bg picture', { yPercent: big ? 12 : 6, ease: 'none' }, 0)
-          .to('.hero__copy', { y: big ? -120 : -60, ease: 'none' }, 0);
-      if (big) hero.to('.hero__side-words', { y: -50, opacity: 0, ease: 'none', duration: 0.6 }, 0.4);
+      var heroCleanup = heroParallax(big);
 
       /* 7. Frase da consultoria acende palavra por palavra (a parte dourada termina dourada) */
       $$('[data-words]').forEach(function (p) {
@@ -110,7 +107,81 @@
           .fromTo('.map-pin', { '--drop': '-90px', opacity: 0 }, { '--drop': '0px', opacity: 1, duration: 0.9, ease: 'bounce.out' }, 0.5)
           .from('.place__map-hint', { opacity: 0, y: 8, duration: 0.5 }, 1.1);
       }
+      return heroCleanup;
     });
+  }
+
+  /* Hero: parallax. Três opções em teste, escolhidas por ?parallax=1|2|3 no endereço
+     (ou data-parallax no #hero). Sem escolha, fica o parallax suave original (0).
+     1 Camadas profundas: foto e cada linha de texto em velocidades bem diferentes.
+     2 Profundidade com o mouse: camadas reagem ao cursor (desktop) + rolagem.
+     3 Janela que se abre: o hero fica fixo, a foto se abre até a largura toda e o texto sai. */
+  function heroParallax(big) {
+    var heroEl = $('#hero');
+    var q = /[?&]parallax=(\d)/.exec(location.search);
+    var mode = q ? q[1] : (heroEl.getAttribute('data-parallax') || '0');
+    var pic = '.hero .section__bg picture';
+    var L = {
+      title: '.hero__title', sub: '.hero__subtitle', body: '.hero__body',
+      btn: '.hero .hero__copy > .btn', micro: '.micro-benefits', side: '.hero__side-words'
+    };
+    var sc = { trigger: heroEl, start: 'top top', end: 'bottom top', scrub: true };
+
+    function layers(tl, k) {
+      tl.to(L.title, { '--py': (-260 * k) + 'px', ease: 'none' }, 0)
+        .to(L.sub, { '--py': (-190 * k) + 'px', ease: 'none' }, 0)
+        .to(L.body, { '--py': (-150 * k) + 'px', ease: 'none' }, 0)
+        .to(L.btn, { '--py': (-110 * k) + 'px', ease: 'none' }, 0)
+        .to(L.micro, { '--py': (-70 * k) + 'px', ease: 'none' }, 0);
+      if (big) tl.to(L.side, { '--py': (-320 * k) + 'px', opacity: 0, ease: 'none' }, 0);
+      return tl;
+    }
+
+    if (mode === '1' || (mode === '3' && !big)) {
+      var t1 = gsap.timeline({ scrollTrigger: sc });
+      t1.to(pic, { yPercent: big ? 30 : 18, scale: big ? 1.12 : 1.08, ease: 'none' }, 0);
+      layers(t1, big ? 1 : 0.5);
+      return;
+    }
+
+    if (mode === '2') {
+      var t2 = gsap.timeline({ scrollTrigger: sc });
+      t2.to(pic, { yPercent: big ? 18 : 12, ease: 'none' }, 0);
+      layers(t2, big ? 0.6 : 0.4);
+      if (big && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        var depth = [[pic, -28, 'xy'], [L.side, 18], [L.title, 12], [L.sub, 9], [L.body, 7], [L.btn, 5], [L.micro, 4]];
+        var movers = depth.map(function (d) {
+          var el = $(d[0]);
+          if (!el) return null;
+          if (d[2] === 'xy') return { d: d[1], x: gsap.quickTo(el, 'x', { duration: 0.9, ease: 'power3' }), y: gsap.quickTo(el, 'y', { duration: 0.9, ease: 'power3' }) };
+          return { d: d[1], x: gsap.quickTo(el, '--mx', { duration: 0.9, ease: 'power3', unit: 'px' }), y: gsap.quickTo(el, '--my', { duration: 0.9, ease: 'power3', unit: 'px' }) };
+        }).filter(Boolean);
+        var onMove = function (e) {
+          var nx = (e.clientX / window.innerWidth) * 2 - 1, ny = (e.clientY / window.innerHeight) * 2 - 1;
+          movers.forEach(function (m) { m.x(nx * m.d); m.y(ny * m.d); });
+        };
+        heroEl.addEventListener('pointermove', onMove);
+        return function () { heroEl.removeEventListener('pointermove', onMove); };
+      }
+      return;
+    }
+
+    if (mode === '3') {
+      var bg = $('.hero .section__bg');
+      var t3 = gsap.timeline({ scrollTrigger: { trigger: heroEl, start: 'top top', end: '+=85%', scrub: true, pin: true, invalidateOnRefresh: true } });
+      t3.to(bg, { left: 0, width: function () { return window.innerWidth; }, '--ma': 1, '--mb': 1, ease: 'power1.inOut' }, 0)
+        .to(pic, { scale: 1.1, yPercent: 6, ease: 'none' }, 0)
+        .to([L.title, L.sub, L.body, L.btn, L.micro], { '--py': '-90px', stagger: 0.04, ease: 'power1.in', duration: 0.55 }, 0)
+        .to('.hero__copy', { opacity: 0, ease: 'power1.in', duration: 0.5 }, 0.05)
+        .to('.hero .hero__inner > .side-words', { autoAlpha: 0, ease: 'none', duration: 0.3 }, 0);
+      return;
+    }
+
+    /* 0: parallax suave original */
+    var t0 = gsap.timeline({ scrollTrigger: sc });
+    t0.to(pic, { yPercent: big ? 12 : 6, ease: 'none' }, 0)
+      .to('.hero__copy', { y: big ? -120 : -60, ease: 'none' }, 0);
+    if (big) t0.to(L.side, { y: -50, opacity: 0, ease: 'none', duration: 0.6 }, 0.4);
   }
 
   /* 9. Menu acompanha a leitura: o item da seção na tela ganha o sublinhado dourado.
@@ -131,14 +202,6 @@
 
   /* Abrir e fechar perguntas muda a altura da página: recalcula os gatilhos */
   $$('details').forEach(function (d) { d.addEventListener('toggle', function () { ST.refresh(); }); });
-
-  /* Anel 3D do hero (three.js, vendor/hero3d.min.js): só com animações ligadas.
-     Sem WebGL, ou se falhar, a foto do hero continua. */
-  if (motion) {
-    import('./vendor/hero3d.min.js')
-      .then(function (m) { m.initHero3D({ gsap: gsap, ScrollTrigger: ST, reduce: false }); })
-      .catch(function () {});
-  }
   }
 
   function splitWords(el) {

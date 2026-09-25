@@ -741,8 +741,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 @media (min-width: 1024px) {
   .hero .section__bg { top: calc(-40 * var(--u)); left: calc(var(--edge) + 166 * var(--u)); right: auto; width: calc(522 * var(--u)); }
   .hero .section__bg {
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .4) 26%, #000 46%, #000 86%, transparent 100%);
-            mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .4) 26%, #000 46%, #000 86%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, var(--ma, 0)) 0%, rgba(0, 0, 0, calc(.4 + var(--ma, 0) * .6)) 26%, #000 46%, #000 86%, rgba(0, 0, 0, var(--mb, 0)) 100%);
+            mask-image: linear-gradient(90deg, rgba(0, 0, 0, var(--ma, 0)) 0%, rgba(0, 0, 0, calc(.4 + var(--ma, 0) * .6)) 26%, #000 46%, #000 86%, rgba(0, 0, 0, var(--mb, 0)) 100%);
   }
   .hero .section__bg img { object-position: 50% 58%; }
   /* leitura das palavras laterais sobre a foto */
@@ -889,14 +889,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .site-footer__bottom { flex-direction: column; text-align: center; padding-bottom: 72px; }
 }
 
-/* Anel 3D do hero: entra com fade por cima da foto, que some quando o 3D está pronto */
-.hero3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 1.2s var(--ease); pointer-events: none; }
-.hero .section__bg.has-3d .hero3d { opacity: 1; }
-.hero .section__bg picture { transition: opacity 1.2s var(--ease); }
-.hero .section__bg.has-3d picture { opacity: 0; }
-.hero .section__bg { background: radial-gradient(45% 45% at 62% 50%, rgba(25, 61, 137, .35), transparent 70%); }
-
 /* GSAP + ScrollTrigger (scroll.js): apoios em CSS */
+.hero__title, .hero__subtitle, .hero__body, .hero .hero__copy > .btn, .micro-benefits, .hero__side-words {
+  translate: calc(var(--px, 0px) + var(--mx, 0px)) calc(var(--py, 0px) + var(--my, 0px));
+}
 .form-card { scale: var(--pull, 1); }
 .cta-form::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: rgba(5, 5, 6, var(--dim, 0)); }
 .btn--gold.is-lit { box-shadow: 0 0 0 1px rgba(227, 198, 129, .55), 0 14px 38px -8px rgba(195, 170, 104, .75); }
