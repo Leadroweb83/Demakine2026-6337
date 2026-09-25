@@ -78,11 +78,13 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   seção na tela; 10 mapa com zoom e pin que cai. Sem GSAP (ou com movimento reduzido), valem as animações de script.js.
 - Anel e brinco 3D (three.js, feitos em código): anel de dois fios torcidos com bordas de milgrain; brinco com
   tarraxa em cúpula, coroa de bolinhas, argola e pingente em gota com moldura dupla, contorno de bolinhas e filigrana.
-  Começam em metal bruto no hero, descem com a página pelas fotos da Consultoria e da Estratégia recebendo o banho de
-  ouro e mergulham atrás de Diferenciais (seção-parede com z-index acima do canvas fixo). No celular se dissolvem
-  entre uma foto e outra para não cruzar textos. Fonte: `../audace-galvanica-fonte/src/joias3d.js`
-  (`npm install && npm run build:3d` gera `vendor/joias3d.min.js`). Carregam depois da página abrir; não ligam sem
-  GPU real, em aparelho lento (vigia de quadros) ou com movimento reduzido. Teste sem GPU: `?3d=force`.
+  Movimento lento. No hero ficam na faixa escura da direita e recebem o banho de ouro durante a "janela que se abre".
+  Voltam no Antes e depois, nas laterais da imagem principal (no celular, abaixo dela) com 15% atrás da imagem, indo
+  do bruto ao ouro conforme a seção entra. Fonte: `../audace-galvanica-fonte/src/joias3d.js`
+  (`npm install && npm run build:3d` gera `vendor/joias3d.min.js`). Só baixa com GPU real, depois da página abrir;
+  vigia de quadros e movimento reduzido desligam. Teste sem GPU: `?3d=force`.
+- WhatsApp flutuante: "Estamos online" com ponto verde pulsando das 7h às 18h (horário de Brasília), "Fale conosco"
+  fora do horário; perto do rodapé vira só o ícone; no celular aparece depois do hero.
 - Parallax do hero: opção 3 escolhida pelo cliente (`data-parallax="3"`): hero fixo por 85% da tela, a janela da foto
   se abre até a largura toda e o texto sai. O espaço do pin é reservado no CSS desde o início (sem CLS). No celular
   usa a opção 1 (camadas). As outras seguem testáveis por `?parallax=1|2`.

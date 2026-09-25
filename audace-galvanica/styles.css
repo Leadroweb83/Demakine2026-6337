@@ -907,11 +907,12 @@ html.lenis { scroll-behavior: auto; }
   html.js-motion .hero[data-parallax="3"]:not(.is-pin-ready) { margin-bottom: 85vh; }
 }
 
-/* Anel e brinco 3D: canvas fixo acima das três primeiras seções e abaixo de Diferenciais em diante,
-   que funciona como "parede": as peças mergulham atrás dela */
+/* Anel e brinco 3D: canvas fixo e transparente. No hero ficam na faixa escura da direita; no Antes e depois
+   ficam atrás da imagem principal (15% escondido): a seção não isola camadas e a imagem e os títulos sobem acima. */
 .joias3d { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .8s var(--ease); }
 .joias3d.is-on { opacity: 1; }
-#diferenciais, #diferenciais ~ section, .site-footer { position: relative; z-index: 3; }
+.compare { isolation: auto; }
+.compare__frame, .compare__head, .compare__note { position: relative; z-index: 3; }
 
 /* GSAP + ScrollTrigger (scroll.js): apoios em CSS */
 .hero__title, .hero__subtitle, .hero__body, .hero .hero__copy > .btn, .micro-benefits, .hero__side-words {
@@ -1196,16 +1197,32 @@ body::after {
 .js-motion img[loading="lazy"] { opacity: 0; transition: opacity .8s var(--ease); }
 .js-motion img[loading="lazy"].is-loaded { opacity: 1; }
 
-/* 40. WhatsApp flutuante, só depois do hero; discreto para não competir com o CTA */
+/* 40. WhatsApp flutuante: pílula com status. Das 7h às 18h (Brasília) "Estamos online" com ponto verde
+   pulsando como transmissão ao vivo; fora do horário, "Fale conosco". Perto do rodapé vira só o ícone. */
 .wa-float {
   position: fixed; z-index: 60;
   right: calc(20px + env(safe-area-inset-right, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%;
-  background: rgba(28, 28, 30, .92); border: 1px solid rgba(195, 170, 104, .55);
-  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .8);
-  transition: opacity .5s var(--ease), transform .5s var(--ease), visibility .5s, border-color .3s;
+  display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 18px 0 6px; border-radius: 999px;
+  background: rgba(20, 20, 22, .94); border: 1px solid rgba(195, 170, 104, .55);
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, .85);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  color: var(--white); font-size: 13px; font-weight: 600; letter-spacing: .01em; white-space: nowrap;
+  transition: opacity .5s var(--ease), transform .5s var(--ease), visibility .5s, border-color .3s, padding .45s var(--ease), gap .45s var(--ease);
 }
-.wa-float img { width: 24px; height: 24px; }
+.wa-float__icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #1f8f4e; flex: none; }
+.wa-float img { width: 22px; height: 22px; }
+.wa-float__label { display: inline-flex; align-items: center; gap: 8px; max-width: 160px; overflow: hidden; transition: max-width .45s var(--ease), opacity .3s var(--ease); }
+.wa-float__dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--line-gold); flex: none; }
+.wa-float.is-online .wa-float__dot { background: #2BD66B; box-shadow: 0 0 8px rgba(43, 214, 107, .8); }
+.wa-float.is-online .wa-float__dot::after {
+  content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid rgba(43, 214, 107, .7);
+  animation: waLive 1.6s ease-out infinite;
+}
+.wa-float.is-online .wa-float__icon { animation: waBeat 2.4s ease-in-out infinite; }
+@keyframes waLive { from { transform: scale(.4); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+@keyframes waBeat { 0%, 100% { box-shadow: 0 0 0 0 rgba(43, 214, 107, .45); } 50% { box-shadow: 0 0 0 7px rgba(43, 214, 107, 0); } }
+.wa-float.is-compact { padding: 0 6px; gap: 0; }
+.wa-float.is-compact .wa-float__label { max-width: 0; opacity: 0; }
 .wa-float:hover { border-color: var(--gold-light); transform: translateY(-2px); }
 .js .wa-float:not(.is-visible) { opacity: 0; visibility: hidden; transform: translateY(12px); }
 

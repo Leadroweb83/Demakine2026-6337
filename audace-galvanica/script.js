@@ -192,7 +192,8 @@
     var max = document.documentElement.scrollHeight - vh;
     header.classList.toggle('is-scrolled', y > 40);
     root.style.setProperty('--read', max > 0 ? (y / max).toFixed(4) : 0);
-    if (wa && hero) wa.classList.toggle('is-visible', y > hero.offsetHeight * 0.8);
+    /* no celular aparece depois do botão do hero (para não cobri-lo); no desktop fica sempre visível */
+    if (wa) wa.classList.toggle('is-visible', wide.matches || !hero || y > hero.offsetHeight * 0.6);
     if (!motion) return;
 
     var big = desktop.matches;
@@ -407,4 +408,29 @@
 (function () {
   var y = document.querySelector('[data-year]');
   if (y) y.textContent = new Date().getFullYear();
+})();
+
+/* WhatsApp flutuante: "Estamos online" das 7h às 18h no horário de Brasília, "Fale conosco" fora dele.
+   Perto do rodapé vira só o ícone, para não cobrir a assinatura. */
+(function () {
+  var wa = document.querySelector('[data-wa-float]');
+  if (!wa) return;
+  var label = wa.querySelector('[data-wa-status]');
+  function hourBR() {
+    try {
+      return parseInt(new Intl.DateTimeFormat('pt-BR', { hour: 'numeric', hour12: false, timeZone: 'America/Sao_Paulo' }).format(new Date()), 10);
+    } catch (e) { return new Date().getHours(); }
+  }
+  function update() {
+    var h = hourBR(), online = h >= 7 && h < 18;
+    wa.classList.toggle('is-online', online);
+    label.textContent = online ? 'Estamos online' : 'Fale conosco';
+    wa.setAttribute('aria-label', (online ? 'Estamos online no WhatsApp' : 'Fale conosco no WhatsApp') + ' (abre em nova aba)');
+  }
+  update();
+  setInterval(update, 60000);
+  var foot = document.querySelector('.site-footer');
+  if (foot && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) { wa.classList.toggle('is-compact', e[0].isIntersecting); }).observe(foot);
+  }
 })();

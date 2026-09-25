@@ -91,21 +91,15 @@ function makeEarring(metal) {
   return wrap;
 }
 
-/* ---------- coreografia ---------- */
-const STAGES = {
-  big: [
-    { sel: '#hero .section__bg', ring: [0.62, 0.38], ear: [0.8, 0.64], size: 1 },
-    { sel: '#consultoria .section__bg', ring: [0.22, 0.8], ear: [0.6, 0.86], size: 0.78 },
-    { sel: '#estrategia .section__bg', ring: [0.3, 0.56], ear: [0.74, 0.44], size: 0.78 },
-    { sel: '#diferenciais', ring: [0.42, 0.5], ear: [0.6, 0.46], size: 0.7 }
-  ],
-  small: [
-    { sel: '#hero .section__bg', ring: [0.32, 0.36], ear: [0.76, 0.46], size: 1 },
-    { sel: '#consultoria .section__bg', ring: [0.2, 0.72], ear: [0.8, 0.78], size: 0.85 },
-    { sel: '#estrategia .section__bg', ring: [0.24, 0.6], ear: [0.8, 0.5], size: 0.85 },
-    { sel: '#diferenciais', ring: [0.38, 0.4], ear: [0.66, 0.36], size: 0.75 }
-  ]
+/* ---------- coreografia ----------
+   1) Hero: as peças ficam na faixa escura da direita e recebem o banho de ouro enquanto o hero rola.
+   2) Antes e depois: voltam nas laterais da imagem principal, com 15% delas atrás da imagem,
+      e se transformam do bruto ao ouro conforme a seção entra na tela. Entre as duas, não aparecem. */
+const HERO = {
+  big: { ring: [0.905, 0.27], ear: [0.9, 0.77], size: 150 },
+  small: { ring: [0.83, 0.13], ear: [0.87, 0.37], size: 74 }
 };
+const HIDE = 0.15; // fração das peças escondida atrás da imagem do Antes e depois
 
 export function initJoias(opts) {
   const ST = opts && opts.ScrollTrigger;
@@ -161,71 +155,69 @@ export function initJoias(opts) {
   }
   function toWorld(px, py, out) { out.x = (px - W / 2) * k; out.y = -(py - H / 2) * k; return out; }
 
-  // posições de rolagem de cada etapa (em coordenadas do documento)
-  let stops = [], stages = STAGES.big;
-  function measure() {
-    stages = small.matches ? STAGES.small : STAGES.big;
-    const y = window.scrollY;
-    stops = stages.map((s, i) => {
-      const el = document.querySelector(s.sel);
-      if (!el) return 0;
-      const r = el.getBoundingClientRect();
-      if (i === 0) return 0;
-      if (i === stages.length - 1) return r.top + y - H * 0.28;   // seção-parede com o topo a 28% da tela
-      return r.top + y + r.height / 2 - H / 2;                     // foto centralizada na tela
-    });
-  }
+  function measure() { /* posições são lidas ao vivo a cada quadro */ }
 
-  function anchor(i, which, out) {
-    const s = stages[i];
-    const el = document.querySelector(s.sel);
-    const r = el.getBoundingClientRect();
-    const f = s[which];
-    out.x = r.left + f[0] * r.width; out.y = r.top + f[1] * r.height;
-    return out;
-  }
+  const v = new Vector3();
+  const heroEl = document.querySelector('#hero');
+  const frameEl = document.querySelector('.compare__frame');
+  let t0 = performance.now();
+  let mode = 'none';
 
-  const a = { x: 0, y: 0 }, b = { x: 0, y: 0 }, v = new Vector3();
-  let t0 = performance.now(), lastY = -1;
-  function place(obj, which, seg, t, time, baseScale) {
-    anchor(seg, which, a); anchor(Math.min(seg + 1, stages.length - 1), which, b);
-    const px = a.x + (b.x - a.x) * t, py = a.y + (b.y - a.y) * t;
+  function setAt(obj, px, py, sizePx, baseScale) {
     toWorld(px, py, v);
     obj.position.set(v.x, v.y, 0);
-    const sz = stages[seg].size + (stages[Math.min(seg + 1, stages.length - 1)].size - stages[seg].size) * t;
-    const pxSize = (small.matches ? Math.min(W * 0.24, 120) : Math.min(W * 0.12, 190)) * sz;
-    obj.scale.setScalar((pxSize * k) / baseScale);
+    obj.scale.setScalar((sizePx * k) / baseScale);
+  }
+  function setGold(g) {
+    metal.color.copy(RAW).lerp(GOLD, g);
+    metal.roughness = MathUtils.lerp(0.5, 0.15, g);
+    metal.clearcoat = MathUtils.lerp(0, 0.5, g);
+  }
+  function stage() {
+    if (heroEl) { const r = heroEl.getBoundingClientRect(); if (r.bottom > 0) return 'hero'; }
+    if (frameEl) { const r = frameEl.getBoundingClientRect(); if (r.top < H + 120 && r.bottom > -160) return 'compare'; }
+    return 'none';
   }
 
   function frame() {
-    const now = performance.now(), time = (now - t0) / 1000;
+    const time = (performance.now() - t0) / 1000;
     const y = window.scrollY;
-    const last = stops[stops.length - 1] || 1;
-    // etapa atual e avanço entre âncoras (fica um tempo "presa" na foto e depois desliza)
-    let seg = 0;
-    for (let i = 0; i < stops.length - 1; i++) if (y >= stops[i]) seg = i;
-    const span = Math.max(1, stops[seg + 1] - stops[seg]);
-    const t = smooth(0.2, 0.9, (y - stops[seg]) / span);
+    mode = stage();
+    const sm = small.matches;
+    // movimento lento e contínuo: giro suave, leve balanço e flutuação
+    ring.rotation.set(0.45 + Math.sin(time * 0.3) * 0.06, time * 0.12 + y * 0.0006, 0.22);
+    ear.rotation.set(0.08, Math.sin(time * 0.25) * 0.5 + y * 0.0004, Math.sin(time * 0.6) * 0.05);
+    const fl = Math.sin(time * 0.6) * 5, fl2 = Math.sin(time * 0.6 + 1.3) * 5;
 
-    // banho de ouro: bruto no topo, dourado ao chegar na Estratégia
-    const gold = smooth(0, stops[2] || last * 0.66, y);
-    metal.color.copy(RAW).lerp(GOLD, gold);
-    metal.roughness = MathUtils.lerp(0.5, 0.15, gold);
-    metal.clearcoat = MathUtils.lerp(0, 0.5, gold);
-
-    // no celular as fotos ficam acima dos textos: entre uma foto e outra as peças se dissolvem
-    // e reaparecem na próxima, em vez de atravessar o texto
-    const last2 = seg >= stops.length - 2;
-    metal.opacity = small.matches && !last2 ? 1 - smooth(0.06, 0.2, t) + smooth(0.8, 0.94, t) : 1;
-    place(ring, 'ring', seg, t, time, 2.3);
-    place(ear, 'ear', seg, t, time, 2.2);
-    const scrollSpin = y * 0.0022;
-    ring.rotation.set(0.5 + Math.sin(time * 0.6) * 0.08, time * 0.35 + scrollSpin, 0.25);
-    ear.rotation.set(0.1, Math.sin(time * 0.5) * 0.6 + scrollSpin * 0.6, Math.sin(time * 1.3) * 0.08);
-    ring.position.y += Math.sin(time * 1.1) * 0.04;
-    ear.position.y += Math.sin(time * 1.1 + 1.4) * 0.04;
-    renderer.render(scene, camera);
-    lastY = y;
+    if (mode === 'hero') {
+      const r = heroEl.getBoundingClientRect();
+      const cfg = sm ? HERO.small : HERO.big;
+      const size = sm ? cfg.size : Math.min(W * 0.12, cfg.size * (W / 1262));
+      // banho acontece dentro do hero: no desktop durante a "janela que se abre", no celular ao rolar o hero
+      const span = sm ? r.height * 0.6 : H * 0.85;
+      setGold(smooth(0.05, 0.95, y / span));
+      metal.opacity = 1;
+      setAt(ring, r.left + cfg.ring[0] * r.width, r.top + cfg.ring[1] * r.height + fl, size, 2.3);
+      setAt(ear, r.left + cfg.ear[0] * r.width, r.top + cfg.ear[1] * r.height + fl2, size * 1.15, 2.2);
+    } else if (mode === 'compare') {
+      const r = frameEl.getBoundingClientRect();
+      // 0 quando a imagem começa a entrar, 1 quando está no centro da tela
+      const p = clamp01((H - r.top) / (H / 2 + r.height / 2));
+      setGold(smooth(0.12, 0.92, p));
+      metal.opacity = smooth(0, 0.3, p) * (1 - smooth(0.25, -0.1, r.bottom / H));
+      const size = sm ? Math.min(W * 0.26, 110) : Math.min(W * 0.13, 170);
+      const rise = (1 - smooth(0, 0.9, p)) * 60; // sobem devagar até o lugar
+      const ringW = size, earW = size * 1.15 * 0.55;
+      if (sm) {
+        // imagem ocupa a largura toda: as peças ficam abaixo dela, com 15% atrás da borda inferior
+        setAt(ring, W * 0.16, r.bottom + (0.5 - HIDE) * ringW + rise + fl, ringW, 2.3);
+        setAt(ear, W * 0.84, r.bottom + (0.5 - HIDE) * size * 1.15 + rise + fl2, size * 1.15, 2.2);
+      } else {
+        setAt(ring, r.left - (0.5 - HIDE) * ringW, r.top + r.height * 0.34 + rise + fl, ringW, 2.3);
+        setAt(ear, r.right + (0.5 - HIDE) * earW, r.top + r.height * 0.6 + rise + fl2, size * 1.15, 2.2);
+      }
+    }
+    if (mode !== 'none') renderer.render(scene, camera);
   }
 
   /* laço: só roda enquanto as peças podem estar na tela (do topo até pouco depois do mergulho) */
@@ -241,7 +233,7 @@ export function initJoias(opts) {
     }
     lastT = nowT;
   }
-  function inRange() { return window.scrollY < (stops[stops.length - 1] || 0) + H * 0.9; }
+  function inRange() { return stage() !== 'none'; }
   function loop(nowT) {
     if (!running) return;
     if (!FORCE && (frames < 24 || !degraded)) watch(nowT || performance.now());
