@@ -1,0 +1,12 @@
+{
+  "name": "audace-galvanica-fonte",
+  "private": true,
+  "description": "Fonte do anel 3D do hero (three.js), empacotado em ../audace-galvanica/vendor/hero3d.min.js",
+  "scripts": {
+    "build:3d": "esbuild src/hero3d.js --bundle --format=esm --minify --target=es2019 --legal-comments=eof --sourcemap --outfile=../audace-galvanica/vendor/hero3d.min.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10",
+    "three": "0.186.1"
+  }
+}

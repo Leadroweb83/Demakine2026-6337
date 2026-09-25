@@ -76,6 +76,13 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   2 hero em camadas; 3 Como funciona fixa no desktop com as etapas acendendo uma a uma; 7 frase da consultoria
   palavra por palavra; 8 formulário que cresce, fundo que escurece e botão que brilha no centro; 9 menu que marca a
   seção na tela; 10 mapa com zoom e pin que cai. Sem GSAP (ou com movimento reduzido), valem as animações de script.js.
+- Hero com anel 3D (three.js, feito em código, sem arquivo 3D): solitário com banho de ouro e diamante. Entra
+  como metal bruto e recebe o "banho" de ouro; gira devagar, muda de ângulo com a rolagem (ScrollTrigger) e inclina
+  com o mouse. Fonte em `../audace-galvanica-fonte/src/hero3d.js`; gerar com `npm install && npm run build:3d`
+  (sai `vendor/hero3d.min.js` + `.map`). Carrega depois da página abrir; a foto do kit continua sendo a imagem
+  principal (LCP) e fica no lugar quando: não há WebGL, a renderização é por software, o aparelho não sustenta
+  ~22 quadros/s (o vigia baixa a resolução e depois devolve a foto) ou o usuário pediu movimento reduzido.
+  Teste sem GPU: `?3d=force`.
 - Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
 
 ## Decisões sobre os assets (versão anterior, histórico)

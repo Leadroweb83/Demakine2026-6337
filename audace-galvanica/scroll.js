@@ -132,6 +132,13 @@
   /* Abrir e fechar perguntas muda a altura da página: recalcula os gatilhos */
   $$('details').forEach(function (d) { d.addEventListener('toggle', function () { ST.refresh(); }); });
 
+  /* Anel 3D do hero (three.js, vendor/hero3d.min.js): só com animações ligadas.
+     Sem WebGL, ou se falhar, a foto do hero continua. */
+  if (motion) {
+    import('./vendor/hero3d.min.js')
+      .then(function (m) { m.initHero3D({ gsap: gsap, ScrollTrigger: ST, reduce: false }); })
+      .catch(function () {});
+  }
   }
 
   function splitWords(el) {
