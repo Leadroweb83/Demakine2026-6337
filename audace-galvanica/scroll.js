@@ -214,6 +214,14 @@
   ST.sort();
   ST.refresh();
 
+  /* Anel e brinco 3D (three.js, vendor/joias3d.min.js): descem do hero até mergulhar atrás de Diferenciais.
+     Só com animações ligadas; sem GPU real ou em aparelho lento, não aparecem. */
+  if (motion) {
+    import('./vendor/joias3d.min.js')
+      .then(function (m) { m.initJoias({ gsap: gsap, ScrollTrigger: ST }); })
+      .catch(function () {});
+  }
+
   /* Lenis: rolagem suave com inércia, sincronizada com o ScrollTrigger. Só no desktop com mouse
      (no celular a rolagem nativa já é suave) e sem pedido de movimento reduzido. */
   if (motion && window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {

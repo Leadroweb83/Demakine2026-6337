@@ -907,6 +907,12 @@ html.lenis { scroll-behavior: auto; }
   html.js-motion .hero[data-parallax="3"]:not(.is-pin-ready) { margin-bottom: 85vh; }
 }
 
+/* Anel e brinco 3D: canvas fixo acima das três primeiras seções e abaixo de Diferenciais em diante,
+   que funciona como "parede": as peças mergulham atrás dela */
+.joias3d { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .8s var(--ease); }
+.joias3d.is-on { opacity: 1; }
+#diferenciais, #diferenciais ~ section, .site-footer { position: relative; z-index: 3; }
+
 /* GSAP + ScrollTrigger (scroll.js): apoios em CSS */
 .hero__title, .hero__subtitle, .hero__body, .hero .hero__copy > .btn, .micro-benefits, .hero__side-words {
   translate: calc(var(--px, 0px) + var(--mx, 0px)) calc(var(--py, 0px) + var(--my, 0px));
