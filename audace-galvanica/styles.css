@@ -67,7 +67,7 @@
   --gutter: 32px;
 
   --focus-ring: 0 0 0 2px var(--navy-black), 0 0 0 4px var(--line-gold);
-  --ease: cubic-bezier(.22, .61, .36, 1);
+  --ease: cubic-bezier(.22, 1, .36, 1); /* easeOutQuint (easings.net): chega devagar, acabamento de luxo */
 }
 
 /* ---------- Reset ---------- */
@@ -887,6 +887,24 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 @media (max-width: 767px) {
   .site-footer__bottom { flex-direction: column; text-align: center; padding-bottom: 72px; }
+}
+
+/* Seções claras: ondas em camadas no estilo Haikei (tons de off-white + fio dourado da paleta) */
+.benefits, .faq { background-image: url("images/overlays/ondas-claras.svg"); background-repeat: no-repeat; background-position: center bottom; }
+.benefits { background-size: 100% 62%; }
+.faq { background-size: 100% 42%; }
+@media (max-width: 1023px) { .benefits, .faq { background-size: 180% 26%; } }
+
+/* Lenis (rolagem suave, vendor/lenis.min.js), só no desktop com mouse */
+html.lenis, html.lenis body { height: auto; }
+html.lenis { scroll-behavior: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* Parallax 3 (janela que se abre): reserva desde o início o espaço que o hero fixo vai ocupar,
+   para a página não "pular" quando o GSAP chegar. O scroll.js troca a reserva pelo espaço do pin. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html.js-motion .hero[data-parallax="3"]:not(.is-pin-ready) { margin-bottom: 85vh; }
 }
 
 /* GSAP + ScrollTrigger (scroll.js): apoios em CSS */

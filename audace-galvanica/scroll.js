@@ -17,7 +17,10 @@
     loadScript('vendor/gsap.min.js')
       .then(function () { return loadScript('vendor/ScrollTrigger.min.js'); })
       .then(init)
-      .catch(function () { /* sem GSAP a página segue com as animações de script.js */ });
+      .catch(function () {
+        /* sem GSAP a página segue com as animações de script.js; libera o espaço reservado do hero */
+        var h = document.getElementById('hero'); if (h) h.classList.add('is-pin-ready');
+      });
   }
   function idle() { (window.requestIdleCallback || function (f) { setTimeout(f, 200); })(boot, { timeout: 2000 }); }
   if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
@@ -27,6 +30,7 @@
   var gsap = window.gsap, ST = window.ScrollTrigger;
   gsap.registerPlugin(ST);
   window.__audaceGsap = true;
+  gsap.defaults({ ease: 'expo.out' }); /* curva padrão das animações não presas à rolagem */
   var hp = document.querySelector('.hero .section__bg picture');
   if (hp) hp.style.removeProperty('--hero-y');
   var oldSteps = document.querySelector('[data-steps]');
@@ -120,6 +124,7 @@
     var heroEl = $('#hero');
     var q = /[?&]parallax=(\d)/.exec(location.search);
     var mode = q ? q[1] : (heroEl.getAttribute('data-parallax') || '0');
+    if (mode !== '3' || !big) heroEl.classList.add('is-pin-ready');
     var pic = '.hero .section__bg picture';
     var L = {
       title: '.hero__title', sub: '.hero__subtitle', body: '.hero__body',
@@ -167,6 +172,7 @@
     }
 
     if (mode === '3') {
+      heroEl.classList.add('is-pin-ready'); /* troca a reserva de espaço pelo espaço do pin, no mesmo quadro */
       var bg = $('.hero .section__bg');
       var t3 = gsap.timeline({ scrollTrigger: { trigger: heroEl, start: 'top top', end: '+=85%', scrub: true, pin: true, invalidateOnRefresh: true } });
       t3.to(bg, { left: 0, width: function () { return window.innerWidth; }, '--ma': 1, '--mb': 1, ease: 'power1.inOut' }, 0)
@@ -202,6 +208,25 @@
 
   /* Abrir e fechar perguntas muda a altura da página: recalcula os gatilhos */
   $$('details').forEach(function (d) { d.addEventListener('toggle', function () { ST.refresh(); }); });
+
+  /* Gatilhos com seção fixa foram criados fora da ordem da página (o hero depois das etapas):
+     ordena pela posição e recalcula, para cada um contar o espaço dos anteriores */
+  ST.sort();
+  ST.refresh();
+
+  /* Lenis: rolagem suave com inércia, sincronizada com o ScrollTrigger. Só no desktop com mouse
+     (no celular a rolagem nativa já é suave) e sem pedido de movimento reduzido. */
+  if (motion && window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
+    loadScript('vendor/lenis.min.js').then(function () {
+      if (!window.Lenis) return;
+      /* anchors: o Lenis já respeita o scroll-padding-top do cabeçalho fixo */
+      var lenis = new window.Lenis({ lerp: 0.09, anchors: true, autoRaf: false });
+      lenis.on('scroll', ST.update);
+      gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+      window.__audaceLenis = lenis;
+    }).catch(function () {});
+  }
   }
 
   function splitWords(el) {

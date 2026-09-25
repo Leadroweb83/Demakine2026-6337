@@ -78,8 +78,14 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   seção na tela; 10 mapa com zoom e pin que cai. Sem GSAP (ou com movimento reduzido), valem as animações de script.js.
 - Anel 3D no hero: testado e retirado a pedido do cliente (fonte guardada em `../audace-galvanica-fonte/src/hero3d.js`).
   O hero voltou a ser a foto do kit.
-- Parallax do hero em teste, três opções por `?parallax=1|2|3` (o escolhido vira `data-parallax` no `#hero`):
-  1 camadas profundas; 2 profundidade com o mouse + rolagem; 3 janela que se abre (hero fixo, foto vai à largura toda).
+- Parallax do hero: opção 3 escolhida pelo cliente (`data-parallax="3"`): hero fixo por 85% da tela, a janela da foto
+  se abre até a largura toda e o texto sai. O espaço do pin é reservado no CSS desde o início (sem CLS). No celular
+  usa a opção 1 (camadas). As outras seguem testáveis por `?parallax=1|2`.
+- Curvas (easings.net): padrão CSS `cubic-bezier(.22, 1, .36, 1)` (easeOutQuint) e GSAP `expo.out`.
+- Lenis 1.3 (MIT, `vendor/lenis.min.js`, ~5 KB): rolagem suave sincronizada com o ScrollTrigger, só no desktop com
+  mouse e sem movimento reduzido; links do menu rolam suavemente respeitando o cabeçalho.
+- Ondas no estilo Haikei (`images/overlays/ondas-claras.svg`, 1,4 KB): fundo das seções claras (Diferenciais e
+  Perguntas frequentes), em tons de off-white com fio dourado da paleta.
 - Lighthouse após a troca: mobile 98/100/100/100, desktop 100/100/100/100, CLS 0.
 
 ## Decisões sobre os assets (versão anterior, histórico)
