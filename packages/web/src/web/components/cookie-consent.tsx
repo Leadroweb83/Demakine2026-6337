@@ -1,6 +1,6 @@
 /**
  * Banner de consentimento de cookies (LGPD).
- * Guarda a escolha em localStorage e só libera medição depois do aceite.
+ * Guarda a escolha em localStorage. O GTM já carrega com o consentimento negado; o aceite libera os cookies.
  * Reabre pelo link "Preferências de cookies" no rodapé (evento custom).
  */
 import { useEffect, useState } from "react";

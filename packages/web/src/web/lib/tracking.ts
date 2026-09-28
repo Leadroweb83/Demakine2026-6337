@@ -1,9 +1,9 @@
 /**
  * Medição: Google Tag Manager (GTM-W4686GTS) e tag do Google Ads (AW-969480580).
  *
- * LGPD: nada do Google carrega antes de o visitante aceitar no banner de cookies ("Aceitar").
- * O Modo de Consentimento v2 já nasce negado e só vira "concedido" no aceite; quem recusa não
- * manda nada. O painel (/admin) não é medido.
+ * O GTM e a tag do Ads carregam assim que o site abre (pedido do cliente), mas com o Modo de
+ * Consentimento v2 negado por padrão: sem cookie, o Google só recebe sinais anônimos. No aceite do
+ * banner vira "concedido"; quem recusa continua negado. O painel (/admin) não é medido.
  *
  * A tag do Google Ads está aqui no código: não crie a mesma tag dentro do GTM (contaria em dobro).
  * Eventos para o GTM/GA4 e conversões do Ads: page_view_spa, generate_lead, job_application,
@@ -17,6 +17,7 @@ type TrackWindow = Window & { dataLayer?: DataLayer; gtag?: (...args: unknown[])
 
 const w = () => (typeof window === "undefined" ? null : (window as TrackWindow));
 let loaded = false;
+let granted = false;
 
 const DENIED = {
   ad_storage: "denied",
@@ -50,13 +51,12 @@ function addScript(src: string) {
   document.head.appendChild(s);
 }
 
-/** Carrega GTM e Google Ads (uma vez), já com o consentimento concedido. */
+/** Carrega GTM e Google Ads (uma vez). O consentimento já foi definido antes, em initTracking. */
 function load() {
   const win = w();
   if (!win || loaded || isAdmin()) return;
   loaded = true;
   win.gtag = gtag;
-  gtag("consent", "update", GRANTED);
   win.dataLayer!.push({ "gtm.start": Date.now(), event: "gtm.js" });
   addScript(`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`);
   gtag("js", new Date());
@@ -67,29 +67,36 @@ function load() {
 /** Mesma chave do banner (components/cookie-consent.tsx). */
 const CONSENT_KEY = "demakine_cookie_consent";
 
-/** Na abertura do site: consentimento negado por padrão; se o visitante já aceitou antes, carrega. */
+/**
+ * Na abertura do site: consentimento negado por padrão (ou concedido, se o visitante já aceitou
+ * numa visita anterior) e GTM carregado na hora.
+ */
 export function initTracking() {
   const win = w();
   if (!win) return;
   win.dataLayer = win.dataLayer ?? [];
-  gtag("consent", "default", { ...DENIED, wait_for_update: 500 });
   let consent: string | null = null;
   try {
     consent = win.localStorage.getItem(CONSENT_KEY);
   } catch {
-    /* armazenamento bloqueado: fica sem medição */
+    /* armazenamento bloqueado: segue negado */
   }
-  if (consent === "all") load();
+  granted = consent === "all";
+  gtag("consent", "default", granted ? GRANTED : { ...DENIED, wait_for_update: 500 });
+  load();
   listenContactClicks();
 }
 
 /** Escolha feita no banner de cookies. */
 export function applyConsent(choice: "all" | "essential") {
-  if (choice === "all") load();
-  else if (loaded) gtag("consent", "update", DENIED);
+  const next = choice === "all";
+  if (next !== granted) gtag("consent", "update", next ? GRANTED : DENIED);
+  granted = next;
+  // quem abriu direto no /admin e depois foi para o site ainda não tem o GTM
+  load();
 }
 
-/** Evento para o GTM (só sai se o visitante aceitou: antes disso o GTM nem existe). */
+/** Evento para o GTM (sem aceite, o Google recebe só o sinal anônimo do Modo de Consentimento). */
 export function track(event: string, params: Record<string, unknown> = {}) {
   const win = w();
   if (!win || !loaded || isAdmin()) return;
