@@ -51,11 +51,11 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
   #193D89 na barra de leitura e nos brilhos, cinza #4D4D4D nas bordas dos campos. **Textos, cores dos
   textos e fontes não mudaram** (inclusive o dourado #C9A35D das frases em destaque).
 - Fotos do ensaio em `images/fotos/` (WebP 420w/700w/860w/1122w + JPG de fallback):
-  hero `kit-rodio-pedra-agua`; consultoria `modelo-semijoias-rodio-luz-azul`; estratégia
-  `processo-banho-galvanico-correntes`; etapas `modelo-semijoias-rodio-olhar`, `kit-semijoias-rodio-zirconias`,
+  hero `kit-prateado-pedra-agua`; consultoria `modelo-semijoias-prateadas-luz-azul`; estratégia
+  `processo-banho-galvanico-correntes`; etapas `modelo-semijoias-prateadas-olhar`, `kit-semijoias-prateadas-zirconias`,
   `conjunto-semijoias-douradas-floral`; formulário `kit-semijoias-pedra-luz-azul`; fundo do Instagram
-  `modelo-colar-corrente-rodio` com véu grafite #1C1C1E e azul #193D89; Onde estamos com as peças
-  `kit-semijoias-rodio-zirconias` ao lado do texto, fundo grafite com brilho azul e mapa colorido em faixa larga (a vitrine de fotos no Instagram foi retirada a pedido do cliente).
+  `modelo-colar-corrente-prateado` com véu grafite #1C1C1E e azul #193D89; Onde estamos com as peças
+  `kit-semijoias-prateadas-zirconias` ao lado do texto, fundo grafite com brilho azul e mapa colorido em faixa larga (a vitrine de fotos no Instagram foi retirada a pedido do cliente).
 - As fotos ficam do lado oposto ao texto e se fundem ao preto por máscara, mantendo as posições dos textos da arte.
   No hero a foto fica entre o texto e as palavras laterais, para "Brilho / Qualidade..." não cobrir os brincos.
   No celular, a foto do hero ocupa o topo e o texto entra logo abaixo.
