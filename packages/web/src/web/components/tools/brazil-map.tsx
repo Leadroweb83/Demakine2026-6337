@@ -252,10 +252,10 @@ function GrowthStat({ dark }: { dark: boolean }) {
     >
       <div>
         <p className={cn("cine-kicker tabnum text-[40px] leading-none md:text-[46px]", dark ? "text-white" : "text-dm-ink")}>
-          <Counter to={site.stats.clients} prefix="+" />
+          <Counter to={site.stats.clients / 1000} prefix="+ de " suffix=" mil" />
         </p>
         <p className={cn("mt-2 text-[12.5px] uppercase tracking-[0.14em]", dark ? "text-white/55" : "text-dm-gray")}>
-          clientes atendidos
+          clientes atendidos no Brasil
         </p>
       </div>
       <div className="flex h-[72px] items-end gap-[5px]" aria-hidden="true">
