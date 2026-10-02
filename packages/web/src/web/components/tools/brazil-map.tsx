@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import mapRaw from "../../data/br-map.json";
-import { testimonials } from "@/lib/content";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Counter } from "../counter";
@@ -13,36 +12,20 @@ type MapData = {
 
 const map = mapRaw as unknown as MapData;
 
-/** Agrega os depoimentos reais por UF (a cidade vem no formato "Cidade/UF"). */
-function useByState() {
-  return useMemo(() => {
-    const acc: Record<string, { count: number; names: string[] }> = {};
-    for (const t of testimonials) {
-      const uf = t.city.split("/")[1]?.trim().toUpperCase();
-      if (!uf || !map.states[uf]) continue;
-      acc[uf] ??= { count: 0, names: [] };
-      acc[uf].count += 1;
-      acc[uf].names.push(`${t.company || t.name} · ${t.city}`);
-    }
-    return acc;
-  }, []);
-}
+/**
+ * Foto de cada estado (pessoas trabalhando num equipamento Demakine), em public/img/estados/<uf>.webp.
+ * Só entram aqui as UFs que já têm foto; as outras mostram a fábrica, de onde tudo sai.
+ */
+const STATE_PHOTOS: Record<string, string> = {};
+const FALLBACK_PHOTO = "/img/site/fabrica.webp";
+
+/** estados pequenos no desenho: sigla menor para não encavalar */
+const SMALL = new Set(["DF", "SE", "AL", "PB", "RN", "PE", "ES", "RJ"]);
 
 export function BrazilMap({ dark = true }: { dark?: boolean }) {
-  const byState = useByState();
-  const [active, setActive] = useState<string | null>("SP");
+  const [active, setActive] = useState<string>("SP");
 
-  const maxCount = Math.max(1, ...Object.values(byState).map((v) => v.count));
-
-  const fillFor = (uf: string) => {
-    const data = byState[uf];
-    if (!data) return dark ? "rgba(255,255,255,0.06)" : "#eef1f6";
-    const t = data.count / maxCount;
-    const alpha = 0.28 + t * 0.62;
-    return dark ? `rgba(69,131,232,${alpha})` : `rgba(16,61,148,${alpha})`;
-  };
-
-  const activeData = active ? byState[active] : undefined;
+  const fill = dark ? "rgba(69,131,232,0.62)" : "rgba(16,61,148,0.6)";
 
   /** Origem: fábrica em Limeira/SP. */
   const origin: [number, number] = [map.states.SP.c[0] - 6, map.states.SP.c[1] - 26];
@@ -74,6 +57,9 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const state = map.states[active];
+  const photo = STATE_PHOTOS[active];
+
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
       <div className="relative mx-auto w-full max-w-[420px]">
@@ -87,16 +73,16 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
             <path
               key={uf}
               d={s.d}
-              className={cn("uf-path", byState[uf] && "has-data")}
-              fill={active === uf && byState[uf] ? "#e4141b" : fillFor(uf)}
+              className="uf-path has-data"
+              fill={active === uf ? "#e4141b" : fill}
               stroke={dark ? "rgba(255,255,255,0.22)" : "rgba(16,61,148,0.25)"}
               strokeWidth={1.6}
-              onMouseEnter={() => byState[uf] && setActive(uf)}
-              onFocus={() => byState[uf] && setActive(uf)}
-              onClick={() => byState[uf] && setActive(uf)}
-              tabIndex={byState[uf] ? 0 : -1}
+              onMouseEnter={() => setActive(uf)}
+              onFocus={() => setActive(uf)}
+              onClick={() => setActive(uf)}
+              tabIndex={0}
             >
-              <title>{`${s.name}${byState[uf] ? `: ${byState[uf].count} cliente(s)` : ""}`}</title>
+              <title>{s.name}</title>
             </path>
           ))}
 
@@ -112,9 +98,8 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
                     active === r.uf
                       ? "rgba(228,20,27,0.9)"
                       : dark
-                        ? // estado sem depoimento público: linha mais discreta, para o mapa não virar um emaranhado
-                          `rgba(255,255,255,${byState[r.uf] ? 0.45 : 0.24})`
-                        : `rgba(16,61,148,${byState[r.uf] ? 0.4 : 0.22})`
+                        ? "rgba(255,255,255,0.38)"
+                        : "rgba(16,61,148,0.35)"
                   }
                   strokeWidth={active === r.uf ? 2 : 1.5}
                   strokeLinecap="round"
@@ -145,24 +130,21 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
             ))}
           </g>
 
-          {Object.entries(byState).map(([uf]) => {
-            const s = map.states[uf];
-            return (
-              <text
-                key={`t-${uf}`}
-                x={s.c[0]}
-                y={s.c[1] + 5}
-                textAnchor="middle"
-                fontSize={20}
-                fontFamily="Anton, sans-serif"
-                fill={dark ? "#fff" : "#0a1f3d"}
-                opacity={0.85}
-                pointerEvents="none"
-              >
-                {uf}
-              </text>
-            );
-          })}
+          {Object.entries(map.states).map(([uf, s]) => (
+            <text
+              key={`t-${uf}`}
+              x={s.c[0]}
+              y={s.c[1] + 5}
+              textAnchor="middle"
+              fontSize={SMALL.has(uf) ? 13 : 20}
+              fontFamily="Anton, sans-serif"
+              fill={dark ? "#fff" : "#0a1f3d"}
+              opacity={0.85}
+              pointerEvents="none"
+            >
+              {uf}
+            </text>
+          ))}
 
           {/* fábrica em Limeira/SP */}
           <g pointerEvents="none">
@@ -192,37 +174,29 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
       <div>
         <GrowthStat dark={dark} />
 
-        <div
+        <figure
           className={cn(
-            "mt-4 min-h-[170px] rounded-xl border p-5",
-            dark ? "border-white/10 bg-white/[0.04]" : "border-dm-line bg-white",
+            "relative mt-4 aspect-[4/3] overflow-hidden rounded-xl border",
+            dark ? "border-white/10 bg-white/[0.04]" : "border-dm-line bg-dm-surface",
           )}
         >
-          {activeData && active ? (
-            <>
-              <p className={cn("cine-kicker text-[22px]", dark ? "text-white" : "text-dm-ink")}>
-                {map.states[active].name}
-              </p>
-              <ul className={cn("mt-3 space-y-1.5 text-[14px]", dark ? "text-white/70" : "text-dm-gray")}>
-                {activeData.names.map((n) => (
-                  <li key={n} className="flex gap-2">
-                    <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-dm-red" />
-                    {n}
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <p className={cn("text-[14.5px]", dark ? "text-white/60" : "text-dm-gray")}>
-              Passe o mouse nos estados destacados para ver quem já opera com equipamentos Demakine.
-            </p>
-          )}
-        </div>
-
-        <p className={cn("mt-3 text-[12.5px]", dark ? "text-white/40" : "text-dm-gray/85")}>
-          O mapa mostra apenas os clientes que autorizaram depoimento público. A entrega é feita em
-          todo o território nacional.
-        </p>
+          <img
+            key={photo ?? "fabrica"}
+            src={photo ?? FALLBACK_PHOTO}
+            alt={photo ? `Equipe trabalhando com equipamento Demakine em ${state.name}` : "Fábrica da Demakine em Limeira/SP"}
+            loading="lazy"
+            className="state-photo h-full w-full object-cover"
+          />
+          <figcaption
+            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#08192f]/90 to-transparent px-5 pb-4 pt-12"
+            aria-live="polite"
+          >
+            <span className="cine-kicker block text-[22px] leading-tight text-white">{state.name}</span>
+            <span className="mt-1 block text-[13px] text-white/75">
+              {photo ? "Equipamento Demakine em operação" : "Sai da fábrica em Limeira/SP e chega até você"}
+            </span>
+          </figcaption>
+        </figure>
       </div>
     </div>
   );

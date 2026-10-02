@@ -288,8 +288,8 @@ export default function Home() {
               <CineTitle className="mt-5" small lines={["Nossas máquinas", "estão rodando", "perto de você"]} />
               <CineRule className="mt-5" />
               <p className="mt-5 max-w-xl text-[16.5px] leading-relaxed text-white/70">
-                O mapa mostra os estados onde clientes já publicaram depoimento sobre a Demakine.
-                Entregamos em todo o país, com logística acompanhada e assistência técnica própria.
+                Da fábrica em Limeira/SP para os 26 estados e o Distrito Federal, com logística
+                acompanhada e assistência técnica própria.
               </p>
 
               <div className="mt-8 space-y-3">

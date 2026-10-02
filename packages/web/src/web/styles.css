@@ -716,6 +716,22 @@
   fill: #e4141b;
 }
 
+/* foto do estado no mapa da home: troca suave */
+.state-photo {
+  animation: state-photo-in 0.45s ease;
+}
+@keyframes state-photo-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .state-photo {
+    animation: none;
+  }
+}
+
 /* barras de crescimento ao lado do número de clientes (mapa da home) */
 .growth-bar {
   transform: scaleY(0);
