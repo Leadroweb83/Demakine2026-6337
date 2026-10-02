@@ -262,7 +262,8 @@ export function Fact({
         className={cn(
           "mt-1 text-[16px] font-bold",
           dark ? "text-white" : "text-dm-ink",
-          highlight && "text-dm-red",
+          // vermelho sobre fundo escuro não dá contraste: no escuro o destaque fica na borda
+          highlight && !dark && "text-dm-red",
         )}
       >
         {v}

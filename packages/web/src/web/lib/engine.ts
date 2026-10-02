@@ -79,8 +79,11 @@ const familyBySituation: Record<MaterialKey, string> = {
 
 export type SizingInput = {
   material: MaterialKey;
-  /** distância horizontal entre carga e descarga, em metros */
-  distance: number;
+  /**
+   * distância horizontal entre carga e descarga, em metros. Sem ela (calculadora do topo da home),
+   * a indicação sai só pela altura: o menor modelo da tabela que alcança a descarga.
+   */
+  distance?: number;
   /** altura de descarga desejada, em metros */
   height: number;
   /** ambiente: precisa inox/sanitário? */
@@ -107,12 +110,16 @@ export type SizingResult = {
   alternatives: Product[];
 };
 
+/** seno de 30°: inclinação máxima considerada quando a tabela não traz a altura do modelo */
+const SIN_MAX_ANGLE = 0.5;
+
 export function sizeConveyor(input: SizingInput): SizingResult {
   const notes: string[] = [];
-  const distance = Math.max(0, input.distance);
+  const byHeight = input.distance === undefined;
+  const distance = Math.max(0, input.distance ?? 0);
   const height = Math.max(0, input.height);
-  const needed = Math.sqrt(distance * distance + height * height);
-  const angle = distance > 0 ? (Math.atan2(height, distance) * 180) / Math.PI : height > 0 ? 90 : 0;
+  let needed = Math.sqrt(distance * distance + height * height);
+  let angle = distance > 0 ? (Math.atan2(height, distance) * 180) / Math.PI : height > 0 ? 90 : 0;
 
   let slug = familyBySituation[input.material];
 
@@ -129,7 +136,7 @@ export function sizeConveyor(input: SizingInput): SizingResult {
       "Acima de 7 m de elevação com granel, o elevador de canecas é a solução mais eficiente e ocupa menos área.",
     );
   }
-  if (angle > 30 && input.material === "granel") {
+  if (!byHeight && angle > 30 && input.material === "granel") {
     notes.push(
       "Inclinação acima de 30° com granel exige correia taliscada ou em V para o material não retornar.",
     );
@@ -156,9 +163,18 @@ export function sizeConveyor(input: SizingInput): SizingResult {
     .filter((m) => m.length !== null)
     .sort((a, b) => (a.length ?? 0) - (b.length ?? 0));
 
-  const fit = rows.find(
-    (m) => (m.length ?? 0) >= needed - 0.01 && (m.heightMax === null || m.heightMax >= height - 0.01),
-  );
+  const fit = byHeight
+    ? rows.find((m) =>
+        // sem altura máxima na tabela, vale o limite de 30° de inclinação
+        m.heightMax !== null ? m.heightMax >= height - 0.01 : (m.length ?? 0) * SIN_MAX_ANGLE >= height - 0.01,
+      )
+    : rows.find(
+        (m) => (m.length ?? 0) >= needed - 0.01 && (m.heightMax === null || m.heightMax >= height - 0.01),
+      );
+  if (byHeight) {
+    needed = fit?.length ?? height / SIN_MAX_ANGLE;
+    angle = needed > 0 ? (Math.asin(Math.min(1, height / needed)) * 180) / Math.PI : 0;
+  }
 
   const alternatives = products
     .filter((p) => p.slug !== product.slug && p.category === product.category)

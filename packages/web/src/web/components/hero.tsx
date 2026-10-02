@@ -6,7 +6,7 @@ import { BtnGhost, BtnPrimary } from "./kit";
 import { CineRule, CineStat, CineTag } from "./cine";
 import { Counter } from "./counter";
 import { Rotator } from "./rotator";
-import { QuickSelector } from "./tools/quick-selector";
+import { HeroCalc } from "./tools/hero-calc";
 import { site } from "@/lib/site";
 
 /* ------------------------------------------------------------------ ticker */
@@ -153,9 +153,9 @@ export function HomeHero() {
           </div>
 
           <div>
-            <QuickSelector />
+            <HeroCalc />
             <p className="mt-3 text-center text-[12.5px] text-white/45">
-              Três escolhas e você já cai na ficha técnica do equipamento indicado.
+              Valores de referência das tabelas de fábrica. A engenharia confirma com os dados da sua linha.
             </p>
           </div>
         </div>
