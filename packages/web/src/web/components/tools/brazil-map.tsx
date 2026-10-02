@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import mapRaw from "../../data/br-map.json";
 import { testimonials } from "@/lib/content";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Counter } from "../counter";
 
@@ -230,7 +231,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
 /** alturas das barras (decorativas): só o desenho de crescimento, não são dados por ano */
 const BARS = [22, 30, 38, 49, 58, 70, 84, 100];
 
-/** "+ de 2 mil clientes atendidos": número contando e barras subindo quando a caixa entra na tela. */
+/** Clientes atendidos (o mesmo número do topo da home): número contando e barras subindo quando a caixa entra na tela. */
 function GrowthStat({ dark }: { dark: boolean }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [seen, setSeen] = useState(false);
@@ -265,7 +266,7 @@ function GrowthStat({ dark }: { dark: boolean }) {
     >
       <div>
         <p className={cn("cine-kicker tabnum text-[40px] leading-none md:text-[46px]", dark ? "text-white" : "text-dm-ink")}>
-          <Counter to={2000} prefix="+" />
+          <Counter to={site.stats.clients} prefix="+" />
         </p>
         <p className={cn("mt-2 text-[12.5px] uppercase tracking-[0.14em]", dark ? "text-white/55" : "text-dm-gray")}>
           clientes atendidos
