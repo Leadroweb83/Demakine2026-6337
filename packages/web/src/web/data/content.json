@@ -55,7 +55,7 @@
         "Laterais para apoio da correia (opcional)",
         "Motoredutor blindado na tração da correia",
         "Disponível em 220 ou 380 Volts e em casos especiais o motor pode ser Monofásico",
-        "Pintura na cor azul sintético"
+        "Pintura predominante em PU (poliuretano), na cor azul"
       ],
       "models": [
         {
@@ -221,7 +221,7 @@
         "Rodízios giratórios na traseira",
         "Motoredutores blindados",
         "Disponível em 220 ou 380 Volts trifásico e em casos especiais o motor pode ser Monofásico",
-        "Pintura na cor azul esmalte sintético"
+        "Pintura predominante em PU (poliuretano), na cor azul"
       ],
       "models": [
         {
@@ -379,7 +379,7 @@
         "Rodízios giratórios na traseira Ø5″",
         "Motorredutores blindados",
         "Disponível em 220 ou 380 Volts trifásico e em casos especiais o motor pode ser Monofásico",
-        "Pintura na cor azul esmalte sintético"
+        "Pintura predominante em PU (poliuretano), na cor azul"
       ],
       "models": [
         {
@@ -506,7 +506,7 @@
         "Levante elétrico ou manual na manivela",
         "Motoredutores blindados",
         "Disponível em 220 ou 380 Volts e em casos especiais o motor pode ser Monofásico",
-        "Pintura na azul automotivo"
+        "Pintura predominante em PU (poliuretano), na cor azul"
       ],
       "models": [
         {
@@ -639,7 +639,7 @@
         "Rodízios giratórios na traseira",
         "Motoredutores blindados",
         "Disponível em 220 ou 380 Volts trifásico e em casos especiais o motor pode ser Monofásico",
-        "Pintura na azul esmalte sintético"
+        "Pintura predominante em PU (poliuretano), na cor azul"
       ],
       "models": [
         {
@@ -775,7 +775,7 @@
         "Rodízios giratórios Ø5″ na traseira",
         "Motoredutores blindados",
         "Disponível em 220 ou 380 Volts Trifásico e em casos especiais o motor pode ser Monofásico",
-        "Pintura na cor azul automotiva"
+        "Pintura predominante em PU (poliuretano), na cor azul"
       ],
       "models": [
         {
@@ -934,7 +934,7 @@
         "Laterais em chapa para contenção",
         "Motoredutores blindados",
         "Disponível em 220 ou 380 Volts e em casos especiais o motor pode ser Monofásico",
-        "Pintura na cor verde esmalte sintético ou podendo ser epóxi",
+        "Pintura predominante em PU (poliuretano), na cor verde",
         "Moega de recepção",
         "Inversor de Velocidade"
       ],
@@ -1075,7 +1075,8 @@
         "Inversor de Velocidade",
         "Motor monofásico 110/220 V",
         "Levante Elétrico",
-        "Tomada de força para trator"
+        "Tomada de força para trator",
+        "Pintura predominante em PU (poliuretano)"
       ],
       "models": [
         {
@@ -1234,7 +1235,8 @@
         "Sem carrinho e rodas ou com suporte fixo",
         "Motor monofásico 110/220 V",
         "Levante Elétrico",
-        "Tomada de força para trator. (Cardan)"
+        "Tomada de força para trator. (Cardan)",
+        "Pintura predominante em PU (poliuretano)"
       ],
       "models": [
         {
@@ -1394,7 +1396,8 @@
         "O formato e medida das canecas depende do produto (grão) a ser transportado",
         "Na base do elevador de canecas existem gavetas de limpeza",
         "Todo elevador tem em um de seus módulos a janela de manutenção e substituição das canecas",
-        "Canecas para elevador de canecas podem ser adquiridos separadamente"
+        "Canecas para elevador de canecas podem ser adquiridos separadamente",
+        "Pintura predominante em PU (poliuretano)"
       ],
       "models": [],
       "specKeys": [],
@@ -1439,7 +1442,8 @@
         "Tração por Motorredutor",
         "Rodízios giratórios para movimentação",
         "Correia laminada 03 lonas",
-        "Chave para acionamento"
+        "Chave para acionamento",
+        "Pintura predominante em PU (poliuretano)"
       ],
       "models": [],
       "specKeys": [],
@@ -1482,7 +1486,7 @@
         "Pedal para acionamento da costuradora",
         "Rolamentos de precisão na base móvel do carro",
         "Pés de borracha para regulagem de nível",
-        "Pintura eletrostática",
+        "Pintura predominante em PU (poliuretano)",
         "Indicado para sacos de carvão e produtos leves até 15 kilos"
       ],
       "models": [],
@@ -1646,7 +1650,8 @@
         "Chave de acionamento inclusa, instalada fora da máquina por causa da vibração",
         "Mancais com graxeiras para lubrificação",
         "Fixação chumbada ao piso, com guia de fixação para cada modelo",
-        "Modelos especiais sob medida"
+        "Modelos especiais sob medida",
+        "Pintura predominante em PU (poliuretano)"
       ],
       "models": [
         {
@@ -1748,7 +1753,7 @@
         "Produção máxima de 2000 sacos por dia",
         "Disponível em 220 ou 380 Volts trifásico e, em casos especiais, com motor monofásico",
         "Correia lisa de 150 centímetros",
-        "Pintura eletrostática"
+        "Pintura predominante em PU (poliuretano)"
       ],
       "models": [],
       "specKeys": [],

@@ -83,7 +83,7 @@ const differentials = [
   {
     Icon: ShieldCheck,
     title: "Estrutura reforçada",
-    text: "Aço SAE 1020, motoredutores blindados, roletes com rolamentos e pintura industrial para operar turno cheio.",
+    text: "Aço SAE 1020, motoredutores blindados, roletes com rolamentos e pintura PU para operar turno cheio.",
   },
   {
     Icon: Headphones,

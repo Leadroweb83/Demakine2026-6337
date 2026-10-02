@@ -59,7 +59,7 @@ const steps: Step[] = [
     question: "Como é o ambiente?",
     hint: "Define acabamento: pintura, galvanização ou inox.",
     options: [
-      { value: "comum", label: "Galpão comum", sub: "pintura industrial" },
+      { value: "comum", label: "Galpão comum", sub: "pintura PU" },
       { value: "sanitario", label: "Alimentício / sanitário", sub: "aço inox, correia atóxica" },
       { value: "externo", label: "Exposto ao tempo", sub: "galvanizado a fogo" },
     ],

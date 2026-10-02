@@ -28,7 +28,7 @@ export const beltHotspots: Hotspot[] = [
     x: 50,
     y: 60,
     title: "Estrutura em aço 1020",
-    text: "Perfil dobrado e soldado na nossa fábrica, com pintura industrial. É a mesma estrutura que aguenta turno cheio há mais de 15 anos.",
+    text: "Perfil dobrado e soldado na nossa fábrica, com pintura PU. É a mesma estrutura que aguenta turno cheio há mais de 15 anos.",
   },
   {
     x: 72,

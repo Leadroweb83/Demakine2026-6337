@@ -32,7 +32,7 @@ const steps: Step[] = [
   {
     n: "04",
     title: "Pintura e testes",
-    text: "Tratamento da superfície, pintura industrial e teste da máquina rodando antes de sair. Nada embarca sem funcionar.",
+    text: "Tratamento da superfície, pintura PU e teste da máquina rodando antes de sair. Nada embarca sem funcionar.",
     image: "/img/projetos/esteira-em-z/1.webp",
   },
   {
