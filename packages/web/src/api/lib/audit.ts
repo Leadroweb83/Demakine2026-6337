@@ -2,7 +2,7 @@ import { createMiddleware } from "hono/factory";
 import { db } from "../database";
 import * as schema from "../database/schema";
 import type { SessionUser } from "../middleware/auth";
-import { affectsSite, requestPublish } from "./publish";
+import { affectsSite, purgeContentCache, requestPublish } from "./publish";
 
 /** Rotas que mudam só preferência pessoal ou preparam envio: não entram no registro. */
 const SKIP = [/\/admin\/preferences$/, /\/presign$/, /\/admin\/avatar\/presign$/];
@@ -119,6 +119,7 @@ export const auditMiddleware = createMiddleware(async (c, next) => {
   }
   // conteúdo que aparece nas páginas pré-renderizadas: pede um novo build (ver lib/publish.ts)
   if (affectsSite(path)) {
+    await purgeContentCache();
     try {
       await requestPublish();
     } catch (err) {

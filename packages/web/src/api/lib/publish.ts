@@ -1,3 +1,4 @@
+import { dangerouslyDeleteByTag } from "@vercel/functions";
 import { eq } from "drizzle-orm";
 import { db } from "../database";
 import * as schema from "../database/schema";
@@ -10,6 +11,22 @@ import * as schema from "../database/schema";
  * Várias edições seguidas não disparam vários builds: no máximo um a cada 60 s. Uma edição que
  * chegue depois de o build ler o banco é pega por afterPrerender, que pede outro build.
  */
+/** Etiqueta da cópia de /api/conteudo guardada na borda da Vercel. */
+export const CONTENT_CACHE_TAG = "conteudo";
+
+/**
+ * Apaga a cópia de /api/conteudo da borda: sem isso, quem abre o site logo depois de salvar no
+ * painel ainda recebe o conteúdo antigo por alguns minutos (e parece que a edição não funcionou).
+ */
+export async function purgeContentCache() {
+  if (!process.env.VERCEL) return;
+  try {
+    await dangerouslyDeleteByTag(CONTENT_CACHE_TAG);
+  } catch (err) {
+    console.error("[publicacao] limpeza do cache falhou", err);
+  }
+}
+
 const KEY = "publicacao";
 const MIN_INTERVAL_MS = 60_000;
 

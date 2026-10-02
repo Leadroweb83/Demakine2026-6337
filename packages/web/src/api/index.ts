@@ -53,6 +53,7 @@ import {
   type NotifySettings,
 } from "./lib/notify";
 import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection, publishedInCode } from "./lib/content-docs";
+import { CONTENT_CACHE_TAG } from "./lib/publish";
 
 type Env = {
   Variables: {
@@ -186,10 +187,12 @@ const app = new Hono<Env>()
   // -------------------------------------------------- conteúdo editável (site)
   .get('/conteudo', async (c) => {
     const snapshot = await getContentSnapshot();
-    // navegador sempre confere; só a borda da Vercel guarda (30 s): edição aparece em até ~1 min.
+    // navegador sempre confere; só a borda da Vercel guarda. Edição no painel apaga essa cópia na
+    // hora pela etiqueta (lib/publish.ts); os 30 s são só a rede de segurança se a limpeza falhar.
     // stale-while-revalidate no Cache-Control valeria também no navegador e mostraria versão velha.
     c.header('Cache-Control', 'public, max-age=0, must-revalidate');
     c.header('CDN-Cache-Control', 'public, s-maxage=30, stale-while-revalidate=300');
+    c.header('Vercel-Cache-Tag', CONTENT_CACHE_TAG);
     return c.json(snapshot, 200);
   })
   // ------------------------------------------------------------------ vagas
