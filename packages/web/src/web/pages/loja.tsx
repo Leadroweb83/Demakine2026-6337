@@ -120,7 +120,7 @@ function Hero() {
 
             <div className="mt-3 grid grid-cols-3 divide-x divide-dm-line border-t border-dm-line pt-3 text-center">
               {[
-                { k: "+15", v: "anos de fábrica" },
+                { k: "+14", v: "anos de fábrica" },
                 { k: "21", v: "linhas de produto" },
                 { k: "BR", v: "envio nacional" },
               ].map((s) => (

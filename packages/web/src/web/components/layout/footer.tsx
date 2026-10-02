@@ -87,7 +87,7 @@ export function Footer() {
             />
             <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-white/65">
               Fabricamos esteiras transportadoras, roscas, elevadores e projetos especiais sob medida
-              para a indústria e o agronegócio. Mais de 15 anos movimentando produção.
+              para a indústria e o agronegócio. Mais de 14 anos movimentando produção.
             </p>
             <div className="mt-6 flex gap-2.5">
               {socials.map(({ href, label, Icon }) => (

@@ -42,7 +42,7 @@ const DEFAULTS: SiteData = {
     youtube: "https://www.youtube.com/@demakineindustrial",
   },
   stats: {
-    years: 15,
+    years: 14,
     machines: 7000,
     clients: 8000,
     rating: 4.9,

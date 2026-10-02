@@ -5,7 +5,7 @@
  * - Nada de credencial de exportação inventada: nenhum número de países
  *   atendidos, nenhum volume exportado, nenhum Incoterm prometido, nenhum
  *   prazo de embarque. O que a página afirma é o que já é fato no site em
- *   português: fábrica própria em Limeira/SP, mais de 15 anos de mercado,
+ *   português: fábrica própria em Limeira/SP, mais de 14 anos de mercado,
  *   linhas de produto reais e engenharia que projeta sob medida.
  * - Frete, imposto e condição de embarque ficam como "quoted per project",
  *   porque dependem de destino e não existe tabela publicada.
@@ -53,13 +53,13 @@ export const exportCopy: Record<ExportLang, ExportCopy> = {
     eyebrow: "Exportación",
     title: "Equipos de transporte agroindustrial fabricados en Brasil",
     intro:
-      "Demakine fabrica cintas transportadoras, tornillos transportadores, elevadores de cangilones y máquinas de coser sacos en su propia planta en Limeira, São Paulo. Más de 15 años proyectando equipos a medida para la industria y el agronegocio.",
+      "Demakine fabrica cintas transportadoras, tornillos transportadores, elevadores de cangilones y máquinas de coser sacos en su propia planta en Limeira, São Paulo. Más de 14 años proyectando equipos a medida para la industria y el agronegocio.",
     ctaPrimary: "Solicitar cotización",
     ctaSecondary: "Hablar por WhatsApp",
     factsTitle: "La fábrica",
     facts: [
       { label: "Planta propia", value: "Limeira, São Paulo, Brasil" },
-      { label: "Tiempo de mercado", value: "Más de 15 años" },
+      { label: "Tiempo de mercado", value: "Más de 14 años" },
       { label: "Ingeniería", value: "Proyecto propio, equipo a medida" },
       { label: "Líneas", value: "Transporte, ensacado y costura, proyectos especiales" },
     ],
@@ -145,13 +145,13 @@ export const exportCopy: Record<ExportLang, ExportCopy> = {
     eyebrow: "Export",
     title: "Agro-industrial handling equipment made in Brazil",
     intro:
-      "Demakine manufactures belt conveyors, screw conveyors, bucket elevators and bag closing machines at its own plant in Limeira, São Paulo. Over 15 years designing custom equipment for industry and agribusiness.",
+      "Demakine manufactures belt conveyors, screw conveyors, bucket elevators and bag closing machines at its own plant in Limeira, São Paulo. Over 14 years designing custom equipment for industry and agribusiness.",
     ctaPrimary: "Request a quote",
     ctaSecondary: "Talk on WhatsApp",
     factsTitle: "The plant",
     facts: [
       { label: "Own factory", value: "Limeira, São Paulo, Brazil" },
-      { label: "Years in business", value: "More than 15 years" },
+      { label: "Years in business", value: "More than 14 years" },
       { label: "Engineering", value: "In-house design, custom-built equipment" },
       { label: "Product lines", value: "Handling, bagging and sewing, special projects" },
     ],

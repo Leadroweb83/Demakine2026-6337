@@ -44,18 +44,18 @@ export default function AEmpresa() {
     <>
       <Seo
         title="A Empresa | Demakine Equipamentos Agroindustriais"
-        description="Há mais de 15 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio. Missão, visão, valores e propósito social."
+        description="Há mais de 14 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio. Missão, visão, valores e propósito social."
         path="/a-empresa"
         image="/img/site/fabrica.webp"
         jsonLd={aboutPageJsonLd(
-          "Há mais de 15 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio.",
+          "Há mais de 14 anos em Limeira/SP, a Demakine fabrica máquinas e equipamentos para a indústria e o agronegócio.",
         )}
       />
 
       <PageHero
         eyebrow="A Empresa"
         title="Transformando o setor agroindustrial desde a nossa fábrica em Limeira"
-        text="Mais de 15 anos criando soluções inteligentes para indústrias que buscam agilidade e alto desempenho nos seus processos de produção."
+        text="Mais de 14 anos criando soluções inteligentes para indústrias que buscam agilidade e alto desempenho nos seus processos de produção."
         image="/img/site/fabrica.webp"
         crumbs={[{ label: "A Empresa" }]}
       />
@@ -86,7 +86,7 @@ export default function AEmpresa() {
             <div className="prose-dm mt-6 text-[16.5px] leading-relaxed text-dm-ink/80">
               <p>
                 Localizada em Limeira, no interior de São Paulo, a Demakine consolidou-se como
-                referência no mercado de equipamentos agroindustriais. Com mais de 15 anos de
+                referência no mercado de equipamentos agroindustriais. Com mais de 14 anos de
                 experiência, nosso propósito é criar soluções inteligentes para indústrias que buscam
                 agilidade e alto desempenho.
               </p>

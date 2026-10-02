@@ -227,7 +227,7 @@ export function OpenStatus({ className }: { className?: string }) {
 /* ------------------------------------------------------------------- selos */
 
 const badges = [
-  { Icon: BadgeCheck, label: "+15 anos de mercado" },
+  { Icon: BadgeCheck, label: "+14 anos de mercado" },
   { Icon: Factory, label: "Fábrica própria" },
   { Icon: Truck, label: "Entrega nacional" },
   { Icon: Wrench, label: "Assistência técnica" },

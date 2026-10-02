@@ -90,7 +90,7 @@ export function VideoSection() {
         <Reveal i={1}>
           <p className="eyebrow text-white/45">Quem é a Demakine</p>
           <h2 className="mt-3 font-display text-[26px] font-extrabold leading-tight text-white md:text-[32px]">
-            Mais de 15 anos fabricando o que a indústria precisa mover
+            Mais de 14 anos fabricando o que a indústria precisa mover
           </h2>
           <p className="mt-4 text-[15.5px] leading-relaxed text-white/70">
             Começamos em Limeira e hoje temos esteiras, roscas, elevadores e peneiras rodando em

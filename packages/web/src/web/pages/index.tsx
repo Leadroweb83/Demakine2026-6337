@@ -53,7 +53,7 @@ import {
   projects,
   testimonials,
 } from "@/lib/content";
-import { segments, site, waLink } from "@/lib/site";
+import { site, waLink } from "@/lib/site";
 import { PageSections, type Block } from "@/lib/page-layout";
 import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
 
@@ -249,37 +249,14 @@ export default function Home() {
     segmentos: {
       render: (tone) => (
         <Section tone={tone}>
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-end">
-            <Reveal>
-              <p className="eyebrow text-dm-blue">Segmentos atendidos</p>
-              <h2 className="h2 mt-3">Da lavoura ao centro de distribuição</h2>
-              <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-dm-gray">
-                Cada segmento tem uma exigência diferente de correia, higienização, inclinação e
-                capacidade. Escolha o seu e veja o equipamento que a nossa engenharia indica.
-              </p>
-            </Reveal>
-
-            <Reveal i={1} className="min-w-0">
-              <div className="grid grid-cols-2 items-end gap-x-6 gap-y-5 border-t border-dm-line pt-6 lg:flex lg:justify-end lg:gap-10">
-                <div>
-                  <p className="font-display text-[2.1rem] font-extrabold leading-none text-dm-blue">
-                    {segments.length}
-                  </p>
-                  <p className="mt-1.5 text-[12.5px] uppercase tracking-[0.14em] text-dm-gray">
-                    segmentos atendidos
-                  </p>
-                </div>
-                <div>
-                  <p className="font-display text-[2.1rem] font-extrabold leading-none text-dm-blue">
-                    21
-                  </p>
-                  <p className="mt-1.5 text-[12.5px] uppercase tracking-[0.14em] text-dm-gray">
-                    linhas de equipamento
-                  </p>
-                </div>
-              </div>
-            </Reveal>
-          </div>
+          <Reveal>
+            <p className="eyebrow text-dm-blue">Segmentos atendidos</p>
+            <h2 className="h2 mt-3">Da lavoura ao centro de distribuição</h2>
+            <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-dm-gray">
+              Cada segmento tem uma exigência diferente de correia, higienização, inclinação e
+              capacidade. Escolha o seu e veja o equipamento que a nossa engenharia indica.
+            </p>
+          </Reveal>
 
           <div className="mt-10">
             <SegmentsCarousel />
@@ -519,7 +496,7 @@ export default function Home() {
     <>
       <Seo
         title="Demakine | Esteiras Transportadoras, Roscas e Elevadores"
-        description="Fábrica de esteiras transportadoras, roscas, elevadores e máquinas de costurar sacos sob medida. Mais de 15 anos e 7.000 máquinas entregues. Limeira/SP."
+        description="Fábrica de esteiras transportadoras, roscas, elevadores e máquinas de costurar sacos sob medida. Mais de 14 anos e 7.000 máquinas entregues. Limeira/SP."
         path="/"
         jsonLd={[organizationJsonLd, websiteJsonLd]}
         alternates={LANGUAGE_ALTERNATES}

@@ -97,7 +97,7 @@ export const agroChains = [
   {
     id: "fertilizantes",
     name: "Fertilizantes e insumos",
-    text: "Material abrasivo e úmido pede correia e estrutura certas, é o que fazemos há 15 anos.",
+    text: "Material abrasivo e úmido pede correia e estrutura certas, é o que fazemos há 14 anos.",
     slugs: ["esteira-transportadora-para-granel", "rosca-transportadora", "esteira-transportadora-para-sacaria"],
     image: "/img/produtos/esteira-transportadora-para-granel/10.webp",
   },
