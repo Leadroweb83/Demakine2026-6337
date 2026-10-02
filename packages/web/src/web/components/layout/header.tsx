@@ -117,10 +117,10 @@ export function Header() {
       {/* barra utilitária */}
       <div className="hidden bg-dm-blue-deep text-white lg:block">
         <div className="dm-container flex h-10 items-center justify-between text-[13px]">
-          <p className="text-white/70">
+          <p className="min-w-0 truncate pr-6 text-white/70">
             {site.tagline} · Fábrica própria em Limeira/SP · Atendimento em todo o Brasil
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex shrink-0 items-center gap-6 whitespace-nowrap">
             <a href={site.phoneHref} className="flex items-center gap-2 text-white/80 hover:text-white">
               <Phone className="h-3.5 w-3.5" />
               {site.phone}

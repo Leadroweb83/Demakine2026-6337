@@ -18,6 +18,21 @@
       "source": "/trabalhe-conosco",
       "destination": "/vagas",
       "permanent": true
+    },
+    {
+      "source": "/:lang(en|es)/vagas",
+      "destination": "/vagas",
+      "permanent": false
+    },
+    {
+      "source": "/:lang(en|es)/vagas/:slug",
+      "destination": "/vagas/:slug",
+      "permanent": false
+    },
+    {
+      "source": "/:lang(en|es)/:rest(loja|admin|export)",
+      "destination": "/:rest",
+      "permanent": false
     }
   ],
   "rewrites": [
