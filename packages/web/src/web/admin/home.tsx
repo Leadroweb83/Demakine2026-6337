@@ -27,7 +27,7 @@ function HomeEditor({ doc }: { doc: Doc | null }) {
   const base: HomeData = { ...HOME_DEFAULTS, ...doc?.data };
   const [heroText, setHeroText] = useState(base.heroText);
   const [words, setWords] = useState(base.heroWords.join(", "));
-  const [agroLink, setAgroLink] = useState(base.agroLink);
+  const [segmentsLink, setSegmentsLink] = useState(base.segmentsLink);
   const [slides, setSlides] = useState<BestSellerSlide[]>(base.bestSellers.map((s) => ({ ...s, lines: [...s.lines] as [string, string] })));
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -47,7 +47,7 @@ function HomeEditor({ doc }: { doc: Doc | null }) {
       if (!heroWords.length) throw new Error("Informe ao menos uma palavra");
       if (slides.length < 2) throw new Error("A vitrine precisa de pelo menos 2 produtos");
       if (slides.some((s) => !s.lines[0].trim() || !s.tab.trim())) throw new Error("Cada produto da vitrine precisa de título e nome da aba");
-      const data: HomeData = { heroText: heroText.trim(), heroWords, agroLink: agroLink.trim(), bestSellers: slides };
+      const data: HomeData = { heroText: heroText.trim(), heroWords, segmentsLink: segmentsLink.trim(), bestSellers: slides };
       const res = await api.admin.conteudo[":collection"][":key"].$put({ param: { collection: "home", key: "main" }, json: { data } });
       if (!res.ok) throw new Error("Não foi possível salvar");
     },
@@ -86,8 +86,8 @@ function HomeEditor({ doc }: { doc: Doc | null }) {
           <Field label="Texto de apresentação" hint={`${heroText.length} caracteres. Até uns 220 cabe bem no celular.`}>
             <textarea rows={3} value={heroText} onChange={(e) => setHeroText(e.target.value)} className={inputCls} />
           </Field>
-          <Field label="Link para a página Agro">
-            <input value={agroLink} onChange={(e) => setAgroLink(e.target.value)} className={inputCls} />
+          <Field label="Link para os segmentos (abaixo do botão)">
+            <input value={segmentsLink} onChange={(e) => setSegmentsLink(e.target.value)} className={inputCls} />
           </Field>
         </div>
       </Card>

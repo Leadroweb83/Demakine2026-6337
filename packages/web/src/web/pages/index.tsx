@@ -248,7 +248,7 @@ export default function Home() {
     },
     segmentos: {
       render: (tone) => (
-        <Section tone={tone}>
+        <Section tone={tone} id="segmentos" className="scroll-mt-24">
           <Reveal>
             <p className="eyebrow text-dm-blue">Segmentos atendidos</p>
             <h2 className="h2 mt-3">Da lavoura ao centro de distribuição</h2>

@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { home } from "@/lib/home";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { ArrowRight, ShieldCheck, Wrench, Truck, Factory } from "lucide-react";
-import { BtnGhost, BtnPrimary } from "./kit";
+import { BtnGhost } from "./kit";
 import { CineRule, CineStat, CineTag } from "./cine";
 import { Counter } from "./counter";
 import { Rotator } from "./rotator";
@@ -118,20 +118,18 @@ export function HomeHero() {
               {home.heroText}
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <BtnPrimary to="/contato" className="cine-shine">
-                Solicitar orçamento
-              </BtnPrimary>
-              <BtnGhost dark href="/downloads/catalogo-demakine.pdf" external>
+            {/* um botão só, na largura que os dois ocupavam; o pedido de orçamento fica na calculadora ao lado */}
+            <div className="mt-9">
+              <BtnGhost dark href="/downloads/catalogo-demakine.pdf" external className="w-full sm:w-[27rem]">
                 Ver catálogo (PDF)
               </BtnGhost>
             </div>
 
             <a
-              href="/agro"
+              href="#segmentos"
               className="mt-6 inline-flex items-center gap-2 text-[14px] font-semibold text-[#e8c469] transition-colors hover:text-white"
             >
-              {home.agroLink}
+              {home.segmentsLink}
               <ArrowRight className="h-4 w-4" />
             </a>
 

@@ -6,7 +6,8 @@ export type BestSellerSlide = { slug: string; lines: [string, string]; tab: stri
 export type HomeData = {
   heroText: string;
   heroWords: string[];
-  agroLink: string;
+  /** link abaixo do botão do topo, leva à seção de segmentos da home */
+  segmentsLink: string;
   bestSellers: BestSellerSlide[];
 };
 
@@ -14,7 +15,7 @@ export const HOME_DEFAULTS: HomeData = {
   heroText:
     "Esteiras transportadoras, roscas, elevadores, máquinas de costurar sacos e projetos especiais fabricados sob medida na nossa fábrica em Limeira/SP. Menos gente carregando no braço, mais produtividade na linha.",
   heroWords: ["grãos", "fertilizantes", "reciclagem", "construção", "alimentos"],
-  agroLink: "É do agro? Veja a linha para grãos, fertilizantes e ração",
+  segmentsLink: "Qual é o seu segmento? Veja o equipamento indicado para cada um",
   bestSellers: [
     { slug: "esteira-transportadora-para-sacaria", lines: ["Esteira para", "sacaria e fardos"], tab: "Sacaria" },
     { slug: "esteira-transportadora-para-granel", lines: ["Esteira em V", "para granel"], tab: "Granel" },
