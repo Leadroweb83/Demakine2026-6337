@@ -13,11 +13,21 @@ type MapData = {
 const map = mapRaw as unknown as MapData;
 
 /**
- * Foto de cada estado (pessoas trabalhando num equipamento Demakine), em public/img/estados/<uf>.webp.
- * Só entram aqui as UFs que já têm foto; as outras mostram a fábrica, de onde tudo sai.
+ * Foto por região (public/img/estados): imagens ilustrativas geradas por IA a partir das fotos reais
+ * dos equipamentos. Os estados da mesma região mostram a mesma foto.
  */
-const STATE_PHOTOS: Record<string, string> = {};
-const FALLBACK_PHOTO = "/img/site/fabrica.webp";
+type Region = "norte" | "nordeste" | "centro-oeste" | "sudeste" | "sul";
+
+const REGIONS: Record<Region, { label: string; ufs: string[] }> = {
+  norte: { label: "Região Norte", ufs: ["AC", "AM", "AP", "PA", "RO", "RR", "TO"] },
+  nordeste: { label: "Região Nordeste", ufs: ["AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE"] },
+  "centro-oeste": { label: "Região Centro-Oeste", ufs: ["DF", "GO", "MS", "MT"] },
+  sudeste: { label: "Região Sudeste", ufs: ["ES", "MG", "RJ", "SP"] },
+  sul: { label: "Região Sul", ufs: ["PR", "RS", "SC"] },
+};
+
+const regionOf = (uf: string): Region =>
+  (Object.keys(REGIONS) as Region[]).find((r) => REGIONS[r].ufs.includes(uf)) ?? "sudeste";
 
 /** estados pequenos no desenho: sigla menor para não encavalar */
 const SMALL = new Set(["DF", "SE", "AL", "PB", "RN", "PE", "ES", "RJ"]);
@@ -58,7 +68,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
   }, []);
 
   const state = map.states[active];
-  const photo = STATE_PHOTOS[active];
+  const region = regionOf(active);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
@@ -181,9 +191,11 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
           )}
         >
           <img
-            key={photo ?? "fabrica"}
-            src={photo ?? FALLBACK_PHOTO}
-            alt={photo ? `Equipe trabalhando com equipamento Demakine em ${state.name}` : "Fábrica da Demakine em Limeira/SP"}
+            key={region}
+            src={`/img/estados/${region}.webp`}
+            alt={`Equipe trabalhando com uma esteira Demakine na ${REGIONS[region].label} (imagem ilustrativa)`}
+            width={1120}
+            height={844}
             loading="lazy"
             className="state-photo h-full w-full object-cover"
           />
@@ -193,7 +205,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
           >
             <span className="cine-kicker block text-[22px] leading-tight text-white">{state.name}</span>
             <span className="mt-1 block text-[13px] text-white/75">
-              {photo ? "Equipamento Demakine em operação" : "Sai da fábrica em Limeira/SP e chega até você"}
+              {REGIONS[region].label} · imagem ilustrativa
             </span>
           </figcaption>
         </figure>
