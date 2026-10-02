@@ -716,6 +716,22 @@
   fill: #e4141b;
 }
 
+/* barras de crescimento ao lado do número de clientes (mapa da home) */
+.growth-bar {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.growth-bar.is-in {
+  transform: scaleY(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .growth-bar {
+    transform: none;
+    transition: none;
+  }
+}
+
 /* barra de progresso do quiz / etapas */
 .step-bar span {
   transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);

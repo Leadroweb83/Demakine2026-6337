@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import mapRaw from "../../data/br-map.json";
 import { testimonials } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { Counter } from "../counter";
 
 type MapData = {
   w: number;
@@ -31,8 +32,6 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
   const [active, setActive] = useState<string | null>("SP");
 
   const maxCount = Math.max(1, ...Object.values(byState).map((v) => v.count));
-  const total = Object.values(byState).reduce((s, v) => s + v.count, 0);
-  const ufs = Object.keys(byState).length;
 
   const fillFor = (uf: string) => {
     const data = byState[uf];
@@ -47,9 +46,9 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
   /** Origem: fábrica em Limeira/SP. */
   const origin: [number, number] = [map.states.SP.c[0] - 6, map.states.SP.c[1] - 26];
 
-  /** Curvas da fábrica até cada estado atendido, com tempos variados. */
+  /** Curvas da fábrica até todos os estados (a entrega é nacional), com tempos variados. */
   const routes = useMemo(() => {
-    return Object.keys(byState)
+    return Object.keys(map.states)
       .filter((uf) => uf !== "SP")
       .map((uf, i) => {
         const s = map.states[uf];
@@ -72,7 +71,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
         };
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [byState]);
+  }, []);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
@@ -81,7 +80,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
           viewBox={`0 0 ${map.w} ${map.h}`}
           className="w-full"
           role="img"
-          aria-label="Mapa do Brasil com estados onde a Demakine tem clientes com depoimento público"
+          aria-label="Mapa do Brasil: entregas saindo da fábrica em Limeira/SP para todos os estados"
         >
           {Object.entries(map.states).map(([uf, s]) => (
             <path
@@ -112,8 +111,9 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
                     active === r.uf
                       ? "rgba(228,20,27,0.9)"
                       : dark
-                        ? "rgba(255,255,255,0.45)"
-                        : "rgba(16,61,148,0.4)"
+                        ? // estado sem depoimento público: linha mais discreta, para o mapa não virar um emaranhado
+                          `rgba(255,255,255,${byState[r.uf] ? 0.45 : 0.24})`
+                        : `rgba(16,61,148,${byState[r.uf] ? 0.4 : 0.22})`
                   }
                   strokeWidth={active === r.uf ? 2 : 1.5}
                   strokeLinecap="round"
@@ -189,34 +189,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
       </div>
 
       <div>
-        <div className="grid grid-cols-2 gap-3">
-          <div
-            className={cn(
-              "rounded-xl border px-4 py-4",
-              dark ? "border-white/10 bg-white/[0.04]" : "border-dm-line bg-dm-surface",
-            )}
-          >
-            <p className={cn("text-[11.5px] uppercase tracking-wide", dark ? "text-white/45" : "text-dm-gray")}>
-              Estados com cliente público
-            </p>
-            <p className={cn("cine-kicker tabnum mt-1 text-[30px]", dark ? "text-white" : "text-dm-ink")}>
-              {ufs}
-            </p>
-          </div>
-          <div
-            className={cn(
-              "rounded-xl border px-4 py-4",
-              dark ? "border-white/10 bg-white/[0.04]" : "border-dm-line bg-dm-surface",
-            )}
-          >
-            <p className={cn("text-[11.5px] uppercase tracking-wide", dark ? "text-white/45" : "text-dm-gray")}>
-              Depoimentos publicados
-            </p>
-            <p className={cn("cine-kicker tabnum mt-1 text-[30px]", dark ? "text-white" : "text-dm-ink")}>
-              {total}
-            </p>
-          </div>
-        </div>
+        <GrowthStat dark={dark} />
 
         <div
           className={cn(
@@ -249,6 +222,63 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
           O mapa mostra apenas os clientes que autorizaram depoimento público. A entrega é feita em
           todo o território nacional.
         </p>
+      </div>
+    </div>
+  );
+}
+
+/** alturas das barras (decorativas): só o desenho de crescimento, não são dados por ano */
+const BARS = [22, 30, 38, 49, 58, 70, 84, 100];
+
+/** "+ de 2 mil clientes atendidos": número contando e barras subindo quando a caixa entra na tela. */
+function GrowthStat({ dark }: { dark: boolean }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [seen, setSeen] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setSeen(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setSeen(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "flex items-end justify-between gap-5 rounded-xl border px-5 py-5",
+        dark ? "border-white/10 bg-white/[0.04]" : "border-dm-line bg-dm-surface",
+      )}
+    >
+      <div>
+        <p className={cn("cine-kicker tabnum text-[40px] leading-none md:text-[46px]", dark ? "text-white" : "text-dm-ink")}>
+          <Counter to={2000} prefix="+" />
+        </p>
+        <p className={cn("mt-2 text-[12.5px] uppercase tracking-[0.14em]", dark ? "text-white/55" : "text-dm-gray")}>
+          clientes atendidos
+        </p>
+      </div>
+      <div className="flex h-[72px] items-end gap-[5px]" aria-hidden="true">
+        {BARS.map((h, i) => (
+          <span
+            key={h}
+            className={cn("growth-bar w-[9px] rounded-t-[3px]", seen && "is-in", i === BARS.length - 1 ? "bg-dm-red" : dark ? "bg-white/35" : "bg-dm-blue/45")}
+            style={{ height: `${h}%`, transitionDelay: `${i * 110}ms` }}
+          />
+        ))}
       </div>
     </div>
   );
