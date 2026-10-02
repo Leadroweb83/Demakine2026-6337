@@ -99,6 +99,7 @@ function ChecklistCard({
           );
         })}
       </ul>
+      <p className="mt-5 text-[13.5px] text-dm-gray">Consulte o manual para demais informações.</p>
     </div>
   );
 }
