@@ -90,12 +90,12 @@ export default function Clientes() {
         <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {list.map((c, idx) => (
             <Reveal key={c.id} i={idx % 5}>
-              <div className="flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-dm-line bg-white p-5 transition-shadow hover:shadow-md">
+              <div className="group flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-dm-line bg-white p-5 transition-shadow hover:shadow-md">
                 <img
                   src={c.logo}
                   alt={c.name}
                   loading="lazy"
-                  className="h-16 w-auto object-contain opacity-80 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
+                  className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none"
                 />
                 <div className="text-center">
                   <p className="text-[13.5px] font-bold leading-tight text-dm-ink">{c.name}</p>

@@ -293,7 +293,7 @@ export function ClientsMarquee({ tone = "white" }: { tone?: "white" | "surface" 
             alt={c.name}
             loading="lazy"
             title={c.name}
-            className="h-[68px] w-auto shrink-0 opacity-70 grayscale transition-all duration-300 hover:scale-105 hover:opacity-100 hover:grayscale-0 md:h-[92px]"
+            className="h-[68px] w-auto shrink-0 transition-transform duration-300 hover:scale-105 motion-reduce:transform-none md:h-[92px]"
           />
         ))}
       </div>
