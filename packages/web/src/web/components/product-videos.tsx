@@ -6,6 +6,7 @@ import { videoThumb, type ProductVideo } from "@/lib/product-videos";
 import { artigo } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { locale, tr } from "@/lib/i18n";
 
 /**
  * Vídeos do produto em facade: a capa é local e o iframe do YouTube (modo sem cookies)
@@ -50,7 +51,7 @@ export function ProductVideos({
                 <button
                   type="button"
                   onClick={() => setPlaying(true)}
-                  aria-label={`Assistir ao vídeo: ${video.title}`}
+                  aria-label={tr("Assistir ao vídeo: {titulo}", { titulo: tr(video.title) })}
                   className="group relative block h-full w-full"
                 >
                   <img
@@ -127,7 +128,7 @@ export function ProductVideos({
 
           <div className="mt-7 flex flex-wrap gap-3">
             <BtnWhats
-              href={waLink(`Olá! Vi o vídeo ${art.da} ${productName} no site e quero um orçamento.`)}
+              href={waLink(locale() === "pt" ? `Olá! Vi o vídeo ${art.da} ${productName} no site e quero um orçamento.` : tr("Olá! Vi no site o vídeo deste equipamento e quero um orçamento: {produto}.", { produto: tr(productName) }))}
               className="gap-2 whitespace-nowrap"
             >
               <MessageCircle className="h-4 w-4" />

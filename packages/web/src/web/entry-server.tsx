@@ -4,12 +4,16 @@ import { Router } from "wouter";
 import { QueryClient, QueryClientProvider, dehydrate } from "@tanstack/react-query";
 import App from "./app";
 import { beginSsrHead } from "./lib/ssr-head";
+import { i18nState, loadDict, localePrefix, setLocale, splitLocale } from "./lib/i18n";
+
+export { i18nState, loadDict, setLocale, splitLocale };
 
 /**
  * Pré-renderização (vite/prerender.ts): mesma árvore de main.tsx, com o endereço fixo e o cache
  * do React Query já preenchido. O conteúdo do painel precisa estar em globalThis.__DM_CONTENT__
  * antes de este módulo ser importado (content.ts e site.ts leem na primeira avaliação).
  * As páginas são carregadas sob demanda (lazy), então espera tudo ficar pronto (allReady).
+ * O idioma é o que estiver definido por setLocale no momento da chamada; "path" vem com o prefixo (/en/...).
  */
 export async function render(path: string, search: string, prefill: [unknown[], unknown][] = []) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: Infinity, retry: false } } });
@@ -18,7 +22,7 @@ export async function render(path: string, search: string, prefill: [unknown[], 
   const stream = await renderToReadableStream(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <Router ssrPath={path} ssrSearch={search}>
+        <Router base={localePrefix()} ssrPath={path} ssrSearch={search}>
           <App />
         </Router>
       </QueryClientProvider>

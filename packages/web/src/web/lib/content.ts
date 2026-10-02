@@ -1,6 +1,7 @@
 import raw from "../data/content.json";
 import { deletedKeys, editedDocs } from "./runtime-content";
 import { toWebp } from "./images";
+import { formatLocale, locale, tr } from "./i18n";
 
 export type Category = {
   slug: string;
@@ -153,6 +154,13 @@ export function getProduct(slug: string) {
 
 /** Artigo certo antes do nome do equipamento: "o Elevador", "a Esteira". */
 export function artigo(name: string) {
+  const here = locale();
+  if (here === "en") return { a: "the", A: "The", da: "for the", para: "for the" };
+  if (here === "es") {
+    // o gênero é o do nome já traduzido ("la cinta", "el elevador")
+    const fem = /^(cinta|máquina|criba|zaranda|canaleta|línea)/i.test(tr(name).trim());
+    return fem ? { a: "la", A: "La", da: "de la", para: "para la" } : { a: "el", A: "El", da: "del", para: "para el" };
+  }
   const masc = /^(elevador|cartrans|carrinho|mini sistema|sistema)/i.test(name.trim());
   return masc ? { a: "o", A: "O", da: "do", para: "para o" } : { a: "a", A: "A", da: "da", para: "para a" };
 }
@@ -178,7 +186,7 @@ export function relatedProducts(product: Product, limit = 3) {
 export function formatDate(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
   if (!y || !m || !d) return iso;
-  return new Date(y, m - 1, d).toLocaleDateString("pt-BR", {
+  return new Date(y, m - 1, d).toLocaleDateString(formatLocale(), {
     day: "2-digit",
     month: "long",
     year: "numeric",

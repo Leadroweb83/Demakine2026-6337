@@ -8,6 +8,7 @@ import { getProduct, products } from "@/lib/content";
 import { productMaintenance } from "@/lib/product-maintenance";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 const files = [
   {
@@ -237,7 +238,7 @@ export default function Downloads() {
         <SectionHead
           eyebrow="Sob solicitação"
           title="Documentos técnicos personalizados"
-          text={`Enviamos por e-mail ou WhatsApp em até 1 dia útil. ${withTable.length} equipamentos já têm tabela de modelos publicada no catálogo do site.`}
+          text={tr("Enviamos por e-mail ou WhatsApp em até 1 dia útil. {n} equipamentos já têm tabela de modelos publicada no catálogo do site.", { n: withTable.length })}
         />
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {onRequest.map(({ Icon, title, desc }, idx) => (

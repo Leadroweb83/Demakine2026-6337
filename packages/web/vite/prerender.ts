@@ -128,9 +128,18 @@ async function main() {
   // cópia estática do conteúdo usado no build: reserva se /api/conteudo falhar no navegador
   await writeFile(path.join(DIST, `conteudo-${snapshot.version}.json`), JSON.stringify(snapshot));
 
-  const { render } = (await import(pathToFileURL(SSR_ENTRY).href)) as {
+  type Locale = "pt" | "en" | "es";
+  const { render, loadDict, setLocale, splitLocale, i18nState } = (await import(pathToFileURL(SSR_ENTRY).href)) as {
     render: (p: string, s: string, prefill: [unknown[], unknown][]) => Promise<{ html: string; head: Head; queries: unknown }>;
+    loadDict: (l: Locale) => Promise<Record<string, string>>;
+    setLocale: (l: Locale, dict: Record<string, string>, collect?: boolean) => void;
+    splitLocale: (p: string) => { locale: Locale; path: string };
+    i18nState: () => { misses?: Set<string> } | undefined;
   };
+  // dicionários de /en e /es; I18N_REPORT=1 grava os textos que apareceram sem tradução
+  const dicts: Record<Locale, Record<string, string>> = { pt: {}, en: await loadDict("en"), es: await loadDict("es") };
+  const report = Boolean(process.env.I18N_REPORT);
+  const missing: Record<string, Set<string>> = { en: new Set(), es: new Set() };
 
   const urls = [...pageUrls(sitemap), NOT_FOUND_PATH];
   const jobPrefill: [unknown[], unknown] = [["vagas"], jobs];
@@ -140,11 +149,19 @@ async function main() {
     const prefill: [unknown[], unknown][] = [jobPrefill];
     const job = p!.match(/^\/vagas\/([^/]+)$/);
     if (job) prefill.push([["vaga", job[1]], jobs.find((j) => j.slug === job[1]) ?? null]);
+    // o idioma vem do endereço (/en/..., /es/...) e vale só para esta página (uma por vez)
+    const { locale } = splitLocale(p!);
+    setLocale(locale, dicts[locale], report);
     const { html, head, queries } = await render(p!, q, prefill);
+    if (report && locale !== "pt") for (const m of i18nState()?.misses ?? []) missing[locale]!.add(m);
     const file = path.join(DIST, fileFor(url));
     await mkdir(path.dirname(file), { recursive: true });
-    await writeFile(file, buildHtml(template, html, head, { version: snapshot.version, queries }));
+    await writeFile(file, buildHtml(template, html, head, { version: snapshot.version, queries, ...(locale !== "pt" ? { locale } : {}) }));
     count++;
+  }
+  if (report) {
+    for (const l of ["en", "es"] as const) await writeFile(path.join(ROOT, `i18n-missing-${l}.json`), JSON.stringify([...missing[l]!], null, 1));
+    console.log(`[prerender] sem tradução: en ${missing.en!.size}, es ${missing.es!.size} (i18n-missing-*.json)`);
   }
   await rm(path.join(ROOT, "dist-ssr"), { recursive: true, force: true });
   console.log(`[prerender] ${count} páginas em ${((Date.now() - t0) / 1000).toFixed(1)} s (conteúdo ${fromDb ? snapshot.version : "padrão"})`);

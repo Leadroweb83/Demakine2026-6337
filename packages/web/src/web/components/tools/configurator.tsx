@@ -4,6 +4,7 @@ import { configure, num } from "@/lib/engine";
 import { Fact, Slider } from "./calc-esteira";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { locale, tr } from "@/lib/i18n";
 
 type Family = "sacaria" | "granel" | "caixas" | "reciclagem";
 
@@ -59,7 +60,7 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
           viewBox={`0 0 ${W} ${H}`}
           className="my-auto w-full"
           role="img"
-          aria-label={`Esteira de ${num(length, 1)} metros com ${num(angle, 0)} graus de inclinação`}
+          aria-label={tr("Esteira de {m} metros com {g} graus de inclinação", { m: num(length, 1), g: num(angle, 0) })}
         >
           <defs>
             <linearGradient id="cfg-frame" x1="0" y1="0" x2="0" y2="1">
@@ -293,14 +294,14 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
           <p className={cn("mt-4 text-[13.5px]", dark ? "text-white/60" : "text-dm-gray")}>
             {cfg.overHeight
               ? "Nessa inclinação a altura passa do limite do modelo padrão, por isso fabricamos reforçado sob medida."
-              : `A linha padrão vai até ${num(cfg.maxLen, 0)} m; acima disso fabricamos em módulos ou sob medida.`}
+              : tr("A linha padrão vai até {n} m; acima disso fabricamos em módulos ou sob medida.", { n: num(cfg.maxLen, 0) })}
           </p>
         )}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <a
             href={waLink(
-              `Olá! Configurei no site: ${cfg.product.name}, ${num(length, 1)} m, ${num(angle, 0)}° de inclinação, descarga a ${num(cfg.discharge, 1)} m${wheels ? ", com rodas" : ""}. Quero um orçamento.`,
+              tr("Olá! Configurei no site: {produto}, {m} m, {g}° de inclinação, descarga a {d} m{rodas}. Quero um orçamento.", { produto: tr(cfg.product.name), m: num(length, 1), g: num(angle, 0), d: num(cfg.discharge, 1), rodas: wheels ? tr(", com rodas") : "" }),
             )}
             target="_blank"
             rel="noreferrer"
@@ -317,7 +318,8 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
                 : "border-dm-line text-dm-ink hover:border-dm-blue hover:text-dm-blue",
             )}
           >
-            {cfg.product.name.split(" ").slice(0, 3).join(" ")}
+            {/* em português o nome é cortado para caber; a tradução entra inteira */}
+            {locale() === "pt" ? cfg.product.name.split(" ").slice(0, 3).join(" ") : tr(cfg.product.name)}
           </Link>
         </div>
       </div>

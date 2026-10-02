@@ -19,6 +19,7 @@ import { getProduct } from "@/lib/content";
 import { caseStudies, getCase, hasRealData } from "@/lib/cases";
 import { brl, computeRoi, num } from "@/lib/engine";
 import { site, waLink } from "@/lib/site";
+import { tr } from "@/lib/i18n";
 
 export default function CaseStudyPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -50,7 +51,7 @@ export default function CaseStudyPage() {
   const products = item.products.map((s) => getProduct(s)).filter((p) => Boolean(p));
   const sim = item.simulation;
   const r = computeRoi(sim);
-  const waMsg = `Olá! Vi a aplicação "${item.title}" no site e quero avaliar a minha operação.`;
+  const waMsg = tr('Olá! Vi a aplicação "{titulo}" no site e quero avaliar a minha operação.', { titulo: tr(item.title) });
   const real = hasRealData(item) ? item.real! : null;
 
   return (
@@ -69,7 +70,7 @@ export default function CaseStudyPage() {
       />
 
       <PageHero
-        eyebrow={`${real ? "Case real" : item.eyebrow} · ${item.segment}`}
+        eyebrow={`${tr(real ? "Case real" : item.eyebrow)} · ${tr(item.segment)}`}
         title={item.title}
         text={item.intro}
         image={item.image}
@@ -271,7 +272,7 @@ export default function CaseStudyPage() {
             <h2 className="h2 mt-3">{real ? "Como publicamos este case" : "Por que não há número de cliente aqui"}</h2>
             <p className="mt-4 text-[16.5px] leading-relaxed text-dm-gray">
               {real
-                ? `Os números medidos e o depoimento foram publicados com autorização por escrito de ${real.client}. A simulação acima continua rotulada como simulação.`
+                ? tr("Os números medidos e o depoimento foram publicados com autorização por escrito de {cliente}. A simulação acima continua rotulada como simulação.", { cliente: real.client })
                 : "A Demakine só publica resultado de cliente com medição feita na operação e autorização por escrito do uso de nome e imagem. Enquanto isso não existe, o site mostra a configuração técnica e a simulação, com as premissas abertas."}
             </p>
             <ul className="mt-7 space-y-3 text-[15px] text-dm-ink/85">

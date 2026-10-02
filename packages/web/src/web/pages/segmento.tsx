@@ -19,6 +19,7 @@ import { getProduct } from "@/lib/content";
 import { getSegmentLp, segmentLps, type SegmentLp } from "@/lib/segmentos-lp";
 import { DEFAULT_SEGMENT_THEME, SEGMENT_THEMES, type SegmentTheme } from "@/lib/segment-themes";
 import { site, waLink } from "@/lib/site";
+import { tr } from "@/lib/i18n";
 
 function SegmentoNaoEncontrado() {
   return (
@@ -155,7 +156,7 @@ export default function Segmento() {
   const products = lp.products.map((s) => getProduct(s)).filter((p) => Boolean(p));
   const others = segmentLps.filter((s) => s.slug !== lp.slug);
   const theme = SEGMENT_THEMES[lp.slug] ?? DEFAULT_SEGMENT_THEME;
-  const waMsg = `Olá! Preciso de equipamento para ${theme.sector}.`;
+  const waMsg = tr("Olá! Preciso de equipamento para {setor}.", { setor: tr(theme.sector) });
 
   return (
     <>
@@ -246,7 +247,7 @@ export default function Segmento() {
       <Section tone="surface">
         <SectionHead
           eyebrow="Equipamentos indicados"
-          title={`Equipamentos para ${theme.sector}`}
+          title={tr("Equipamentos para {setor}", { setor: tr(theme.sector) })}
           text="Todos fabricados na nossa unidade em Limeira/SP e adaptáveis ao seu material, comprimento e altura."
           action={
             <BtnGhost to="/produtos">

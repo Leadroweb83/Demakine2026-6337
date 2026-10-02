@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Camera, Loader2, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 export type UploadedPhoto = {
   /** key no storage, é isso que vai junto do lead */
@@ -42,7 +43,7 @@ export function PhotoUpload({
 
     const room = MAX_FILES - value.length;
     if (room <= 0) {
-      setError(`Máximo de ${MAX_FILES} fotos.`);
+      setError(tr("Máximo de {n} fotos.", { n: MAX_FILES }));
       return;
     }
 
@@ -114,7 +115,7 @@ export function PhotoUpload({
             <button
               type="button"
               onClick={() => remove(p.key)}
-              aria-label={`Remover ${p.name}`}
+              aria-label={tr("Remover {nome}", { nome: p.name })}
               className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-dm-ink/80 text-white"
             >
               <X className="h-3 w-3" />

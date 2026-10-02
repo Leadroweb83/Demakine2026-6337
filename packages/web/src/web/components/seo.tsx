@@ -4,6 +4,7 @@ import { editedDoc } from "@/lib/runtime-content";
 import { seoKey } from "@/lib/seo-pages";
 import { ssrHead } from "@/lib/ssr-head";
 import { shareImage } from "@/lib/images";
+import { LOCALES, isTranslatedPath, locale, localeInfo, localePath, tr, trDeep } from "@/lib/i18n";
 
 type SeoProps = {
   title: string;
@@ -65,9 +66,9 @@ function breadcrumbJsonLd(path: string, title: string) {
   const clean = path.split("?")[0]!;
   if (clean === "/" || clean.startsWith("/export")) return null;
   const parent = "/" + clean.split("/")[1];
-  const items = [{ name: "Início", url: `${site.url}/` }];
-  if (parent !== clean && PARENTS[parent]) items.push({ name: PARENTS[parent], url: `${site.url}${parent}` });
-  items.push({ name: title.split(" | ")[0]!.trim(), url: `${site.url}${clean}` });
+  const items = [{ name: tr("Início"), url: `${site.url}${localePath("/")}` }];
+  if (parent !== clean && PARENTS[parent]) items.push({ name: tr(PARENTS[parent]), url: `${site.url}${localePath(parent)}` });
+  items.push({ name: title.split(" | ")[0]!.trim(), url: `${site.url}${localePath(clean)}` });
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -86,17 +87,30 @@ export function Seo({
   path = "/",
   image,
   type = "website",
-  jsonLd,
+  jsonLd: baseJsonLd,
   noindex = false,
-  alternates,
-  lang,
+  alternates: givenAlternates,
+  lang: givenLang,
   preloadImage,
 }: SeoProps) {
-  // título e descrição editados no painel (SEO das páginas fixas) valem sobre o padrão da página
-  const edited = editedDoc<{ title?: string; description?: string }>("seo", seoKey(path));
-  const title = edited?.title?.trim() || baseTitle;
-  const description = edited?.description?.trim() || baseDescription;
-  const url = `${site.url}${path}`;
+  const here = locale();
+  // título e descrição editados no painel (SEO das páginas fixas) valem sobre o padrão da página;
+  // o painel edita o português, então nos outros idiomas vale a tradução do texto padrão
+  const edited = here === "pt" ? editedDoc<{ title?: string; description?: string }>("seo", seoKey(path)) : undefined;
+  const title = edited?.title?.trim() || tr(baseTitle);
+  const description = edited?.description?.trim() || tr(baseDescription);
+  const url = `${site.url}${localePath(path)}`;
+  const lang = givenLang ?? (here === "pt" ? undefined : localeInfo().hreflang);
+  // cada página aponta para ela mesma nos três idiomas (o Google exige a volta de cada lado)
+  const alternates =
+    givenAlternates ??
+    (noindex || !isTranslatedPath(path)
+      ? undefined
+      : [
+          ...LOCALES.map((l) => ({ hreflang: l.hreflang, href: `${site.url}${localePath(path, l.code)}` })),
+          { hreflang: "x-default", href: `${site.url}${path}` },
+        ]);
+  const jsonLd = baseJsonLd && here !== "pt" ? trDeep(baseJsonLd) : baseJsonLd;
   // compartilhamento usa o JPG/PNG original: LinkedIn e outros não mostram WebP
   const ogImage = /^https?:\/\//.test(image ?? "") ? image! : `${site.url}${shareImage(image ?? "/og-image.jpg")}`;
   const meta: Meta[] = [
@@ -172,15 +186,17 @@ export function Seo({
     return () => script.remove();
   }, [crumbsKey]);
 
+  // (texto como chave: fora do português o objeto traduzido é novo a cada desenho)
+  const jsonLdKey = jsonLd ? JSON.stringify(jsonLd) : "";
   useEffect(() => {
     dropPrerendered('script[type="application/ld+json"]');
-    if (!jsonLd) return;
+    if (!jsonLdKey) return;
     const script = document.createElement("script");
     script.type = "application/ld+json";
-    script.textContent = JSON.stringify(jsonLd);
+    script.textContent = jsonLdKey;
     document.head.appendChild(script);
     return () => script.remove();
-  }, [jsonLd]);
+  }, [jsonLdKey]);
 
   return null;
 }

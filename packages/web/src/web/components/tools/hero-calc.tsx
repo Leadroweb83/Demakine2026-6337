@@ -4,6 +4,7 @@ import { ArrowRight, Ruler } from "lucide-react";
 import { materials, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
 import { waLink } from "@/lib/site";
 import { Fact, Slider } from "./calc-esteira";
+import { tr } from "@/lib/i18n";
 
 /**
  * Dimensionador do topo da home: material e altura de descarga numa caixa só, com a indicação
@@ -17,8 +18,8 @@ export function HeroCalc() {
   const result = useMemo(() => sizeConveyor({ material, height, sanitary }), [material, height, sanitary]);
 
   const waMsg = result.model
-    ? `Olá! Usei o dimensionador do site: ${result.product.name}, modelo ${result.model.model} (altura de descarga ${num(height, 1)} m). Quero um orçamento.`
-    : `Olá! Usei o dimensionador do site e preciso de um projeto sob medida: ${result.product.name}, altura de descarga ${num(height, 1)} m.`;
+    ? tr("Olá! Usei o dimensionador do site: {produto}, modelo {modelo} (altura de descarga {altura} m). Quero um orçamento.", { produto: tr(result.product.name), modelo: result.model.model, altura: num(height, 1) })
+    : tr("Olá! Usei o dimensionador do site e preciso de um projeto sob medida: {produto}, altura de descarga {altura} m.", { produto: tr(result.product.name), altura: num(height, 1) });
 
   return (
     <div className="rounded-2xl border border-white/12 bg-white/[0.06] p-5 backdrop-blur md:p-6">

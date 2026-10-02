@@ -19,7 +19,7 @@ import {
   Phone,
 } from "lucide-react";
 import { Seo, organizationJsonLd } from "@/components/seo";
-import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
+import { EXPORT_ALTERNATES } from "@/lib/hreflang";
 import { track } from "@/lib/tracking";
 import { visitAttribution } from "@/lib/visits";
 import { Reveal } from "@/components/reveal";
@@ -188,7 +188,7 @@ export default function ExportLanding() {
         title={c.seoTitle}
         description={c.seoDescription}
         path={`/export?lang=${lang}`}
-        alternates={LANGUAGE_ALTERNATES}
+        alternates={EXPORT_ALTERNATES}
         jsonLd={organizationJsonLd}
         lang={c.htmlLang}
         image="/img/produtos/esteira-transportadora-para-granel/1.webp"

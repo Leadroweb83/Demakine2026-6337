@@ -17,6 +17,7 @@ import { categoryName, products, searchProducts } from "@/lib/content";
 import { site } from "@/lib/site";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /* ------------------------------------------------------- busca no rodapé */
 
@@ -70,7 +71,7 @@ export function FooterSearch() {
       {open && (
         <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-50 overflow-hidden rounded-2xl border border-white/12 bg-[#08182f] shadow-2xl shadow-black/50">
           <p className="border-b border-white/10 px-4 py-2.5 text-[11.5px] font-bold uppercase tracking-wider text-white/60">
-            {q.length > 0 ? `${results.length} resultado(s)` : "Mais procurados"}
+            {q.length > 0 ? tr("{n} resultado(s)", { n: results.length }) : "Mais procurados"}
           </p>
           {results.length === 0 ? (
             <div className="px-4 py-4">
@@ -166,19 +167,19 @@ function status() {
   const today = HOURS[day];
 
   if (today && hour >= today.open && hour < today.close) {
-    return { open: true, text: `Aberto agora · fecha às ${hhmm(today.close)}` };
+    return { open: true, text: tr("Aberto agora · fecha às {hora}", { hora: hhmm(today.close) }) };
   }
 
   if (today && hour < today.open) {
-    return { open: false, text: `Fechado · abrimos hoje às ${hhmm(today.open)}` };
+    return { open: false, text: tr("Fechado · abrimos hoje às {hora}", { hora: hhmm(today.open) }) };
   }
 
   for (let i = 1; i <= 7; i++) {
     const d = (day + i) % 7;
     const next = HOURS[d];
     if (next) {
-      const when = i === 1 ? "amanhã" : DAY_LABEL[d];
-      return { open: false, text: `Fechado · abrimos ${when} às ${hhmm(next.open)}` };
+      const when = tr(i === 1 ? "amanhã" : DAY_LABEL[d]!);
+      return { open: false, text: tr("Fechado · abrimos {quando} às {hora}", { quando: when, hora: hhmm(next.open) }) };
     }
   }
 

@@ -5,6 +5,7 @@ import { LeadForm } from "@/components/lead-form";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { RingChart } from "@/components/ui/ring-chart";
+import { tr } from "@/lib/i18n";
 
 /**
  * Calculadora de retorno: compara o custo da movimentação manual
@@ -161,7 +162,7 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
           <Big
             dark={dark}
             k="Payback estimado"
-            v={r.paybackMonths ? `${num(r.paybackMonths, 1)} meses` : "informe o investimento"}
+            v={r.paybackMonths ? tr("{n} meses", { n: num(r.paybackMonths, 1) }) : "informe o investimento"}
           />
           <Big dark={dark} k="Horas/mês liberadas" v={`${num(r.hoursSavedPerMonth, 0)} h`} />
         </div>
@@ -249,7 +250,7 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
               variant={dark ? "dark" : "light"}
               compact
               source="calculadora-roi"
-              product={`ROI: economia de ${brl(r.monthlySaving)}/mês, ${num(volumePerDay)} volumes/dia`}
+              product={tr("ROI: economia de {valor}/mês, {n} volumes/dia", { valor: brl(r.monthlySaving), n: num(volumePerDay) })}
               buttonLabel="Receber o cálculo"
               title="Receber este cálculo"
               subtitle="Enviamos o memorial com a máquina indicada para a sua operação."
@@ -266,7 +267,7 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             </button>
             <a
               href={waLink(
-                `Olá! Fiz a conta no site: ${num(volumePerDay)} volumes/dia, economia estimada de ${brl(r.monthlySaving)} por mês. Quero avaliar a máquina.`,
+                tr("Olá! Fiz a conta no site: {n} volumes/dia, economia estimada de {valor} por mês. Quero avaliar a máquina.", { n: num(volumePerDay), valor: brl(r.monthlySaving) }),
               )}
               target="_blank"
               rel="noreferrer"

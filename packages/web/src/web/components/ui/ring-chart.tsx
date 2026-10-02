@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { formatLocale } from "@/lib/i18n";
 
 export type RingSegment = {
   key: string;
@@ -98,7 +99,7 @@ export function RingChart({
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
           <span className={cn("text-[12.5px] font-medium", muted)}>{focus ? focus.label : centerLabel}</span>
           <span className={cn("mt-1 text-[22px] font-bold leading-tight tabular-nums", ink)}>
-            {focus ? (focus.display ?? focus.value.toLocaleString("pt-BR")) : centerValue}
+            {focus ? (focus.display ?? focus.value.toLocaleString(formatLocale())) : centerValue}
           </span>
           {focus && total > 0 && (
             <span className={cn("mt-0.5 text-[12px] font-semibold", muted)}>
@@ -133,7 +134,7 @@ export function RingChart({
                 </span>
                 <span className="flex shrink-0 items-center gap-1.5">
                   <span className={cn("text-[13.5px] font-semibold tabular-nums", ink)}>
-                    {s.display ?? s.value.toLocaleString("pt-BR")}
+                    {s.display ?? s.value.toLocaleString(formatLocale())}
                   </span>
                   {s.badge && (
                     <span

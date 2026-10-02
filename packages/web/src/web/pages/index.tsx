@@ -55,7 +55,7 @@ import {
 } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 import { PageSections, type Block } from "@/lib/page-layout";
-import { LANGUAGE_ALTERNATES } from "@/lib/hreflang";
+import { tr } from "@/lib/i18n";
 
 const categoryIcons: Record<string, typeof Cog> = {
   "esteiras-transportadoras": Truck,
@@ -326,7 +326,7 @@ export default function Home() {
         <Section tone={tone}>
           <SectionHead
             eyebrow="Depoimentos"
-            title={`${testimonials.length} avaliações de quem já comprou`}
+            title={tr("{n} avaliações de quem já comprou", { n: testimonials.length })}
             text="Nota média 4,9. A maior parte dos nossos clientes chega por indicação de outro cliente."
             action={<BtnGhost to="/clientes">Ver todos</BtnGhost>}
           />
@@ -499,7 +499,6 @@ export default function Home() {
         description="Fábrica de esteiras transportadoras, roscas, elevadores e máquinas de costurar sacos sob medida. Mais de 14 anos e 7.000 máquinas entregues. Limeira/SP."
         path="/"
         jsonLd={[organizationJsonLd, websiteJsonLd]}
-        alternates={LANGUAGE_ALTERNATES}
         preloadImage="/img/site/hero.webp"
       />
 

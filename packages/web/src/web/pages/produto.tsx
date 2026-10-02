@@ -41,6 +41,7 @@ import { artigo, categoryName, getProduct, relatedProducts } from "@/lib/content
 import { site, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { PageSections, type Block } from "@/lib/page-layout";
+import { locale, tr } from "@/lib/i18n";
 
 function NotFound() {
   return (
@@ -83,7 +84,9 @@ export default function Produto() {
     }),
   );
   const art = artigo(product.name);
-  const waMessage = `Olá! Quero um orçamento ${art.da} ${product.name}.`;
+  const pt = locale() === "pt";
+  const produto = tr(product.name);
+  const waMessage = pt ? `Olá! Quero um orçamento ${art.da} ${product.name}.` : tr("Olá! Quero um orçamento deste equipamento: {produto}.", { produto });
   const isBelt = product.category === "esteiras-transportadoras";
   const spin = images.length >= 4;
   const extras = productExtras(product.category);
@@ -300,7 +303,7 @@ export default function Produto() {
           </div>
 
           <Reveal i={3} className="mt-7">
-            <BtnWhats href={waLink(`Olá! Quero conferir se ${art.a} ${product.name} é a escolha certa para a minha operação.`)} className="gap-2">
+            <BtnWhats href={waLink(pt ? `Olá! Quero conferir se ${art.a} ${product.name} é a escolha certa para a minha operação.` : tr("Olá! Quero conferir se este equipamento é a escolha certa para a minha operação: {produto}.", { produto }))} className="gap-2">
               <MessageCircle className="h-4 w-4" />
               Conferir minha escolha com um especialista
             </BtnWhats>
@@ -321,7 +324,7 @@ export default function Produto() {
               </p>
               <div className="mt-6">
                 <BtnWhats
-                  href={waLink(`Olá! Quero conferir a preparação do local para instalar ${art.a} ${product.name}.`)}
+                  href={waLink(pt ? `Olá! Quero conferir a preparação do local para instalar ${art.a} ${product.name}.` : tr("Olá! Quero conferir a preparação do local para instalar este equipamento: {produto}.", { produto }))}
                   className="gap-2"
                 >
                   <MessageCircle className="h-4 w-4" />
@@ -394,7 +397,7 @@ export default function Produto() {
                 </p>
               </div>
               <BtnWhats
-                href={waLink(`Olá! Preciso de orçamento de peça de reposição ${art.para} ${product.name}.`)}
+                href={waLink(pt ? `Olá! Preciso de orçamento de peça de reposição ${art.para} ${product.name}.` : tr("Olá! Preciso de orçamento de peça de reposição para este equipamento: {produto}.", { produto }))}
                 className="shrink-0 gap-2"
               >
                 <MessageCircle className="h-4 w-4" />
@@ -597,7 +600,7 @@ export default function Produto() {
                     key={img}
                     type="button"
                     onClick={() => setActive(idx)}
-                    aria-label={`Foto ${idx + 1} de ${product.name}`}
+                    aria-label={tr("Foto {n} de {produto}", { n: idx + 1, produto })}
                     className={cn(
                       "h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-colors md:h-20 md:w-28",
                       idx === active ? "border-dm-blue" : "border-transparent opacity-70 hover:opacity-100",

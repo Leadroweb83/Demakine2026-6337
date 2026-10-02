@@ -7,6 +7,7 @@ import { artigo, getProduct } from "@/lib/content";
 import { waLink } from "@/lib/site";
 import { home } from "@/lib/home";
 import { cn } from "@/lib/utils";
+import { locale, tr } from "@/lib/i18n";
 
 const INTERVAL = 10; // segundos por produto
 
@@ -116,7 +117,7 @@ export function BestSellers() {
                       <BtnPrimary to={`/produtos/${p.slug}`} className="cine-shine">
                         Ver ficha técnica
                       </BtnPrimary>
-                      <BtnWhats href={waLink(`Olá! Quero um orçamento ${art.da} ${p.name}.`)} className="cine-shine">
+                      <BtnWhats href={waLink(locale() === "pt" ? `Olá! Quero um orçamento ${art.da} ${p.name}.` : tr("Olá! Quero um orçamento deste equipamento: {produto}.", { produto: tr(p.name) }))} className="cine-shine">
                         Pedir orçamento
                       </BtnWhats>
                     </div>

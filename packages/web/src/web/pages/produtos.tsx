@@ -7,6 +7,7 @@ import { Reveal } from "@/components/reveal";
 import { CtaBand, PageHero, ProductCard, Section } from "@/components/kit";
 import { categories, categoryName, products } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 export default function Produtos() {
   const search = useSearch();
@@ -38,7 +39,7 @@ export default function Produtos() {
     <>
       <Seo
         title="Catálogo de Equipamentos | Demakine"
-        description={`Mais de ${products.length} equipamentos agroindustriais: esteiras, roscas, elevadores, máquinas de costurar sacos e peneiras, com modelos, medidas e capacidades.`}
+        description={tr("Mais de {n} equipamentos agroindustriais: esteiras, roscas, elevadores, máquinas de costurar sacos e peneiras, com modelos, medidas e capacidades.", { n: products.length })}
         path="/produtos"
         jsonLd={itemListJsonLd(
           "Catálogo de equipamentos Demakine",
@@ -102,7 +103,7 @@ export default function Produtos() {
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-[14px] text-dm-gray">
             {list.length} {list.length === 1 ? "equipamento" : "equipamentos"}
-            {cat !== "all" && ` em ${categoryName(cat)}`}
+            {cat !== "all" && ` ${tr("em {categoria}", { categoria: tr(categoryName(cat)) })}`}
           </p>
           <p className="text-[13.5px] text-dm-gray">
             Marque <strong className="font-semibold text-dm-ink">Comparar</strong> em até 3 cards para

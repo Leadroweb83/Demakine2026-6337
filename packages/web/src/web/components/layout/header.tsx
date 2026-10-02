@@ -4,6 +4,7 @@ import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { nav, site, waLink } from "@/lib/site";
 import { categories, searchProducts } from "@/lib/content";
 import { ProductsMega } from "@/components/layout/mega-menu";
+import { LangSwitch } from "@/components/layout/lang-switch";
 import { cn } from "@/lib/utils";
 
 function SearchBox({ onDone }: { onDone?: () => void }) {
@@ -127,6 +128,7 @@ export function Header() {
             <a href={`mailto:${site.email}`} className="text-white/80 hover:text-white">
               {site.email}
             </a>
+            <LangSwitch dark />
           </div>
         </div>
       </div>
@@ -217,12 +219,15 @@ export function Header() {
             Pedir orçamento
           </a>
 
+          {/* no celular a barra de cima não aparece: o seletor de idioma vem para cá */}
+          <LangSwitch className="ml-auto lg:hidden" />
+
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
-            className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dm-line text-dm-ink lg:ml-3 xl:hidden"
+            className="ml-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dm-line text-dm-ink lg:ml-3 xl:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

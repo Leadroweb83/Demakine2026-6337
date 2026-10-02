@@ -11,6 +11,7 @@ import { GitCompareArrows, X } from "lucide-react";
 import { categoryName, products, type Product } from "@/lib/content";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 const MAX = 3;
 
@@ -89,7 +90,7 @@ export function CompareToggle({
       type="button"
       aria-pressed={on}
       disabled={blocked}
-      title={blocked ? `Você já selecionou ${MAX} equipamentos` : "Adicionar ao comparador"}
+      title={blocked ? tr("Você já selecionou {n} equipamentos", { n: MAX }) : "Adicionar ao comparador"}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -154,7 +155,7 @@ function CompareBar({ onOpen }: { onOpen: () => void }) {
               <button
                 type="button"
                 onClick={() => remove(p.slug)}
-                aria-label={`Remover ${p.name}`}
+                aria-label={tr("Remover {nome}", { nome: tr(p.name) })}
                 className="text-white/50 hover:text-white"
               >
                 <X className="h-3.5 w-3.5" />
@@ -179,7 +180,7 @@ function CompareBar({ onOpen }: { onOpen: () => void }) {
               list.length < 2 && "cursor-not-allowed opacity-45",
             )}
           >
-            {list.length < 2 ? "Escolha 2+" : `Comparar (${list.length})`}
+            {list.length < 2 ? "Escolha 2+" : tr("Comparar ({n})", { n: list.length })}
           </button>
         </div>
       </div>
@@ -312,7 +313,7 @@ function CompareModal({ onClose }: { onClose: () => void }) {
           </p>
           <a
             href={waLink(
-              `Olá! Quero comparar estes equipamentos: ${list.map((p) => p.name).join(" / ")}.`,
+              tr("Olá! Quero comparar estes equipamentos: {lista}.", { lista: list.map((p) => tr(p.name)).join(" / ") }),
             )}
             target="_blank"
             rel="noreferrer"

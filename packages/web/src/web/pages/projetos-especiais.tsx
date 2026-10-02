@@ -6,6 +6,7 @@ import { LeadForm } from "@/components/lead-form";
 import { CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
 import { projects } from "@/lib/content";
 import { segmentList } from "@/lib/segments";
+import { tr } from "@/lib/i18n";
 
 const pillars = [
   {
@@ -121,7 +122,7 @@ export default function ProjetosEspeciais() {
       <Section tone="surface">
         <SectionHead
           eyebrow="Portfólio"
-          title={`${projects.length} configurações especiais já entregues`}
+          title={tr("{n} configurações especiais já entregues", { n: projects.length })}
           text="Fotos reais de equipamentos que saíram da nossa fábrica. Clique para ampliar."
         />
 
@@ -267,7 +268,7 @@ export default function ProjetosEspeciais() {
                     key={img}
                     type="button"
                     onClick={() => setOpen({ slug: active.slug, index: idx })}
-                    aria-label={`Foto ${idx + 1}`}
+                    aria-label={tr("Foto {n}", { n: idx + 1 })}
                     className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 ${
                       idx === open.index ? "border-white" : "border-transparent opacity-60"
                     }`}

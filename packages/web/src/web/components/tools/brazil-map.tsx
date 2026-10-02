@@ -3,6 +3,7 @@ import mapRaw from "../../data/br-map.json";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Counter } from "../counter";
+import { tr } from "@/lib/i18n";
 
 type MapData = {
   w: number;
@@ -193,7 +194,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
           <img
             key={region}
             src={`/img/estados/${region}.webp`}
-            alt={`Equipe trabalhando com uma esteira Demakine na ${REGIONS[region].label} (imagem ilustrativa)`}
+            alt={tr("Equipe trabalhando com uma esteira Demakine na {regiao} (imagem ilustrativa)", { regiao: tr(REGIONS[region].label) })}
             width={1120}
             height={844}
             loading="lazy"
@@ -205,7 +206,7 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
           >
             <span className="cine-kicker block text-[22px] leading-tight text-white">{state.name}</span>
             <span className="mt-1 block text-[13px] text-white/75">
-              {REGIONS[region].label} · imagem ilustrativa
+              {tr(REGIONS[region].label)} · {tr("imagem ilustrativa")}
             </span>
           </figcaption>
         </figure>

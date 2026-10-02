@@ -4,6 +4,7 @@ import { ArrowRight, Ruler } from "lucide-react";
 import { materials, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /**
  * Dimensionador: a partir de distância, altura e material,
@@ -27,8 +28,8 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
   );
 
   const waMsg = result.model
-    ? `Olá! Usei o dimensionador do site: ${result.product.name}, modelo ${result.model.model} (${num(result.needed, 1)} m, altura ${num(height, 1)} m). Quero um orçamento.`
-    : `Olá! Usei o dimensionador do site e preciso de um projeto sob medida: ${result.product.name}, ${num(result.needed, 1)} m de comprimento e ${num(height, 1)} m de altura.`;
+    ? tr("Olá! Usei o dimensionador do site: {produto}, modelo {modelo} ({comprimento} m, altura {altura} m). Quero um orçamento.", { produto: tr(result.product.name), modelo: result.model.model, comprimento: num(result.needed, 1), altura: num(height, 1) })
+    : tr("Olá! Usei o dimensionador do site e preciso de um projeto sob medida: {produto}, {comprimento} m de comprimento e {altura} m de altura.", { produto: tr(result.product.name), comprimento: num(result.needed, 1), altura: num(height, 1) });
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.05fr] lg:gap-8">

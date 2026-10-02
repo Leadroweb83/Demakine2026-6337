@@ -6,6 +6,7 @@ import { CtaBand, PageHero, Section, SectionHead, TestimonialGrid } from "@/comp
 import { clients, testimonials } from "@/lib/content";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 export default function Clientes() {
   const segmentList = useMemo(() => {
@@ -53,7 +54,7 @@ export default function Clientes() {
       <Section>
         <SectionHead
           eyebrow="Parcerias"
-          title={`${clients.length} marcas que confiam na nossa engenharia`}
+          title={tr("{n} marcas que confiam na nossa engenharia", { n: clients.length })}
           text="Do setor alimentício ao farmacêutico, do agronegócio à reciclagem: nossa tecnologia movimenta o crescimento dos nossos parceiros diariamente."
         />
 

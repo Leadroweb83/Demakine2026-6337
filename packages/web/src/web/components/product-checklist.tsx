@@ -3,6 +3,7 @@ import { motion, useInView, useReducedMotion } from "motion/react";
 import { ClipboardCheck } from "lucide-react";
 import type { MaintenanceGroup } from "@/lib/product-maintenance";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 const STEP = 0.32;
 
@@ -28,7 +29,7 @@ export function ProductChecklist({ groups }: { groups: MaintenanceGroup[] }) {
           />
         </div>
         <p className="shrink-0 text-[13px] font-bold tabular-nums text-dm-ink" aria-live="polite">
-          {count === total ? `${total} itens conferidos` : `${count} de ${total} itens`}
+          {count === total ? tr("{total} itens conferidos", { total }) : tr("{count} de {total} itens", { count, total })}
         </p>
       </div>
 

@@ -4,6 +4,16 @@ import { segmentLps } from "../../web/lib/segmentos-lp";
 
 const ORIGIN = "https://www.demakine.com.br";
 
+/** Idiomas com endereço próprio (português na raiz). Mesma regra de web/lib/i18n.ts. */
+const LANGS = [
+  { hreflang: "pt-BR", prefix: "" },
+  { hreflang: "en", prefix: "/en" },
+  { hreflang: "es", prefix: "/es" },
+];
+/** só em português: vagas e a página de exportação (que já é uma página em espanhol e inglês) */
+const PT_ONLY = /^\/(vagas|export)(\/|$|\?)/;
+const inLang = (path: string, prefix: string) => (!prefix ? path : path === "/" ? prefix : prefix + path);
+
 /** Páginas fixas do site (as de produto, blog, case e vaga vêm do conteúdo). */
 const STATIC_PAGES = [
   "/", "/produtos", "/projetos-especiais", "/a-empresa", "/clientes", "/assistencia-tecnica", "/blog",
@@ -55,11 +65,17 @@ export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: D
     })),
     ...openJobs.map((j) => ({ path: `/vagas/${j.slug}`, lastmod: day(j.updatedAt), priority: "0.5" })),
   ];
+  const row = (e: Entry, loc: string, links = "") =>
+    `  <url><loc>${esc(ORIGIN + loc)}</loc>${links}${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}<priority>${e.priority}</priority></url>`;
   const urls = entries
-    .map(
-      (e) =>
-        `  <url><loc>${esc(ORIGIN + e.path)}</loc>${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}<priority>${e.priority}</priority></url>`,
-    )
+    .flatMap((e) => {
+      if (PT_ONLY.test(e.path)) return [row(e, e.path)];
+      // uma linha por idioma, cada uma listando as três versões (hreflang no sitemap)
+      const links = [...LANGS.map((l) => [l.hreflang, inLang(e.path, l.prefix)] as const), ["x-default", e.path] as const]
+        .map(([lang, p]) => `<xhtml:link rel="alternate" hreflang="${lang}" href="${esc(ORIGIN + p)}"/>`)
+        .join("");
+      return LANGS.map((l) => row(e, inLang(e.path, l.prefix), links));
+    })
     .join("\n");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
 }

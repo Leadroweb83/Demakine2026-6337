@@ -10,6 +10,7 @@ import {
 } from "@/lib/engine";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 type Step = {
   key: keyof QuizAnswers;
@@ -117,7 +118,7 @@ export function Quiz({ dark = false }: { dark?: boolean }) {
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <a
                 href={waLink(
-                  `Olá! Fiz o teste no site e o resultado foi: ${result.main.name}. Quero um orçamento.`,
+                  tr("Olá! Fiz o teste no site e o resultado foi: {produto}. Quero um orçamento.", { produto: tr(result.main.name) }),
                 )}
                 target="_blank"
                 rel="noreferrer"

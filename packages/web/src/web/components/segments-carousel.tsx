@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { segmentList } from "@/lib/segments";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /**
  * Segmentos atendidos: chips com ícone e cor própria de cada segmento navegam o
@@ -68,7 +69,7 @@ export function SegmentsCarousel() {
               key={s.slug}
               type="button"
               onClick={() => goTo(i)}
-              aria-label={`Ver equipamento indicado para ${s.name}`}
+              aria-label={tr("Ver equipamento indicado para {segmento}", { segmento: tr(s.name) })}
               className={cn(
                 "seg-chip group flex items-center gap-2.5 rounded-xl border bg-white px-3 py-2.5 text-left transition-all duration-300",
                 on
@@ -165,7 +166,7 @@ export function SegmentsCarousel() {
                   className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-bold"
                   style={{ color: c.color }}
                 >
-                  {c.page ? `Soluções para ${c.name.toLowerCase()}` : c.product}
+                  {c.page ? tr("Soluções para {segmento}", { segmento: tr(c.name).toLowerCase() }) : c.product}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </p>
               </div>

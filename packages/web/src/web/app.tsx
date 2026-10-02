@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 import { track } from "./lib/tracking";
+import { locale, localePath } from "./lib/i18n";
 import { recordView } from "./lib/visits";
 import { RedirectGate } from "./components/redirect-gate";
 import { endFirstPaint } from "./components/reveal";
@@ -105,7 +106,17 @@ function NotFound() {
   );
 }
 
+/** Página que só existe em português (vagas): em /en ou /es, vai para a versão em português. */
+function PtOnly() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.location.replace(location + window.location.search);
+  }, [location]);
+  return <div className="min-h-[60vh]" />;
+}
+
 function Site() {
+  const pt = locale() === "pt";
   return (
     <Shell>
       <Suspense fallback={<div className="min-h-[60vh]" />}>
@@ -127,8 +138,8 @@ function Site() {
         <Route path="/cases" component={Cases} />
         <Route path="/cases/:slug" component={CaseStudyPage} />
         <Route path="/contato" component={Contato} />
-        <Route path="/vagas" component={Vagas} />
-        <Route path="/vagas/:slug" component={Vaga} />
+        <Route path="/vagas" component={pt ? Vagas : PtOnly} />
+        <Route path="/vagas/:slug" component={pt ? Vaga : PtOnly} />
         <Route path="/trabalhe-conosco">
           <Redirect to="/vagas" replace />
         </Route>
@@ -147,7 +158,8 @@ function App() {
   // troca de página dentro do site (sem recarregar) vira page_view_spa no GTM
   const [location] = useLocation();
   // medição própria (painel > Visitas): toda página vista, inclusive a primeira
-  useEffect(() => recordView(location), [location]);
+  // (com o prefixo do idioma: /en/produtos e /produtos contam separado no painel)
+  useEffect(() => recordView(localePath(location)), [location]);
   const firstView = useRef(true);
   useEffect(() => {
     if (firstView.current) {
@@ -155,7 +167,7 @@ function App() {
       return;
     }
     // espera a página nova (carregada sob demanda) trocar o título
-    const t = window.setTimeout(() => track("page_view_spa", { page_path: location, page_title: document.title }), 400);
+    const t = window.setTimeout(() => track("page_view_spa", { page_path: localePath(location), page_title: document.title }), 400);
     return () => window.clearTimeout(t);
   }, [location]);
   return (

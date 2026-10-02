@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 type LeadFormProps = {
   source?: string;
@@ -99,8 +100,8 @@ export function LeadForm({
         <a
           href={waLink(
             product
-              ? `Olá! Acabei de pedir orçamento no site sobre: ${product}.`
-              : "Olá! Acabei de enviar um pedido de orçamento pelo site da Demakine.",
+              ? tr("Olá! Acabei de pedir orçamento no site sobre: {produto}.", { produto: tr(product) })
+              : tr("Olá! Acabei de enviar um pedido de orçamento pelo site da Demakine."),
           )}
           target="_blank"
           rel="noreferrer"
@@ -214,7 +215,7 @@ export function LeadForm({
           rows={compact ? 2 : 4}
           placeholder={
             product
-              ? `Conte o que precisa (material transportado, comprimento, altura, capacidade) para ${product}`
+              ? tr("Conte o que precisa (material transportado, comprimento, altura, capacidade) para {produto}", { produto: tr(product) })
               : "Conte o que precisa: material transportado, comprimento, altura e capacidade"
           }
           aria-label="Mensagem"

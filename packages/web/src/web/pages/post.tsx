@@ -10,6 +10,7 @@ import { CalcRoi } from "@/components/tools/calc-roi";
 import { formatDate, getPost, posts } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 import { Block } from "@/components/post-block";
+import { tr } from "@/lib/i18n";
 
 export default function Post() {
   const { slug } = useParams<{ slug: string }>();
@@ -143,7 +144,7 @@ export default function Post() {
               sob medida.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(`Olá! Li o artigo "${post.title}" e quero falar com um especialista.`)}>
+              <BtnWhats href={waLink(tr('Olá! Li o artigo "{titulo}" e quero falar com um especialista.', { titulo: tr(post.title) }))}>
                 Falar com especialista
               </BtnWhats>
             </div>

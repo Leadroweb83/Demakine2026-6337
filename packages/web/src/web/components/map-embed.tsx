@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MapPin, Navigation } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /**
  * Mapa do Google só depois do clique: o iframe traz uns 80 KB de scripts e cookies do Google, que
@@ -13,7 +14,7 @@ export function MapEmbed({ className, tone = "light" }: { className?: string; to
     return (
       <iframe
         src={site.mapsEmbed}
-        title={`Mapa da fábrica Demakine: ${site.address}`}
+        title={tr("Mapa da fábrica Demakine: {endereco}", { endereco: site.address })}
         referrerPolicy="no-referrer-when-downgrade"
         className={cn("w-full border-0", className)}
       />

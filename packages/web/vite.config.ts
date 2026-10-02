@@ -12,7 +12,8 @@ export default defineConfig(({ mode }) => {
 	Object.assign(process.env, env);
 
 	return {
-		plugins: [honoDevPlugin(), react(), tailwind()],
+		// textos passam pelo dicionário do idioma na hora de desenhar (src/web/i18n-jsx)
+		plugins: [honoDevPlugin(), react({ jsxImportSource: "@/i18n-jsx" }), tailwind()],
 		resolve: {
 			alias: {
 				"@": path.resolve(__dirname, "./src/web"),

@@ -1,4 +1,5 @@
 import { editedDoc } from "./runtime-content";
+import { tr } from "./i18n";
 
 export type Department = { name: string; phone: string; email: string };
 
@@ -83,8 +84,9 @@ function buildSite(edit: Partial<SiteData> | undefined) {
 
 export const site = buildSite(editedDoc<SiteData>("site", "main"));
 
+/** Link do WhatsApp com a mensagem pronta, no idioma da página. */
 export function waLink(message: string) {
-  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(tr(message))}`;
 }
 
 export const departments = site.departments;

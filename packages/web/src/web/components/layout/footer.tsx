@@ -13,6 +13,7 @@ import {
   TrustRow,
 } from "@/components/layout/footer-parts";
 import { openCookiePrefs } from "@/components/cookie-consent";
+import { LangSwitch } from "@/components/layout/lang-switch";
 
 const socials = [
   { href: site.social.instagram, label: "Instagram", Icon: FaInstagram },
@@ -251,14 +252,12 @@ export function Footer() {
           >
             Preferências de cookies
           </button>
-          {/* versões para exportação: sem este link a página ficava sem nenhuma entrada no site */}
-          <span className="flex gap-3 md:ml-auto">
-            <Link href="/export?lang=en" hrefLang="en" lang="en" className="hover:text-white">
-              English
-            </Link>
-            <Link href="/export?lang=es" hrefLang="es" lang="es" className="hover:text-white">
-              Español
-            </Link>
+          <span className="flex items-center gap-3 md:ml-auto">
+            {/* página de exportação: sem este link ela ficava sem nenhuma entrada no site */}
+            <a href="/export?lang=en" hrefLang="en" lang="en" translate="no" className="hover:text-white">
+              Export
+            </a>
+            <LangSwitch dark />
           </span>
         </div>
 

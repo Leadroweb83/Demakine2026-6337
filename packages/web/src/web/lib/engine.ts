@@ -4,6 +4,7 @@
  * (nenhum valor inventado; quando a tabela não cobre o caso, cai em "sob medida").
  */
 import { getProduct, products, type Product } from "./content";
+import { formatLocale, tr } from "./i18n";
 
 /* ------------------------------------------------------------------ helpers */
 
@@ -26,7 +27,7 @@ export function parseCv(raw?: string): number | null {
 }
 
 export function brl(v: number, digits = 0): string {
-  return v.toLocaleString("pt-BR", {
+  return v.toLocaleString(formatLocale(), {
     style: "currency",
     currency: "BRL",
     minimumFractionDigits: digits,
@@ -35,7 +36,7 @@ export function brl(v: number, digits = 0): string {
 }
 
 export function num(v: number, digits = 0): string {
-  return v.toLocaleString("pt-BR", {
+  return v.toLocaleString(formatLocale(), {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   });
@@ -183,7 +184,7 @@ export function sizeConveyor(input: SizingInput): SizingResult {
   if (!fit) {
     if (rows.length > 0) {
       notes.push(
-        `A linha padrão vai até ${num(rows[rows.length - 1].length ?? 0, 0)} m de comprimento. Acima disso fabricamos sob medida ou em módulos.`,
+        tr("A linha padrão vai até {n} m de comprimento. Acima disso fabricamos sob medida ou em módulos.", { n: num(rows[rows.length - 1].length ?? 0, 0) }),
       );
     } else {
       notes.push("Esse equipamento é sempre dimensionado sob medida para a sua operação.");

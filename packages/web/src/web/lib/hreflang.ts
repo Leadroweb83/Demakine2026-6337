@@ -1,11 +1,10 @@
 import { site } from "./site";
 
 /**
- * Grupo de idiomas do site: home em português e a página de exportação em espanhol e inglês.
- * As três páginas declaram o mesmo grupo (o Google ignora o par quando um lado não aponta de volta).
+ * Página de exportação (/export): existe só em espanhol e inglês, uma apontando para a outra.
+ * As demais páginas declaram os três idiomas sozinhas (components/seo.tsx).
  */
-export const LANGUAGE_ALTERNATES = [
-  { hreflang: "pt-BR", href: `${site.url}/` },
+export const EXPORT_ALTERNATES = [
   { hreflang: "es", href: `${site.url}/export?lang=es` },
   { hreflang: "en", href: `${site.url}/export?lang=en` },
   { hreflang: "x-default", href: `${site.url}/export?lang=en` },
