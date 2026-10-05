@@ -2,7 +2,6 @@ import { useEffect, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { Header } from "./header";
 import { Footer } from "./footer";
-import { WhatsappFloat } from "../whatsapp-float";
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
@@ -16,7 +15,6 @@ export function Shell({ children }: { children: ReactNode }) {
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
-      <WhatsappFloat />
     </div>
   );
 }
