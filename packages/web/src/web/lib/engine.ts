@@ -76,6 +76,15 @@ const familyBySituation: Record<MaterialKey, string> = {
   "cama-frango": "esteira-transportadora-em-v-para-cama-de-frango-aviario",
 };
 
+/** Material que já abre selecionado no dimensionador da página de um produto. */
+export function materialForProduct(slug: string, category: string): MaterialKey {
+  const exact = (Object.keys(familyBySituation) as MaterialKey[]).find((k) => familyBySituation[k] === slug);
+  if (exact) return exact;
+  if (category === "roscas-transportadoras") return "graos-fechado";
+  if (category === "elevadores") return "granel";
+  return "sacaria";
+}
+
 /* -------------------------------------------------------------- sizing (esteira) */
 
 export type SizingInput = {

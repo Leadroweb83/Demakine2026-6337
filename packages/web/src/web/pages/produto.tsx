@@ -463,7 +463,7 @@ export default function Produto() {
       ),
     },
     ferramentas: {
-      render: (tone) => <ProductTools category={product.category} tone={tone} />,
+      render: (tone) => <ProductTools slug={product.slug} category={product.category} tone={tone} />,
     },
     faq: {
       render: (tone) => (

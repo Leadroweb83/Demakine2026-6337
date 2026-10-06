@@ -4,6 +4,7 @@ import { Reveal } from "@/components/reveal";
 import { Section } from "@/components/kit";
 import type { LightTone } from "@/lib/page-layout";
 import { cn } from "@/lib/utils";
+import { materialForProduct } from "@/lib/engine";
 
 // cada ferramenta é um arquivo à parte: a página do produto só baixa a que estiver aberta
 const CalcEsteira = lazy(() => import("@/components/tools/calc-esteira").then((m) => ({ default: m.CalcEsteira })));
@@ -29,7 +30,7 @@ function toolsFor(category: string): ToolId[] {
  * Ferramentas da engenharia dentro da página do produto (saíram do menu do site):
  * configurador, dimensionador e calculadora de retorno, conforme a linha.
  */
-export function ProductTools({ category, tone }: { category: string; tone: LightTone }) {
+export function ProductTools({ slug, category, tone }: { slug: string; category: string; tone: LightTone }) {
   const tools = toolsFor(category);
   const [active, setActive] = useState<ToolId>(tools[0]!);
 
@@ -72,7 +73,7 @@ export function ProductTools({ category, tone }: { category: string; tone: Light
       <div role="tabpanel" className="mt-6">
         <Suspense fallback={<div className="min-h-[420px] rounded-2xl border border-dm-line bg-white" />}>
           {active === "configurar" && <Configurator dark={false} />}
-          {active === "dimensionar" && <CalcEsteira />}
+          {active === "dimensionar" && <CalcEsteira initialMaterial={materialForProduct(slug, category)} />}
           {active === "retorno" && <CalcRoi />}
         </Suspense>
       </div>

@@ -278,6 +278,18 @@
     padding-inline: 40px;
   }
 }
+/* topo do site: o menu com os nomes completos pede mais largura que o conteúdo das páginas */
+@media (min-width: 1380px) {
+  .dm-container--header {
+    max-width: 1440px;
+    padding-inline: 24px;
+  }
+}
+@media (min-width: 1600px) {
+  .dm-container--header {
+    max-width: 1560px;
+  }
+}
 
 .hero-scrim {
   background: linear-gradient(

@@ -10,8 +10,8 @@ import { tr } from "@/lib/i18n";
  * Dimensionador: a partir de distância, altura e material,
  * indica o modelo da tabela real de fábrica.
  */
-export function CalcEsteira({ dark = false }: { dark?: boolean }) {
-  const [material, setMaterial] = useState<MaterialKey>("sacaria");
+export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dark?: boolean; initialMaterial?: MaterialKey }) {
+  const [material, setMaterial] = useState<MaterialKey>(initialMaterial);
   const [distance, setDistance] = useState(6);
   const [height, setHeight] = useState(2.5);
   const [sanitary, setSanitary] = useState(false);

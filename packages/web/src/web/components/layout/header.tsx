@@ -139,7 +139,8 @@ export function Header() {
           scrolled ? "border-dm-line shadow-sm" : "border-transparent",
         )}
       >
-        <div className="dm-container flex h-[76px] items-center gap-6">
+        {/* o menu com os nomes completos pede mais largura que o conteúdo das páginas (1240 px) */}
+        <div className="dm-container dm-container--header flex h-[76px] items-center gap-4 min-[1600px]:gap-6">
           <Link href="/" className="shrink-0" aria-label="Demakine, página inicial">
             <img
               src="/img/site/logo-blue.webp"
@@ -167,7 +168,7 @@ export function Header() {
                       onFocus={openMega}
                       aria-expanded={mega}
                       className={cn(
-                        "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-[14px] font-semibold min-[1800px]:px-3 transition-colors",
+                        "flex items-center gap-1 whitespace-nowrap rounded-full px-[7px] py-2 text-[13.5px] font-semibold min-[1600px]:px-2.5 min-[1600px]:text-[14px] transition-colors",
                         active || mega
                           ? "bg-dm-blue-soft text-dm-blue"
                           : "text-dm-ink/75 hover:text-dm-blue",
@@ -189,7 +190,7 @@ export function Header() {
                   key={item.to}
                   href={item.to}
                   className={cn(
-                    "whitespace-nowrap rounded-full px-2 py-2 text-[14px] font-semibold min-[1800px]:px-3 transition-colors",
+                    "whitespace-nowrap rounded-full px-[7px] py-2 text-[13.5px] font-semibold min-[1600px]:px-2.5 min-[1600px]:text-[14px] transition-colors",
                     active ? "bg-dm-blue-soft text-dm-blue" : "text-dm-ink/75 hover:text-dm-blue",
                   )}
                 >
@@ -206,7 +207,7 @@ export function Header() {
           <div className="hidden shrink-0 items-center gap-2 lg:ml-auto lg:flex min-[1380px]:ml-0">
             <a
               href="/loja"
-              className="rounded-full bg-dm-blue px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#0d3480]"
+              className="rounded-full bg-dm-blue px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#0d3480] min-[1600px]:px-5 min-[1600px]:text-[13px]"
             >
               Loja virtual
             </a>
@@ -214,7 +215,7 @@ export function Header() {
               href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-dm-green px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+              className="rounded-full bg-dm-green px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark min-[1600px]:px-5 min-[1600px]:text-[13px]"
             >
               Pedir orçamento
             </a>
