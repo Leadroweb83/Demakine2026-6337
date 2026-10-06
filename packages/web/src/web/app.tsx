@@ -44,6 +44,7 @@ const ROUTES: [pattern: RegExp, load: Loader][] = [
   [/^\/export$/, () => import("./pages/export")],
   [/^\/politica-de-privacidade$/, named(() => import("./pages/legal"), "PoliticaDePrivacidade")],
   [/^\/termos-de-uso$/, named(() => import("./pages/legal"), "TermosDeUso")],
+  [/^\/obrigado$/, () => import("./pages/obrigado")],
 ];
 const page = (i: number) => lazy(ROUTES[i]![1]);
 
@@ -81,6 +82,7 @@ const Vaga = page(18);
 const ExportLanding = page(19);
 const PoliticaDePrivacidade = page(20);
 const TermosDeUso = page(21);
+const Obrigado = page(22);
 // painel e loja só baixam quando alguém abre essas páginas: o visitante do site não carrega esse código
 const Admin = lazy(() => import("./pages/admin"));
 const Loja = lazy(() => import("./pages/loja"));
@@ -145,6 +147,7 @@ function Site() {
         </Route>
         <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
         <Route path="/termos-de-uso" component={TermosDeUso} />
+        <Route path="/obrigado" component={Obrigado} />
         <Route component={NotFound} />
       </Switch>
       </Suspense>

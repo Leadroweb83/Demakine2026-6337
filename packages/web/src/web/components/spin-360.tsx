@@ -84,7 +84,7 @@ export function Spin360({
     <div className={cn("min-w-0", className)}>
       <div
         ref={boxRef}
-        className="relative touch-pan-y overflow-hidden rounded-2xl border border-dm-line bg-dm-surface select-none"
+        className="relative touch-pan-y overflow-hidden rounded-2xl border border-dm-line bg-white select-none"
         onMouseEnter={() => {
           engage();
           setActive(true);
@@ -107,7 +107,7 @@ export function Spin360({
             fetchPriority={idx === 0 ? "high" : "low"}
             alt={idx === 0 ? alt : ""}
             className={cn(
-              "aspect-[4/3] w-full object-cover transition-opacity duration-100",
+              "aspect-[4/3] w-full object-contain p-2 transition-opacity duration-100",
               idx === cur ? "opacity-100" : "pointer-events-none absolute inset-0 opacity-0",
             )}
           />

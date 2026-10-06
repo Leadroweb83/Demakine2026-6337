@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { ArrowRight, Mail, MapPin, MessageCircle, Navigation, Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import { nav, site, waLink } from "@/lib/site";
@@ -42,9 +42,14 @@ export function Footer() {
     return p ? [{ key: p.slug, label: p.name, href: `/produtos/${p.slug}` }] : [];
   });
 
+  const [location] = useLocation();
+  // em vagas a faixa de orçamento não faz sentido (pedido do cliente): quem está ali procura emprego
+  const showQuoteBand = !location.startsWith("/vagas");
+
   return (
     <footer className="relative overflow-hidden bg-dm-blue-deep text-white">
       {/* faixa de decisão */}
+      {showQuoteBand && (
       <div className="border-b border-white/10 bg-white/[0.04]">
         <div className="dm-container flex flex-col gap-5 py-8 md:flex-row md:items-center md:justify-between">
           <div>
@@ -75,6 +80,7 @@ export function Footer() {
           </div>
         </div>
       </div>
+      )}
 
       <div className="dm-container py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

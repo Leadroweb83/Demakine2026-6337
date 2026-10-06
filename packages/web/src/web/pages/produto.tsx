@@ -27,6 +27,7 @@ import { ProductProcess } from "@/components/product-process";
 import { processFor } from "@/lib/product-process";
 import { maintenanceFor } from "@/lib/product-maintenance";
 import { ProductChecklist } from "@/components/product-checklist";
+import { ProductTools } from "@/components/product-tools";
 import { FaqAccordion } from "@/components/faq";
 import { faqGroups, faqJsonLd } from "@/lib/faq";
 import {
@@ -461,6 +462,9 @@ export default function Produto() {
         </Section>
       ),
     },
+    ferramentas: {
+      render: (tone) => <ProductTools category={product.category} tone={tone} />,
+    },
     faq: {
       render: (tone) => (
         <Section tone={tone}>
@@ -579,11 +583,11 @@ export default function Produto() {
                 onIndexChange={setActive}
               />
             ) : (
-              <div className="overflow-hidden rounded-2xl border border-dm-line bg-dm-surface">
+              <div className="overflow-hidden rounded-2xl border border-dm-line bg-white">
                 <img
                   src={current}
                   alt={product.name}
-                  className="aspect-[4/3] w-full object-cover"
+                  className="aspect-[4/3] w-full object-contain p-2"
                 />
               </div>
             )}
@@ -606,7 +610,7 @@ export default function Produto() {
                       idx === active ? "border-dm-blue" : "border-transparent opacity-70 hover:opacity-100",
                     )}
                   >
-                    <img src={img} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    <img src={img} alt="" loading="lazy" className="h-full w-full bg-white object-contain p-1" />
                   </button>
                 ))}
               </div>

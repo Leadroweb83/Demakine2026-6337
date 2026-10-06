@@ -266,7 +266,7 @@ function CompareModal({ onClose }: { onClose: () => void }) {
                       src={p.images[0]}
                       alt=""
                       loading="lazy"
-                      className="mb-2 h-20 w-full rounded-lg object-cover"
+                      className="mb-2 h-20 w-full rounded-lg bg-white object-contain"
                     />
                     <Link
                       href={`/produtos/${p.slug}`}

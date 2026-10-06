@@ -2,7 +2,7 @@ import { Cog, MapPin, PhoneCall, Timer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnGhost, BtnWhats, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
+import { BtnGhost, BtnWhats, CtaBand, PageHero, Section } from "@/components/kit";
 import { departments, site, waLink } from "@/lib/site";
 
 const services = [
@@ -51,7 +51,7 @@ export default function AssistenciaTecnica() {
         eyebrow="Assistência Técnica · SAC"
         title="Suporte que não termina na entrega do equipamento"
         text="Da concepção ao pós-venda, acompanhamos o desempenho de cada máquina. Equipe especializada e parcerias técnicas em todo o território nacional."
-        image="/img/site/projetos.webp"
+        image="/img/site/assistencia.webp"
         crumbs={[{ label: "Assistência Técnica" }]}
       />
 
@@ -76,6 +76,15 @@ export default function AssistenciaTecnica() {
                 contínuo com a excelência e a satisfação de quem confia na nossa marca.
               </p>
             </div>
+
+            <img
+              src="/img/site/assistencia.webp"
+              alt="Técnicos da Demakine fazendo manutenção preventiva em uma esteira transportadora (imagem ilustrativa)"
+              width={1600}
+              height={900}
+              loading="lazy"
+              className="mt-8 w-full rounded-2xl object-cover"
+            />
 
             <div className="mt-8 rounded-2xl border border-dm-line bg-dm-surface p-6">
               <p className="eyebrow text-dm-blue">Canal direto do SAC</p>
@@ -135,8 +144,8 @@ export default function AssistenciaTecnica() {
             </ol>
             <p className="mt-8 text-[14.5px] text-dm-gray">
               Horário de atendimento: {site.hoursLine} ·{" "}
-              <a href={`mailto:${site.email}`} className="font-semibold text-dm-blue hover:underline">
-                {site.email}
+              <a href={`mailto:${support.email}`} className="font-semibold text-dm-blue hover:underline">
+                {support.email}
               </a>
             </p>
           </Reveal>
@@ -155,30 +164,7 @@ export default function AssistenciaTecnica() {
         </div>
       </Section>
 
-      <Section>
-        <SectionHead
-          eyebrow="Fale com o setor certo"
-          title="Contatos por departamento"
-          text="Cada área tem canal próprio para agilizar o seu atendimento."
-        />
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {departments.map((d, idx) => (
-            <Reveal key={d.name} i={idx % 4} className="h-full">
-              <div className="h-full rounded-2xl border border-dm-line bg-white p-5">
-                <p className="eyebrow text-dm-blue">{d.name}</p>
-                <p className="mt-3 text-[15.5px] font-bold text-dm-ink">{d.phone}</p>
-                <a
-                  href={`mailto:${d.email}`}
-                  className="mt-1 block break-all text-[14px] text-dm-gray hover:text-dm-blue"
-                >
-                  {d.email}
-                </a>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
+      {/* contatos dos outros departamentos saíram desta página (pedido do cliente): fica só o SAC, no topo */}
       <CtaBand
         title="Equipamento parado é dinheiro parado"
         text="Fale agora com o nosso SAC e receba orientação técnica de quem fabricou a sua máquina."

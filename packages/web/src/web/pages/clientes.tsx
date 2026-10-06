@@ -6,7 +6,6 @@ import { CtaBand, PageHero, Section, SectionHead, TestimonialGrid } from "@/comp
 import { clients, testimonials } from "@/lib/content";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
-import { tr } from "@/lib/i18n";
 
 export default function Clientes() {
   const segmentList = useMemo(() => {
@@ -23,7 +22,7 @@ export default function Clientes() {
     <>
       <Seo
         title="Nossos Clientes e Depoimentos | Demakine"
-        description="Indústrias de todos os portes e segmentos em todo o Brasil movimentam sua produção com equipamentos Demakine. Veja clientes e 29 depoimentos reais."
+        description="Indústrias de todos os portes e segmentos em todo o Brasil movimentam sua produção com equipamentos Demakine. Veja clientes e depoimentos reais."
         path="/clientes"
       />
 
@@ -36,11 +35,10 @@ export default function Clientes() {
       />
 
       <div className="border-b border-dm-line bg-white">
-        <div className="dm-container grid grid-cols-2 gap-y-8 py-10 md:grid-cols-4">
+        <div className="dm-container grid grid-cols-3 gap-y-8 py-10">
           {[
             { value: <Counter to={site.stats.clients} suffix="+" />, label: "clientes atendidos" },
             { value: <Counter to={site.stats.machines} suffix="+" />, label: "máquinas entregues" },
-            { value: <Counter to={testimonials.length} />, label: "depoimentos publicados" },
             { value: <Counter to={site.stats.rating} decimals={1} suffix="★" />, label: "nota média" },
           ].map((s) => (
             <div key={s.label} className="text-center">
@@ -54,7 +52,7 @@ export default function Clientes() {
       <Section>
         <SectionHead
           eyebrow="Parcerias"
-          title={tr("{n} marcas que confiam na nossa engenharia", { n: clients.length })}
+          title="Marcas que confiam na nossa engenharia"
           text="Do setor alimentício ao farmacêutico, do agronegócio à reciclagem: nossa tecnologia movimenta o crescimento dos nossos parceiros diariamente."
         />
 
@@ -124,7 +122,7 @@ export default function Clientes() {
               onClick={() => setShowAll(true)}
               className="rounded-full border border-dm-line bg-white px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-dm-ink transition-colors hover:border-dm-blue hover:text-dm-blue"
             >
-              Ver todos os {testimonials.length} depoimentos
+              Ver todos os depoimentos
             </button>
           </div>
         )}

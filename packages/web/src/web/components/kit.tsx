@@ -57,7 +57,7 @@ export function SectionHead({
     >
       <Reveal className={cn("max-w-2xl", align === "center" && "text-center")}>
         {eyebrow && (
-          <p className={cn("eyebrow", dark ? "text-white/45" : "text-dm-blue")}>{eyebrow}</p>
+          <p className={cn("eyebrow", dark ? "text-white/75" : "text-dm-blue")}>{eyebrow}</p>
         )}
         <h2 className={cn("h2 mt-3", dark ? "text-white" : "text-dm-ink")}>{title}</h2>
         {text && (
@@ -185,12 +185,15 @@ export function PageHero({
   text,
   image,
   crumbs,
+  action,
 }: {
   eyebrow: string;
   title: string;
   text?: string;
   image?: string;
   crumbs: { label: string; to?: string }[];
+  /** botão abaixo do texto (ex.: baixar o catálogo) */
+  action?: ReactNode;
 }) {
   return (
     <>
@@ -209,7 +212,7 @@ export function PageHero({
         )}
         <div className="absolute inset-0 grid-lines" />
         <div className="dm-container relative py-14 md:py-20">
-          <p className="eyebrow text-white/45 hero-in">{eyebrow}</p>
+          <p className="eyebrow text-white/75 hero-in">{eyebrow}</p>
           <h1 className="h1 mt-3 max-w-4xl text-white hero-in" style={{ ["--i" as string]: 1 }}>
             {title}
           </h1>
@@ -220,6 +223,11 @@ export function PageHero({
             >
               {text}
             </p>
+          )}
+          {action && (
+            <div className="mt-8 hero-in" style={{ ["--i" as string]: 3 }}>
+              {action}
+            </div>
           )}
         </div>
       </section>
@@ -244,12 +252,12 @@ export function ProductCard({
         href={`/produtos/${product.slug}`}
         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dm-line bg-white transition-all hover:-translate-y-1 hover:border-dm-blue/35 hover:shadow-xl hover:shadow-dm-blue/10"
       >
-        <div className="relative aspect-[4/3] overflow-hidden bg-dm-surface">
+        <div className="relative aspect-[4/3] overflow-hidden bg-white">
           <img
             src={product.images[0]}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
           />
           {product.tag && (
             <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-dm-blue">

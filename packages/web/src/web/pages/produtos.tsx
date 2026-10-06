@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSearch } from "wouter";
-import { Search, X } from "lucide-react";
+import { Download, Search, X } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { itemListJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
@@ -53,6 +53,17 @@ export default function Produtos() {
         text="Todos os modelos são fabricados na nossa unidade em Limeira/SP e podem ser adaptados ao seu layout, material e capacidade."
         image="/img/site/hero.webp"
         crumbs={[{ label: "Produtos" }]}
+        action={
+          <a
+            href="/downloads/catalogo-demakine.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-dm-blue-deep shadow-lg shadow-black/20 transition-colors hover:bg-dm-blue-soft"
+          >
+            <Download className="h-4 w-4" />
+            Baixar catálogo completo (PDF)
+          </a>
+        }
       />
 
       <Section>

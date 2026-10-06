@@ -4,16 +4,41 @@ import { aboutPageJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { ClientsMarquee, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
+import { VideoSection } from "@/components/video-section";
 import { site } from "@/lib/site";
 
-const values = [
-  "Deus",
-  "Respeito",
-  "Trabalho em equipe",
-  "Humanismo",
-  "Foco nas pessoas e no cliente",
-  "Superação e resiliência",
-  "Humildade",
+const values = ["Deus", "Empatia", "Comprometimento", "Perseverança e resiliência", "Excelência", "Humildade"];
+
+/**
+ * Trajetória: só fatos publicados no site (feiras no blog, números da empresa).
+ * O ano de fundação entra quando a Demakine confirmar.
+ */
+const timeline = [
+  {
+    when: "Começo",
+    title: "Fábrica própria em Limeira/SP",
+    text: "A Demakine nasce em Limeira, no interior de São Paulo, fabricando esteiras e roscas para a indústria e o agronegócio.",
+  },
+  {
+    when: "2024",
+    title: "Agrishow e Batatec",
+    text: "Estande na Agrishow em parceria com a MF Rural e presença na 5ª Batatec, em Presidente Prudente/SP, com demonstração dos equipamentos.",
+  },
+  {
+    when: "2025",
+    title: "Agrishow 2025",
+    text: "Cinco dias de demonstrações ao vivo e conversas técnicas com produtores e indústrias de todo o país.",
+  },
+  {
+    when: "2026",
+    title: "Agrishow e AgroBrasília",
+    text: "A linha agro chega às duas maiores vitrines do campo: Ribeirão Preto/SP e Brasília/DF.",
+  },
+  {
+    when: "Hoje",
+    title: "Mais de 7.000 máquinas entregues",
+    text: "Mais de 8 mil clientes atendidos em todo o Brasil, com fabricação, assistência técnica e peças pelo mesmo time.",
+  },
 ];
 
 const socialProjects = [
@@ -77,6 +102,9 @@ export default function AEmpresa() {
         </div>
       </div>
 
+      {/* vídeo institucional logo no começo, como na home */}
+      <VideoSection stats={false} />
+
       {/* ------------------------------------------------------------- história */}
       <Section>
         <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
@@ -126,6 +154,30 @@ export default function AEmpresa() {
         </div>
       </Section>
 
+      {/* ----------------------------------------------------------- trajetória */}
+      <Section>
+        <SectionHead eyebrow="Linha do tempo" title="Nossa trajetória" />
+        <ol className="relative mt-12 grid gap-8 md:grid-cols-5 md:gap-5">
+          {/* linha que liga os marcos */}
+          <span aria-hidden="true" className="absolute bottom-0 left-[11px] top-0 w-px bg-dm-line md:bottom-auto md:left-0 md:right-0 md:top-[11px] md:h-px md:w-auto" />
+          {timeline.map((t, idx) => (
+            <li key={t.title} className="relative pl-10 md:pl-0 md:pt-10">
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-0.5 flex h-[23px] w-[23px] items-center justify-center rounded-full border-2 border-dm-blue bg-white md:top-0"
+              >
+                <span className="h-2 w-2 rounded-full bg-dm-red" />
+              </span>
+              <Reveal i={idx}>
+                <p className="font-display text-[22px] font-extrabold leading-none text-dm-blue">{t.when}</p>
+                <h3 className="mt-2 text-[16px] font-bold text-dm-ink">{t.title}</h3>
+                <p className="mt-2 text-[14.5px] leading-relaxed text-dm-gray">{t.text}</p>
+              </Reveal>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
       {/* --------------------------------------------------- missão visão valores */}
       <Section tone="surface">
         <SectionHead eyebrow="O que nos guia" title="Missão, visão e valores" />
@@ -146,8 +198,8 @@ export default function AEmpresa() {
               title: "Visão",
               body: (
                 <p className="text-[15.5px] leading-relaxed text-dm-gray">
-                  Ser líder nacional no setor industrial e empresa referência para clientes,
-                  colaboradores e parceiros.
+                  Ser líder nacional e internacional no setor agroindustrial e empresa referência
+                  para clientes, colaboradores e parceiros.
                 </p>
               ),
             },
@@ -183,9 +235,12 @@ export default function AEmpresa() {
       <section className="relative overflow-hidden bg-dm-blue-deep py-16 md:py-24">
         <div className="absolute inset-0 grid-lines" />
         <div className="dm-container relative">
+          {/* o pedido foi destacar "Propósito social": vira um selo legível, não um sobretítulo apagado */}
+          <p className="mb-5 inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-[14px] font-bold uppercase tracking-[0.14em] text-white">
+            Propósito social
+          </p>
           <SectionHead
             dark
-            eyebrow="Propósito social"
             title="Nosso compromisso é com pessoas"
             text="Acreditamos que cada empresa tem o poder de transformar realidades. Por isso apoiamos projetos que levam cuidado, educação e esperança a quem mais precisa."
           />

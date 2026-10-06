@@ -79,7 +79,8 @@ export function ProductsMega({ onNavigate }: { onNavigate?: () => void }) {
                   onFocus={() => setHover(p.slug)}
                   onClick={onNavigate}
                   className={cn(
-                    "block truncate rounded-lg px-2.5 py-2 text-[14px] font-semibold transition-colors",
+                    // nome inteiro, em até duas linhas (pedido do cliente: nada de "Esteira Transportadora para Saca…")
+                    "block rounded-lg px-2.5 py-2 text-[14px] font-semibold leading-snug transition-colors",
                     hover === p.slug
                       ? "bg-dm-surface text-dm-blue"
                       : "text-dm-ink/75 hover:text-dm-blue",
@@ -129,7 +130,7 @@ export function ProductsMega({ onNavigate }: { onNavigate?: () => void }) {
                 src={shown.images[0]}
                 alt={shown.name}
                 loading="lazy"
-                className="mega-img h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="mega-img h-full w-full bg-white object-contain p-2 transition-transform duration-500 group-hover:scale-105"
               />
             </div>
             <div className="p-4">

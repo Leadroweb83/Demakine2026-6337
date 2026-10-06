@@ -1,11 +1,11 @@
 import { useState, type ReactNode } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { track } from "@/lib/tracking";
 import { visitAttribution } from "@/lib/visits";
 import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
-import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -23,6 +23,11 @@ type LeadFormProps = {
   successExtra?: ReactNode;
   /** Texto alternativo do painel de sucesso. */
   successTitle?: string;
+  /**
+   * Depois de enviar, abre a página de obrigado (/obrigado), que é a conversão medida no GTM e no
+   * Google Ads. Padrão: sim, menos quando o painel de sucesso tem conteúdo próprio (links liberados).
+   */
+  thankYouPage?: boolean;
   /** Habilita o anexo de foto da peca/maquina (ate 3 imagens). */
   photos?: boolean;
   /** Rotulo do bloco de foto, quando habilitado. */
@@ -45,11 +50,14 @@ export function LeadForm({
   onSuccess,
   successExtra,
   successTitle,
+  thankYouPage,
   photos = false,
   photoLabel,
   photoHint,
 }: LeadFormProps) {
   const dark = variant === "dark";
+  const [, navigate] = useLocation();
+  const goToThanks = thankYouPage ?? !successExtra;
   const [form, setForm] = useState({
     name: "",
     company: "",
@@ -73,6 +81,7 @@ export function LeadForm({
     onSuccess: () => {
       track("generate_lead", { form_source: source, product: product ?? null });
       onSuccess?.();
+      if (goToThanks) navigate(`/obrigado?origem=${encodeURIComponent(source)}`);
     },
   });
 
@@ -93,22 +102,10 @@ export function LeadForm({
         <h3 className={cn("h3 mt-4", dark && "text-white")}>
           {successTitle ?? "Recebemos seu pedido"}
         </h3>
+        {/* sem botão de WhatsApp aqui: a ideia é o cliente aguardar o contato do vendedor */}
         <p className={cn("mt-2 text-[15px]", dark ? "text-white/65" : "text-dm-gray")}>
-          Um especialista da Demakine entra em contato em até 1 dia útil. Quer agilizar? Fale agora no
-          WhatsApp.
+          Um especialista da Demakine entra em contato em até 1 dia útil.
         </p>
-        <a
-          href={waLink(
-            product
-              ? tr("Olá! Acabei de pedir orçamento no site sobre: {produto}.", { produto: tr(product) })
-              : tr("Olá! Acabei de enviar um pedido de orçamento pelo site da Demakine."),
-          )}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-5 inline-block rounded-full bg-dm-green px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-        >
-          Falar no WhatsApp
-        </a>
         {successExtra && <div className="mt-6">{successExtra}</div>}
       </div>
     );

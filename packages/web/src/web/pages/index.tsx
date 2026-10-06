@@ -51,11 +51,9 @@ import {
   posts,
   products,
   projects,
-  testimonials,
 } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 import { PageSections, type Block } from "@/lib/page-layout";
-import { tr } from "@/lib/i18n";
 
 const categoryIcons: Record<string, typeof Cog> = {
   "esteiras-transportadoras": Truck,
@@ -326,7 +324,7 @@ export default function Home() {
         <Section tone={tone}>
           <SectionHead
             eyebrow="Depoimentos"
-            title={tr("{n} avaliações de quem já comprou", { n: testimonials.length })}
+            title="Avaliações de quem já comprou"
             text="Nota média 4,9. A maior parte dos nossos clientes chega por indicação de outro cliente."
             action={<BtnGhost to="/clientes">Ver todos</BtnGhost>}
           />

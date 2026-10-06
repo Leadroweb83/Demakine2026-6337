@@ -139,18 +139,19 @@ export function Header() {
           scrolled ? "border-dm-line shadow-sm" : "border-transparent",
         )}
       >
-        <div className="dm-container flex h-[68px] items-center gap-6">
+        <div className="dm-container flex h-[76px] items-center gap-6">
           <Link href="/" className="shrink-0" aria-label="Demakine, página inicial">
             <img
               src="/img/site/logo-blue.webp"
               width={293}
               height={80}
               alt="Demakine Equipamentos Agroindustriais"
-              className="h-8 w-auto object-contain md:h-9"
+              className="h-9 w-auto object-contain md:h-11"
             />
           </Link>
 
-          <nav className="ml-auto hidden items-center gap-1 xl:flex">
+          {/* nomes completos no menu: ele aparece a partir de 1380 px; abaixo disso, o menu do celular */}
+          <nav className="ml-auto hidden items-center gap-0.5 min-[1380px]:flex">
             {nav.slice(1).map((item) => {
               const active = location === item.to || location.startsWith(`${item.to}/`);
               if (item.to === "/produtos") {
@@ -191,33 +192,33 @@ export function Header() {
                     "whitespace-nowrap rounded-full px-2 py-2 text-[14px] font-semibold min-[1800px]:px-3 transition-colors",
                     active ? "bg-dm-blue-soft text-dm-blue" : "text-dm-ink/75 hover:text-dm-blue",
                   )}
-                  title={"short" in item ? item.label : undefined}
                 >
-                  {"short" in item ? (
-                    <>
-                      <span className="min-[1800px]:hidden">{item.short}</span>
-                      <span className="hidden min-[1800px]:inline">{item.label}</span>
-                    </>
-                  ) : (
-                    item.label
-                  )}
+                  {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="ml-auto hidden w-[210px] 2xl:ml-4 2xl:block">
+          <div className="ml-auto hidden w-[210px] min-[1800px]:ml-4 min-[1800px]:block">
             <SearchBox />
           </div>
 
-          <a
-            href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden shrink-0 lg:ml-auto rounded-full bg-dm-green px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark lg:block"
-          >
-            Pedir orçamento
-          </a>
+          <div className="hidden shrink-0 items-center gap-2 lg:ml-auto lg:flex min-[1380px]:ml-0">
+            <a
+              href="/loja"
+              className="rounded-full bg-dm-blue px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#0d3480]"
+            >
+              Loja virtual
+            </a>
+            <a
+              href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-dm-green px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+            >
+              Pedir orçamento
+            </a>
+          </div>
 
           {/* no celular a barra de cima não aparece: o seletor de idioma vem para cá */}
           <LangSwitch className="ml-auto lg:hidden" />
@@ -227,7 +228,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
-            className="ml-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dm-line text-dm-ink lg:ml-3 xl:hidden"
+            className="ml-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dm-line text-dm-ink lg:ml-3 min-[1380px]:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -237,14 +238,14 @@ export function Header() {
           <div
             onMouseEnter={openMega}
             onMouseLeave={scheduleClose}
-            className="absolute left-0 right-0 top-full hidden xl:block"
+            className="absolute left-0 right-0 top-full hidden min-[1380px]:block"
           >
             <ProductsMega onNavigate={() => setMega(false)} />
           </div>
         )}
 
         {open && (
-          <div className="border-t border-dm-line bg-white xl:hidden">
+          <div className="border-t border-dm-line bg-white min-[1380px]:hidden">
             <div className="dm-container max-h-[calc(100dvh-120px)] overflow-y-auto py-5">
               <SearchBox onDone={() => setOpen(false)} />
               <nav className="mt-4 flex flex-col">
@@ -279,6 +280,12 @@ export function Header() {
                 })}
               </nav>
               <div className="mt-5 flex flex-col gap-3">
+                <a
+                  href="/loja"
+                  className="rounded-full bg-dm-blue px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
+                >
+                  Loja virtual
+                </a>
                 <a
                   href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
                   target="_blank"

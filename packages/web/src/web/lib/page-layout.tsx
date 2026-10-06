@@ -47,6 +47,7 @@ export const PAGE_SECTIONS: Record<LayoutPage, SectionDef[]> = {
     { id: "anatomia", label: "Anatomia do equipamento", kind: "dark", note: "só esteiras" },
     { id: "modelos", label: "Tabela de modelos", kind: "light", tone: "white", note: "só produtos com modelos" },
     { id: "material", label: "Para qual material serve", kind: "light", tone: "white" },
+    { id: "ferramentas", label: "Ferramentas (dimensionar, retorno)", kind: "light", tone: "surface" },
     { id: "erros", label: "3 erros que custam caro", kind: "light", tone: "surface" },
     { id: "instalacao", label: "Ficha de instalação", kind: "light", tone: "white" },
     { id: "pecas", label: "Peças de reposição", kind: "light", tone: "surface" },

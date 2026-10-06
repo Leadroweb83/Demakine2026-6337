@@ -95,12 +95,12 @@ export function Quiz({ dark = false }: { dark?: boolean }) {
         </div>
 
         <div className="mt-5 grid gap-6 md:grid-cols-[1fr_1.1fr] md:items-center">
-          <div className="overflow-hidden rounded-2xl bg-dm-surface">
+          <div className="overflow-hidden rounded-2xl bg-white">
             <img
               src={result.main.images[0]}
               alt={result.main.name}
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover"
+              className="aspect-[4/3] w-full object-contain p-2"
             />
           </div>
           <div>

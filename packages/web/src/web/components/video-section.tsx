@@ -30,7 +30,7 @@ const points = [
  * clique) de um lado e o texto de experiência da empresa do outro, com CTA para
  * o catálogo.
  */
-export function VideoSection() {
+export function VideoSection({ stats = true }: { stats?: boolean }) {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -88,7 +88,7 @@ export function VideoSection() {
 
         {/* texto */}
         <Reveal i={1}>
-          <p className="eyebrow text-white/45">Quem é a Demakine</p>
+          <p className="eyebrow text-white/75">Quem é a Demakine</p>
           <h2 className="mt-3 font-display text-[26px] font-extrabold leading-tight text-white md:text-[32px]">
             Mais de 14 anos fabricando o que a indústria precisa mover
           </h2>
@@ -98,6 +98,7 @@ export function VideoSection() {
             prazo cumprido que faz nossos clientes voltarem e indicarem a Demakine.
           </p>
 
+          {stats && (
           <div className="mt-6 grid grid-cols-3 gap-3">
             {[
               { value: <Counter to={site.stats.years} suffix="+" />, label: "anos de mercado" },
@@ -117,6 +118,7 @@ export function VideoSection() {
               </div>
             ))}
           </div>
+          )}
 
           <ul className="mt-6 space-y-3">
             {points.map(({ Icon, title, text }) => (

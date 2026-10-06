@@ -1,8 +1,7 @@
 import { useRef } from "react";
 import { home } from "@/lib/home";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
-import { ArrowRight, ShieldCheck, Wrench, Truck, Factory } from "lucide-react";
-import { BtnGhost } from "./kit";
+import { ArrowRight, Download, ShieldCheck, Wrench, Truck, Factory } from "lucide-react";
 import { CineRule, CineStat, CineTag } from "./cine";
 import { Counter } from "./counter";
 import { Rotator } from "./rotator";
@@ -120,9 +119,15 @@ export function HomeHero() {
 
             {/* um botão só, na largura que os dois ocupavam; o pedido de orçamento fica na calculadora ao lado */}
             <div className="mt-9">
-              <BtnGhost dark href="/downloads/catalogo-demakine.pdf" external className="w-full sm:w-[27rem]">
-                Ver catálogo (PDF)
-              </BtnGhost>
+              <a
+                href="/downloads/catalogo-demakine.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="cine-shine inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-dm-blue-deep shadow-lg shadow-black/20 transition-colors hover:bg-dm-blue-soft sm:w-[27rem]"
+              >
+                <Download className="h-4 w-4" />
+                Baixar catálogo (PDF)
+              </a>
             </div>
 
             <a

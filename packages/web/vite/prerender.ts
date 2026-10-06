@@ -141,7 +141,8 @@ async function main() {
   const report = Boolean(process.env.I18N_REPORT);
   const missing: Record<string, Set<string>> = { en: new Set(), es: new Set() };
 
-  const urls = [...pageUrls(sitemap), NOT_FOUND_PATH];
+  // página de obrigado: fora do sitemap (noindex), mas pronta para quem recarregar depois de enviar
+  const urls = [...pageUrls(sitemap), "/obrigado", "/en/obrigado", "/es/obrigado", NOT_FOUND_PATH];
   const jobPrefill: [unknown[], unknown] = [["vagas"], jobs];
   let count = 0;
   for (const url of urls) {
