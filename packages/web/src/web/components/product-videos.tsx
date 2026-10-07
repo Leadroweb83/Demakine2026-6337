@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { MessageCircle, Play, Youtube } from "lucide-react";
+import { Play, Youtube } from "lucide-react";
 import { Reveal } from "@/components/reveal";
-import { BtnGhost, BtnWhats, Section } from "@/components/kit";
+import { BtnGhost, Section } from "@/components/kit";
 import { videoThumb, type ProductVideo } from "@/lib/product-videos";
 import { artigo } from "@/lib/content";
-import { site, waLink } from "@/lib/site";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
-import { locale, tr } from "@/lib/i18n";
+import { tr } from "@/lib/i18n";
 
 /**
  * Vídeos do produto em facade: a capa é local e o iframe do YouTube (modo sem cookies)
@@ -126,14 +126,8 @@ export function ProductVideos({
             </ul>
           )}
 
-          <div className="mt-7 flex flex-wrap gap-3">
-            <BtnWhats
-              href={waLink(locale() === "pt" ? `Olá! Vi o vídeo ${art.da} ${productName} no site e quero um orçamento.` : tr("Olá! Vi no site o vídeo deste equipamento e quero um orçamento: {produto}.", { produto: tr(productName) }))}
-              className="gap-2 whitespace-nowrap"
-            >
-              <MessageCircle className="h-4 w-4" />
-              Pedir orçamento
-            </BtnWhats>
+          {/* o orçamento já tem formulário e faixa própria na página do produto: aqui só o canal de vídeos */}
+          <div className="mt-7 flex justify-center">
             <BtnGhost href={site.social.youtube} external className="gap-2 whitespace-nowrap">
               <Youtube className="h-4 w-4" />
               Mais vídeos
