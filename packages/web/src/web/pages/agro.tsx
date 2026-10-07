@@ -223,12 +223,12 @@ export default function Agro() {
           {agroChains.map((c, i) => (
             <Reveal key={c.id} i={i % 3} className="h-full">
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dm-line bg-white transition-all hover:-translate-y-1 hover:border-[#2f7a3f]/45 hover:shadow-xl hover:shadow-[#2f7a3f]/10">
-                <div className="relative aspect-[16/10] overflow-hidden bg-dm-surface">
+                <div className="relative aspect-[16/10] overflow-hidden bg-white">
                   <img
                     src={c.image}
                     alt={c.name}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-contain p-3 transition-transform duration-700 group-hover:scale-105"
                   />
                   <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-[#12331e]/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#e8c469]">
                     <Wheat className="h-3.5 w-3.5" />

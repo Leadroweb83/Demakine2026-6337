@@ -134,12 +134,12 @@ export default function ProjetosEspeciais() {
                 onClick={() => setOpen({ slug: p.slug, index: 0 })}
                 className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-dm-line bg-white text-left transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-dm-blue/10"
               >
-                <div className="relative aspect-[16/11] overflow-hidden bg-dm-surface">
+                <div className="relative aspect-[16/11] overflow-hidden bg-white">
                   <img
                     src={p.images[0]}
                     alt={p.name}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
                   />
                   <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-dm-blue opacity-0 transition-opacity group-hover:opacity-100">
                     <ArrowUpRight className="h-4 w-4" />
@@ -273,7 +273,7 @@ export default function ProjetosEspeciais() {
                       idx === open.index ? "border-white" : "border-transparent opacity-60"
                     }`}
                   >
-                    <img src={img} alt="" className="h-full w-full object-cover" />
+                    <img src={img} alt="" className="h-full w-full bg-white object-contain p-0.5" />
                   </button>
                 ))}
               </div>

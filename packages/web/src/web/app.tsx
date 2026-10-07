@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 import { track } from "./lib/tracking";
 import { locale, localePath } from "./lib/i18n";
+import { SHOP_OPEN } from "./lib/site";
 import { recordView } from "./lib/visits";
 import { RedirectGate } from "./components/redirect-gate";
 import { endFirstPaint } from "./components/reveal";
@@ -184,9 +185,13 @@ function App() {
             </Suspense>
           </Route>
           <Route path="/loja">
-            <Suspense fallback={null}>
-              <Loja />
-            </Suspense>
+            {SHOP_OPEN ? (
+              <Suspense fallback={null}>
+                <Loja />
+              </Suspense>
+            ) : (
+              <Redirect to="/" replace />
+            )}
           </Route>
           <Route path="/export">
             <Suspense fallback={null}>

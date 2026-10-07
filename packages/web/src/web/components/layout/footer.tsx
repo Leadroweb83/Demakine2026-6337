@@ -43,8 +43,10 @@ export function Footer() {
   });
 
   const [location] = useLocation();
-  // em vagas quem está ali procura emprego; no obrigado o pedido já foi feito (e sem WhatsApp, a pedido do cliente)
-  const showQuoteBand = !location.startsWith("/vagas") && location !== "/obrigado";
+  // a pedido do cliente: fora das páginas de produto (elas têm o próprio orçamento), de vagas (quem está ali
+  // procura emprego) e do obrigado (o pedido já foi feito, e lá não vai WhatsApp)
+  const showQuoteBand =
+    !location.startsWith("/produtos") && !location.startsWith("/vagas") && location !== "/obrigado";
 
   return (
     <footer className="relative overflow-hidden bg-dm-blue-deep text-white">

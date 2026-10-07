@@ -91,6 +91,9 @@ export function waLink(message: string) {
 
 export const departments = site.departments;
 
+/** Loja virtual: enquanto false, o botão do topo mostra "Em breve" e /loja volta para a home. */
+export const SHOP_OPEN = false;
+
 export const nav = [
   { label: "Home", to: "/" },
   { label: "Produtos", to: "/produtos" },

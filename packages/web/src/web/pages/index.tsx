@@ -222,12 +222,12 @@ export default function Home() {
                     href="/projetos-especiais"
                     className="group block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]"
                   >
-                    <div className="aspect-[16/11] overflow-hidden">
+                    <div className="aspect-[16/11] overflow-hidden bg-white">
                       <img
                         src={p.images[0]}
                         alt={p.name}
                         loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                     <div className="p-5">
