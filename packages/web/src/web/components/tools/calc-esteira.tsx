@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Ruler } from "lucide-react";
-import { materials, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
+import { materials, maxAngleFor, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
@@ -15,6 +15,7 @@ export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dar
   const [distance, setDistance] = useState(6);
   const [height, setHeight] = useState(2.5);
   const [sanitary, setSanitary] = useState(false);
+  const flat = maxAngleFor(material) === 0;
 
   const result = useMemo(
     () => sizeConveyor({ material, distance, height, sanitary }),
@@ -28,8 +29,8 @@ export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dar
   );
 
   const waMsg = result.model
-    ? tr("Olá! Usei o dimensionador do site: {produto}, modelo {modelo} ({comprimento} m, altura {altura} m). Quero um orçamento.", { produto: tr(result.product.name), modelo: result.model.model, comprimento: num(result.needed, 1), altura: num(height, 1) })
-    : tr("Olá! Usei o dimensionador do site e preciso de um projeto sob medida: {produto}, {comprimento} m de comprimento e {altura} m de altura.", { produto: tr(result.product.name), comprimento: num(result.needed, 1), altura: num(height, 1) });
+    ? tr("Olá! Usei o dimensionador do site: {produto}, modelo {modelo} ({comprimento} m, altura {altura} m). Quero um orçamento.", { produto: tr(result.product.name), modelo: result.model.model, comprimento: num(result.needed, 1), altura: num(flat ? 0 : height, 1) })
+    : tr("Olá! Usei o dimensionador do site e preciso de um projeto sob medida: {produto}, {comprimento} m de comprimento e {altura} m de altura.", { produto: tr(result.product.name), comprimento: num(result.needed, 1), altura: num(flat ? 0 : height, 1) });
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.05fr] lg:gap-8">
@@ -73,16 +74,19 @@ export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dar
             suffix=" m"
             onChange={setDistance}
           />
-          <Slider
-            dark={dark}
-            label="Altura de descarga"
-            value={height}
-            min={0}
-            max={12}
-            step={0.1}
-            suffix=" m"
-            onChange={setHeight}
-          />
+          {/* esteira de triagem é horizontal: altura de descarga não se aplica */}
+          {!flat && (
+            <Slider
+              dark={dark}
+              label="Altura de descarga"
+              value={height}
+              min={0}
+              max={12}
+              step={0.1}
+              suffix=" m"
+              onChange={setHeight}
+            />
+          )}
         </div>
 
         <label
@@ -116,7 +120,7 @@ export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dar
 
         <div className="mt-5 grid grid-cols-2 gap-3">
           <Fact dark={dark} k="Comprimento necessário" v={`${num(result.needed, 1)} m`} />
-          <Fact dark={dark} k="Inclinação" v={`${num(result.angle, 0)}°`} />
+          <Fact dark={dark} k="Inclinação" v={flat ? tr("0° (horizontal)") : `${num(result.angle, 0)}°`} />
           <Fact
             dark={dark}
             k="Modelo indicado"

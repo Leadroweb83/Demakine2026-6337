@@ -2946,5 +2946,19 @@
  "k02945": "Ver o catálogo",
  "k02946": "Um especialista da Demakine entra em contato em até 1 dia útil.",
  "k02947": "Ferramentas (dimensionar, retorno)",
- "k02948": "Em breve"
+ "k02948": "Em breve",
+ "k02949": "Olá! Vim pelo site da Demakine e quero começar pelo levantamento do meu equipamento.",
+ "k02950": "Começar pelo levantamento",
+ "k02951": "DISTÂNCIA",
+ "k02952": "ALTURA",
+ "k02953": "MATERIAL",
+ "k02954": "VOLUME POR HORA",
+ "k02955": "Desenho de levantamento com comprimento, altura de descarga e material da esteira",
+ "k02956": "Estrutura de esteira em montagem na oficina da Demakine",
+ "k02957": "Soldador trabalhando em uma peça na fábrica da Demakine em Limeira/SP",
+ "k02958": "Esteira com moega pintada e pronta dentro da fábrica da Demakine",
+ "k02959": "Técnicos da Demakine fazendo manutenção em uma esteira transportadora (imagem ilustrativa)",
+ "k02960": "0° (horizontal)",
+ "k02961": "Esteira de triagem trabalha na horizontal.",
+ "k02962": "Com {material} a inclinação vai até {g}°. Para essa altura a esteira precisa de {m} m, ocupando {d} m no piso."
 }

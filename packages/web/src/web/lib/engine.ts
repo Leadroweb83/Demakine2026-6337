@@ -120,14 +120,21 @@ export type SizingResult = {
   alternatives: Product[];
 };
 
-/** seno de 30°: inclinação máxima considerada quando a tabela não traz a altura do modelo */
-const SIN_MAX_ANGLE = 0.5;
+/**
+ * Inclinação máxima que a fábrica trabalha em cada material (passada pela Demakine).
+ * Esteira de triagem (reciclagem) é sempre horizontal. Os demais seguem o limite geral de 30°.
+ */
+const MAX_ANGLE: Partial<Record<MaterialKey, number>> = { sacaria: 35, granel: 30, caixas: 28, reciclagem: 0 };
+export const maxAngleFor = (material: MaterialKey) => MAX_ANGLE[material] ?? 30;
+const sinDeg = (deg: number) => Math.sin((deg * Math.PI) / 180);
 
 export function sizeConveyor(input: SizingInput): SizingResult {
   const notes: string[] = [];
   const byHeight = input.distance === undefined;
   const distance = Math.max(0, input.distance ?? 0);
-  const height = Math.max(0, input.height);
+  const maxAngle = maxAngleFor(input.material);
+  // esteira de triagem trabalha na horizontal: a altura de descarga não entra na conta
+  const height = maxAngle === 0 ? 0 : Math.max(0, input.height);
   let needed = Math.sqrt(distance * distance + height * height);
   let angle = distance > 0 ? (Math.atan2(height, distance) * 180) / Math.PI : height > 0 ? 90 : 0;
 
@@ -146,9 +153,17 @@ export function sizeConveyor(input: SizingInput): SizingResult {
       "Acima de 7 m de elevação com granel, o elevador de canecas é a solução mais eficiente e ocupa menos área.",
     );
   }
-  if (!byHeight && angle > 30 && input.material === "granel") {
+  // distância curta para a altura pedida: a esteira fica mais longa para não passar do limite do material
+  if (!byHeight && height > 0 && angle > maxAngle + 0.01) {
+    needed = height / sinDeg(maxAngle);
+    angle = maxAngle;
     notes.push(
-      "Inclinação acima de 30° com granel exige correia taliscada ou em V para o material não retornar.",
+      tr("Com {material} a inclinação vai até {g}°. Para essa altura a esteira precisa de {m} m, ocupando {d} m no piso.", {
+        material: tr(materials.find((m) => m.key === input.material)?.label ?? "").toLowerCase(),
+        g: maxAngle,
+        m: num(needed, 1),
+        d: num(Math.sqrt(needed * needed - height * height), 1),
+      }),
     );
   }
   if (input.sanitary) {
@@ -176,13 +191,13 @@ export function sizeConveyor(input: SizingInput): SizingResult {
   const fit = byHeight
     ? rows.find((m) =>
         // sem altura máxima na tabela, vale o limite de 30° de inclinação
-        m.heightMax !== null ? m.heightMax >= height - 0.01 : (m.length ?? 0) * SIN_MAX_ANGLE >= height - 0.01,
+        m.heightMax !== null ? m.heightMax >= height - 0.01 : (m.length ?? 0) * sinDeg(maxAngle) >= height - 0.01,
       )
     : rows.find(
         (m) => (m.length ?? 0) >= needed - 0.01 && (m.heightMax === null || m.heightMax >= height - 0.01),
       );
   if (byHeight) {
-    needed = fit?.length ?? height / SIN_MAX_ANGLE;
+    needed = fit?.length ?? (maxAngle > 0 ? height / sinDeg(maxAngle) : 0);
     angle = needed > 0 ? (Math.asin(Math.min(1, height / needed)) * 180) / Math.PI : 0;
   }
 
@@ -352,7 +367,8 @@ export type ConfigInput = {
   family: "sacaria" | "granel" | "caixas" | "reciclagem";
 };
 
-export function configure({ length, angle, family }: ConfigInput) {
+export function configure({ length, angle: rawAngle, family }: ConfigInput) {
+  const angle = Math.min(rawAngle, maxAngleFor(family));
   const slug =
     family === "sacaria"
       ? "esteira-transportadora-para-sacaria"

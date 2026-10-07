@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Ruler } from "lucide-react";
-import { materials, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
+import { materials, maxAngleFor, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
 import { waLink } from "@/lib/site";
 import { Fact, Slider } from "./calc-esteira";
 import { tr } from "@/lib/i18n";
@@ -14,12 +14,13 @@ export function HeroCalc() {
   const [material, setMaterial] = useState<MaterialKey>("sacaria");
   const [height, setHeight] = useState(2.5);
   const [sanitary, setSanitary] = useState(false);
+  const flat = maxAngleFor(material) === 0;
 
   const result = useMemo(() => sizeConveyor({ material, height, sanitary }), [material, height, sanitary]);
 
   const waMsg = result.model
-    ? tr("Olá! Usei o dimensionador do site: {produto}, modelo {modelo} (altura de descarga {altura} m). Quero um orçamento.", { produto: tr(result.product.name), modelo: result.model.model, altura: num(height, 1) })
-    : tr("Olá! Usei o dimensionador do site e preciso de um projeto sob medida: {produto}, altura de descarga {altura} m.", { produto: tr(result.product.name), altura: num(height, 1) });
+    ? tr("Olá! Usei o dimensionador do site: {produto}, modelo {modelo} (altura de descarga {altura} m). Quero um orçamento.", { produto: tr(result.product.name), modelo: result.model.model, altura: num(flat ? 0 : height, 1) })
+    : tr("Olá! Usei o dimensionador do site e preciso de um projeto sob medida: {produto}, altura de descarga {altura} m.", { produto: tr(result.product.name), altura: num(flat ? 0 : height, 1) });
 
   return (
     <div className="rounded-2xl border border-white/12 bg-white/[0.06] p-5 backdrop-blur md:p-6">
@@ -44,9 +45,16 @@ export function HeroCalc() {
         ))}
       </select>
 
-      <div className="mt-5">
-        <Slider dark label="Altura de descarga" value={height} min={0} max={12} step={0.1} suffix=" m" onChange={setHeight} />
-      </div>
+      {/* esteira de triagem é horizontal: altura de descarga não se aplica */}
+      {flat ? (
+        <p className="mt-5 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-3 text-[14px] text-white/75">
+          Esteira de triagem trabalha na horizontal.
+        </p>
+      ) : (
+        <div className="mt-5">
+          <Slider dark label="Altura de descarga" value={height} min={0} max={12} step={0.1} suffix=" m" onChange={setHeight} />
+        </div>
+      )}
 
       <label className="mt-4 flex cursor-pointer items-center gap-3 text-[14px] text-white/75">
         <input
@@ -66,7 +74,7 @@ export function HeroCalc() {
           <Fact dark k="Modelo indicado" v={result.model ? result.model.model : "Sob medida"} highlight />
           {/* sem modelo de tabela (sob medida), comprimento e inclinação saem do projeto, não de conta */}
           <Fact dark k="Comprimento" v={result.model ? `${num(result.needed, 1)} m` : "a definir"} />
-          <Fact dark k="Inclinação" v={result.model ? `${num(result.angle, 0)}°` : "a definir"} />
+          <Fact dark k="Inclinação" v={flat ? tr("0° (horizontal)") : result.model ? `${num(result.angle, 0)}°` : "a definir"} />
           <Fact dark k="Motorização" v={result.model?.motor ?? "a definir"} />
           <Fact dark k="Correia / helicoide" v={result.model?.belt ?? "a definir"} />
           <Fact dark k="Capacidade" v={result.model?.capacity ?? "a definir"} />

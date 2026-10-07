@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { configure, num } from "@/lib/engine";
+import { configure, maxAngleFor, num } from "@/lib/engine";
 import { Fact, Slider } from "./calc-esteira";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
-import { locale, tr } from "@/lib/i18n";
+import { tr } from "@/lib/i18n";
 
 type Family = "sacaria" | "granel" | "caixas" | "reciclagem";
 
@@ -21,8 +21,11 @@ const families: { key: Family; label: string; belt: string }[] = [
  */
 export function Configurator({ dark = true }: { dark?: boolean }) {
   const [length, setLength] = useState(8);
-  const [angle, setAngle] = useState(22);
+  const [rawAngle, setAngle] = useState(22);
   const [family, setFamily] = useState<Family>("sacaria");
+  // cada material tem a sua inclinação máxima; trocar de material traz o valor para dentro do limite
+  const maxAngle = maxAngleFor(family);
+  const angle = Math.min(rawAngle, maxAngle);
   const [wheels, setWheels] = useState(true);
 
   const cfg = useMemo(() => configure({ length, angle, family }), [length, angle, family]);
@@ -221,7 +224,10 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
             <button
               key={f.key}
               type="button"
-              onClick={() => setFamily(f.key)}
+              onClick={() => {
+                setFamily(f.key);
+                setAngle((a) => Math.min(a, maxAngleFor(f.key)));
+              }}
               className={cn(
                 "rounded-full border px-4 py-2 text-[13px] font-bold uppercase tracking-wide transition-colors",
                 family === f.key
@@ -247,16 +253,27 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
             suffix=" m"
             onChange={setLength}
           />
-          <Slider
-            dark={dark}
-            label="Inclinação"
-            value={angle}
-            min={0}
-            max={40}
-            step={1}
-            suffix="°"
-            onChange={setAngle}
-          />
+          {maxAngle > 0 ? (
+            <Slider
+              dark={dark}
+              label="Inclinação"
+              value={angle}
+              min={0}
+              max={maxAngle}
+              step={1}
+              suffix="°"
+              onChange={setAngle}
+            />
+          ) : (
+            <p
+              className={cn(
+                "rounded-xl border px-4 py-3 text-[14px]",
+                dark ? "border-white/12 bg-white/[0.04] text-white/75" : "border-dm-line bg-dm-surface text-dm-ink/80",
+              )}
+            >
+              Esteira de triagem trabalha na horizontal.
+            </p>
+          )}
         </div>
 
         <label
@@ -281,7 +298,11 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
             v={cfg.model && !cfg.custom ? cfg.model.model : "Sob medida"}
             highlight
           />
-          <Fact dark={dark} k="Altura de descarga" v={`${num(cfg.discharge, 1)} m`} />
+          {maxAngle > 0 ? (
+            <Fact dark={dark} k="Altura de descarga" v={`${num(cfg.discharge, 1)} m`} />
+          ) : (
+            <Fact dark={dark} k="Inclinação" v="0° (horizontal)" />
+          )}
           <Fact dark={dark} k="Motorização" v={cfg.model?.motor ?? "a definir"} />
           <Fact
             dark={dark}
@@ -318,8 +339,7 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
                 : "border-dm-line text-dm-ink hover:border-dm-blue hover:text-dm-blue",
             )}
           >
-            {/* em português o nome é cortado para caber; a tradução entra inteira */}
-            {locale() === "pt" ? cfg.product.name.split(" ").slice(0, 3).join(" ") : tr(cfg.product.name)}
+            Ver ficha técnica
           </Link>
         </div>
       </div>
