@@ -5,7 +5,8 @@ import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { site } from "@/lib/site";
 
-const YT_ID = "cHw0WbzKy4A";
+/** vídeo institucional no YouTube (também é o fundo do título de A Empresa) */
+export const YT_ID = "cHw0WbzKy4A";
 
 const points = [
   {

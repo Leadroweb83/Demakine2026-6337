@@ -4,6 +4,7 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "./reveal";
 import { CompareToggle } from "./compare";
+import { YouTubeBg } from "./youtube-bg";
 import { clients, testimonials, type Product } from "@/lib/content";
 import { site, waLink } from "@/lib/site";
 
@@ -186,6 +187,7 @@ export function PageHero({
   image,
   crumbs,
   action,
+  youtubeBg,
 }: {
   eyebrow: string;
   title: string;
@@ -194,6 +196,8 @@ export function PageHero({
   crumbs: { label: string; to?: string }[];
   /** botão abaixo do texto (ex.: baixar o catálogo) */
   action?: ReactNode;
+  /** id de vídeo do YouTube para tocar no fundo, sem som, com a mesma opacidade da imagem */
+  youtubeBg?: string;
 }) {
   return (
     <>
@@ -210,6 +214,7 @@ export function PageHero({
             className="absolute inset-0 h-full w-full object-cover opacity-35"
           />
         )}
+        {youtubeBg && <YouTubeBg id={youtubeBg} />}
         <div className="absolute inset-0 grid-lines" />
         <div className="dm-container relative py-14 md:py-20">
           <p className="eyebrow text-white/75 hero-in">{eyebrow}</p>
