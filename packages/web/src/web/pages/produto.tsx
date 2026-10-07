@@ -84,6 +84,10 @@ export default function Produto() {
       return v !== "" && v !== "definir" && v !== "-" && v !== "-";
     }),
   );
+  // o que é igual em todos os modelos sai da tabela e vira um bloco só: a tabela fica com o que muda e cabe sem rolar
+  const specVaries = (k: string) => new Set(product.models.map((m) => m.specs[k] ?? "-")).size > 1;
+  const sharedSpecs = product.models.length > 1 ? specKeys.filter((k) => !specVaries(k)) : specKeys;
+  const varyingSpecs = specKeys.filter((k) => !sharedSpecs.includes(k));
   const art = artigo(product.name);
   const pt = locale() === "pt";
   const produto = tr(product.name);
@@ -174,34 +178,71 @@ export default function Produto() {
           </Reveal>
 
           <Reveal i={1} className="mt-8">
-            <div className="overflow-x-auto rounded-2xl border border-dm-line">
-              <table className="spec-table">
-                <thead>
-                  <tr>
-                    <th>Modelo</th>
-                    {specKeys.map((k) => (
-                      <th key={k}>{k}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {product.models.map((m) => (
-                    <tr key={m.model}>
-                      <th scope="row" className="font-bold text-dm-blue">
-                        {m.model}
-                      </th>
-                      {specKeys.map((k) => (
-                        <td key={k} className="text-dm-ink/80">
-                          {m.specs[k] ?? "-"}
-                        </td>
-                      ))}
-                    </tr>
+            {sharedSpecs.length > 0 && (
+              <div className={cn("rounded-2xl border border-dm-line p-5 md:p-6", tone === "surface" ? "bg-white" : "bg-dm-surface")}>
+                <p className="text-[12.5px] font-bold uppercase tracking-[0.14em] text-dm-gray">
+                  {product.models.length > 1 ? "Igual em todos os modelos" : product.models[0].model}
+                </p>
+                <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
+                  {sharedSpecs.map((k) => (
+                    <div key={k}>
+                      <dt className="text-[13px] text-dm-gray">{k}</dt>
+                      <dd className="mt-0.5 text-[16px] font-semibold tabular-nums text-dm-ink">{product.models[0].specs[k] ?? "-"}</dd>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </dl>
+              </div>
+            )}
+
+            {varyingSpecs.length > 0 && (
+              <>
+                {/* computador: tabela só com o que muda entre os modelos */}
+                <div className="mt-4 hidden overflow-hidden rounded-2xl border border-dm-line lg:block">
+                  <table className="spec-table">
+                    <thead>
+                      <tr>
+                        <th>Modelo</th>
+                        {varyingSpecs.map((k) => (
+                          <th key={k}>{k}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {product.models.map((m) => (
+                        <tr key={m.model}>
+                          <th scope="row" className="font-bold text-dm-blue">
+                            {m.model}
+                          </th>
+                          {varyingSpecs.map((k) => (
+                            <td key={k} className="text-dm-ink/80">
+                              {m.specs[k] ?? "-"}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* celular e tablet: um cartão por modelo, sem arrastar para o lado */}
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:hidden">
+                  {product.models.map((m) => (
+                    <li key={m.model} className="rounded-2xl border border-dm-line bg-white p-4">
+                      <p className="text-[17px] font-bold text-dm-blue">{m.model}</p>
+                      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3">
+                        {varyingSpecs.map((k) => (
+                          <div key={k}>
+                            <dt className="text-[12.5px] text-dm-gray">{k}</dt>
+                            <dd className="mt-0.5 text-[15px] font-semibold tabular-nums text-dm-ink">{m.specs[k] ?? "-"}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </Reveal>
-          <p className="mt-3 text-[13px] text-dm-gray lg:hidden">Arraste a tabela para o lado →</p>
         </Section>
       ),
     },
