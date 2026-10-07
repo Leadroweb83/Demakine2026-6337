@@ -122,7 +122,7 @@ export default function ProjetosEspeciais() {
       <Section tone="surface">
         <SectionHead
           eyebrow="Portfólio"
-          title={tr("{n} configurações especiais já entregues", { n: projects.length })}
+          title="Alguns projetos especiais já entregues"
           text="Fotos reais de equipamentos que saíram da nossa fábrica. Clique para ampliar."
         />
 
