@@ -182,13 +182,20 @@ export default function AEmpresa() {
       {/* --------------------------------------------------- missão visão valores */}
       <Section tone="surface">
         <SectionHead eyebrow="O que nos guia" title="Missão, visão e valores" />
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
+        {/*
+          Missão → visão → valores ligados por uma linha, como a linha do tempo. Os pontos pulsam em
+          sequência e um brilho corre pela linha no mesmo sentido: um leva ao outro.
+        */}
+        <ol className="mvv relative mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
+          <span aria-hidden="true" className="mvv-line">
+            <span className="mvv-flow" />
+          </span>
           {[
             {
               Icon: Target,
               title: "Missão",
               body: (
-                <p className="text-[15.5px] leading-relaxed text-dm-gray">
+                <p className="text-[17px] leading-relaxed text-dm-ink/85 md:text-[18px]">
                   Oferecer soluções práticas e inovadoras na fabricação de máquinas e equipamentos
                   para os setores da indústria e do agronegócio.
                 </p>
@@ -198,7 +205,7 @@ export default function AEmpresa() {
               Icon: Compass,
               title: "Visão",
               body: (
-                <p className="text-[15.5px] leading-relaxed text-dm-gray">
+                <p className="text-[17px] leading-relaxed text-dm-ink/85 md:text-[18px]">
                   Ser líder nacional e internacional no setor agroindustrial e empresa referência
                   para clientes, colaboradores e parceiros.
                 </p>
@@ -208,10 +215,12 @@ export default function AEmpresa() {
               Icon: HeartHandshake,
               title: "Valores",
               body: (
-                <ul className="space-y-1.5 text-[15.5px] text-dm-gray">
+                <ul className="flex flex-wrap gap-2">
                   {values.map((v) => (
-                    <li key={v} className="flex gap-2">
-                      <span className="text-dm-blue">•</span>
+                    <li
+                      key={v}
+                      className="rounded-full border border-dm-blue/20 bg-white px-3.5 py-1.5 text-[14.5px] font-semibold text-dm-blue shadow-sm"
+                    >
                       {v}
                     </li>
                   ))}
@@ -219,17 +228,23 @@ export default function AEmpresa() {
               ),
             },
           ].map(({ Icon, title, body }, idx) => (
-            <Reveal key={title} i={idx} className="h-full">
-              <div className="h-full rounded-2xl border border-dm-line bg-white p-7">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-dm-blue-soft text-dm-blue">
-                  <Icon className="h-6 w-6" />
-                </span>
-                <h3 className="mt-5 text-[18px] font-bold text-dm-ink">{title}</h3>
+            <li key={title} className="relative pl-20 md:pl-0 md:pt-24">
+              <span
+                aria-hidden="true"
+                className="mvv-node absolute left-0 top-0 flex h-14 w-14 items-center justify-center rounded-full bg-dm-blue text-white shadow-[0_10px_24px_rgba(16,61,148,0.28)]"
+                style={{ ["--d" as string]: `${idx * 0.8}s` }}
+              >
+                <span className="mvv-ping" />
+                <Icon className="relative h-6 w-6" />
+              </span>
+              <Reveal i={idx}>
+                <p className="text-[12.5px] font-bold uppercase tracking-[0.16em] text-dm-red">0{idx + 1}</p>
+                <h3 className="mt-1 font-display text-[24px] font-extrabold text-dm-ink">{title}</h3>
                 <div className="mt-3">{body}</div>
-              </div>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
-        </div>
+        </ol>
       </Section>
 
       {/* ------------------------------------------------------- propósito social */}

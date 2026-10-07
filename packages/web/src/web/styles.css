@@ -1392,3 +1392,69 @@
     animation: none;
   }
 }
+
+/* ------------------------------------------------ missão, visão e valores (A Empresa) */
+/* linha que liga os três pontos: vertical no celular, horizontal a partir de 768 px */
+.mvv-line {
+  position: absolute;
+  left: 27px;
+  top: 28px;
+  bottom: 0;
+  width: 2px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--color-dm-blue) 0%, var(--color-dm-line) 100%);
+}
+.mvv-flow {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 30%;
+  background: linear-gradient(to bottom, transparent, var(--color-dm-red), transparent);
+  animation: mvv-flow-y 2.4s linear infinite;
+}
+@media (min-width: 768px) {
+  .mvv-line {
+    left: 28px;
+    right: 0;
+    top: 27px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-dm-blue) 0%, var(--color-dm-blue) 70%, transparent 100%);
+  }
+  .mvv-flow {
+    inset: 0 auto 0 0;
+    width: 30%;
+    height: auto;
+    background: linear-gradient(to right, transparent, var(--color-dm-red), transparent);
+    animation-name: mvv-flow-x;
+  }
+}
+@keyframes mvv-flow-y {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(340%); }
+}
+@keyframes mvv-flow-x {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(340%); }
+}
+/* pulsação: um anel vermelho que abre em cada ponto, um depois do outro (atraso em --d) */
+.mvv-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid var(--color-dm-red);
+  animation: mvv-ping 2.4s ease-out infinite;
+  animation-delay: var(--d, 0s);
+  opacity: 0;
+}
+@keyframes mvv-ping {
+  0% { transform: scale(1); opacity: 0.75; }
+  70%, 100% { transform: scale(1.9); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mvv-flow,
+  .mvv-ping {
+    animation: none;
+  }
+  .mvv-flow { display: none; }
+}
