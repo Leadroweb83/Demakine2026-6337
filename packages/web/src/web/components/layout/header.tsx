@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
-import { nav, SHOP_OPEN, site, waLink } from "@/lib/site";
+import { nav, quoteHref, SHOP_OPEN, site } from "@/lib/site";
 import { categories, searchProducts } from "@/lib/content";
 import { ProductsMega } from "@/components/layout/mega-menu";
 import { LangSwitch } from "@/components/layout/lang-switch";
@@ -225,14 +225,13 @@ export function Header() {
                 </span>
               </span>
             )}
-            <a
-              href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-dm-green px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark min-[1600px]:px-5 min-[1600px]:text-[13px]"
+            {/* orçamento vai para o formulário de contato; verde fica reservado ao WhatsApp */}
+            <Link
+              href={quoteHref()}
+              className="rounded-full bg-dm-red px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017] min-[1600px]:px-5 min-[1600px]:text-[13px]"
             >
               Pedir orçamento
-            </a>
+            </Link>
           </div>
 
           {/* no celular a barra de cima não aparece: o seletor de idioma vem para cá */}
@@ -311,14 +310,13 @@ export function Header() {
                     <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10.5px]">Em breve</span>
                   </span>
                 )}
-                <a
-                  href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-dm-green px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
+                <Link
+                  href={quoteHref()}
+                  onClick={() => setOpen(false)}
+                  className="rounded-full bg-dm-red px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
                 >
-                  Pedir orçamento no WhatsApp
-                </a>
+                  Pedir orçamento
+                </Link>
                 <a
                   href={site.mobileHref}
                   className="rounded-full border border-dm-line px-6 py-3.5 text-center text-sm font-bold text-dm-ink"

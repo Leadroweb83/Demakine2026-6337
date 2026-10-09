@@ -6,6 +6,7 @@ import {
   Check,
   HelpCircle,
   MessageCircle,
+  Send,
   Minus,
   Phone,
   Printer,
@@ -39,7 +40,7 @@ import {
   type Fit,
 } from "@/lib/product-content";
 import { artigo, categoryName, getProduct, relatedProducts } from "@/lib/content";
-import { site, waLink } from "@/lib/site";
+import { quoteHref, site, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { PageSections, type Block } from "@/lib/page-layout";
 import { locale, tr } from "@/lib/i18n";
@@ -438,13 +439,13 @@ export default function Produto() {
                   assistência técnica.
                 </p>
               </div>
-              <BtnWhats
-                href={waLink(pt ? `Olá! Preciso de orçamento de peça de reposição ${art.para} ${product.name}.` : tr("Olá! Preciso de orçamento de peça de reposição para este equipamento: {produto}.", { produto }))}
+              <BtnPrimary
+                to={quoteHref({ produto: product.name, mensagem: pt ? `Olá! Preciso de orçamento de peça de reposição ${art.para} ${product.name}.` : tr("Olá! Preciso de orçamento de peça de reposição para este equipamento: {produto}.", { produto }) })}
                 className="shrink-0 gap-2"
               >
-                <MessageCircle className="h-4 w-4" />
+                <Send className="h-4 w-4" />
                 Orçamento de peça
-              </BtnWhats>
+              </BtnPrimary>
             </div>
           </Reveal>
         </Section>
@@ -693,10 +694,10 @@ export default function Produto() {
             )}
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(waMessage)} className="gap-2">
-                <MessageCircle className="h-4 w-4" />
-                Orçamento no WhatsApp
-              </BtnWhats>
+              <BtnPrimary to={quoteHref({ produto: product.name, mensagem: waMessage })} className="gap-2">
+                <Send className="h-4 w-4" />
+                Pedir orçamento
+              </BtnPrimary>
               <BtnGhost href={site.phoneHref} className="gap-2">
                 <Phone className="h-4 w-4" />
                 {site.phone}

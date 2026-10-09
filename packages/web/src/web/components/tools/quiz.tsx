@@ -8,7 +8,7 @@ import {
   type MaterialKey,
   type QuizAnswers,
 } from "@/lib/engine";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -116,16 +116,15 @@ export function Quiz({ dark = false }: { dark?: boolean }) {
               ))}
             </ul>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={waLink(
-                  tr("Olá! Fiz o teste no site e o resultado foi: {produto}. Quero um orçamento.", { produto: tr(result.main.name) }),
-                )}
-                target="_blank"
-                rel="noreferrer"
-                className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+              <Link
+                href={quoteHref({
+                  produto: result.main.name,
+                  mensagem: tr("Olá! Fiz o teste no site e o resultado foi: {produto}. Quero um orçamento.", { produto: tr(result.main.name) }),
+                })}
+                className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
               >
                 Pedir orçamento
-              </a>
+              </Link>
               <Link
                 href={`/produtos/${result.main.slug}`}
                 className={cn(

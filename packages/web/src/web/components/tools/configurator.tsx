@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { configure, maxAngleFor, num } from "@/lib/engine";
 import { Fact, Slider } from "./calc-esteira";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -320,16 +320,15 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
         )}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={waLink(
-              tr("Olá! Configurei no site: {produto}, {m} m, {g}° de inclinação, descarga a {d} m{rodas}. Quero um orçamento.", { produto: tr(cfg.product.name), m: num(length, 1), g: num(angle, 0), d: num(cfg.discharge, 1), rodas: wheels ? tr(", com rodas") : "" }),
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+          <Link
+            href={quoteHref({
+              produto: cfg.product.name,
+              mensagem: tr("Olá! Configurei no site: {produto}, {m} m, {g}° de inclinação, descarga a {d} m{rodas}. Quero um orçamento.", { produto: tr(cfg.product.name), m: num(length, 1), g: num(angle, 0), d: num(cfg.discharge, 1), rodas: wheels ? tr(", com rodas") : "" }),
+            })}
+            className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
           >
             Orçar esta configuração
-          </a>
+          </Link>
           <Link
             href={`/produtos/${cfg.product.slug}`}
             className={cn(

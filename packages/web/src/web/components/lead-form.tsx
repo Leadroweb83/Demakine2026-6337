@@ -35,6 +35,8 @@ type LeadFormProps = {
   photoLabel?: string;
   /** Ajuda do bloco de foto, quando habilitado. */
   photoHint?: string;
+  /** texto que já vem escrito na mensagem (botões de orçamento das ferramentas e produtos) */
+  initialMessage?: string;
 };
 
 const inputBase =
@@ -55,6 +57,7 @@ export function LeadForm({
   photos = false,
   photoLabel,
   photoHint,
+  initialMessage = "",
 }: LeadFormProps) {
   const dark = variant === "dark";
   const [, navigate] = useLocation();
@@ -66,7 +69,7 @@ export function LeadForm({
     email: "",
     city: "",
     uf: "",
-    message: "",
+    message: initialMessage,
   });
   const [error, setError] = useState<string | null>(null);
   const [shots, setShots] = useState<UploadedPhoto[]>([]);

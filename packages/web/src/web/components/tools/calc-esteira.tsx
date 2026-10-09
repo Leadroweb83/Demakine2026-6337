@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Ruler } from "lucide-react";
 import { materials, maxAngleFor, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -144,14 +144,12 @@ export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dar
         )}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={waLink(waMsg)}
-            target="_blank"
-            rel="noreferrer"
-            className="cine-shine inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+          <Link
+            href={quoteHref({ produto: result.product.name, mensagem: waMsg })}
+            className="cine-shine inline-flex items-center justify-center gap-2 rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-red-dark"
           >
             Orçar este modelo
-          </a>
+          </Link>
           <Link
             href={`/produtos/${result.product.slug}`}
             className={cn(

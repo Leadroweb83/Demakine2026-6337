@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { Pause, Play } from "lucide-react";
-import { BtnPrimary, BtnWhats } from "@/components/kit";
+import { BtnGhost, BtnPrimary } from "@/components/kit";
 import { CineBullets, CineRule, CineSection, CineShot, CineStat, CineTag, CineTitle } from "@/components/cine";
 import { artigo, getProduct } from "@/lib/content";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { home } from "@/lib/home";
 import { cn } from "@/lib/utils";
 import { locale, tr } from "@/lib/i18n";
@@ -114,12 +114,15 @@ export function BestSellers() {
                     </div>
 
                     <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                      <BtnPrimary to={`/produtos/${p.slug}`} className="cine-shine">
-                        Ver ficha técnica
-                      </BtnPrimary>
-                      <BtnWhats href={waLink(locale() === "pt" ? `Olá! Quero um orçamento ${art.da} ${p.name}.` : tr("Olá! Quero um orçamento deste equipamento: {produto}.", { produto: tr(p.name) }))} className="cine-shine">
+                      <BtnPrimary
+                        to={quoteHref({ produto: p.name, mensagem: locale() === "pt" ? `Olá! Quero um orçamento ${art.da} ${p.name}.` : tr("Olá! Quero um orçamento deste equipamento: {produto}.", { produto: tr(p.name) }) })}
+                        className="cine-shine"
+                      >
                         Pedir orçamento
-                      </BtnWhats>
+                      </BtnPrimary>
+                      <BtnGhost dark to={`/produtos/${p.slug}`}>
+                        Ver ficha técnica
+                      </BtnGhost>
                     </div>
                   </div>
 

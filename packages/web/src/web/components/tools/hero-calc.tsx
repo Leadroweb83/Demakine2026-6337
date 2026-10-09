@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Ruler } from "lucide-react";
 import { materials, maxAngleFor, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { Fact, Slider } from "./calc-esteira";
 import { tr } from "@/lib/i18n";
 
@@ -92,14 +92,12 @@ export function HeroCalc() {
         )}
 
         <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
-          <a
-            href={waLink(waMsg)}
-            target="_blank"
-            rel="noreferrer"
-            className="cine-shine inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-dm-green px-5 py-3 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+          <Link
+            href={quoteHref({ produto: result.product.name, mensagem: waMsg })}
+            className="cine-shine inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-dm-red px-5 py-3 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-red-dark"
           >
             Orçar este modelo
-          </a>
+          </Link>
           <Link
             href={`/produtos/${result.product.slug}`}
             className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/25 px-5 py-3 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:border-white/60"

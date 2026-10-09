@@ -89,6 +89,18 @@ export function waLink(message: string) {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(tr(message))}`;
 }
 
+/**
+ * Todo botão de orçamento leva para o formulário de /contato (a conversão é medida na página de obrigado).
+ * Vindo de um produto ou de uma ferramenta, o formulário já abre com o produto e a mensagem preenchidos.
+ */
+export function quoteHref(opts: { produto?: string; mensagem?: string } = {}) {
+  const q = new URLSearchParams();
+  if (opts.produto) q.set("produto", opts.produto);
+  if (opts.mensagem) q.set("mensagem", tr(opts.mensagem));
+  const qs = q.toString();
+  return `/contato${qs ? `?${qs}` : ""}#formulario`;
+}
+
 export const departments = site.departments;
 
 /** Loja virtual: enquanto false, o botão do topo mostra "Em breve" e /loja volta para a home. */
