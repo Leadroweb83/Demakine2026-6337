@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { ABROAD, UFS, cityWithUf, withoutUf } from "@/lib/uf";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { track } from "@/lib/tracking";
@@ -64,6 +65,7 @@ export function LeadForm({
     phone: "",
     email: "",
     city: "",
+    uf: "",
     message: "",
   });
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +74,7 @@ export function LeadForm({
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution() },
+        json: { ...withoutUf(form), city: cityWithUf(form.city, form.uf), product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
@@ -85,7 +87,7 @@ export function LeadForm({
     },
   });
 
-  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
 
   if (send.isSuccess) {
@@ -176,18 +178,43 @@ export function LeadForm({
                 : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
             )}
           />
-          <input
-            value={form.city}
-            onChange={set("city")}
-            placeholder="Cidade / UF"
-            aria-label="Cidade"
-            className={cn(
-              inputBase,
-              dark
-                ? "border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-white/45"
-                : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
-            )}
-          />
+          <div className="grid grid-cols-[1fr_6.5rem] gap-3">
+            <input
+              value={form.city}
+              onChange={set("city")}
+              placeholder="Cidade"
+              aria-label="Cidade"
+              autoComplete="address-level2"
+              className={cn(
+                inputBase,
+                dark
+                  ? "border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-white/45"
+                  : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
+              )}
+            />
+            <select
+              value={form.uf}
+              onChange={set("uf")}
+              aria-label="Estado"
+              autoComplete="address-level1"
+              className={cn(
+                inputBase,
+                "px-3",
+                dark
+                  ? "border-white/15 bg-white/5 focus:border-white/45 [&>option]:text-dm-ink"
+                  : "border-dm-line bg-white focus:border-dm-blue",
+                form.uf ? (dark ? "text-white" : "text-dm-ink") : dark ? "text-white/40" : "text-dm-gray/70",
+              )}
+            >
+              <option value="">Estado</option>
+              {UFS.map((uf) => (
+                <option key={uf} value={uf}>
+                  {uf}
+                </option>
+              ))}
+              <option value={ABROAD}>Exterior</option>
+            </select>
+          </div>
         </div>
 
         {!compact && (

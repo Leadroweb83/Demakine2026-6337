@@ -249,5 +249,6 @@
  "rgba(255,255,255,0.85)",
  "rgba(255,255,255,0.45)",
  "rgba(255,255,255,0.07)",
- "rotate(90 344 166)"
+ "rotate(90 344 166)",
+ "autoplay; encrypted-media; picture-in-picture"
 ]

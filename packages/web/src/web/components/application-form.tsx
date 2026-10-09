@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { ABROAD, UFS, cityWithUf, withoutUf } from "@/lib/uf";
 import { Link } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { track } from "@/lib/tracking";
@@ -23,6 +24,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
     phone: "",
     email: "",
     city: "",
+    uf: "",
     linkedin: "",
     salaryExpectation: "",
     message: "",
@@ -34,7 +36,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
   const [error, setError] = useState<string | null>(null);
   const file = useRef<HTMLInputElement>(null);
 
-  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
 
   const upload = async (f: File) => {
@@ -60,7 +62,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.vagas.candidatura.$post({
-        json: { ...form, jobSlug: jobSlug ?? null, resumeKey: resume?.key ?? null, consent },
+        json: { ...withoutUf(form), city: cityWithUf(form.city, form.uf), jobSlug: jobSlug ?? null, resumeKey: resume?.key ?? null, consent },
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
@@ -113,10 +115,26 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
           <input required value={form.phone} onChange={set("phone")} placeholder="WhatsApp com DDD*" aria-label="WhatsApp" inputMode="tel" autoComplete="tel" className={input} />
           <input required type="email" value={form.email} onChange={set("email")} placeholder="E-mail*" aria-label="E-mail" autoComplete="email" className={input} />
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <input required value={form.city} onChange={set("city")} placeholder="Cidade / UF*" aria-label="Cidade" className={input} />
-          <input value={form.salaryExpectation} onChange={set("salaryExpectation")} placeholder="Pretensão salarial" aria-label="Pretensão salarial" className={input} />
+        <div className="grid grid-cols-[1fr_6.5rem] gap-3">
+          <input required value={form.city} onChange={set("city")} placeholder="Cidade*" aria-label="Cidade" autoComplete="address-level2" className={input} />
+          <select
+            required
+            value={form.uf}
+            onChange={set("uf")}
+            aria-label="Estado"
+            autoComplete="address-level1"
+            className={cn(input, "px-3", !form.uf && "text-dm-gray/70")}
+          >
+            <option value="">Estado*</option>
+            {UFS.map((uf) => (
+              <option key={uf} value={uf}>
+                {uf}
+              </option>
+            ))}
+            <option value={ABROAD}>Exterior</option>
+          </select>
         </div>
+        <input value={form.salaryExpectation} onChange={set("salaryExpectation")} placeholder="Pretensão salarial" aria-label="Pretensão salarial" className={input} />
         <input value={form.linkedin} onChange={set("linkedin")} placeholder="LinkedIn (opcional)" aria-label="LinkedIn" className={input} />
 
         {/* currículo */}
