@@ -82,9 +82,12 @@ export default function Produtos() {
                 )}
               >
                 {f.name}
-                <span className={cn("ml-1.5 text-[12px]", cat === f.slug ? "text-white/60" : "text-dm-gray/70")}>
-                  {f.count}
-                </span>
+                {/* o total geral não aparece (pedido do cliente); as linhas mostram quantos modelos têm */}
+                {f.slug !== "all" && (
+                  <span className={cn("ml-1.5 text-[12px]", cat === f.slug ? "text-white/60" : "text-dm-gray/70")}>
+                    {f.count}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -113,8 +116,12 @@ export default function Produtos() {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-[14px] text-dm-gray">
-            {list.length} {list.length === 1 ? "equipamento" : "equipamentos"}
-            {cat !== "all" && ` ${tr("em {categoria}", { categoria: tr(categoryName(cat)) })}`}
+            {cat === "all" && !query.trim() ? null : (
+              <>
+                {list.length} {list.length === 1 ? "equipamento" : "equipamentos"}
+                {cat !== "all" && ` ${tr("em {categoria}", { categoria: tr(categoryName(cat)) })}`}
+              </>
+            )}
           </p>
           <p className="text-[13.5px] text-dm-gray">
             Marque <strong className="font-semibold text-dm-ink">Comparar</strong> em até 3 cards para

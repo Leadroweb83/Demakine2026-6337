@@ -5,7 +5,7 @@ import { ArrowRight, Download, ShieldCheck, Wrench, Truck, Factory } from "lucid
 import { CineRule, CineStat, CineTag } from "./cine";
 import { Counter } from "./counter";
 import { Rotator } from "./rotator";
-import { HeroCalc } from "./tools/hero-calc";
+import { LeadForm } from "./lead-form";
 import { site } from "@/lib/site";
 
 /* ------------------------------------------------------------------ ticker */
@@ -155,11 +155,15 @@ export function HomeHero() {
             </div>
           </div>
 
+          {/* pedido do cliente: no topo da home entra o formulário (a calculadora segue nos produtos e em Ferramentas) */}
           <div>
-            <HeroCalc />
-            <p className="mt-3 text-center text-[12.5px] text-white/45">
-              Valores de referência das tabelas de fábrica. A engenharia confirma com os dados da sua linha.
-            </p>
+            <LeadForm
+              variant="dark"
+              compact
+              source="home-topo"
+              title="Peça seu orçamento"
+              subtitle="Um especialista da Demakine responde em até 1 dia útil."
+            />
           </div>
         </div>
       </motion.div>

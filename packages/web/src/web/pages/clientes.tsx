@@ -67,7 +67,7 @@ export default function Clientes() {
                 : "border-dm-line bg-white text-dm-ink/75 hover:border-dm-blue/50 hover:text-dm-blue",
             )}
           >
-            Todos <span className="ml-1 text-[12px] opacity-70">{clients.length}</span>
+            Todos
           </button>
           {segmentList.map(([seg, count]) => (
             <button

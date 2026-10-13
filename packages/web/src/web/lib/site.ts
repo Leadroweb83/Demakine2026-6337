@@ -25,7 +25,7 @@ export type SiteData = {
 const DEFAULTS: SiteData = {
   name: "Demakine",
   legal: "Demakine Equipamentos Agroindustriais",
-  tagline: "A Indústria em movimento",
+  tagline: "Equipamentos agroindustriais",
   url: "https://www.demakine.com.br",
   email: "vendas@demakine.com.br",
   phone: "(19) 3033-9397",

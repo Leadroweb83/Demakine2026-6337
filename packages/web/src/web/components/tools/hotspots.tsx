@@ -15,8 +15,8 @@ export const beltHotspots: Hotspot[] = [
   {
     x: 84,
     y: 12,
-    title: "Motoredutor blindado",
-    text: "Redutor fechado e motor dimensionado por modelo, de 0,75 a 7,5 cv. Sem corrente exposta, com reversão para carga e descarga.",
+    title: "Motor WEG",
+    text: "Motor WEG com redutor fechado, dimensionado por modelo, de 0,75 a 7,5 cv. Sem corrente exposta, com reversão para carga e descarga.",
   },
   {
     x: 64,
@@ -47,6 +47,12 @@ export const beltHotspots: Hotspot[] = [
     y: 88,
     title: "Rodízios dianteiros",
     text: "Rodízios reforçados na ponta de carga, com travamento, para posicionar a máquina no ponto exato.",
+  },
+  {
+    x: 19,
+    y: 82,
+    title: "Roletes livres",
+    text: "Roletes que giram soltos e sustentam a correia ao longo da esteira: ela corre leve, com menos esforço do motor e menos desgaste.",
   },
 ];
 

@@ -92,7 +92,7 @@ export function Footer() {
               width={293}
               height={80}
               alt="Demakine"
-              className="h-9 w-auto object-contain"
+              className="h-12 w-auto object-contain"
             />
             <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-white/65">
               Fabricamos esteiras transportadoras, roscas, elevadores e projetos especiais sob medida
