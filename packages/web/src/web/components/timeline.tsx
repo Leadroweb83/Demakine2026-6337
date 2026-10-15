@@ -28,8 +28,8 @@ const steps: Step[] = [
     n: "02",
     title: "Projeto e aprovação",
     text: "A engenharia define comprimento, inclinação, correia, motorização e acessórios. Você aprova o desenho antes de qualquer corte.",
-    image: "/img/site/oficina.webp",
-    alt: "Estrutura de esteira em montagem na oficina da Demakine",
+    image: "/img/site/processo-projeto.webp",
+    alt: "Projeto 3D de uma linha com esteira inclinada, plataforma de triagem, big bags e empilhadeira",
   },
   {
     n: "03",
