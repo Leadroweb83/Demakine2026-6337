@@ -147,7 +147,7 @@ export function Header() {
               width={293}
               height={80}
               alt="Demakine Equipamentos Agroindustriais"
-              className="h-10 w-auto object-contain md:h-[52px]"
+              className="h-[52px] w-auto object-contain md:h-[68px]"
             />
           </Link>
 
