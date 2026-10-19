@@ -79,7 +79,7 @@ export default function AssistenciaTecnica() {
 
             <img
               src="/img/site/assistencia.webp"
-              alt="Técnicos da Demakine fazendo manutenção preventiva em uma esteira transportadora (imagem ilustrativa)"
+              alt="Técnico da Demakine com tablet ao lado de uma esteira transportadora e da caixa de ferramentas (imagem ilustrativa)"
               width={1600}
               height={900}
               loading="lazy"

@@ -22,7 +22,19 @@ export type VideoTestimonial = {
 };
 
 export const videoTestimonials: VideoTestimonial[] = [
-  { name: "", company: "", city: "" },
-  { name: "", company: "", city: "" },
+  {
+    name: "Piscicultura Puro Peixe",
+    company: "",
+    city: "Santa Clara do Oeste/SP",
+    youtube: "fcGIPV8F4WE",
+    poster: "/img/depoimentos/puro-peixe.webp",
+  },
+  {
+    name: "Visita pós-venda",
+    company: "Demakine",
+    city: "",
+    youtube: "LildGrx8bDI",
+    poster: "/img/depoimentos/visita-pos-venda.webp",
+  },
   { name: "", company: "", city: "" },
 ];

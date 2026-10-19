@@ -50,7 +50,7 @@ const steps: Step[] = [
     title: "Entrega e pós-venda",
     text: "Logística acompanhada, orientação de instalação e assistência técnica própria para peças, ajustes e manutenção.",
     image: "/img/site/assistencia.webp",
-    alt: "Técnicos da Demakine fazendo manutenção em uma esteira transportadora (imagem ilustrativa)",
+    alt: "Técnico da Demakine com tablet ao lado de uma esteira transportadora e da caixa de ferramentas (imagem ilustrativa)",
   },
 ];
 

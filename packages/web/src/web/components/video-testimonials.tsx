@@ -22,7 +22,7 @@ export function VideoTestimonials() {
 function EmptySlot() {
   return (
     <figure className="h-full">
-      <div className="flex aspect-[4/5] flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-dm-line bg-white px-6 text-center">
+      <div className="flex aspect-video flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-dm-line bg-white px-6 text-center">
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-dm-blue-soft text-dm-blue">
           <Play className="h-6 w-6 translate-x-0.5" />
         </span>
@@ -38,7 +38,7 @@ function VideoCard({ v }: { v: VideoTestimonial }) {
 
   return (
     <figure className="h-full">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-dm-line bg-dm-blue-deep">
+      <div className="relative aspect-video overflow-hidden rounded-2xl border border-dm-line bg-dm-blue-deep">
         {playing ? (
           v.youtube ? (
             <iframe
