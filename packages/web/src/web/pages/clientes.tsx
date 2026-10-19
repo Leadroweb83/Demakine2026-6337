@@ -3,6 +3,7 @@ import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { CtaBand, PageHero, Section, SectionHead, TestimonialGrid } from "@/components/kit";
+import { VideoTestimonials } from "@/components/video-testimonials";
 import { clients, testimonials } from "@/lib/content";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -107,6 +108,17 @@ export default function Clientes() {
       </Section>
 
       <Section tone="surface">
+        <SectionHead
+          eyebrow="Em vídeo"
+          title="Clientes contam como é trabalhar com a Demakine"
+          text="Depoimentos gravados pelos próprios clientes."
+        />
+        <div className="mt-12">
+          <VideoTestimonials />
+        </div>
+      </Section>
+
+      <Section>
         <SectionHead
           eyebrow="Depoimentos"
           title="O que os clientes falam da Demakine"
