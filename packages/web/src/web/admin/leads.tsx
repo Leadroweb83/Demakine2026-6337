@@ -184,8 +184,8 @@ export function AdminLeads({ user, initial }: { user: PanelUser; initial?: Leads
     },
   });
 
-  const leads = leadsQuery.data ?? [];
-  const team = teamQuery.data ?? [];
+  const leads = useMemo(() => leadsQuery.data ?? [], [leadsQuery.data]);
+  const team = useMemo(() => teamQuery.data ?? [], [teamQuery.data]);
   const memberById = useMemo(() => new Map(team.map((m) => [m.id, m])), [team]);
   const sources = useMemo(() => [...new Set(leads.map((l) => l.source ?? "site"))].sort(), [leads]);
 

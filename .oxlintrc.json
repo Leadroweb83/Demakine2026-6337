@@ -12,7 +12,30 @@
     "correctness": "error"
   },
   "rules": {
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "jsx-a11y/prefer-tag-over-role": "off",
+    "jsx-a11y/control-has-associated-label": [
+      "error",
+      {
+        "depth": 5,
+        "ignoreElements": [
+          "audio",
+          "canvas",
+          "embed",
+          "input",
+          "textarea",
+          "tr",
+          "video",
+          "option"
+        ]
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "depth": 4
+      }
+    ]
   },
   "ignorePatterns": [
     "dist/**",

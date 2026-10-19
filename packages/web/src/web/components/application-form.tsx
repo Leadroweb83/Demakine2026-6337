@@ -176,6 +176,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
             ref={file}
             type="file"
             accept="application/pdf"
+            aria-label="Currículo em PDF"
             className="hidden"
             onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])}
           />

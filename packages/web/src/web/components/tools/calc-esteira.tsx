@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Ruler } from "lucide-react";
 import { materials, maxAngleFor, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
@@ -11,6 +11,7 @@ import { tr } from "@/lib/i18n";
  * indica o modelo da tabela real de fábrica.
  */
 export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dark?: boolean; initialMaterial?: MaterialKey }) {
+  const uid = useId();
   const [material, setMaterial] = useState<MaterialKey>(initialMaterial);
   const [distance, setDistance] = useState(6);
   const [height, setHeight] = useState(2.5);
@@ -42,10 +43,11 @@ export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dar
         </div>
 
         <div className="mt-5">
-          <label className={cn("block text-[14px] font-semibold", dark ? "text-white/80" : "text-dm-ink")}>
+          <label htmlFor={`${uid}-material`} className={cn("block text-[14px] font-semibold", dark ? "text-white/80" : "text-dm-ink")}>
             O que você precisa transportar
           </label>
           <select
+            id={`${uid}-material`}
             value={material}
             onChange={(e) => setMaterial(e.target.value as MaterialKey)}
             className={cn(

@@ -38,7 +38,7 @@ export function AdminActivity({ user }: { user: PanelUser }) {
   const [who, setWho] = useState("todos");
   const [term, setTerm] = useState("");
 
-  const items = q.data ?? [];
+  const items = useMemo(() => q.data ?? [], [q.data]);
   const people = useMemo(() => [...new Map(items.map((i) => [i.userId, i.userName ?? "?"])).entries()], [items]);
   const shown = items.filter(
     (i) => (who === "todos" || i.userId === who) && (!term.trim() || i.summary.toLowerCase().includes(term.trim().toLowerCase())),

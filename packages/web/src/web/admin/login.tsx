@@ -60,7 +60,6 @@ export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
               onChange={(e) => setEmail(e.target.value)}
               className={inputCls}
               autoComplete="username"
-              autoFocus
               required
             />
           </Field>

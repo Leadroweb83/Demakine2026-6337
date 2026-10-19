@@ -474,7 +474,7 @@ function Candidates({ jobs }: { jobs: Job[] }) {
     },
   });
 
-  const all = appsQuery.data ?? [];
+  const all = useMemo(() => appsQuery.data ?? [], [appsQuery.data]);
   const list = useMemo(
     () =>
       jobFilter === "todas"

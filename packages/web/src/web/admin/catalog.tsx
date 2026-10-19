@@ -441,7 +441,9 @@ function ProductEditor({ row, takenSlugs, onClose }: { row: Row | null; takenSlu
                         </div>
                       </th>
                     ))}
-                    <th />
+                    <th>
+                      <span className="sr-only">Ações</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>

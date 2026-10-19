@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Layers, Ruler, ShieldCheck, TrendingUp, X } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
@@ -103,6 +103,22 @@ const engineeringText = [
 export default function ProjetosEspeciais() {
   const [open, setOpen] = useState<{ slug: string; index: number } | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+  const isOpen = open !== null;
+
+  // foto ampliada: Esc fecha, o foco vai para o botão de fechar e a página atrás não rola
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    document.addEventListener("keydown", onKey);
+    closeRef.current?.focus();
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
   const active = open ? [...designProjects, ...photoProjects].find((p) => p.slug === open.slug) : null;
   const shownDesigns = showAll ? designProjects : designProjects.slice(0, FIRST_BATCH);
 
@@ -371,11 +387,20 @@ export default function ProjetosEspeciais() {
       {active && open && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-4"
-          onClick={() => setOpen(null)}
           role="dialog"
+          aria-modal="true"
           aria-label={active.name}
         >
+          {/* o fundo é um botão: clicar fora fecha, e quem usa teclado fecha com Esc ou Tab até aqui */}
           <button
+            type="button"
+            onClick={() => setOpen(null)}
+            aria-label="Fechar"
+            tabIndex={-1}
+            className="absolute inset-0 h-full w-full cursor-default"
+          />
+          <button
+            ref={closeRef}
             type="button"
             onClick={() => setOpen(null)}
             aria-label="Fechar"
@@ -384,7 +409,7 @@ export default function ProjetosEspeciais() {
             <X className="h-5 w-5" />
           </button>
 
-          <div className="w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full max-w-4xl">
             <img
               src={active.images[Math.min(open.index, active.images.length - 1)]}
               alt={active.name}

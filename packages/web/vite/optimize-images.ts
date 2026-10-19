@@ -36,7 +36,7 @@ async function main() {
   for (const file of files) {
     const webp = file.replace(/\.(jpe?g|png)$/i, ".webp");
     const publicPath = (p: string) => "/" + path.relative(path.join(ROOT, "public"), p).split(path.sep).join("/");
-    if (!/\.jpg$/.test(file)) originals[publicPath(webp)] = publicPath(file);
+    if (!file.endsWith(".jpg")) originals[publicPath(webp)] = publicPath(file);
     const src = await stat(file);
     // no clone do Git as datas dos arquivos não dizem nada: se o WebP existe, vale
     // (trocou a foto mantendo o nome? apague o .webp e rode de novo)

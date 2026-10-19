@@ -103,6 +103,7 @@ function UploadButton({ onDone, label = "Enviar imagens" }: { onDone?: (items: M
         type="file"
         accept="image/*"
         multiple
+        aria-label="Enviar imagens"
         className="hidden"
         onChange={async (e) => {
           const files = [...(e.target.files ?? [])];

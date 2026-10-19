@@ -153,6 +153,7 @@ export function PhotoUpload({
         accept="image/*"
         multiple
         capture="environment"
+        aria-label="Fotos da peça ou da máquina"
         onChange={(e) => pick(e.target.files)}
         className="hidden"
       />

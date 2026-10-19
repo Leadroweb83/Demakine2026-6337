@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createSwapy, utils, type SlotItemMapArray, type Swapy } from "swapy";
 import { ArrowDown, ArrowUp, Eye, EyeOff, GripVertical, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -144,13 +144,16 @@ export function DashboardCustomizer({
   const kpiOrder = useRef<string[]>([]);
   const cardOrder = useRef<string[]>([]);
 
-  const byId = (list: readonly Block[], order: string[]) =>
-    order
-      .filter((id) => !blocked.includes(id))
-      .map((id) => list.find((b) => b.id === id))
-      .filter((b): b is Block => Boolean(b));
-  const kpis = useMemo(() => byId(KPI_BLOCKS, base.order), [base]);
-  const cards = useMemo(() => byId(CARD_BLOCKS, base.order), [base]);
+  const byId = useCallback(
+    (list: readonly Block[], order: string[]) =>
+      order
+        .filter((id) => !blocked.includes(id))
+        .map((id) => list.find((b) => b.id === id))
+        .filter((b): b is Block => Boolean(b)),
+    [blocked],
+  );
+  const kpis = useMemo(() => byId(KPI_BLOCKS, base.order), [byId, base]);
+  const cards = useMemo(() => byId(CARD_BLOCKS, base.order), [byId, base]);
 
   const toggle = (id: string) =>
     setHidden((h) => (h.includes(id) ? h.filter((x) => x !== id) : [...h, id]));
