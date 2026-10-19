@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ABROAD, UFS, cityWithUf, withoutUf } from "@/lib/uf";
+import { ABROAD, UFS, withState } from "@/lib/uf";
 import { Link } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { track } from "@/lib/tracking";
@@ -62,7 +62,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.vagas.candidatura.$post({
-        json: { ...withoutUf(form), city: cityWithUf(form.city, form.uf), jobSlug: jobSlug ?? null, resumeKey: resume?.key ?? null, consent },
+        json: { ...withState(form), jobSlug: jobSlug ?? null, resumeKey: resume?.key ?? null, consent },
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };

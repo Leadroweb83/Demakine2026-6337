@@ -17,6 +17,7 @@ import { api } from "../lib/api";
 import { can, type PanelUser } from "../lib/auth";
 import { JOB_TYPE_LABEL, brDate } from "@/lib/vagas";
 import { cn } from "@/lib/utils";
+import { placeLabel } from "@/lib/uf";
 import { Badge, Btn, Card, Field, PageTitle, inputCls } from "./ui";
 
 /* ------------------------------------------------------------------ tipos */
@@ -49,6 +50,7 @@ type Application = {
   email: string;
   phone: string;
   city: string | null;
+  state: string | null;
   linkedin: string | null;
   salaryExpectation: string | null;
   message: string | null;
@@ -530,7 +532,7 @@ function Candidates({ jobs }: { jobs: Job[] }) {
                       <p className="mt-0.5 truncate text-[12px] text-dm-ink/55">{a.jobTitle ?? "Banco de talentos"}</p>
                       <p className="mt-2 flex items-center gap-2 text-[11.5px] text-dm-ink/45">
                         <span className="shrink-0">{when(a.createdAt)}</span>
-                        {a.city && <span className="truncate">· {a.city}</span>}
+                        {placeLabel(a.city, a.state) && <span className="truncate">· {placeLabel(a.city, a.state)}</span>}
                         {a.resumeKey && <FileText className="ml-auto h-3.5 w-3.5 shrink-0 text-dm-blue" aria-label="Tem currículo" />}
                       </p>
                     </button>
@@ -632,6 +634,12 @@ function CandidateDetail({ app, onClose }: { app: Application; onClose: () => vo
                 <dd className="flex items-center gap-1 font-semibold text-dm-ink">
                   <MapPin className="h-3.5 w-3.5 text-dm-ink/40" /> {app.city}
                 </dd>
+              </div>
+            )}
+            {app.state && (
+              <div>
+                <dt className="text-[11px] font-bold uppercase tracking-wide text-dm-ink/45">Estado</dt>
+                <dd className="font-semibold text-dm-ink">{app.state}</dd>
               </div>
             )}
             {app.salaryExpectation && (

@@ -34,6 +34,7 @@ import {
   type JobInput,
 } from "./lib/jobs";
 import { canSeeLeadValue, isLeadStatus, ownerChangeError } from "./lib/leads";
+import { UFS, placeFrom } from "./lib/place";
 import { getContentSnapshot } from "./lib/content-snapshot";
 import { purgeOldVisits, recordPageView, visitsSummary } from "./lib/visits";
 import { TEAM_VIEW, blockedFor, cleanAccess, getDashboardAccess, saveDashboardAccess, stripDashboard } from "./lib/dashboard-access";
@@ -80,6 +81,7 @@ const app = new Hono<Env>()
       phone: string;
       email?: string;
       city?: string;
+      state?: string;
       product?: string;
       message?: string;
       source?: string;
@@ -92,6 +94,7 @@ const app = new Hono<Env>()
       return c.json({ error: 'Nome e telefone sao obrigatorios' }, 400);
     }
 
+    const place = placeFrom(body.city, body.state);
     const [lead] = await db
       .insert(schema.leads)
       .values({
@@ -99,7 +102,8 @@ const app = new Hono<Env>()
         company: body.company?.trim() || null,
         phone: body.phone.trim(),
         email: body.email?.trim() || null,
-        city: body.city?.trim() || null,
+        city: place.city,
+        state: place.state,
         product: body.product?.trim() || null,
         message: body.message?.trim() || null,
         source: body.source?.trim() || 'site',
@@ -233,6 +237,7 @@ const app = new Hono<Env>()
       email?: string;
       phone?: string;
       city?: string;
+      state?: string;
       linkedin?: string;
       salaryExpectation?: string;
       message?: string;
@@ -278,12 +283,14 @@ const app = new Hono<Env>()
       jobTitle = job.title;
     }
 
+    const place = placeFrom(body.city, body.state);
     const [created] = await db.insert(schema.applications).values({
       jobId,
       name,
       email,
       phone,
-      city: text(body.city, 80) || null,
+      city: place.city,
+      state: place.state,
       linkedin: text(body.linkedin, 200) || null,
       salaryExpectation: text(body.salaryExpectation, 60) || null,
       message: message || null,
@@ -1103,6 +1110,7 @@ const app = new Hono<Env>()
         company: r.company,
         phone: r.phone,
         city: r.city,
+        state: r.state,
         product: r.product,
         source: r.source ?? 'site',
         status: r.status ?? 'novo',
@@ -1116,18 +1124,13 @@ const app = new Hono<Env>()
       byWeekHour[d.weekday]![Math.floor(d.hour / 3)]! += 1;
     }
 
-    // UF a partir da cidade digitada ("Limeira/SP", "Limeira - SP", "Limeira, SP")
-    const UFS = new Set([
-      'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
-      'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
-    ]);
-    const ufOf = (city: string | null) => {
-      const m = (city ?? '').trim().match(/(?:[/,–-]\s*|\s)([A-Za-z]{2})\.?$/);
-      const uf = m?.[1]?.toUpperCase();
+    // UF do pedido: vem do campo estado; pedido antigo sem estado ainda tem a sigla no fim da cidade
+    const ufOf = (r: { city: string | null; state: string | null }) => {
+      const uf = r.state ?? placeFrom(r.city, null).state;
       return uf && UFS.has(uf) ? uf : null;
     };
-    const byState = countBy(period, (r) => ufOf(r.city));
-    const stateUnknown = period.filter((r) => !ufOf(r.city)).length;
+    const byState = countBy(period, (r) => ufOf(r));
+    const stateUnknown = period.filter((r) => !ufOf(r)).length;
 
     const byOwner = countBy(period, (r) => (r.ownerId ? userName.get(r.ownerId) ?? 'Removido' : null)).map(
       (o) => ({ ...o, image: imageByName.get(o.label) ?? null }),
@@ -1199,7 +1202,7 @@ const app = new Hono<Env>()
         bySource,
         byMonth,
         topProducts: countBy(period, (r) => r.product).slice(0, 8),
-        topCities: countBy(period, (r) => r.city).slice(0, 8),
+        topCities: countBy(period, (r) => (r.city ? (r.state ? `${r.city} / ${r.state}` : r.city) : null)).slice(0, 8),
         lossReasons: countBy(
           period.filter((r) => r.status === 'perdido'),
           (r) => r.lossReason,

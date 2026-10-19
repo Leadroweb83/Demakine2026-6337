@@ -29,6 +29,7 @@ type Lead = {
   phone: string;
   email: string | null;
   city: string | null;
+  state: string | null;
   product: string | null;
   message: string | null;
   source: string | null;
@@ -134,6 +135,7 @@ function exportCsv(leads: Lead[], team: Member[]) {
     ["Telefone", (l) => l.phone],
     ["E-mail", (l) => l.email ?? ""],
     ["Cidade", (l) => l.city ?? ""],
+    ["Estado", (l) => l.state ?? ""],
     ["Interesse", (l) => l.product ?? ""],
     ["Origem", (l) => l.source ?? "site"],
     ["Status", (l) => statusMeta(l.status).label],
@@ -196,7 +198,7 @@ export function AdminLeads({ user, initial }: { user: PanelUser; initial?: Leads
       if (owner === "sem" && l.ownerId) return false;
       if (owner !== "todos" && owner !== "meus" && owner !== "sem" && l.ownerId !== owner) return false;
       if (!t) return true;
-      return [l.name, l.company, l.phone, l.email, l.city, l.product, l.message]
+      return [l.name, l.company, l.phone, l.email, l.city, l.state, l.product, l.message]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(t));
     });
@@ -373,6 +375,7 @@ export function AdminLeads({ user, initial }: { user: PanelUser; initial?: Leads
                   <th className="px-5 py-3">Valor</th>
                   <th className="px-5 py-3">Telefone</th>
                   <th className="px-5 py-3">Cidade</th>
+                  <th className="px-5 py-3">Estado</th>
                   <th className="px-5 py-3">Interesse</th>
                   <th className="px-5 py-3">Origem</th>
                   <th className="px-5 py-3">Fotos</th>
@@ -442,6 +445,7 @@ export function AdminLeads({ user, initial }: { user: PanelUser; initial?: Leads
                       </td>
                       <td className="whitespace-nowrap px-5 py-4 text-dm-ink/70">{lead.phone}</td>
                       <td className="px-5 py-4 text-dm-ink/70">{lead.city || "-"}</td>
+                      <td className="whitespace-nowrap px-5 py-4 text-dm-ink/70">{lead.state || "-"}</td>
                       <td className="px-5 py-4 text-dm-ink/70">{lead.product || "-"}</td>
                       <td className="px-5 py-4">
                         <Badge>{lead.source || "site"}</Badge>
@@ -596,6 +600,7 @@ function LeadDetail({ lead, team, me, onClose }: { lead: Lead; team: Member[]; m
                 ["Telefone", lead.phone],
                 ["E-mail", lead.email],
                 ["Cidade", lead.city],
+                ["Estado", lead.state],
                 ["Interesse", lead.product],
                 ["Primeiro contato", lead.firstContactAt ? new Date(lead.firstContactAt).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : null],
               ]

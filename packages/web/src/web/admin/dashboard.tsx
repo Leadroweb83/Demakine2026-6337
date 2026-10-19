@@ -43,6 +43,7 @@ import { DashboardCustomizer } from "./customize";
 import { DashboardAccessPanel } from "./dashboard-access";
 import { CARD_BLOCKS, SIZE_CLASS, resolveLayout, type DashboardLayout } from "./layout";
 import { cn } from "@/lib/utils";
+import { placeLabel } from "@/lib/uf";
 
 const cardSize: Record<string, "S" | "M" | "L"> = Object.fromEntries(CARD_BLOCKS.map((b) => [b.id, b.size]));
 
@@ -696,7 +697,7 @@ export function AdminDashboard({ user, onGo }: { user: PanelUser; onGo: Go }) {
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[13.5px] font-bold text-dm-ink">{r.name}</span>
                       <span className="block truncate text-[12px] text-dm-ink/50">
-                        {[r.product, r.city, r.source].filter(Boolean).join(" · ")}
+                        {[r.product, placeLabel(r.city, r.state), r.source].filter(Boolean).join(" · ")}
                       </span>
                     </span>
                     <span className="shrink-0 text-right">

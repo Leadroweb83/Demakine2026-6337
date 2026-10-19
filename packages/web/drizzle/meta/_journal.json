@@ -85,6 +85,13 @@
       "when": 1790276889520,
       "tag": "0011_visitas",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792420807099,
+      "tag": "0012_cidade_estado",
+      "breakpoints": true
     }
   ]
 }

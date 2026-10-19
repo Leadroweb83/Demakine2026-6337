@@ -7,6 +7,8 @@ export const leads = pgTable("leads", {
   phone: text("phone").notNull(),
   email: text("email"),
   city: text("city"),
+  /** sigla do estado (SP, MG...) ou "Exterior"; a cidade fica só em city */
+  state: text("state"),
   product: text("product"),
   message: text("message"),
   source: text("source").default("site"),
@@ -164,6 +166,8 @@ export const applications = pgTable(
     email: text("email").notNull(),
     phone: text("phone").notNull(),
     city: text("city"),
+    /** sigla do estado (SP, MG...) ou "Exterior" */
+    state: text("state"),
     linkedin: text("linkedin"),
     salaryExpectation: text("salary_expectation"),
     message: text("message"),

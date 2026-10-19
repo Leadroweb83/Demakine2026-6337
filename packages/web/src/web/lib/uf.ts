@@ -7,19 +7,16 @@ export const UFS = [
 /** opção para quem é de fora do Brasil (site em inglês e espanhol) */
 export const ABROAD = "Exterior";
 
-/**
- * Cidade e estado vão para o banco no mesmo campo, como "Limeira / SP": é o formato que o painel
- * já lê para contar pedidos por estado, então o banco não precisou mudar.
- */
-export function cityWithUf(city: string, uf: string): string {
-  const c = city.trim();
-  if (!uf) return c;
-  if (uf === ABROAD) return c ? `${c} (exterior)` : "Exterior";
-  return c ? `${c} / ${uf}` : uf;
+/** troca o nome do campo do formulário (uf) pelo que a API espera (state) */
+export function withState<T extends { uf: string }>(form: T): Omit<T, "uf"> & { state: string } {
+  const { uf, ...rest } = form;
+  return { ...rest, state: uf };
 }
 
-/** tira o estado do objeto do formulário: ele já vai junto da cidade */
-export function withoutUf<T extends { uf: string }>(form: T): Omit<T, "uf"> {
-  const { uf: _uf, ...rest } = form;
-  return rest;
+/** "Limeira / SP" para mostrar no painel; cidade e estado ficam em campos separados no banco */
+export function placeLabel(city?: string | null, state?: string | null): string {
+  const c = (city ?? "").trim();
+  const s = (state ?? "").trim();
+  if (c && s) return `${c} / ${s}`;
+  return c || s;
 }
