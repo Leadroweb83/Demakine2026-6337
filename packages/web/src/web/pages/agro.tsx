@@ -108,9 +108,11 @@ function AgroHero() {
             <div className="relative overflow-hidden rounded-3xl border border-white/12">
               <motion.img
                 style={reduce ? {} : { y: imgY }}
-                src="/img/site/projetos.webp"
-                alt="Esteira transportadora Demakine com moega instalada em operação"
-                className="h-[420px] w-full object-cover md:h-[520px]"
+                src="/img/site/agro-esteira-moega.webp"
+                alt="Esteira transportadora Demakine azul e vermelha com moega alimentadora"
+                width={1066}
+                height={1000}
+                className="h-[340px] w-full object-cover sm:h-[480px] md:h-[440px] lg:h-[520px]"
                 loading="eager"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0b2415] via-[#0b2415]/70 to-transparent p-6 pt-16">

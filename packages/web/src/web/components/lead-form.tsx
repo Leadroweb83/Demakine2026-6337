@@ -121,8 +121,9 @@ export function LeadForm({
       onSubmit={(e) => {
         e.preventDefault();
         setError(null);
-        if (!form.name.trim() || !form.phone.trim()) {
-          setError("Preencha nome e telefone.");
+        const missing = [form.name, form.company, form.phone, form.email, form.city, form.uf, form.message].some((v) => !v.trim());
+        if (missing) {
+          setError("Preencha todos os campos.");
           return;
         }
         send.mutate();
@@ -168,11 +169,12 @@ export function LeadForm({
           />
         </div>
 
-        <div className={cn("grid gap-3", !compact && "sm:grid-cols-2")}>
+        <div className="grid gap-3 sm:grid-cols-2">
           <input
+            required
             value={form.company}
             onChange={set("company")}
-            placeholder="Empresa"
+            placeholder="Empresa*"
             aria-label="Empresa"
             className={cn(
               inputBase,
@@ -181,29 +183,30 @@ export function LeadForm({
                 : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
             )}
           />
-          {!compact && (
-            <input
-              type="email"
-              value={form.email}
-              onChange={set("email")}
-              placeholder="E-mail"
-              aria-label="E-mail"
-              className={cn(
+          <input
+            required
+            type="email"
+            value={form.email}
+            onChange={set("email")}
+            placeholder="E-mail*"
+            aria-label="E-mail"
+            autoComplete="email"
+            className={cn(
               inputBase,
               dark
                 ? "border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-white/45"
                 : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
             )}
-            />
-          )}
+          />
         </div>
 
         {/* cidade e estado, cada um na sua coluna */}
         <div className="grid grid-cols-2 gap-3">
           <input
+            required
             value={form.city}
             onChange={set("city")}
-            placeholder="Cidade"
+            placeholder="Cidade*"
             aria-label="Cidade"
             autoComplete="address-level2"
             className={cn(
@@ -214,6 +217,7 @@ export function LeadForm({
             )}
           />
           <select
+            required
             value={form.uf}
             onChange={set("uf")}
             aria-label="Estado"
@@ -227,7 +231,7 @@ export function LeadForm({
               form.uf ? (dark ? "text-white" : "text-dm-ink") : dark ? "text-white/40" : "text-dm-gray/70",
             )}
           >
-            <option value="">Estado</option>
+            <option value="">Estado*</option>
             {UFS.map((uf) => (
               <option key={uf} value={uf}>
                 {uf}
@@ -238,13 +242,14 @@ export function LeadForm({
         </div>
 
         <textarea
+          required
           value={form.message}
           onChange={set("message")}
           rows={compact ? 2 : 4}
           placeholder={
             product
-              ? tr("Conte o que precisa (material transportado, comprimento, altura, capacidade) para {produto}", { produto: tr(product) })
-              : "Conte o que precisa: material transportado, comprimento, altura e capacidade"
+              ? `${tr("Conte o que precisa (material transportado, comprimento, altura, capacidade) para {produto}", { produto: tr(product) })}*`
+              : `${tr("Conte o que precisa: material transportado, comprimento, altura e capacidade")}*`
           }
           aria-label="Mensagem"
           className={cn(

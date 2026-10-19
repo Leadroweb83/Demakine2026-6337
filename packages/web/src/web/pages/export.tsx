@@ -37,12 +37,12 @@ const waMsg: Record<ExportLang, string> = {
 const formLabels: Record<ExportLang, Record<string, string>> = {
   es: {
     name: "Nombre*",
-    company: "Empresa",
+    company: "Empresa*",
     phone: "Teléfono / WhatsApp*",
-    email: "E-mail",
-    country: "País de destino",
-    message: "Material, capacidad por hora, largo y altura necesarios",
-    required: "Complete nombre y teléfono.",
+    email: "E-mail*",
+    country: "País de destino*",
+    message: "Material, capacidad por hora, largo y altura necesarios*",
+    required: "Complete todos los campos.",
     fail: "No fue posible enviar. Escríbanos por WhatsApp.",
     okTitle: "Solicitud recibida",
     okText: "Un especialista de Demakine responde en hasta 1 día hábil.",
@@ -50,18 +50,21 @@ const formLabels: Record<ExportLang, Record<string, string>> = {
   },
   en: {
     name: "Name*",
-    company: "Company",
+    company: "Company*",
     phone: "Phone / WhatsApp*",
-    email: "E-mail",
-    country: "Destination country",
-    message: "Material, capacity per hour, required length and height",
-    required: "Please fill in name and phone.",
+    email: "E-mail*",
+    country: "Destination country*",
+    message: "Material, capacity per hour, required length and height*",
+    required: "Please fill in all fields.",
     fail: "Could not send. Please reach us on WhatsApp.",
     okTitle: "Request received",
     okText: "A Demakine specialist replies within 1 business day.",
     okCta: "Talk on WhatsApp now",
   },
 };
+
+/** o asterisco de obrigatório fica só no texto de exemplo, não no nome lido pelo leitor de tela */
+const bare = (label: string) => label.replace(/\*$/, "");
 
 function ExportForm({ lang }: { lang: ExportLang }) {
   const t = formLabels[lang];
@@ -121,7 +124,7 @@ function ExportForm({ lang }: { lang: ExportLang }) {
       onSubmit={(e) => {
         e.preventDefault();
         setError(null);
-        if (!form.name.trim() || !form.phone.trim()) {
+        if (Object.values(form).some((v) => !v.trim())) {
           setError(t.required);
           return;
         }
@@ -135,20 +138,21 @@ function ExportForm({ lang }: { lang: ExportLang }) {
 
       <div className="mt-6 grid gap-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <input required value={form.name} onChange={set("name")} placeholder={t.name} aria-label={t.name} className={input} />
-          <input required value={form.phone} onChange={set("phone")} placeholder={t.phone} aria-label={t.phone} inputMode="tel" className={input} />
+          <input required value={form.name} onChange={set("name")} placeholder={t.name} aria-label={bare(t.name)} className={input} />
+          <input required value={form.phone} onChange={set("phone")} placeholder={t.phone} aria-label={bare(t.phone)} inputMode="tel" className={input} />
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <input value={form.company} onChange={set("company")} placeholder={t.company} aria-label={t.company} className={input} />
-          <input value={form.city} onChange={set("city")} placeholder={t.country} aria-label={t.country} className={input} />
+          <input required value={form.company} onChange={set("company")} placeholder={t.company} aria-label={bare(t.company)} className={input} />
+          <input required value={form.city} onChange={set("city")} placeholder={t.country} aria-label={bare(t.country)} className={input} />
         </div>
-        <input type="email" value={form.email} onChange={set("email")} placeholder={t.email} aria-label={t.email} className={input} />
+        <input required type="email" value={form.email} onChange={set("email")} placeholder={t.email} aria-label={bare(t.email)} autoComplete="email" className={input} />
         <textarea
+          required
           value={form.message}
           onChange={set("message")}
           rows={4}
           placeholder={t.message}
-          aria-label={t.message}
+          aria-label={bare(t.message)}
           className={cn(input, "resize-none")}
         />
       </div>

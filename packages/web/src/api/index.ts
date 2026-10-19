@@ -90,11 +90,19 @@ const app = new Hono<Env>()
       traffic?: { source?: unknown; landing?: unknown; campaign?: unknown } | null;
     }>();
 
-    if (!body.name || !body.phone) {
-      return c.json({ error: 'Nome e telefone sao obrigatorios' }, 400);
+    // todos os campos são obrigatórios (o formulário já exige, aqui ninguém burla chamando a API direto);
+    // no site em inglês e espanhol o campo cidade traz o país de destino e não há estado
+    const place = placeFrom(body.city, body.state);
+    const abroadForm = (body.source ?? '').startsWith('export-');
+    const filled = (v: unknown) => typeof v === 'string' && v.trim().length > 0;
+    const emailOk = typeof body.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email.trim());
+    if (
+      !filled(body.name) || !filled(body.company) || !filled(body.phone) || !emailOk ||
+      !place.city || (!abroadForm && !place.state) || !filled(body.message)
+    ) {
+      return c.json({ error: 'Preencha todos os campos' }, 400);
     }
 
-    const place = placeFrom(body.city, body.state);
     const [lead] = await db
       .insert(schema.leads)
       .values({
@@ -255,7 +263,11 @@ const app = new Hono<Env>()
     const message = text(body.message, 3000);
     const resumeKey = body.resumeKey || null;
 
+    const place = placeFrom(body.city, body.state);
+    const salary = text(body.salaryExpectation, 60);
     if (name.length < 3) return c.json({ error: 'Informe seu nome completo' }, 400);
+    if (!place.city || !place.state) return c.json({ error: 'Informe cidade e estado' }, 400);
+    if (!salary) return c.json({ error: 'Informe sua pretensão salarial' }, 400);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return c.json({ error: 'Informe um e-mail válido' }, 400);
     if (phone.replace(/\D/g, '').length < 10) return c.json({ error: 'Informe um telefone com DDD' }, 400);
     if (!body.consent) return c.json({ error: 'É preciso autorizar o uso dos seus dados para a seleção' }, 400);
@@ -283,7 +295,6 @@ const app = new Hono<Env>()
       jobTitle = job.title;
     }
 
-    const place = placeFrom(body.city, body.state);
     const [created] = await db.insert(schema.applications).values({
       jobId,
       name,
@@ -292,7 +303,7 @@ const app = new Hono<Env>()
       city: place.city,
       state: place.state,
       linkedin: text(body.linkedin, 200) || null,
-      salaryExpectation: text(body.salaryExpectation, 60) || null,
+      salaryExpectation: salary,
       message: message || null,
       resumeKey,
       status: jobId ? 'recebido' : 'banco',

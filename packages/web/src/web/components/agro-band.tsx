@@ -4,6 +4,7 @@ import { Reveal } from "./reveal";
 import { BtnWhats } from "./kit";
 import { agroChain, agroChains, agroClients } from "@/lib/agro";
 import { waLink } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 /**
  * Faixa dedicada ao agro na home, com paleta própria (verde + dourado)
@@ -66,7 +67,11 @@ export function AgroBand() {
 
           <div className="grid gap-3 sm:grid-cols-2">
             {agroChain.map((s, i) => (
-              <Reveal key={s.step} i={i} className="h-full">
+              <Reveal
+                key={s.step}
+                i={i}
+                className={cn("h-full", i === agroChain.length - 1 && agroChain.length % 2 === 1 && "sm:col-span-2")}
+              >
                 <Link
                   href="/agro#etapas"
                   className="cine-shine flex h-full flex-col rounded-2xl border border-white/12 bg-white/[0.05] p-5 transition-colors hover:border-[#e8c469]/55"
@@ -82,37 +87,6 @@ export function AgroBand() {
                 </Link>
               </Reveal>
             ))}
-
-            {/* espaço da grade preenchido com a máquina da linha agro (recorte) */}
-            <Reveal i={agroChain.length} className="h-full">
-              <Link
-                href="/produtos/esteira-transportadora-para-granel"
-                className="group relative flex h-full min-h-[200px] flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-[#e8c469]/45"
-              >
-                <img
-                  src="/img/site/agro-esteira-cut.webp"
-                  alt="Esteira transportadora para granel Demakine"
-                  loading="lazy"
-                  className="cine-float pointer-events-none absolute -right-4 -top-1 w-[104%] max-w-none drop-shadow-[0_18px_28px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-[1.04]"
-                />
-                <div
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%]"
-                  style={{
-                    background:
-                      "linear-gradient(to top, rgba(10,32,18,0.96) 12%, rgba(10,32,18,0.72) 48%, transparent)",
-                  }}
-                />
-                <div className="relative">
-                  <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[#e8c469]">
-                    Linha agro
-                  </p>
-                  <p className="mt-1 inline-flex items-center gap-1.5 text-[15px] font-bold text-white">
-                    Esteira para granel
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </p>
-                </div>
-              </Link>
-            </Reveal>
           </div>
         </div>
       </div>

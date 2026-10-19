@@ -134,7 +134,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
             <option value={ABROAD}>Exterior</option>
           </select>
         </div>
-        <input value={form.salaryExpectation} onChange={set("salaryExpectation")} placeholder="Pretensão salarial" aria-label="Pretensão salarial" className={input} />
+        <input required value={form.salaryExpectation} onChange={set("salaryExpectation")} placeholder="Pretensão salarial*" aria-label="Pretensão salarial" className={input} />
         <input value={form.linkedin} onChange={set("linkedin")} placeholder="LinkedIn (opcional)" aria-label="LinkedIn" className={input} />
 
         {/* currículo */}
