@@ -97,7 +97,7 @@ const engineeringText = [
   "Contamos com um time de engenharia interno, especializado em compreender o processo do cliente, identificar suas necessidades e transformar cada desafio em uma solução tecnicamente adequada.",
   "O trabalho começa entendendo a realidade da operação: o material que será movimentado, a capacidade necessária, o espaço disponível, as condições de trabalho e os objetivos do projeto. A partir dessas informações, nossa equipe de engenharia desenvolve e desenha o projeto desde o início, definindo as características necessárias para que o equipamento se integre ao processo.",
   "Da concepção à fabricação, cada etapa é acompanhada pela Demakine, unindo engenharia, experiência e conhecimento em equipamentos industriais e agroindustriais.",
-  "Com mais de 15 anos de mercado e experiência no desenvolvimento de soluções personalizadas, somos especialistas em criar Projetos Especiais para operações que precisam ir além dos equipamentos convencionais.",
+  "Com mais de 14 anos de mercado e experiência no desenvolvimento de soluções personalizadas, somos especialistas em criar Projetos Especiais para operações que precisam ir além dos equipamentos convencionais.",
 ];
 
 export default function ProjetosEspeciais() {
