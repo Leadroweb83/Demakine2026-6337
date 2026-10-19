@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import mapRaw from "../../data/br-map.json";
 import { site } from "@/lib/site";
+import { clients, testimonials } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import { Counter } from "../counter";
 import { tr } from "@/lib/i18n";
@@ -13,22 +14,32 @@ type MapData = {
 
 const map = mapRaw as unknown as MapData;
 
+/** depoimento sem empresa de verdade: aparece como tipo de cliente, não como nome */
+const GENERIC = /^(aut[oô]nomo|produtor rural)$/i;
+const norm = (v: string) => v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+
+type StateClient = { key: string; name: string; logo?: string; city?: string };
+
 /**
- * Foto por região (public/img/estados): imagens ilustrativas geradas por IA a partir das fotos reais
- * dos equipamentos. Os estados da mesma região mostram a mesma foto.
+ * Clientes por estado, só com dado real: logos da lista de clientes que têm o estado preenchido
+ * (painel > Clientes e depoimentos) e as empresas que publicaram depoimento, com a cidade/UF dela.
  */
-type Region = "norte" | "nordeste" | "centro-oeste" | "sudeste" | "sul";
-
-const REGIONS: Record<Region, { label: string; ufs: string[] }> = {
-  norte: { label: "Região Norte", ufs: ["AC", "AM", "AP", "PA", "RO", "RR", "TO"] },
-  nordeste: { label: "Região Nordeste", ufs: ["AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE"] },
-  "centro-oeste": { label: "Região Centro-Oeste", ufs: ["DF", "GO", "MS", "MT"] },
-  sudeste: { label: "Região Sudeste", ufs: ["ES", "MG", "RJ", "SP"] },
-  sul: { label: "Região Sul", ufs: ["PR", "RS", "SC"] },
-};
-
-const regionOf = (uf: string): Region =>
-  (Object.keys(REGIONS) as Region[]).find((r) => REGIONS[r].ufs.includes(uf)) ?? "sudeste";
+function clientsByState(): Map<string, StateClient[]> {
+  const out = new Map<string, StateClient[]>();
+  const add = (uf: string, c: StateClient) => {
+    const list = out.get(uf) ?? [];
+    if (!list.some((x) => norm(x.name) === norm(c.name) || (c.name.length > 4 && (norm(x.name).includes(norm(c.name)) || norm(c.name).includes(norm(x.name)))))) list.push(c);
+    out.set(uf, list);
+  };
+  for (const c of clients) if (c.state) add(c.state.toUpperCase(), { key: `l-${c.id}`, name: c.name, logo: c.logo });
+  for (const t of testimonials) {
+    const uf = t.city.match(/\/\s*([A-Za-z]{2})\s*$/)?.[1]?.toUpperCase();
+    if (!uf || !t.company.trim()) continue;
+    const city = t.city.replace(/\s*\/\s*[A-Za-z]{2}\s*$/, "").trim();
+    add(uf, { key: `t-${t.company}-${city}`, name: t.company, city });
+  }
+  return out;
+}
 
 /** estados pequenos no desenho: sigla menor para não encavalar */
 const SMALL = new Set(["DF", "SE", "AL", "PB", "RN", "PE", "ES", "RJ"]);
@@ -69,7 +80,10 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
   }, []);
 
   const state = map.states[active];
-  const region = regionOf(active);
+  const byUf = useMemo(clientsByState, []);
+  const here = byUf.get(active) ?? [];
+  const logos = here.filter((c) => c.logo).slice(0, 6);
+  const names = here.filter((c) => !c.logo).slice(0, Math.max(0, 8 - logos.length));
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
@@ -185,31 +199,54 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
       <div>
         <GrowthStat dark={dark} />
 
-        <figure
+        <div
           className={cn(
-            "relative mt-4 aspect-[4/3] overflow-hidden rounded-xl border",
+            "mt-4 rounded-xl border p-5",
             dark ? "border-white/10 bg-white/[0.04]" : "border-dm-line bg-dm-surface",
           )}
+          aria-live="polite"
         >
-          <img
-            key={region}
-            src={`/img/estados/${region}.webp`}
-            alt={tr("Equipe trabalhando com uma esteira Demakine na {regiao} (imagem ilustrativa)", { regiao: tr(REGIONS[region].label) })}
-            width={1120}
-            height={844}
-            loading="lazy"
-            className="state-photo h-full w-full object-cover"
-          />
-          <figcaption
-            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#08192f]/90 to-transparent px-5 pb-4 pt-12"
-            aria-live="polite"
-          >
-            <span className="cine-kicker block text-[22px] leading-tight text-white">{state.name}</span>
-            <span className="mt-1 block text-[13px] text-white/75">
-              {tr(REGIONS[region].label)} · {tr("imagem ilustrativa")}
-            </span>
-          </figcaption>
-        </figure>
+          <p className={cn("cine-kicker text-[22px] leading-tight", dark ? "text-white" : "text-dm-ink")}>{state.name}</p>
+
+          {here.length === 0 ? (
+            <p className={cn("mt-2 text-[14px] leading-relaxed", dark ? "text-white/70" : "text-dm-gray")}>
+              {tr("Entregamos em {estado} direto da fábrica em Limeira/SP, com logística acompanhada e assistência técnica própria.", { estado: state.name })}
+            </p>
+          ) : (
+            <>
+              <p className={cn("mt-1 text-[13px]", dark ? "text-white/60" : "text-dm-gray")}>
+                {here.length === 1 ? tr("Cliente nosso neste estado") : tr("Clientes nossos neste estado")}
+              </p>
+
+              {logos.length > 0 && (
+                <ul className="mt-4 grid grid-cols-3 gap-2.5">
+                  {logos.map((c) => (
+                    <li key={c.key} className="flex h-[72px] items-center justify-center rounded-lg bg-white p-2.5" title={c.name}>
+                      <img src={c.logo} alt={c.name} loading="lazy" className="max-h-full max-w-full object-contain" />
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {names.length > 0 && (
+                <ul className={cn("flex flex-wrap gap-2", logos.length > 0 ? "mt-3" : "mt-4")}>
+                  {names.map((c) => (
+                    <li
+                      key={c.key}
+                      className={cn(
+                        "rounded-lg border px-3 py-2 text-[13px] leading-snug",
+                        dark ? "border-white/12 bg-white/[0.05] text-white" : "border-dm-line bg-white text-dm-ink",
+                      )}
+                    >
+                      <span className="font-semibold">{GENERIC.test(c.name.trim()) ? tr(c.name) : c.name}</span>
+                      {c.city && <span className={cn("block text-[12px]", dark ? "text-white/55" : "text-dm-gray")}>{c.city}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -31,7 +31,8 @@ export type Product = {
   videos?: { id: string; title: string }[];
 };
 
-export type Client = { id: number; name: string; segment: string; logo: string };
+/** state: sigla da UF (SP, MG...) onde fica o cliente; usado no mapa da home */
+export type Client = { id: number; name: string; segment: string; logo: string; state?: string };
 export type Testimonial = { name: string; company: string; city: string; text: string };
 export type Project = { slug: string; name: string; desc: string; images: string[] };
 export type Post = {

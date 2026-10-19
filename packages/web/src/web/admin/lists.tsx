@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowDown, ArrowUp, ImagePlus, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { api } from "../lib/api";
 import { DEFAULT_CLIENTS, DEFAULT_TESTIMONIALS, type Client, type Testimonial } from "@/lib/content";
+import { UFS } from "@/lib/uf";
 import { cn } from "@/lib/utils";
 import { Btn, PageTitle, inputCls } from "./ui";
 import { MediaPicker } from "./media";
@@ -139,6 +140,14 @@ function ClientsEditor({ initial, edited }: { initial: Client[]; edited: boolean
             <div className="min-w-0 flex-1 space-y-1.5">
               <input value={c.name} onChange={(e) => set(i, { name: e.target.value })} placeholder="Nome" aria-label="Nome do cliente" className={cn(inputCls, "py-1.5 text-[13px] font-semibold")} />
               <input value={c.segment} onChange={(e) => set(i, { segment: e.target.value })} list="segmentos-clientes" placeholder="Setor" aria-label="Setor" className={cn(inputCls, "py-1.5 text-[12.5px]")} />
+              <select value={c.state ?? ""} onChange={(e) => set(i, { state: e.target.value || undefined })} aria-label="Estado do cliente" className={cn(inputCls, "py-1.5 text-[12.5px]")}>
+                <option value="">Estado (aparece no mapa da home)</option>
+                {UFS.map((uf) => (
+                  <option key={uf} value={uf}>
+                    {uf}
+                  </option>
+                ))}
+              </select>
               <div className="flex">
                 <button type="button" onClick={() => setItems((l) => move(l, i, -1))} className="rounded p-1 text-dm-ink/45 hover:text-dm-ink" title="Antes">
                   <ArrowUp className="h-3.5 w-3.5" />
