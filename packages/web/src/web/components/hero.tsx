@@ -64,9 +64,9 @@ export function HomeHero() {
       {/* vídeo com parallax no scroll */}
       <motion.video
         style={reduce ? still : { y: mediaY, scale: mediaScale }}
-        className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.3]"
-        src="/video/hero-loop.mp4"
-        poster="/img/site/hero.webp"
+        className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.55]"
+        src="/video/hero-fabrica.mp4"
+        poster="/img/site/hero-fabrica.webp"
         autoPlay
         muted
         loop
