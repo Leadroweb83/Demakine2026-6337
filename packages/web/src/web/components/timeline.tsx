@@ -42,8 +42,8 @@ const steps: Step[] = [
     n: "04",
     title: "Pintura e testes",
     text: "Tratamento da superfície, pintura PU e teste da máquina rodando antes de sair. Nada embarca sem funcionar.",
-    image: "/img/site/projetos.webp",
-    alt: "Esteira com moega pintada e pronta dentro da fábrica da Demakine",
+    image: "/img/site/processo-pintura.webp",
+    alt: "Lateral de uma esteira Demakine já pintada em azul e vermelho, com a logo da marca",
   },
   {
     n: "05",

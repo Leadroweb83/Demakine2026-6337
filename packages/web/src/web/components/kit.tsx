@@ -188,6 +188,8 @@ export function PageHero({
   crumbs,
   action,
   youtubeBg,
+  videoBg,
+  imageClassName,
 }: {
   eyebrow: string;
   title: string;
@@ -198,6 +200,10 @@ export function PageHero({
   action?: ReactNode;
   /** id de vídeo do YouTube para tocar no fundo, sem som, com a mesma opacidade da imagem */
   youtubeBg?: string;
+  /** vídeo local (mp4) no fundo, sem som e em loop; a imagem fica por baixo e vale como poster */
+  videoBg?: string;
+  /** ajuste do enquadramento da imagem (ex.: object-[50%_70%]) */
+  imageClassName?: string;
 }) {
   return (
     <>
@@ -211,8 +217,24 @@ export function PageHero({
           <img
             src={image}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover opacity-35"
+            className={cn("absolute inset-0 h-full w-full object-cover opacity-35", imageClassName)}
           />
+        )}
+        {videoBg && (
+          <video
+            src={videoBg}
+            poster={image}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover opacity-50 motion-reduce:hidden"
+          />
+        )}
+        {videoBg && (
+          <div className="absolute inset-0 bg-gradient-to-r from-dm-blue-deep/90 via-dm-blue-deep/60 to-transparent" />
         )}
         {youtubeBg && <YouTubeBg id={youtubeBg} />}
         <div className="absolute inset-0 grid-lines" />

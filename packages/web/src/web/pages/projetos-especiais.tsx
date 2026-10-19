@@ -3,8 +3,8 @@ import { ArrowUpRight, Layers, Ruler, ShieldCheck, TrendingUp, X } from "lucide-
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
-import { projects } from "@/lib/content";
+import { BtnPrimary, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
+import { projects as photoProjects } from "@/lib/content";
 import { segmentList } from "@/lib/segments";
 import { tr } from "@/lib/i18n";
 
@@ -58,9 +58,53 @@ const benefits = [
   },
 ];
 
+/**
+ * Projetos desenhados pela engenharia da Demakine (renders 3D). Entram na ordem em que aparecem
+ * na página: primeiro as linhas completas, depois os equipamentos.
+ */
+const DESIGN_DESC = "Projeto 3D desenvolvido pela engenharia da Demakine.";
+const designProjects = [
+  "Linha de triagem com plataforma elevada e big bags",
+  "Esteira para carga de sacaria em contêineres",
+  "Esteira para descarga de caminhão",
+  "Esteira para descarga de caminhão em galpão",
+  "Roscas transportadoras em fosso de recebimento",
+  "Elevador de canecas com plataforma ao lado de silo",
+  "Rosca transportadora para descarga de caminhão",
+  "Elevador de canecas com plataforma de manutenção",
+  "Esteira inclinada sobre rodas com estrutura treliçada",
+  "Esteira em dois lances com plataforma",
+  "Esteira com máquina de costurar sacos e guias laterais",
+  "Costura de sacos com carro sobre trilho",
+  "Rosca transportadora inclinada em inox com moega",
+  "Esteira com cobertura e trecho de rolos livres",
+  "Esteira horizontal com correia verde",
+  "Esteira inclinada com rodízios",
+  "Esteira inclinada com moega e rodas",
+  "Esteira vertical com base sobre rodízios",
+].map((name, i) => ({
+  slug: `projeto-3d-${i + 1}`,
+  name,
+  desc: DESIGN_DESC,
+  images: [`/img/projetos-3d/${String(i + 1).padStart(2, "0")}.webp`],
+}));
+
+const FIRST_BATCH = 9;
+
+const engineeringText = [
+  "Nem toda operação se encaixa em uma solução pronta. Existem processos que exigem dimensões específicas, diferentes capacidades, adaptações de layout ou até um equipamento desenvolvido exclusivamente para aquela aplicação.",
+  "É nesse cenário que entra a experiência da Demakine em Projetos Especiais.",
+  "Contamos com um time de engenharia interno, especializado em compreender o processo do cliente, identificar suas necessidades e transformar cada desafio em uma solução tecnicamente adequada.",
+  "O trabalho começa entendendo a realidade da operação: o material que será movimentado, a capacidade necessária, o espaço disponível, as condições de trabalho e os objetivos do projeto. A partir dessas informações, nossa equipe de engenharia desenvolve e desenha o projeto desde o início, definindo as características necessárias para que o equipamento se integre ao processo.",
+  "Da concepção à fabricação, cada etapa é acompanhada pela Demakine, unindo engenharia, experiência e conhecimento em equipamentos industriais e agroindustriais.",
+  "Com mais de 15 anos de mercado e experiência no desenvolvimento de soluções personalizadas, somos especialistas em criar Projetos Especiais para operações que precisam ir além dos equipamentos convencionais.",
+];
+
 export default function ProjetosEspeciais() {
   const [open, setOpen] = useState<{ slug: string; index: number } | null>(null);
-  const active = open ? projects.find((p) => p.slug === open.slug) : null;
+  const [showAll, setShowAll] = useState(false);
+  const active = open ? [...designProjects, ...photoProjects].find((p) => p.slug === open.slug) : null;
+  const shownDesigns = showAll ? designProjects : designProjects.slice(0, FIRST_BATCH);
 
   return (
     <>
@@ -75,9 +119,98 @@ export default function ProjetosEspeciais() {
         eyebrow="Engenharia sob medida"
         title="Projetos especiais para processos que não cabem no padrão"
         text="Adaptar uma linha, automatizar uma etapa ou integrar novos equipamentos: transformamos a sua necessidade em máquina projetada, fabricada e testada."
-        image="/img/site/projetos.webp"
+        image="/img/site/hero-projetos.webp"
+        imageClassName="object-[50%_72%]"
         crumbs={[{ label: "Projetos Especiais" }]}
       />
+
+      {/* ------------------------------------------------------- engenharia própria */}
+      <Section>
+        <div className="grid items-start gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+          <Reveal>
+            <p className="eyebrow text-dm-blue">Engenharia própria</p>
+            <h2 className="h2 mt-3 max-w-2xl">
+              Sua necessidade é o ponto de partida. Nossa engenharia transforma ela em projeto.
+            </h2>
+            <h3 className="mt-8 text-[20px] font-bold text-dm-ink md:text-[22px]">
+              Projetos Especiais desenvolvidos para a sua operação
+            </h3>
+            <div className="mt-4 space-y-4 text-[16.5px] leading-relaxed text-dm-ink/80">
+              {engineeringText.map((t) => (
+                <p key={t}>{t}</p>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal i={1} className="lg:sticky lg:top-28">
+            <aside className="rounded-2xl bg-dm-blue-deep p-7 text-white md:p-9">
+              <p className="eyebrow text-white/60">Fale com a engenharia</p>
+              <h3 className="mt-3 text-[24px] font-bold leading-snug md:text-[28px]">
+                Sua operação tem uma necessidade específica?
+              </h3>
+              <p className="mt-4 text-[16px] leading-relaxed text-white/75">
+                Conte para nossa equipe como funciona o seu processo. Nossa engenharia está preparada
+                para estudar o seu projeto e desenvolver uma solução desde o zero.
+              </p>
+              <div className="mt-7">
+                <BtnPrimary to="/contato">Contar sobre o meu processo</BtnPrimary>
+              </div>
+            </aside>
+          </Reveal>
+        </div>
+      </Section>
+
+      {/* ---------------------------------------------------------- projetos em 3D */}
+      <Section tone="surface" id="projetos-3d">
+        <SectionHead
+          eyebrow="Projetos desenvolvidos"
+          title="Abaixo estão alguns projetos que desenvolvemos"
+          text="Desenhos da nossa engenharia, feitos antes de qualquer corte de aço. Clique para ampliar."
+        />
+
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {shownDesigns.map((p, idx) => (
+            <Reveal key={p.slug} i={idx % 3} className="h-full">
+              <button
+                type="button"
+                onClick={() => setOpen({ slug: p.slug, index: 0 })}
+                className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-dm-line bg-white text-left transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-dm-blue/10"
+              >
+                <div className="relative aspect-[4/3] overflow-hidden bg-[#f7f7f7]">
+                  <img
+                    src={p.images[0]}
+                    alt={p.name}
+                    width={1200}
+                    height={900}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                  <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-dm-blue opacity-0 transition-opacity group-hover:opacity-100">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </div>
+                <div className="p-5">
+                  <h3 className="text-[16px] font-bold leading-snug text-dm-ink group-hover:text-dm-blue">
+                    {p.name}
+                  </h3>
+                </div>
+              </button>
+            </Reveal>
+          ))}
+        </div>
+
+        {!showAll && (
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="rounded-full border border-dm-blue px-7 py-3 text-[13px] font-bold uppercase tracking-wide text-dm-blue transition-colors hover:bg-dm-blue hover:text-white"
+            >
+              Ver mais projetos
+            </button>
+          </div>
+        )}
+      </Section>
 
       <Section>
         <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr]">
@@ -127,7 +260,7 @@ export default function ProjetosEspeciais() {
         />
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p, idx) => (
+          {photoProjects.map((p, idx) => (
             <Reveal key={p.slug} i={idx % 3} className="h-full">
               <button
                 type="button"

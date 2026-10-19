@@ -4,7 +4,7 @@ import { aboutPageJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { ClientsMarquee, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
-import { VideoSection, YT_ID } from "@/components/video-section";
+import { VideoSection } from "@/components/video-section";
 import { site } from "@/lib/site";
 
 const values = ["Deus", "Empatia", "Comprometimento", "Perseverança e resiliência", "Excelência", "Humildade"];
@@ -81,8 +81,8 @@ export default function AEmpresa() {
         eyebrow="A Empresa"
         title="Transformando o setor agroindustrial desde a nossa fábrica em Limeira"
         text="Mais de 14 anos criando soluções inteligentes para indústrias que buscam agilidade e alto desempenho nos seus processos de produção."
-        image="/img/site/fabrica.webp"
-        youtubeBg={YT_ID}
+        image="/img/site/hero-fabrica.webp"
+        videoBg="/video/hero-fabrica.mp4"
         crumbs={[{ label: "A Empresa" }]}
       />
 
