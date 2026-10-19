@@ -168,7 +168,7 @@ export function LeadForm({
           />
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className={cn("grid gap-3", !compact && "sm:grid-cols-2")}>
           <input
             value={form.company}
             onChange={set("company")}
@@ -181,52 +181,31 @@ export function LeadForm({
                 : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
             )}
           />
-          <div className="grid grid-cols-[1fr_6.5rem] gap-3">
+          {!compact && (
             <input
-              value={form.city}
-              onChange={set("city")}
-              placeholder="Cidade"
-              aria-label="Cidade"
-              autoComplete="address-level2"
+              type="email"
+              value={form.email}
+              onChange={set("email")}
+              placeholder="E-mail"
+              aria-label="E-mail"
               className={cn(
-                inputBase,
-                dark
-                  ? "border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-white/45"
-                  : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
-              )}
+              inputBase,
+              dark
+                ? "border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-white/45"
+                : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
+            )}
             />
-            <select
-              value={form.uf}
-              onChange={set("uf")}
-              aria-label="Estado"
-              autoComplete="address-level1"
-              className={cn(
-                inputBase,
-                "px-3",
-                dark
-                  ? "border-white/15 bg-white/5 focus:border-white/45 [&>option]:text-dm-ink"
-                  : "border-dm-line bg-white focus:border-dm-blue",
-                form.uf ? (dark ? "text-white" : "text-dm-ink") : dark ? "text-white/40" : "text-dm-gray/70",
-              )}
-            >
-              <option value="">Estado</option>
-              {UFS.map((uf) => (
-                <option key={uf} value={uf}>
-                  {uf}
-                </option>
-              ))}
-              <option value={ABROAD}>Exterior</option>
-            </select>
-          </div>
+          )}
         </div>
 
-        {!compact && (
+        {/* cidade e estado, cada um na sua coluna */}
+        <div className="grid grid-cols-2 gap-3">
           <input
-            type="email"
-            value={form.email}
-            onChange={set("email")}
-            placeholder="E-mail"
-            aria-label="E-mail"
+            value={form.city}
+            onChange={set("city")}
+            placeholder="Cidade"
+            aria-label="Cidade"
+            autoComplete="address-level2"
             className={cn(
               inputBase,
               dark
@@ -234,7 +213,29 @@ export function LeadForm({
                 : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
             )}
           />
-        )}
+          <select
+            value={form.uf}
+            onChange={set("uf")}
+            aria-label="Estado"
+            autoComplete="address-level1"
+            className={cn(
+              inputBase,
+              "px-3",
+              dark
+                ? "border-white/15 bg-white/5 focus:border-white/45 [&>option]:text-dm-ink"
+                : "border-dm-line bg-white focus:border-dm-blue",
+              form.uf ? (dark ? "text-white" : "text-dm-ink") : dark ? "text-white/40" : "text-dm-gray/70",
+            )}
+          >
+            <option value="">Estado</option>
+            {UFS.map((uf) => (
+              <option key={uf} value={uf}>
+                {uf}
+              </option>
+            ))}
+            <option value={ABROAD}>Exterior</option>
+          </select>
+        </div>
 
         <textarea
           value={form.message}

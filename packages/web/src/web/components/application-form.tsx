@@ -115,7 +115,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
           <input required value={form.phone} onChange={set("phone")} placeholder="WhatsApp com DDD*" aria-label="WhatsApp" inputMode="tel" autoComplete="tel" className={input} />
           <input required type="email" value={form.email} onChange={set("email")} placeholder="E-mail*" aria-label="E-mail" autoComplete="email" className={input} />
         </div>
-        <div className="grid grid-cols-[1fr_6.5rem] gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <input required value={form.city} onChange={set("city")} placeholder="Cidade*" aria-label="Cidade" autoComplete="address-level2" className={input} />
           <select
             required
