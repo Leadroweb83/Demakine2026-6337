@@ -10,7 +10,6 @@ import {
   Headphones,
   Mail,
   MapPin,
-  MessageCircle,
   Navigation,
   Phone,
   Ruler,
@@ -52,7 +51,7 @@ import {
   products,
   projects,
 } from "@/lib/content";
-import { site, waLink } from "@/lib/site";
+import { site } from "@/lib/site";
 import { PageSections, type Block } from "@/lib/page-layout";
 
 const categoryIcons: Record<string, typeof Cog> = {
@@ -393,23 +392,6 @@ export default function Home() {
 
               <div className="mt-9 grid gap-3 sm:grid-cols-2">
                 <a
-                  href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex items-start gap-3.5 rounded-2xl border border-white/12 bg-white/[0.05] p-4 transition-colors hover:border-dm-green/70"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-dm-green/18 text-[#4ade9a]">
-                    <MessageCircle className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-[11.5px] font-semibold uppercase tracking-[0.14em] text-white/45">
-                      WhatsApp
-                    </span>
-                    <span className="mt-0.5 block text-[16px] font-bold text-white">{site.mobile}</span>
-                  </span>
-                </a>
-
-                <a
                   href={site.phoneHref}
                   className="group flex items-start gap-3.5 rounded-2xl border border-white/12 bg-white/[0.05] p-4 transition-colors hover:border-white/35"
                 >
@@ -426,7 +408,7 @@ export default function Home() {
 
                 <a
                   href={`mailto:${site.email}`}
-                  className="group flex items-start gap-3.5 rounded-2xl border border-white/12 bg-white/[0.05] p-4 transition-colors hover:border-white/35 sm:col-span-2"
+                  className="group flex items-start gap-3.5 rounded-2xl border border-white/12 bg-white/[0.05] p-4 transition-colors hover:border-white/35"
                 >
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white">
                     <Mail className="h-5 w-5" />

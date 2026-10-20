@@ -111,7 +111,7 @@ export default function Clientes() {
         <SectionHead
           eyebrow="Em vídeo"
           title="Clientes contam como é trabalhar com a Demakine"
-          text="Depoimentos gravados pelos próprios clientes."
+          text="Depoimentos dos nossos clientes."
         />
         <div className="mt-12">
           <VideoTestimonials />

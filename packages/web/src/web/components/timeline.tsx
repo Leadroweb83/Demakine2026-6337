@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, MessageCircle } from "lucide-react";
-import { BtnGhost, BtnWhats } from "./kit";
-import { waLink } from "@/lib/site";
+import { ArrowRight } from "lucide-react";
+import { BtnPrimary } from "./kit";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type Step = {
@@ -153,14 +153,10 @@ export function Timeline() {
         </ol>
 
         <div className="mt-12 flex flex-wrap gap-3 pl-16 max-sm:pl-0">
-          <BtnWhats className="whitespace-nowrap" href={waLink("Olá! Vim pelo site da Demakine e quero começar pelo levantamento do meu equipamento.")}>
-            <MessageCircle className="h-4 w-4" />
+          <BtnPrimary className="whitespace-nowrap" to={quoteHref()}>
             Começar pelo levantamento
-          </BtnWhats>
-          <BtnGhost className="whitespace-nowrap" to="/contato">
-            Pedir orçamento
             <ArrowRight className="h-4 w-4" />
-          </BtnGhost>
+          </BtnPrimary>
         </div>
       </div>
     </div>

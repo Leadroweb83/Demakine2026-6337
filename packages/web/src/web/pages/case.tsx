@@ -6,7 +6,7 @@ import { articleJsonLd } from "@/lib/schema";
 import { clipDescription, fitTitle } from "@/lib/seo-text";
 import {
   BtnGhost,
-  BtnWhats,
+  BtnPrimary,
   CtaBand,
   PageHero,
   ProductCard,
@@ -18,7 +18,7 @@ import { LeadForm } from "@/components/lead-form";
 import { getProduct } from "@/lib/content";
 import { caseStudies, getCase, hasRealData } from "@/lib/cases";
 import { brl, computeRoi, num } from "@/lib/engine";
-import { site, waLink } from "@/lib/site";
+import { quoteHref, site } from "@/lib/site";
 import { tr } from "@/lib/i18n";
 
 export default function CaseStudyPage() {
@@ -241,7 +241,7 @@ export default function CaseStudyPage() {
             </div>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(waMsg)}>Falar com a engenharia</BtnWhats>
+              <BtnPrimary to={quoteHref({ mensagem: waMsg })}>Falar com a engenharia</BtnPrimary>
               <BtnGhost dark to="/ferramentas">
                 Rodar com os meus números
               </BtnGhost>

@@ -2,8 +2,8 @@ import { Cog, MapPin, PhoneCall, Timer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnGhost, BtnWhats, CtaBand, PageHero, Section } from "@/components/kit";
-import { departments, site, waLink } from "@/lib/site";
+import { BtnGhost, BtnPrimary, CtaBand, PageHero, Section } from "@/components/kit";
+import { departments, quoteHref, site } from "@/lib/site";
 
 const services = [
   {
@@ -96,13 +96,13 @@ export default function AssistenciaTecnica() {
                 {support.email}
               </a>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <BtnWhats
-                  href={waLink("Olá! Preciso de assistência técnica para um equipamento Demakine.")}
+                <BtnPrimary
+                  to={quoteHref({ produto: "Assistência técnica", mensagem: "Olá! Preciso de assistência técnica para um equipamento Demakine." })}
                   className="gap-2"
                 >
                   <PhoneCall className="h-4 w-4" />
                   Abrir atendimento
-                </BtnWhats>
+                </BtnPrimary>
                 <BtnGhost to="/downloads">Manuais e downloads</BtnGhost>
               </div>
             </div>

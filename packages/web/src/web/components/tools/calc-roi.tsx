@@ -2,7 +2,6 @@ import { useId, useMemo, useState } from "react";
 import { Calculator, TrendingUp } from "lucide-react";
 import { brl, computeRoi, num, roiAssumptions } from "@/lib/engine";
 import { LeadForm } from "@/components/lead-form";
-import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { RingChart } from "@/components/ui/ring-chart";
 import { tr } from "@/lib/i18n";
@@ -265,16 +264,6 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             >
               Receber este cálculo
             </button>
-            <a
-              href={waLink(
-                tr("Olá! Fiz a conta no site: {n} volumes/dia, economia estimada de {valor} por mês. Quero avaliar a máquina.", { n: num(volumePerDay), valor: brl(r.monthlySaving) }),
-              )}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-            >
-              Falar no WhatsApp
-            </a>
           </div>
         )}
       </div>

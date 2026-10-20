@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Clock, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
+import { Clock, Mail, MapPin, Phone, Send } from "lucide-react";
 import { MapEmbed } from "@/components/map-embed";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import { BtnPrimary, PageHero, Section, SectionHead } from "@/components/kit";
-import { departments, site, waLink } from "@/lib/site";
+import { departments, site } from "@/lib/site";
 import { JobsCta } from "@/components/jobs-cta";
 
 export default function Contato() {
@@ -51,24 +51,6 @@ export default function Contato() {
             <h2 className="h2 mt-3">Escolha o canal mais rápido para você</h2>
 
             <div className="mt-8 grid gap-4">
-              <a
-                href={waLink("Olá! Vim pelo site da Demakine e quero falar com o comercial.")}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-start gap-4 rounded-2xl border border-dm-line bg-white p-5 transition-colors hover:border-[#25D366]"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#25D366]/12 text-[#1da851]">
-                  <MessageCircle className="h-5 w-5" />
-                </span>
-                <span>
-                  <span className="block text-[16px] font-bold text-dm-ink">WhatsApp comercial</span>
-                  <span className="block text-[15px] text-dm-gray">{site.mobile}</span>
-                  <span className="mt-1 block text-[13.5px] text-dm-gray">
-                    Resposta no horário comercial
-                  </span>
-                </span>
-              </a>
-
               <a
                 href={site.phoneHref}
                 className="flex items-start gap-4 rounded-2xl border border-dm-line bg-white p-5 transition-colors hover:border-dm-blue"

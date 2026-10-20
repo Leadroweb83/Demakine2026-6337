@@ -107,14 +107,6 @@ function ExportForm({ lang }: { lang: ExportLang }) {
         </span>
         <h3 className="h3 mt-4">{t.okTitle}</h3>
         <p className="mt-2 text-[15px] text-dm-gray">{t.okText}</p>
-        <a
-          href={waLink(waMsg[lang])}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-5 inline-block rounded-full bg-dm-green px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-        >
-          {t.okCta}
-        </a>
       </div>
     );
   }
@@ -213,15 +205,6 @@ export default function ExportLanding() {
               <Globe className="h-3.5 w-3.5" />
               {c.switchTo}
             </button>
-            <a
-              href={waLink(waMsg[lang])}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden items-center gap-2 rounded-full bg-dm-green px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark sm:inline-flex"
-            >
-              <MessageCircle className="h-3.5 w-3.5" />
-              WhatsApp
-            </a>
           </div>
         </div>
       </header>
@@ -246,15 +229,6 @@ export default function ExportLanding() {
               >
                 {c.ctaPrimary}
                 <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href={waLink(waMsg[lang])}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-              >
-                <MessageCircle className="h-4 w-4" />
-                {c.ctaSecondary}
               </a>
             </div>
           </div>

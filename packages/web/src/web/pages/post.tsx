@@ -3,12 +3,12 @@ import { RedirectGate } from "@/components/redirect-gate";
 import { Seo } from "@/components/seo";
 import { clipDescription, fitTitle } from "@/lib/seo-text";
 import { Reveal } from "@/components/reveal";
-import { Breadcrumb, BtnPrimary, BtnWhats, CtaBand, Section } from "@/components/kit";
+import { Breadcrumb, BtnPrimary, CtaBand, Section } from "@/components/kit";
 import { ShareBar } from "@/components/share";
 import { CalcEsteira } from "@/components/tools/calc-esteira";
 import { CalcRoi } from "@/components/tools/calc-roi";
 import { formatDate, getPost, posts } from "@/lib/content";
-import { site, waLink } from "@/lib/site";
+import { quoteHref, site } from "@/lib/site";
 import { Block } from "@/components/post-block";
 import { tr } from "@/lib/i18n";
 
@@ -144,9 +144,9 @@ export default function Post() {
               sob medida.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(tr('Olá! Li o artigo "{titulo}" e quero falar com um especialista.', { titulo: tr(post.title) }))}>
+              <BtnPrimary to={quoteHref({ mensagem: tr('Olá! Li o artigo "{titulo}" e quero falar com um especialista.', { titulo: tr(post.title) }) })}>
                 Falar com especialista
-              </BtnWhats>
+              </BtnPrimary>
             </div>
           </div>
 

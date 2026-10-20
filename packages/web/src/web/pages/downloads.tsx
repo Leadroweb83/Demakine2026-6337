@@ -6,7 +6,6 @@ import { LeadForm } from "@/components/lead-form";
 import { CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
 import { getProduct, products } from "@/lib/content";
 import { productMaintenance } from "@/lib/product-maintenance";
-import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -261,14 +260,6 @@ export default function Downloads() {
               Diga qual equipamento e modelo você precisa. Se ainda não souber o modelo, descreva a
               operação e a gente indica.
             </p>
-            <a
-              href={waLink("Olá! Quero receber a ficha técnica de um equipamento Demakine.")}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-dm-green px-6 py-3 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-            >
-              Ou peça direto no WhatsApp →
-            </a>
           </Reveal>
           <Reveal i={1}>
             <LeadForm

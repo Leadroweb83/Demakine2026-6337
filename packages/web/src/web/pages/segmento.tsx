@@ -7,7 +7,7 @@ import {
   Section,
   SectionHead,
   ProductCard,
-  BtnWhats,
+  BtnPrimary,
   BtnGhost,
   ClientsMarquee,
   CtaBand,
@@ -18,7 +18,7 @@ import { LeadForm } from "@/components/lead-form";
 import { getProduct } from "@/lib/content";
 import { getSegmentLp, segmentLps, type SegmentLp } from "@/lib/segmentos-lp";
 import { DEFAULT_SEGMENT_THEME, SEGMENT_THEMES, type SegmentTheme } from "@/lib/segment-themes";
-import { site, waLink } from "@/lib/site";
+import { site } from "@/lib/site";
 import { tr } from "@/lib/i18n";
 
 function SegmentoNaoEncontrado() {
@@ -70,7 +70,7 @@ function HighlightTitle({ title, highlight, color }: { title: string; highlight:
 }
 
 /** Topo do segmento no espírito da página Agro: fundo escuro da cor do setor e textura do material. */
-function SegmentHero({ lp, theme, waMsg }: { lp: SegmentLp; theme: SegmentTheme; waMsg: string }) {
+function SegmentHero({ lp, theme }: { lp: SegmentLp; theme: SegmentTheme }) {
   return (
     <section className="seg" style={themeVars(theme)}>
       <div className="seg-bg" />
@@ -104,12 +104,9 @@ function SegmentHero({ lp, theme, waMsg }: { lp: SegmentLp; theme: SegmentTheme;
               ))}
             </ul>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(waMsg)} className="cine-shine">
-                Falar com um especialista
-              </BtnWhats>
-              <BtnGhost dark href="#orcamento">
+              <BtnPrimary href="#orcamento" className="cine-shine">
                 Receber proposta técnica
-              </BtnGhost>
+              </BtnPrimary>
             </div>
           </div>
 
@@ -180,7 +177,7 @@ export default function Segmento() {
         }}
       />
 
-      <SegmentHero lp={lp} theme={theme} waMsg={waMsg} />
+      <SegmentHero lp={lp} theme={theme} />
 
       {/* dores do setor */}
       <Section tone="white">
@@ -235,7 +232,7 @@ export default function Segmento() {
           ))}
         </div>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-          <BtnWhats href={waLink(waMsg)}>Falar com um especialista</BtnWhats>
+          <BtnPrimary href="#orcamento">Receber proposta técnica</BtnPrimary>
           <BtnGhost dark to="/ferramentas">
             Dimensionar no simulador
           </BtnGhost>
@@ -286,9 +283,6 @@ export default function Segmento() {
                 </li>
               ))}
             </ul>
-            <div className="mt-8">
-              <BtnWhats href={waLink(waMsg)}>WhatsApp {site.mobile}</BtnWhats>
-            </div>
           </Reveal>
           <LeadForm
             source={`segmento-${lp.slug}`}

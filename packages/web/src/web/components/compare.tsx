@@ -9,7 +9,7 @@ import {
 import { Link } from "wouter";
 import { GitCompareArrows, X } from "lucide-react";
 import { categoryName, products, type Product } from "@/lib/content";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -311,16 +311,14 @@ function CompareModal({ onClose }: { onClose: () => void }) {
           <p className="text-[13px] text-dm-gray">
             Precisa de uma medida que não está na tabela? Fabricamos sob medida.
           </p>
-          <a
-            href={waLink(
-              tr("Olá! Quero comparar estes equipamentos: {lista}.", { lista: list.map((p) => tr(p.name)).join(" / ") }),
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white hover:bg-dm-green-dark"
+          <Link
+            href={quoteHref({
+              mensagem: tr("Olá! Quero comparar estes equipamentos: {lista}.", { lista: list.map((p) => tr(p.name)).join(" / ") }),
+            })}
+            className="inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white hover:bg-[#c31017]"
           >
-            Tirar dúvida no WhatsApp
-          </a>
+            Pedir orçamento
+          </Link>
         </div>
       </div>
     </div>

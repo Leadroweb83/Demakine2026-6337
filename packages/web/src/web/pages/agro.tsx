@@ -12,7 +12,7 @@ import {
   Package,
 } from "lucide-react";
 import { Seo } from "@/components/seo";
-import { Section, SectionHead, BtnGhost, BtnWhats, Breadcrumb } from "@/components/kit";
+import { Section, SectionHead, BtnGhost, BtnPrimary, Breadcrumb } from "@/components/kit";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { LeadForm } from "@/components/lead-form";
@@ -24,10 +24,9 @@ import {
   agroProducts,
   agroTestimonials,
 } from "@/lib/agro";
-import { site, waLink } from "@/lib/site";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const waMsg = "Olá! Sou do agro e quero um orçamento de equipamento Demakine.";
 
 /* ------------------------------------------------------------------ hero agro */
 
@@ -80,12 +79,9 @@ function AgroHero() {
             </ul>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(waMsg)} className="cine-shine">
-                Falar com especialista agro
-              </BtnWhats>
-              <BtnGhost dark href="#proposta">
+              <BtnPrimary href="#proposta" className="cine-shine">
                 Receber proposta técnica
-              </BtnGhost>
+              </BtnPrimary>
             </div>
 
             <div className="mt-11 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/15 pt-7">
@@ -365,9 +361,7 @@ export default function Agro() {
             </div>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(waMsg)}>
-                Falar no WhatsApp agora
-              </BtnWhats>
+              <BtnPrimary href="#proposta">Receber proposta técnica</BtnPrimary>
               <BtnGhost dark href="/downloads/catalogo-demakine.pdf" external>
                 Baixar catálogo (PDF)
               </BtnGhost>

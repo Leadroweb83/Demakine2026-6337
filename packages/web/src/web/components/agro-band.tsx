@@ -1,9 +1,9 @@
 import { Link } from "wouter";
 import { ArrowRight, Wheat } from "lucide-react";
 import { Reveal } from "./reveal";
-import { BtnWhats } from "./kit";
+import { BtnPrimary } from "./kit";
 import { agroChain, agroChains, agroClients } from "@/lib/agro";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /**
@@ -59,9 +59,7 @@ export function AgroBand() {
                 Ver a linha agro
                 <ArrowRight className="h-4.5 w-4.5" />
               </Link>
-              <BtnWhats href={waLink("Olá! Sou do agro e quero falar sobre equipamentos Demakine.")}>
-                Falar com especialista agro
-              </BtnWhats>
+              <BtnPrimary to={quoteHref({ produto: "Linha agro" })}>Falar com especialista agro</BtnPrimary>
             </div>
           </div>
 

@@ -6,7 +6,7 @@ import { Reveal } from "./reveal";
 import { CompareToggle } from "./compare";
 import { YouTubeBg } from "./youtube-bg";
 import { clients, testimonials, type Product } from "@/lib/content";
-import { site, waLink } from "@/lib/site";
+import { quoteHref, site } from "@/lib/site";
 
 /* ------------------------------------------------------------------ section */
 
@@ -94,31 +94,6 @@ export function BtnPrimary({
   if (to) return <Link href={to} className={cls}>{children}</Link>;
   return (
     <a href={href} className={cls} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>
-      {children}
-    </a>
-  );
-}
-
-/** Botão de WhatsApp: sempre verde, em todo o site. */
-export function BtnWhats({
-  href,
-  children,
-  className,
-}: {
-  href?: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white shadow-[0_12px_30px_rgba(23,134,79,0.24)] transition-colors hover:bg-dm-green-dark",
-        className,
-      )}
-    >
       {children}
     </a>
   );
@@ -386,13 +361,8 @@ export function CtaBand({
         <Reveal className="mx-auto max-w-3xl text-center">
           <h2 className="h2 text-white">{title}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-[17px] leading-relaxed text-white/65">{text}</p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <BtnWhats href={waLink(waMessage)}>
-              Falar no WhatsApp
-            </BtnWhats>
-            <BtnGhost dark to="/contato">
-              Enviar especificação
-            </BtnGhost>
+          <div className="mt-8 flex justify-center">
+            <BtnPrimary to={quoteHref({ mensagem: waMessage })}>Solicitar orçamento</BtnPrimary>
           </div>
           <p className="mt-6 text-[13.5px] text-white/45">
             {site.phone} · {site.mobile} · {site.email}

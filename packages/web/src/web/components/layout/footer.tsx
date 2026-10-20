@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
-import { ArrowRight, Mail, MapPin, MessageCircle, Navigation, Phone } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Navigation, Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
-import { nav, site, waLink } from "@/lib/site";
+import { nav, quoteHref, site } from "@/lib/site";
 import { segmentLps } from "@/lib/segmentos-lp";
 import { categories, getProduct } from "@/lib/content";
 import {
@@ -63,18 +63,9 @@ export function Footer() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <a
-              href={waLink("Olá! Vim pelo site da Demakine e quero falar com um especialista.")}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-dm-green px-6 py-3.5 text-[13.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-            >
-              <MessageCircle className="h-4 w-4" />
-              Falar no WhatsApp
-            </a>
             <Link
-              href="/contato"
-              className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3.5 text-[13.5px] font-bold uppercase tracking-wide text-white transition-colors hover:border-white/60"
+              href={quoteHref()}
+              className="inline-flex items-center gap-2 rounded-full bg-dm-red px-6 py-3.5 text-[13.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
             >
               Pedir orçamento
               <ArrowRight className="h-4 w-4" />

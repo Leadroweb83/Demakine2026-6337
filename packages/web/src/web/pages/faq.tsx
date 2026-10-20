@@ -1,10 +1,10 @@
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { FaqAccordion } from "@/components/faq";
-import { BtnGhost, BtnWhats, CtaBand, PageHero, Section } from "@/components/kit";
+import { BtnGhost, BtnPrimary, CtaBand, PageHero, Section } from "@/components/kit";
 import { faqFlat, faqGroups, faqJsonLd } from "@/lib/faq";
-import { site, waLink } from "@/lib/site";
+import { quoteHref, site } from "@/lib/site";
 
 export default function Faq() {
   return (
@@ -51,13 +51,12 @@ export default function Faq() {
                 operação.
               </p>
               <div className="mt-4 flex flex-col gap-2.5">
-                <BtnWhats
-                  href={waLink("Olá! Tenho uma dúvida sobre equipamentos Demakine.")}
+                <BtnPrimary
+                  to={quoteHref({ mensagem: "Olá! Tenho uma dúvida sobre equipamentos Demakine." })}
                   className="gap-2"
                 >
-                  <MessageCircle className="h-4 w-4" />
-                  Falar no WhatsApp
-                </BtnWhats>
+                  Falar com um especialista
+                </BtnPrimary>
                 <BtnGhost href={site.phoneHref} className="gap-2">
                   <Phone className="h-4 w-4" />
                   {site.phone}

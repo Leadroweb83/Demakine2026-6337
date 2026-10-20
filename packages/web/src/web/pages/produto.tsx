@@ -5,7 +5,6 @@ import {
   AlertTriangle,
   Check,
   HelpCircle,
-  MessageCircle,
   Send,
   Minus,
   Phone,
@@ -17,7 +16,7 @@ import { Seo } from "@/components/seo";
 import { clipDescription, fitTitle } from "@/lib/seo-text";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { Breadcrumb, BtnGhost, BtnPrimary, BtnWhats, CtaBand, ProductCard, Section } from "@/components/kit";
+import { Breadcrumb, BtnGhost, BtnPrimary, CtaBand, ProductCard, Section } from "@/components/kit";
 import { CineBullets, CineRule, CineSection, CineTag, CineTitle } from "@/components/cine";
 import { CompareToggle } from "@/components/compare";
 import { Hotspots } from "@/components/tools/hotspots";
@@ -40,7 +39,7 @@ import {
   type Fit,
 } from "@/lib/product-content";
 import { artigo, categoryName, getProduct, relatedProducts } from "@/lib/content";
-import { quoteHref, site, waLink } from "@/lib/site";
+import { quoteHref, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { PageSections, type Block } from "@/lib/page-layout";
 import { locale, tr } from "@/lib/i18n";
@@ -346,10 +345,9 @@ export default function Produto() {
           </div>
 
           <Reveal i={3} className="mt-7">
-            <BtnWhats href={waLink(pt ? `Olá! Quero conferir se ${art.a} ${product.name} é a escolha certa para a minha operação.` : tr("Olá! Quero conferir se este equipamento é a escolha certa para a minha operação: {produto}.", { produto }))} className="gap-2">
-              <MessageCircle className="h-4 w-4" />
+            <BtnPrimary to={quoteHref({ produto: product.name, mensagem: pt ? `Olá! Quero conferir se ${art.a} ${product.name} é a escolha certa para a minha operação.` : tr("Olá! Quero conferir se este equipamento é a escolha certa para a minha operação: {produto}.", { produto }) })} className="gap-2">
               Conferir minha escolha com um especialista
-            </BtnWhats>
+            </BtnPrimary>
           </Reveal>
         </Section>
       ),
@@ -366,13 +364,12 @@ export default function Produto() {
                 Essa é a lista que passamos para o cliente no fechamento do pedido.
               </p>
               <div className="mt-6">
-                <BtnWhats
-                  href={waLink(pt ? `Olá! Quero conferir a preparação do local para instalar ${art.a} ${product.name}.` : tr("Olá! Quero conferir a preparação do local para instalar este equipamento: {produto}.", { produto }))}
+                <BtnPrimary
+                  to={quoteHref({ produto: product.name, mensagem: pt ? `Olá! Quero conferir a preparação do local para instalar ${art.a} ${product.name}.` : tr("Olá! Quero conferir a preparação do local para instalar este equipamento: {produto}.", { produto }) })}
                   className="gap-2"
                 >
-                  <MessageCircle className="h-4 w-4" />
                   Tirar dúvida de instalação
-                </BtnWhats>
+                </BtnPrimary>
               </div>
             </Reveal>
 
