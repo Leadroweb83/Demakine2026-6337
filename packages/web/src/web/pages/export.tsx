@@ -15,7 +15,6 @@ import {
   Loader2,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
 } from "lucide-react";
 import { Seo, organizationJsonLd } from "@/components/seo";
@@ -26,13 +25,8 @@ import { Reveal } from "@/components/reveal";
 import { api } from "@/lib/api";
 import { getProduct } from "@/lib/content";
 import { exportCopy, type ExportLang } from "@/lib/export-lp";
-import { site, waLink } from "@/lib/site";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
-
-const waMsg: Record<ExportLang, string> = {
-  es: "Hola! Quiero cotizar un equipo Demakine para exportación.",
-  en: "Hello! I would like a quote for Demakine equipment for export.",
-};
 
 const formLabels: Record<ExportLang, Record<string, string>> = {
   es: {
@@ -387,16 +381,6 @@ export default function ExportLanding() {
           </div>
         </div>
       </footer>
-
-      <a
-        href={waLink(waMsg[lang])}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="WhatsApp"
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-dm-green text-white shadow-[0_14px_34px_rgba(23,134,79,0.4)] transition-colors hover:bg-dm-green-dark"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </a>
     </div>
   );
 }

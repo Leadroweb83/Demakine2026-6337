@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Play } from "lucide-react";
 import { Reveal } from "./reveal";
 import { videoTestimonials, type VideoTestimonial } from "@/lib/video-testimonials";
+import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
 const hasVideo = (v: VideoTestimonial) => Boolean(v.src || v.youtube);
@@ -9,7 +10,7 @@ const hasVideo = (v: VideoTestimonial) => Boolean(v.src || v.youtube);
 /** Depoimentos de clientes em vídeo. O vídeo só carrega depois do clique (a página não pesa). */
 export function VideoTestimonials() {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className={cn("grid gap-5 sm:grid-cols-2", videoTestimonials.length > 2 ? "lg:grid-cols-3" : "lg:max-w-4xl")}>
       {videoTestimonials.map((v, i) => (
         <Reveal key={`${v.company}-${i}`} i={i % 3} className="h-full">
           {hasVideo(v) ? <VideoCard v={v} /> : <EmptySlot />}

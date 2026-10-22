@@ -1,9 +1,9 @@
-import { Cog, MapPin, PhoneCall, Timer, Wrench } from "lucide-react";
+import { Cog, MapPin, Timer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnGhost, BtnPrimary, CtaBand, PageHero, Section } from "@/components/kit";
-import { departments, quoteHref, site } from "@/lib/site";
+import { BtnGhost, CtaBand, PageHero, Section } from "@/components/kit";
+import { departments, site } from "@/lib/site";
 
 const services = [
   {
@@ -51,7 +51,8 @@ export default function AssistenciaTecnica() {
         eyebrow="Assistência Técnica · SAC"
         title="Suporte que não termina na entrega do equipamento"
         text="Da concepção ao pós-venda, acompanhamos o desempenho de cada máquina. Equipe especializada e parcerias técnicas em todo o território nacional."
-        image="/img/site/assistencia.webp"
+        image="/img/site/assistencia-banner.webp"
+        imageClassName="object-[50%_66%]"
         crumbs={[{ label: "Assistência Técnica" }]}
       />
 
@@ -78,9 +79,9 @@ export default function AssistenciaTecnica() {
             </div>
 
             <img
-              src="/img/site/assistencia.webp"
-              alt="Técnico da Demakine com tablet ao lado de uma esteira transportadora e da caixa de ferramentas (imagem ilustrativa)"
-              width={1600}
+              src="/img/site/processo-entrega.webp"
+              alt="Dois profissionais de colete laranja conferindo uma esteira transportadora Demakine em um galpão"
+              width={1200}
               height={900}
               loading="lazy"
               className="mt-8 w-full rounded-2xl object-cover"
@@ -96,13 +97,6 @@ export default function AssistenciaTecnica() {
                 {support.email}
               </a>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <BtnPrimary
-                  to={quoteHref({ produto: "Assistência técnica", mensagem: "Olá! Preciso de assistência técnica para um equipamento Demakine." })}
-                  className="gap-2"
-                >
-                  <PhoneCall className="h-4 w-4" />
-                  Abrir atendimento
-                </BtnPrimary>
                 <BtnGhost to="/downloads">Manuais e downloads</BtnGhost>
               </div>
             </div>

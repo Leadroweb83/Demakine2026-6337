@@ -1,7 +1,7 @@
-import { Link, useLocation } from "wouter";
-import { ArrowRight, Mail, MapPin, Navigation, Phone } from "lucide-react";
+import { Link } from "wouter";
+import { Mail, MapPin, Navigation, Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
-import { nav, quoteHref, site } from "@/lib/site";
+import { nav, site } from "@/lib/site";
 import { segmentLps } from "@/lib/segmentos-lp";
 import { categories, getProduct } from "@/lib/content";
 import {
@@ -42,39 +42,8 @@ export function Footer() {
     return p ? [{ key: p.slug, label: p.name, href: `/produtos/${p.slug}` }] : [];
   });
 
-  const [location] = useLocation();
-  // a pedido do cliente: fora das páginas de produto (elas têm o próprio orçamento), de vagas (quem está ali
-  // procura emprego) e do obrigado (o pedido já foi feito, e lá não vai WhatsApp)
-  const showQuoteBand =
-    !location.startsWith("/produtos") && !location.startsWith("/vagas") && location !== "/obrigado";
-
   return (
     <footer className="relative overflow-hidden bg-dm-blue-deep text-white">
-      {/* faixa de decisão */}
-      {showQuoteBand && (
-      <div className="border-b border-white/10 bg-white/[0.04]">
-        <div className="dm-container flex flex-col gap-5 py-8 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="font-display text-[22px] font-extrabold leading-tight text-white md:text-[26px]">
-              Tem uma carga para movimentar? A gente projeta.
-            </p>
-            <p className="mt-1.5 text-[15px] text-white/60">
-              Fale com um especialista e receba o modelo indicado para a sua linha.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href={quoteHref()}
-              className="inline-flex items-center gap-2 rounded-full bg-dm-red px-6 py-3.5 text-[13.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
-            >
-              Pedir orçamento
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </div>
-      )}
-
       <div className="dm-container py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <div>

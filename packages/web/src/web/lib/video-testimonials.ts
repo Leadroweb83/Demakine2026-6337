@@ -36,5 +36,4 @@ export const videoTestimonials: VideoTestimonial[] = [
     youtube: "LildGrx8bDI",
     poster: "/img/depoimentos/visita-pos-venda.webp",
   },
-  { name: "", company: "", city: "" },
 ];
