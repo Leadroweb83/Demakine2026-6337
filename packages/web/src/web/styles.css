@@ -130,6 +130,8 @@
 .reveal.is-in {
   opacity: 1;
   transform: none;
+  /* will-change: transform prenderia qualquer elemento "fixed" lá dentro (ex.: vídeo ampliado) à seção */
+  will-change: auto;
 }
 
 @keyframes bs-progress {

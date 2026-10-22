@@ -1,5 +1,7 @@
 import { Cog, MapPin, Timer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { VideoAutoplay } from "@/components/video-autoplay";
+import { tr } from "@/lib/i18n";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import { BtnGhost, CtaBand, PageHero, Section } from "@/components/kit";
@@ -78,13 +80,12 @@ export default function AssistenciaTecnica() {
               </p>
             </div>
 
-            <img
-              src="/img/site/processo-entrega.webp"
-              alt="Dois profissionais de colete laranja conferindo uma esteira transportadora Demakine em um galpão"
-              width={1200}
-              height={900}
-              loading="lazy"
-              className="mt-8 w-full rounded-2xl object-cover"
+            <VideoAutoplay
+              youtube="Xm-ng5xJknw"
+              poster="/img/site/assistencia-video.webp"
+              label={tr("Assistir ao vídeo: Assistência Técnica Especializada Demakine")}
+              trackId="assistencia-tecnica"
+              className="mt-8 rounded-2xl"
             />
 
             <div className="mt-8 rounded-2xl border border-dm-line bg-dm-surface p-6">
