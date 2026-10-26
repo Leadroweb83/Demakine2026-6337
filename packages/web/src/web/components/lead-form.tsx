@@ -7,6 +7,7 @@ import { visitAttribution } from "@/lib/visits";
 import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
+import { LeadOriginField } from "@/components/lead-origin-field";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -133,6 +134,7 @@ export function LeadForm({
         dark ? "border-white/12 bg-white/[0.04]" : "border-dm-line bg-white shadow-sm",
       )}
     >
+      <LeadOriginField />
       {title && <h3 className={cn("h3", dark && "text-white")}>{title}</h3>}
       {subtitle && (
         <p className={cn("mt-2 text-[15px]", dark ? "text-white/60" : "text-dm-gray")}>{subtitle}</p>

@@ -5,7 +5,7 @@ import { api } from "../lib/api";
 import { DEFAULT_CLIENTS, DEFAULT_TESTIMONIALS, type Client, type Testimonial } from "@/lib/content";
 import { UFS } from "@/lib/uf";
 import { cn } from "@/lib/utils";
-import { Btn, PageTitle, inputCls } from "./ui";
+import { Badge, Btn, Card, PageTitle, inputCls } from "./ui";
 import { MediaPicker } from "./media";
 
 type Doc = { key: string; data: { items?: unknown[] }; updatedAt: string; updatedBy: string | null };
@@ -76,7 +76,7 @@ function SaveBar({ listKey, items, edited, onReset }: { listKey: string; items: 
 
 export function AdminLists() {
   const docs = useLists();
-  const [tab, setTab] = useState<"clientes" | "depoimentos">("clientes");
+  const [tab, setTab] = useState<"clientes" | "depoimentos" | "comentarios">("clientes");
   const doc = (k: string) => docs.data?.find((d) => d.key === k);
 
   return (
@@ -87,6 +87,7 @@ export function AdminLists() {
           [
             ["clientes", "Logos de clientes"],
             ["depoimentos", "Depoimentos"],
+            ["comentarios", "Comentários recebidos"],
           ] as const
         ).map(([k, label]) => (
           <button
@@ -103,7 +104,9 @@ export function AdminLists() {
           </button>
         ))}
       </div>
-      {docs.isPending ? (
+      {tab === "comentarios" ? (
+        <ReviewsModeration />
+      ) : docs.isPending ? (
         <p className="text-[13.5px] text-dm-ink/55">Carregando...</p>
       ) : tab === "clientes" ? (
         <ClientsEditor key={doc("clientes")?.updatedAt ?? "original"} initial={(doc("clientes")?.data.items as Client[] | undefined) ?? [...DEFAULT_CLIENTS]} edited={!!doc("clientes")} />
@@ -223,5 +226,72 @@ function TestimonialsEditor({ initial, edited }: { initial: Testimonial[]; edite
       </div>
       <SaveBar listKey="depoimentos" items={items.filter((t) => t.name.trim() && t.text.trim())} edited={edited} onReset={() => setItems([...DEFAULT_TESTIMONIALS])} />
     </>
+  );
+}
+
+type SiteReviewRow = { id: number; name: string; company: string; rating: number; text: string; status: string; createdAt: string };
+
+const REVIEW_STATUS: Record<string, { label: string; tone: "blue" | "green" | "gray" | "red" }> = {
+  pendente: { label: "Pendente", tone: "blue" },
+  aprovada: { label: "Aprovado", tone: "green" },
+  oculta: { label: "Oculto", tone: "gray" },
+};
+
+/** Comentários enviados pelo formulário da página Clientes: só aparecem no site depois de aprovados aqui. */
+function ReviewsModeration() {
+  const qc = useQueryClient();
+  const q = useQuery({
+    queryKey: ["admin-avaliacoes"],
+    queryFn: async () => {
+      const res = await api.admin.avaliacoes.$get();
+      if (!res.ok) throw new Error("fail");
+      return (await res.json()).items as unknown as SiteReviewRow[];
+    },
+  });
+  const setStatus = useMutation({
+    mutationFn: async (v: { id: number; status: string }) => {
+      const res = await api.admin.avaliacoes[":id"].$patch({ param: { id: String(v.id) }, json: { status: v.status } });
+      if (!res.ok) throw new Error("fail");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-avaliacoes"] });
+      qc.invalidateQueries({ queryKey: ["avaliacoes"] });
+    },
+  });
+
+  if (q.isPending) return <p className="text-[13.5px] text-dm-ink/55">Carregando...</p>;
+  if (q.isError) return <p className="text-[13.5px] text-dm-red">Não foi possível carregar os comentários.</p>;
+  if (!q.data.length) return <p className="text-[13.5px] text-dm-ink/55">Nenhum comentário recebido ainda.</p>;
+
+  return (
+    <div className="space-y-3">
+      {q.data.map((r) => {
+        const st = REVIEW_STATUS[r.status] ?? REVIEW_STATUS.pendente!;
+        return (
+          <Card key={r.id} className="space-y-3 p-5">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="text-[14.5px] font-bold text-dm-ink">{r.name}</span>
+              <span className="text-[13px] text-dm-ink/60">{r.company}</span>
+              <span className="text-[13px] font-semibold text-dm-red">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</span>
+              <Badge tone={st.tone}>{st.label}</Badge>
+              <span className="ml-auto text-[12px] text-dm-ink/45">{new Date(r.createdAt).toLocaleDateString("pt-BR")}</span>
+            </div>
+            <p className="whitespace-pre-line text-[14px] leading-relaxed text-dm-ink/80">{r.text}</p>
+            <div className="flex flex-wrap gap-2">
+              {r.status !== "aprovada" && (
+                <Btn onClick={() => setStatus.mutate({ id: r.id, status: "aprovada" })} disabled={setStatus.isPending}>
+                  Aprovar e publicar
+                </Btn>
+              )}
+              {r.status !== "oculta" && (
+                <Btn tone="ghost" onClick={() => setStatus.mutate({ id: r.id, status: "oculta" })} disabled={setStatus.isPending}>
+                  Ocultar
+                </Btn>
+              )}
+            </div>
+          </Card>
+        );
+      })}
+    </div>
   );
 }

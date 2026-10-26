@@ -40,10 +40,10 @@ export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
       >
         <img
           src="/img/site/logo-blue.webp"
-          width={293}
-          height={80}
+          width={1406}
+          height={302}
           alt="Demakine"
-          className="mx-auto h-10 w-auto object-contain"
+          className="mx-auto h-8 w-auto object-contain"
         />
         <h1 className="mt-6 text-center font-display text-[20px] font-extrabold text-dm-ink">
           Painel Demakine

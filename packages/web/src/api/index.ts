@@ -161,6 +161,40 @@ const app = new Hono<Env>()
 
     return c.json({ lead }, 201);
   })
+  // ------------------------------------------------ comentários da página Clientes
+  .get('/avaliacoes', async (c) => {
+    const items = await db
+      .select({
+        id: schema.siteReviews.id,
+        name: schema.siteReviews.name,
+        company: schema.siteReviews.company,
+        rating: schema.siteReviews.rating,
+        text: schema.siteReviews.text,
+        createdAt: schema.siteReviews.createdAt,
+      })
+      .from(schema.siteReviews)
+      .where(eq(schema.siteReviews.status, 'aprovada'))
+      .orderBy(desc(schema.siteReviews.createdAt))
+      .limit(60);
+    return c.json({ items }, 200);
+  })
+  .post('/avaliacoes', async (c) => {
+    const body = await c.req
+      .json<{ name?: string; company?: string; rating?: number; text?: string; website?: string }>()
+      .catch(() => ({}) as { name?: string; company?: string; rating?: number; text?: string; website?: string });
+    // campo-isca: pessoa não vê, robô preenche. Responde como se tivesse dado certo e descarta
+    if (typeof body.website === 'string' && body.website.trim()) return c.json({ ok: true }, 201);
+
+    const name = clipText(body.name, 80);
+    const company = clipText(body.company, 80);
+    const text = clipText(body.text, 800);
+    const rating = Number(body.rating);
+    if (!name || !company || !text || text.length < 10 || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+      return c.json({ error: 'Preencha todos os campos' }, 400);
+    }
+    await db.insert(schema.siteReviews).values({ name, company, rating, text });
+    return c.json({ ok: true }, 201);
+  })
   .post('/upload/presign', async (c) => {
     const body = await c.req.json<{ filename: string; contentType: string; size?: number }>();
     const contentType = body.contentType ?? '';
@@ -586,6 +620,24 @@ const app = new Hono<Env>()
     await db.update(schema.media).set({ deletedAt: new Date(), deletedBy: me.id }).where(eq(schema.media.id, id));
     return c.json({ ok: true }, 200);
   })
+  // ------------------------------------------------------- moderação dos comentários
+  .get('/admin/avaliacoes', requireRole('admin', 'editor'), async (c) => {
+    const items = await db.select().from(schema.siteReviews).orderBy(desc(schema.siteReviews.createdAt)).limit(300);
+    return c.json({ items }, 200);
+  })
+  .patch(
+    '/admin/avaliacoes/:id',
+    requireRole('admin', 'editor'),
+    validator('json', (v) => (v ?? {}) as { status?: string }),
+    async (c) => {
+      const { status } = c.req.valid('json');
+      if (status !== 'pendente' && status !== 'aprovada' && status !== 'oculta') {
+        return c.json({ error: 'Status inválido' }, 400);
+      }
+      await db.update(schema.siteReviews).set({ status }).where(eq(schema.siteReviews.id, Number(c.req.param('id'))));
+      return c.json({ ok: true }, 200);
+    },
+  )
   // ------------------------------------------------------- redirecionamentos
   .get('/admin/redirecionamentos', requireRole('admin'), async (c) => {
     const items = await db.select().from(schema.redirects).orderBy(desc(schema.redirects.updatedAt));

@@ -156,10 +156,10 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
             {!collapsed && (
               <img
                 src="/img/site/logo-white.webp"
-                width={293}
-                height={80}
+                width={1406}
+                height={302}
                 alt="Demakine"
-                className="h-8 w-auto object-contain"
+                className="h-[25px] w-auto object-contain"
               />
             )}
             <button
@@ -256,10 +256,10 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           </button>
           <img
             src="/img/site/logo-white.webp"
-            width={293}
-            height={80}
+            width={1406}
+            height={302}
             alt="Demakine"
-            className="h-7 w-auto object-contain"
+            className="h-[22px] w-auto object-contain"
           />
           <span className="ml-auto truncate text-[11px] font-bold uppercase tracking-wide text-white/60">
             {ROLE_LABEL[user.role] ?? user.role}

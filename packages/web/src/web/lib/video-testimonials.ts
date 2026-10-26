@@ -36,4 +36,11 @@ export const videoTestimonials: VideoTestimonial[] = [
     youtube: "LildGrx8bDI",
     poster: "/img/depoimentos/visita-pos-venda.webp",
   },
+  {
+    name: "Esteiras para reciclagem",
+    company: "Demakine",
+    city: "",
+    youtube: "clWrBNdMV6Y",
+    poster: "/img/depoimentos/reciclagem.webp",
+  },
 ];

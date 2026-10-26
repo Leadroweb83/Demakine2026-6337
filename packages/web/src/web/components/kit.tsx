@@ -192,7 +192,12 @@ export function PageHero({
           <img
             src={image}
             alt=""
-            className={cn("absolute inset-0 h-full w-full object-cover opacity-35", imageClassName)}
+            className={cn(
+              "absolute inset-0 h-full w-full object-cover opacity-35",
+              // com vídeo de fundo, a imagem só aparece para quem pediu menos movimento (o vídeo some)
+              videoBg && "hidden motion-reduce:block",
+              imageClassName,
+            )}
           />
         )}
         {videoBg && (

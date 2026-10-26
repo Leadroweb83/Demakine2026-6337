@@ -185,6 +185,26 @@ export const applications = pgTable(
   (t) => [index("applications_job_idx").on(t.jobId)],
 );
 
+/**
+ * Comentários enviados pelo formulário "Deixe seu comentário" da página Clientes.
+ * Entram como "pendente" e só aparecem no site depois de aprovados no painel.
+ */
+export const siteReviews = pgTable(
+  "site_reviews",
+  {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull(),
+    company: text("company").notNull(),
+    /** 1 a 5 estrelas */
+    rating: integer("rating").notNull(),
+    text: text("text").notNull(),
+    /** pendente | aprovada | oculta */
+    status: text("status").default("pendente").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("site_reviews_status_idx").on(t.status)],
+);
+
 export * from "./auth-schema";
 
 /**

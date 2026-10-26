@@ -146,8 +146,8 @@ export default function AEmpresa() {
               className="w-full rounded-2xl object-cover"
             />
             <img
-              src="/img/site/oficina.webp"
-              alt="Equipamento Demakine em produção na oficina"
+              src="/img/site/patio-equipamentos.webp"
+              alt="Esteiras e roscas transportadoras Demakine ao ar livre"
               loading="lazy"
               className="w-full rounded-2xl object-cover"
             />

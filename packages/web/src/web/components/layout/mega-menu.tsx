@@ -90,6 +90,17 @@ export function ProductsMega({ onNavigate }: { onNavigate?: () => void }) {
                 </Link>
               </li>
             ))}
+            {cat === "esteiras-transportadoras" && (
+              <li>
+                <Link
+                  href="/projetos-especiais"
+                  onClick={onNavigate}
+                  className="block rounded-lg px-2.5 py-2 text-[14px] font-semibold leading-snug text-dm-ink/75 transition-colors hover:text-dm-blue"
+                >
+                  Esteiras transportadoras especiais
+                </Link>
+              </li>
+            )}
           </ul>
 
           <div className="mt-6 border-t border-dm-line pt-4">

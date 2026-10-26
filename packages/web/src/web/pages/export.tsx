@@ -26,6 +26,7 @@ import { api } from "@/lib/api";
 import { getProduct } from "@/lib/content";
 import { exportCopy, type ExportLang } from "@/lib/export-lp";
 import { site } from "@/lib/site";
+import { LeadOriginField } from "@/components/lead-origin-field";
 import { cn } from "@/lib/utils";
 
 const formLabels: Record<ExportLang, Record<string, string>> = {
@@ -119,6 +120,7 @@ function ExportForm({ lang }: { lang: ExportLang }) {
       className="rounded-2xl border border-dm-line bg-white p-6 shadow-sm md:p-8"
       lang={c.htmlLang}
     >
+      <LeadOriginField />
       <h3 className="h3">{c.formTitle}</h3>
       <p className="mt-2 text-[15px] text-dm-gray">{c.formSubtitle}</p>
 
@@ -188,7 +190,7 @@ export default function ExportLanding() {
       <header className="sticky top-0 z-40 border-b border-dm-line bg-white/95 backdrop-blur">
         <div className="dm-container flex h-16 items-center justify-between gap-4">
           <a href="/" className="flex items-center gap-3">
-            <img src="/img/site/logo-blue.webp" width={293} height={80} alt="Demakine" className="h-8 w-auto object-contain" />
+            <img src="/img/site/logo-blue.webp" width={1406} height={302} alt="Demakine" className="h-[25px] w-auto object-contain" />
           </a>
           <div className="flex items-center gap-2.5">
             <button

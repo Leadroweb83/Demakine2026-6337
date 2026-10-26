@@ -144,10 +144,10 @@ export function Header() {
           <Link href="/" className="shrink-0" aria-label="Demakine, página inicial">
             <img
               src="/img/site/logo-blue.webp"
-              width={293}
-              height={80}
+              width={1406}
+              height={302}
               alt="Demakine Equipamentos Agroindustriais"
-              className="h-[52px] w-auto object-contain md:h-[68px]"
+              className="h-[42px] w-auto object-contain md:h-[54px]"
             />
           </Link>
 

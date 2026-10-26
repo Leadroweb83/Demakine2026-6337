@@ -3,6 +3,7 @@ import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { CtaBand, PageHero, Section, SectionHead, TestimonialGrid } from "@/components/kit";
+import { ReviewForm, SiteReviews } from "@/components/review-form";
 import { VideoTestimonials } from "@/components/video-testimonials";
 import { clients, testimonials } from "@/lib/content";
 import { site } from "@/lib/site";
@@ -53,7 +54,7 @@ export default function Clientes() {
       <Section>
         <SectionHead
           eyebrow="Parcerias"
-          title="Marcas que confiam na nossa engenharia"
+          title="Algumas marcas que confiam na nossa engenharia"
           text="Do setor alimentício ao farmacêutico, do agronegócio à reciclagem: nossa tecnologia movimenta o crescimento dos nossos parceiros diariamente."
         />
 
@@ -120,10 +121,28 @@ export default function Clientes() {
 
       <Section>
         <SectionHead
-          eyebrow="Depoimentos"
+          eyebrow="Avaliações do Google"
           title="O que os clientes falam da Demakine"
-          text="Nota média 4,9. Boa parte dos nossos negócios chega por indicação de quem já comprou."
+          text="Boa parte dos nossos negócios chega por indicação de quem já comprou."
         />
+        <a
+          href={site.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-6 inline-flex items-center gap-3 rounded-full border border-dm-line bg-white px-5 py-2.5 text-[14px] font-semibold text-dm-ink transition-colors hover:border-dm-blue hover:text-dm-blue"
+        >
+          <span className="font-display text-[20px] font-extrabold text-dm-blue">
+            {String(site.stats.rating).replace(".", ",")}
+          </span>
+          <span className="flex gap-0.5 text-dm-red" aria-hidden>
+            {Array.from({ length: 5 }).map((_, s) => (
+              <svg key={s} viewBox="0 0 20 20" className="h-4 w-4 fill-current">
+                <path d="M10 1.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L10 14.9l-5.25 2.75 1-5.85L1.5 7.65l5.9-.85L10 1.5z" />
+              </svg>
+            ))}
+          </span>
+          <span>Nota no Google</span>
+        </a>
         <div className="mt-12">
           <TestimonialGrid limit={showAllTestimonials ? testimonials.length : 9} />
         </div>
@@ -138,6 +157,20 @@ export default function Clientes() {
             </button>
           </div>
         )}
+      </Section>
+
+      <Section tone="surface">
+        <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+          <SectionHead
+            eyebrow="Seu comentário"
+            title="Já comprou da Demakine? Conte como foi"
+            text="Cada comentário ajuda a gente a melhorar e ajuda outras indústrias a decidir. Ele aparece aqui depois de uma revisão rápida da equipe."
+          />
+          <ReviewForm />
+        </div>
+        <div className="mt-12 empty:hidden">
+          <SiteReviews />
+        </div>
       </Section>
 
       <CtaBand

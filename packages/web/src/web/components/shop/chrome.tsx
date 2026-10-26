@@ -81,7 +81,7 @@ export function ShopHeader({ cart }: { cart: number }) {
         </button>
 
         <Link href="/" className="flex shrink-0 items-center gap-3">
-          <img src="/img/site/logo-blue.webp" width={293} height={80} alt="Demakine" className="h-8 w-auto object-contain" />
+          <img src="/img/site/logo-blue.webp" width={1406} height={302} alt="Demakine" className="h-[25px] w-auto object-contain" />
           <span className="hidden h-7 w-px bg-dm-line sm:block" />
           <span className="shop-mono hidden text-[10px] font-bold uppercase leading-tight tracking-[0.2em] text-dm-gray sm:block">
             Loja
@@ -252,10 +252,10 @@ export function ShopFooter() {
           <div>
             <img
               src="/img/site/logo-white.webp"
-              width={293}
-              height={80}
+              width={1406}
+              height={302}
               alt="Demakine"
-              className="h-8 w-auto object-contain"
+              className="h-[25px] w-auto object-contain"
             />
             <p className="shop-mono mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
               Loja oficial da fábrica

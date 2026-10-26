@@ -49,10 +49,10 @@ export function Footer() {
           <div>
             <img
               src="/img/site/logo-white.webp"
-              width={293}
-              height={80}
+              width={1406}
+              height={302}
               alt="Demakine"
-              className="h-12 w-auto object-contain"
+              className="h-[38px] w-auto object-contain"
             />
             <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-white/65">
               Fabricamos esteiras transportadoras, roscas, elevadores e projetos especiais sob medida
@@ -205,6 +205,15 @@ export function Footer() {
         <div className="mt-7 border-t border-white/10 pt-7">
           <LocalBusinessBlock cnpj={site.cnpj} />
         </div>
+
+        <figure className="mt-7 border-t border-white/10 pt-7">
+          <blockquote className="max-w-2xl text-[14.5px] italic leading-relaxed text-white/75">
+            “Deem graças ao SENHOR, porque ele é bom, e a sua misericórdia dura para sempre.”
+          </blockquote>
+          <figcaption className="mt-2 text-[12.5px] font-semibold uppercase tracking-wide text-white/50">
+            Salmos 107:1
+          </figcaption>
+        </figure>
 
         <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-6 text-[13px] text-white/60">
           <Link href="/politica-de-privacidade" className="hover:text-white">
