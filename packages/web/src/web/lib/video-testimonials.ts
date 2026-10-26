@@ -37,8 +37,8 @@ export const videoTestimonials: VideoTestimonial[] = [
     poster: "/img/depoimentos/visita-pos-venda.webp",
   },
   {
-    name: "Esteiras para reciclagem",
-    company: "Demakine",
+    name: "Esteiras Transportadoras para Reciclagem | Mais Eficiência na Triagem de Recicláveis – Demakine",
+    company: "",
     city: "",
     youtube: "clWrBNdMV6Y",
     poster: "/img/depoimentos/reciclagem.webp",

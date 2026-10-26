@@ -10,12 +10,12 @@ import { site } from "@/lib/site";
 const values = ["Deus", "Empatia", "Comprometimento", "Perseverança e resiliência", "Excelência", "Humildade"];
 
 /**
- * Trajetória: só fatos publicados no site (feiras no blog, números da empresa).
- * O ano de fundação entra quando a Demakine confirmar.
+ * Trajetória: fatos publicados no site (feiras no blog, números da empresa).
+ * 2012 vem da conta "14 anos de atividade" (site.stats.years) em 2026; confirmar com a Demakine.
  */
 const timeline = [
   {
-    when: "Começo",
+    when: "2012",
     title: "Fábrica própria em Limeira/SP",
     text: "A Demakine nasce em Limeira, no interior de São Paulo, fabricando esteiras e roscas para a indústria e o agronegócio.",
   },
