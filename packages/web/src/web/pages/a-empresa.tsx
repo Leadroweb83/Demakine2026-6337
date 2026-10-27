@@ -4,6 +4,7 @@ import { aboutPageJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { ClientsMarquee, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
+import { Trajectory, type Milestone } from "@/components/trajectory";
 import { VideoSection } from "@/components/video-section";
 import { site } from "@/lib/site";
 
@@ -12,32 +13,59 @@ const values = ["Deus", "Empatia", "Comprometimento", "Perseverança e resiliên
 /**
  * Trajetória: fatos publicados no site (feiras no blog, números da empresa).
  * 2012 vem da conta "14 anos de atividade" (site.stats.years) em 2026; confirmar com a Demakine.
+ * Para acrescentar um marco (primeira máquina, mudança de fábrica...), é só incluir um item com
+ * foto real, na ordem cronológica: a linha do tempo se ajusta sozinha.
  */
-const timeline = [
+const timeline: Milestone[] = [
   {
     when: "2012",
-    title: "Fábrica própria em Limeira/SP",
-    text: "A Demakine nasce em Limeira, no interior de São Paulo, fabricando esteiras e roscas para a indústria e o agronegócio.",
+    kicker: "Limeira/SP",
+    title: "Nasce a Demakine",
+    text: "Fábrica própria em Limeira, no interior de São Paulo, fabricando esteiras e roscas para a indústria e o agronegócio.",
+    image: "/img/site/fabrica.webp",
+    alt: "Soldador trabalhando em uma peça na fábrica da Demakine em Limeira/SP",
   },
   {
     when: "2024",
-    title: "Agrishow e Batatec",
-    text: "Estande na Agrishow em parceria com a MF Rural e presença na 5ª Batatec, em Presidente Prudente/SP, com demonstração dos equipamentos.",
+    kicker: "Ribeirão Preto/SP · Agrishow",
+    title: "Agrishow 2024",
+    text: "Estande em parceria com a MF Rural, com demonstração dos equipamentos para produtores e indústrias.",
+    image: "/img/blog/demakine-marcou-presenca-na-agrishow-2024.webp",
+    alt: "Equipe da Demakine reunida na Agrishow 2024",
+  },
+  {
+    when: "2024",
+    kicker: "Presidente Prudente/SP · 18 a 21 de julho",
+    title: "5ª Batatec",
+    text: "Presença na 5ª Batatec, em Presidente Prudente/SP, com demonstração dos equipamentos.",
+    image: "/img/blog/batatec-2024-demakine-marcou-presenca-de-sucesso.webp",
+    alt: "Esteira Demakine e equipe no estande da 5ª Batatec",
   },
   {
     when: "2025",
+    kicker: "Ribeirão Preto/SP · Agrishow",
     title: "Agrishow 2025",
     text: "Cinco dias de demonstrações ao vivo e conversas técnicas com produtores e indústrias de todo o país.",
+    image: "/img/blog/demakine-na-agrishow-2025.webp",
+    alt: "Equipe e visitantes no estande da Demakine na Agrishow 2025",
   },
   {
     when: "2026",
+    kicker: "27 de abril a 1º de maio",
     title: "Agrishow e AgroBrasília",
     text: "A linha agro chega às duas maiores vitrines do campo: Ribeirão Preto/SP e Brasília/DF.",
+    image: "/img/blog/demakine-na-agrishow-2026.webp",
+    alt: "Estande da Demakine na Agrishow 2026",
+    fit: "contain",
   },
   {
     when: "Hoje",
-    title: "Mais de 7.000 máquinas entregues",
-    text: "Mais de 8 mil clientes atendidos em todo o Brasil, com fabricação, assistência técnica e peças pelo mesmo time.",
+    kicker: "Limeira/SP · todo o Brasil",
+    title: "Fabricação, assistência e peças no mesmo time",
+    text: "Do projeto à entrega, e depois dela: a mesma equipe fabrica, instala e cuida da assistência técnica.",
+    image: "/img/site/patio-equipamentos.webp",
+    alt: "Esteiras e roscas transportadoras Demakine ao ar livre",
+    stats: true,
   },
 ];
 
@@ -156,28 +184,16 @@ export default function AEmpresa() {
       </Section>
 
       {/* ----------------------------------------------------------- trajetória */}
-      <Section>
-        <SectionHead eyebrow="Linha do tempo" title="Nossa trajetória" />
-        <ol className="relative mt-12 grid gap-8 md:grid-cols-5 md:gap-5">
-          {/* linha que liga os marcos */}
-          <span aria-hidden="true" className="absolute bottom-0 left-[11px] top-0 w-px bg-dm-line md:bottom-auto md:left-0 md:right-0 md:top-[11px] md:h-px md:w-auto" />
-          {timeline.map((t, idx) => (
-            <li key={t.title} className="relative pl-10 md:pl-0 md:pt-10">
-              <span
-                aria-hidden="true"
-                className="absolute left-0 top-0.5 flex h-[23px] w-[23px] items-center justify-center rounded-full border-2 border-dm-blue bg-white md:top-0"
-              >
-                <span className="h-2 w-2 rounded-full bg-dm-red" />
-              </span>
-              <Reveal i={idx}>
-                <p className="font-display text-[22px] font-extrabold leading-none text-dm-blue">{t.when}</p>
-                <h3 className="mt-2 text-[16px] font-bold text-dm-ink">{t.title}</h3>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-dm-gray">{t.text}</p>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
-      </Section>
+      {/* overflow-clip, não hidden: hidden desliga o sticky do palco */}
+      <section className="relative overflow-clip bg-dm-blue-deep py-16 md:py-24">
+        <div className="absolute inset-0 grid-lines" />
+        <div className="dm-container relative">
+          <SectionHead dark eyebrow="Linha do tempo" title="Nossa trajetória" />
+          <div className="mt-12 md:mt-16">
+            <Trajectory steps={timeline} />
+          </div>
+        </div>
+      </section>
 
       {/* --------------------------------------------------- missão visão valores */}
       <Section tone="surface">
