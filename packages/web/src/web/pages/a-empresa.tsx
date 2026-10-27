@@ -271,7 +271,17 @@ export default function AEmpresa() {
               </Reveal>
             ))}
           </div>
-          <p className="mt-10 max-w-3xl text-[15.5px] leading-relaxed text-white/55">
+          <Reveal>
+            <figure className="mt-12 border-l-4 border-dm-red pl-6 md:pl-8">
+              <blockquote className="max-w-3xl font-display text-[22px] font-bold leading-snug text-white md:text-[30px]">
+                “Que pratiquem o bem, sejam ricos de boas obras, generosos em dar e prontos a repartir.”
+              </blockquote>
+              <figcaption className="mt-4 text-[13px] font-semibold uppercase tracking-wide text-white/60">
+                1 Timóteo 6:18
+              </figcaption>
+            </figure>
+          </Reveal>
+          <p className="mt-12 max-w-3xl text-[15.5px] leading-relaxed text-white/55">
             Cada ação que apoiamos carrega um propósito maior: ser instrumento de transformação.
             Nossa fé nos move, e o compromisso com o próximo é parte essencial da nossa identidade
             como empresa.
