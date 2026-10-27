@@ -64,24 +64,18 @@ const benefits = [
  */
 const DESIGN_DESC = "Projeto 3D desenvolvido pela engenharia da Demakine.";
 const designProjects = [
-  "Linha de triagem com plataforma elevada e big bags",
-  "Esteira para carga de sacaria em contêineres",
-  "Esteira para descarga de caminhão",
-  "Esteira para descarga de caminhão em galpão",
-  "Roscas transportadoras em fosso de recebimento",
-  "Elevador de canecas com plataforma ao lado de silo",
-  "Rosca transportadora para descarga de caminhão",
-  "Elevador de canecas com plataforma de manutenção",
-  "Esteira inclinada sobre rodas com estrutura treliçada",
-  "Esteira em dois lances com plataforma",
-  "Esteira com máquina de costurar sacos e guias laterais",
-  "Costura de sacos com carro sobre trilho",
-  "Rosca transportadora inclinada em inox com moega",
-  "Esteira com cobertura e trecho de rolos livres",
-  "Esteira horizontal com correia verde",
-  "Esteira inclinada com rodízios",
+  "Moega de recebimento para pá carregadeira com esteira inclinada",
+  "Esteira longa sobre pórticos treliçados com moega para pá carregadeira",
+  "Linha de esteiras com transferência elevada sobre caçambas",
+  "Esteira inclinada sobre rodas para carga de caminhão",
+  "Esteiras sobre rodízios em dois lances com calhas de descarga",
+  "Esteiras sobre rodízios com descarga em sequência",
+  "Esteira em inox com correia taliscada verde",
+  "Esteira galvanizada em dois lances com moega",
+  "Esteira de inspeção sobre rodízios com corrimão",
+  "Esteira de inspeção sobre rodízios, vista superior",
+  "Esteira inclinada em inox com torre de sustentação",
   "Esteira inclinada com moega e rodas",
-  "Esteira vertical com base sobre rodízios",
 ].map((name, i) => ({
   slug: `projeto-3d-${i + 1}`,
   name,
@@ -196,8 +190,8 @@ export default function ProjetosEspeciais() {
                   <img
                     src={p.images[0]}
                     alt={p.name}
-                    width={1200}
-                    height={900}
+                    width={1600}
+                    height={1200}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
