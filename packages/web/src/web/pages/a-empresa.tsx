@@ -11,60 +11,75 @@ import { site } from "@/lib/site";
 const values = ["Deus", "Empatia", "Comprometimento", "Perseverança e resiliência", "Excelência", "Humildade"];
 
 /**
- * Trajetória: fatos publicados no site (feiras no blog, números da empresa).
- * 2012 vem da conta "14 anos de atividade" (site.stats.years) em 2026; confirmar com a Demakine.
- * Para acrescentar um marco (primeira máquina, mudança de fábrica...), é só incluir um item com
- * foto real, na ordem cronológica: a linha do tempo se ajusta sozinha.
+ * Trajetória: marcos e fotos fornecidos pela Demakine (documento "Ajustes Site1 - Linha do tempo").
+ * Para acrescentar um marco, é só incluir um item com foto real, na ordem cronológica: a linha do
+ * tempo se ajusta sozinha. As fotos ficam em public/img/trajetoria/.
  */
 const timeline: Milestone[] = [
   {
     when: "2012",
     kicker: "Limeira/SP",
-    title: "Nasce a Demakine",
-    text: "Fábrica própria em Limeira, no interior de São Paulo, fabricando esteiras e roscas para a indústria e o agronegócio.",
-    image: "/img/site/fabrica.webp",
-    alt: "Soldador trabalhando em uma peça na fábrica da Demakine em Limeira/SP",
+    title: "Fábrica própria",
+    text: "Iniciamos nossa trajetória em uma fábrica própria, localizada em Limeira/SP.",
+    images: [{ src: "/img/trajetoria/2012.webp", alt: "Fachada da primeira fábrica da Demakine, com palmeiras na calçada" }],
   },
   {
-    when: "2024",
-    kicker: "Ribeirão Preto/SP · Agrishow",
-    title: "Agrishow 2024",
-    text: "Estande em parceria com a MF Rural, com demonstração dos equipamentos para produtores e indústrias.",
-    image: "/img/blog/demakine-marcou-presenca-na-agrishow-2024.webp",
-    alt: "Equipe da Demakine reunida na Agrishow 2024",
+    when: "2014",
+    kicker: "Mudança",
+    title: "Um novo endereço",
+    text: "A mudança para um novo endereço, ampliando nossas experiências e nos preparando para os desafios que estavam por vir.",
+    images: [
+      { src: "/img/trajetoria/2014.webp", alt: "Galpão de dois andares com faixa amarela na fachada e portão de enrolar" },
+      { src: "/img/trajetoria/2014-2.webp", alt: "Equipe montando esteiras de correia verde dentro da fábrica" },
+      { src: "/img/trajetoria/2014-3.webp", alt: "Esteiras de correia verde prontas, enfileiradas no piso da fábrica" },
+    ],
   },
   {
-    when: "2024",
-    kicker: "Presidente Prudente/SP · 18 a 21 de julho",
-    title: "5ª Batatec",
-    text: "Presença na 5ª Batatec, em Presidente Prudente/SP, com demonstração dos equipamentos.",
-    image: "/img/blog/batatec-2024-demakine-marcou-presenca-de-sucesso.webp",
-    alt: "Esteira Demakine e equipe no estande da 5ª Batatec",
+    when: "2016",
+    kicker: "Mudança",
+    title: "Seguimos em frente",
+    text: "Seguimos para um novo endereço, dando continuidade à nossa trajetória e criando oportunidades para o desenvolvimento das nossas atividades e projetos.",
+    images: [{ src: "/img/trajetoria/2016.webp", alt: "Prédio branco de dois andares, com árvores e carros estacionados na frente" }],
+  },
+  {
+    when: "2020–2025",
+    roll: "2020",
+    kicker: "Estrutura",
+    title: "Período de expansão",
+    text: "Passamos a contar com uma estrutura que acompanhou um período importante de expansão das nossas atividades e realização de novos projetos.",
+    images: [
+      { src: "/img/trajetoria/2020-2025.webp", alt: "Prédio da Demakine em azul e vermelho, com a marca na fachada" },
+      { src: "/img/trajetoria/2020-2025-2.webp", alt: "Fachada do prédio de blocos brancos, com a parte de baixo pintada de azul" },
+      { src: "/img/trajetoria/2020-2025-3.webp", alt: "Prédio de dois andares visto de frente, com duas árvores na calçada" },
+      { src: "/img/trajetoria/2020-2025-4.webp", alt: "Prédio visto de lado, com o portão de madeira ao lado" },
+      { src: "/img/trajetoria/2020-2025-5.webp", alt: "Interior do galpão, com bancadas de solda e estruturas de aço em montagem" },
+      { src: "/img/trajetoria/2020-2025-6.webp", alt: "Escritório com mesas e notebooks" },
+      { src: "/img/trajetoria/2020-2025-7.webp", alt: "Sala com armário branco, mesa de trabalho e cafeteira", fit: "contain" },
+      { src: "/img/trajetoria/2020-2025-8.webp", alt: "Recepção com parede azul e escada de degraus de madeira", fit: "contain" },
+    ],
   },
   {
     when: "2025",
-    kicker: "Ribeirão Preto/SP · Agrishow",
-    title: "Agrishow 2025",
-    text: "Cinco dias de demonstrações ao vivo e conversas técnicas com produtores e indústrias de todo o país.",
-    image: "/img/blog/demakine-na-agrishow-2025.webp",
-    alt: "Equipe e visitantes no estande da Demakine na Agrishow 2025",
+    kicker: "Ampliação",
+    title: "Um segundo barracão",
+    text: "Ampliamos para um segundo barracão, mantendo as duas unidades em funcionamento simultaneamente.",
+    images: [
+      { src: "/img/trajetoria/2025.webp", alt: "Barracão da Demakine visto da rua, com os muros azuis com a marca e as esteiras expostas ao fundo" },
+      { src: "/img/trajetoria/2025-2.webp", alt: "Prédio azul de dois andares, com o barracão vermelho e branco ao lado, visto da esquina" },
+      { src: "/img/trajetoria/2025-3.webp", alt: "Fachada azul com toldo e a entrada do barracão vermelho, vista de baixo" },
+      { src: "/img/trajetoria/2025-7.webp", alt: "Prédio bege com toldo azul e o telhado azul do barracão ao fundo" },
+      { src: "/img/trajetoria/2025-4.webp", alt: "Interior do barracão, com pórtico de içamento e esteiras azuis em montagem" },
+      { src: "/img/trajetoria/2025-8.webp", alt: "Área de produção, com bancadas de solda e estruturas de aço em montagem", fit: "contain" },
+      { src: "/img/trajetoria/2025-5.webp", alt: "Escada interna com corrimão preto e poltronas ao fundo" },
+      { src: "/img/trajetoria/2025-6.webp", alt: "Equipe trabalhando no escritório, com mesas e notebooks", fit: "contain" },
+    ],
   },
   {
     when: "2026",
-    kicker: "27 de abril a 1º de maio",
-    title: "Agrishow e AgroBrasília",
-    text: "A linha agro chega às duas maiores vitrines do campo: Ribeirão Preto/SP e Brasília/DF.",
-    image: "/img/blog/demakine-na-agrishow-2026.webp",
-    alt: "Estande da Demakine na Agrishow 2026",
-    fit: "contain",
-  },
-  {
-    when: "Hoje",
-    kicker: "Limeira/SP · todo o Brasil",
-    title: "Fabricação, assistência e peças no mesmo time",
-    text: "Do projeto à entrega, e depois dela: a mesma equipe fabrica, instala e cuida da assistência técnica.",
-    image: "/img/site/patio-equipamentos.webp",
-    alt: "Esteiras e roscas transportadoras Demakine ao ar livre",
+    kicker: "Marco",
+    title: "Nossa maior estrutura",
+    text: "Alcançamos mais um marco importante: nossa maior estrutura até então. E seguimos aprimorando nossos processos e atendendo às necessidades dos nossos clientes com ainda mais eficiência.",
+    images: [{ src: "/img/trajetoria/2026.webp", alt: "Vista aérea da maior estrutura da Demakine, com a marca no telhado" }],
     stats: true,
   },
 ];
