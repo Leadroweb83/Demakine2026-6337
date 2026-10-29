@@ -183,8 +183,10 @@ export default function AEmpresa() {
 
           <Reveal i={1} className="grid gap-4">
             <img
-              src="/img/site/fabrica.webp"
-              alt="Fábrica Demakine"
+              src="/img/site/fabrica-aerea.webp"
+              alt="Vista aérea da fábrica da Demakine, com a marca no telhado"
+              width={1500}
+              height={1000}
               loading="lazy"
               className="w-full rounded-2xl object-cover"
             />
