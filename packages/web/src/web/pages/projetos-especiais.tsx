@@ -75,6 +75,8 @@ const designProjects = [
   "Esteira de inspeção sobre rodízios, vista superior",
   "Esteira inclinada em inox com torre de sustentação",
   "Esteira inclinada com moega e rodas",
+  "Balsa com moega, rosca transportadora e motor de popa",
+  "Moega de recebimento para pá carregadeira com esteira inclinada",
 ].map((name, i) => ({
   slug: `projeto-3d-${i + 1}`,
   name,
