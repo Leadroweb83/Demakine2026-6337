@@ -7,6 +7,7 @@ import { BtnPrimary, CtaBand, PageHero, Section, SectionHead } from "@/component
 import { projects as photoProjects } from "@/lib/content";
 import { segmentList } from "@/lib/segments";
 import { tr } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 const pillars = [
   {
@@ -64,9 +65,7 @@ const benefits = [
  */
 const DESIGN_DESC = "Projeto 3D desenvolvido pela engenharia da Demakine.";
 const designProjects = [
-  "Moega de recebimento para pá carregadeira com esteira inclinada",
   "Esteira longa sobre pórticos treliçados com moega para pá carregadeira",
-  "Linha de esteiras com transferência elevada sobre caçambas",
   "Esteira inclinada sobre rodas para carga de caminhão",
   "Esteiras sobre rodízios em dois lances com calhas de descarga",
   "Esteiras sobre rodízios com descarga em sequência",
@@ -81,9 +80,11 @@ const designProjects = [
   name,
   desc: DESIGN_DESC,
   images: [`/img/projetos-3d/${String(i + 1).padStart(2, "0")}.webp`],
+  // os 4 primeiros são cenários largos (cobrem o quadro 16:9); do quinto em diante o fundo é branco
+  fit: i < 4 ? ("cover" as const) : ("contain" as const),
 }));
 
-const FIRST_BATCH = 9;
+const FIRST_BATCH = 12;
 
 const engineeringText = [
   "Nem toda operação se encaixa em uma solução pronta. Existem processos que exigem dimensões específicas, diferentes capacidades, adaptações de layout ou até um equipamento desenvolvido exclusivamente para aquela aplicação.",
@@ -186,14 +187,18 @@ export default function ProjetosEspeciais() {
                 onClick={() => setOpen({ slug: p.slug, index: 0 })}
                 className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-dm-line bg-white text-left transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-dm-blue/10"
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-[#f7f7f7]">
+                <div className="relative aspect-[16/9] overflow-hidden bg-white">
                   <img
                     src={p.images[0]}
                     alt={p.name}
                     width={1600}
-                    height={1200}
+                    height={900}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    className={cn(
+                      "h-full w-full transition-transform duration-500 group-hover:scale-[1.04]",
+                      // cenários largos preenchem o quadro; renders de fundo branco ficam inteiros (o multiply funde o branco ao cartão)
+                      p.fit === "contain" ? "object-contain mix-blend-multiply" : "object-cover",
+                    )}
                   />
                   <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-dm-blue opacity-0 transition-opacity group-hover:opacity-100">
                     <ArrowUpRight className="h-4 w-4" />
@@ -209,7 +214,7 @@ export default function ProjetosEspeciais() {
           ))}
         </div>
 
-        {!showAll && (
+        {!showAll && designProjects.length > FIRST_BATCH && (
           <div className="mt-10 flex justify-center">
             <button
               type="button"
