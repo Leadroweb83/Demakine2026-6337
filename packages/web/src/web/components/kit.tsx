@@ -160,6 +160,8 @@ export function PageHero({
   title,
   text,
   image,
+  imageMobile,
+  scrim,
   crumbs,
   action,
   youtubeBg,
@@ -170,6 +172,10 @@ export function PageHero({
   title: string;
   text?: string;
   image?: string;
+  /** versão da imagem para o celular (até 767 px), quando o recorte da versão larga não serve */
+  imageMobile?: string;
+  /** escurece a imagem para o texto ler bem (use em fotos claras ou cheias de detalhe) */
+  scrim?: boolean;
   crumbs: { label: string; to?: string }[];
   /** botão abaixo do texto (ex.: baixar o catálogo) */
   action?: ReactNode;
@@ -189,16 +195,22 @@ export function PageHero({
       </div>
       <section className="relative overflow-hidden bg-dm-blue-deep">
         {image && (
-          <img
-            src={image}
-            alt=""
-            className={cn(
-              "absolute inset-0 h-full w-full object-cover opacity-35",
-              // com vídeo de fundo, a imagem só aparece para quem pediu menos movimento (o vídeo some)
-              videoBg && "hidden motion-reduce:block",
-              imageClassName,
-            )}
-          />
+          <picture>
+            {imageMobile && <source media="(max-width: 767px)" srcSet={imageMobile} />}
+            <img
+              src={image}
+              alt=""
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover opacity-35",
+                // com vídeo de fundo, a imagem só aparece para quem pediu menos movimento (o vídeo some)
+                videoBg && "hidden motion-reduce:block",
+                imageClassName,
+              )}
+            />
+          </picture>
+        )}
+        {scrim && (
+          <div className="absolute inset-0 bg-gradient-to-t from-dm-blue-deep/90 via-dm-blue-deep/55 to-dm-blue-deep/35 md:bg-gradient-to-r md:from-dm-blue-deep/90 md:via-dm-blue-deep/55 md:to-transparent" />
         )}
         {videoBg && (
           <video
