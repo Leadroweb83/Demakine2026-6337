@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import mapRaw from "../../data/br-map.json";
+import { STATE_CLIENTS } from "../../data/state-clients";
 import { site } from "@/lib/site";
 import { clients, testimonials } from "@/lib/content";
 import { cn } from "@/lib/utils";
@@ -20,18 +21,24 @@ const norm = (v: string) => v.toLowerCase().normalize("NFD").replace(/[\u0300-\u
 
 type StateClient = { key: string; name: string; logo?: string; city?: string };
 
+/** máximo de clientes mostrados por estado */
+const PER_STATE = 5;
+
 /**
- * Clientes por estado, só com dado real: logos da lista de clientes que têm o estado preenchido
- * (painel > Clientes e depoimentos) e as empresas que publicaram depoimento, com a cidade/UF dela.
+ * Clientes por estado, só com dado real: primeiro os logos da lista de clientes que têm o estado
+ * preenchido (painel > Clientes e depoimentos), depois as empresas da planilha de pedidos
+ * (data/state-clients.ts) e as que publicaram depoimento. No máximo 5 por estado.
  */
 function clientsByState(): Map<string, StateClient[]> {
   const out = new Map<string, StateClient[]>();
   const add = (uf: string, c: StateClient) => {
     const list = out.get(uf) ?? [];
+    if (list.length >= PER_STATE) return;
     if (!list.some((x) => norm(x.name) === norm(c.name) || (c.name.length > 4 && (norm(x.name).includes(norm(c.name)) || norm(c.name).includes(norm(x.name)))))) list.push(c);
     out.set(uf, list);
   };
   for (const c of clients) if (c.state) add(c.state.toUpperCase(), { key: `l-${c.id}`, name: c.name, logo: c.logo });
+  for (const [uf, list] of Object.entries(STATE_CLIENTS)) for (const c of list) add(uf, { key: `p-${uf}-${c.name}`, name: c.name, city: c.city });
   for (const t of testimonials) {
     const uf = t.city.match(/\/\s*([A-Za-z]{2})\s*$/)?.[1]?.toUpperCase();
     if (!uf || !t.company.trim()) continue;
@@ -82,8 +89,8 @@ export function BrazilMap({ dark = true }: { dark?: boolean }) {
   const state = map.states[active];
   const byUf = useMemo(clientsByState, []);
   const here = byUf.get(active) ?? [];
-  const logos = here.filter((c) => c.logo).slice(0, 6);
-  const names = here.filter((c) => !c.logo).slice(0, Math.max(0, 8 - logos.length));
+  const logos = here.filter((c) => c.logo);
+  const names = here.filter((c) => !c.logo);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
