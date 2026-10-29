@@ -20,8 +20,8 @@ export default function Ferramentas() {
   return (
     <>
       <Seo
-        title="Ferramentas de engenharia: dimensione sua esteira | Demakine"
-        description="Dimensione o transportador, configure a máquina, calcule o retorno da automação e receba a recomendação do equipamento certo. Ferramentas gratuitas da engenharia Demakine."
+        title="Dimensione sua Esteira: Ferramentas Grátis | Demakine"
+        description="Dimensione o transportador, configure a máquina, calcule o retorno da automação e receba o equipamento indicado. Ferramentas grátis da engenharia Demakine."
         path="/ferramentas"
       />
 

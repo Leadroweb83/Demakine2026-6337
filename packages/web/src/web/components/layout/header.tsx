@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
-import { nav, site, waLink } from "@/lib/site";
+import { nav, quoteHref, SHOP_OPEN, site } from "@/lib/site";
 import { categories, searchProducts } from "@/lib/content";
 import { ProductsMega } from "@/components/layout/mega-menu";
+import { LangSwitch } from "@/components/layout/lang-switch";
 import { cn } from "@/lib/utils";
 
 function SearchBox({ onDone }: { onDone?: () => void }) {
@@ -116,10 +117,10 @@ export function Header() {
       {/* barra utilitária */}
       <div className="hidden bg-dm-blue-deep text-white lg:block">
         <div className="dm-container flex h-10 items-center justify-between text-[13px]">
-          <p className="text-white/70">
+          <p className="min-w-0 truncate pr-6 text-white/70">
             {site.tagline} · Fábrica própria em Limeira/SP · Atendimento em todo o Brasil
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex shrink-0 items-center gap-6 whitespace-nowrap">
             <a href={site.phoneHref} className="flex items-center gap-2 text-white/80 hover:text-white">
               <Phone className="h-3.5 w-3.5" />
               {site.phone}
@@ -127,6 +128,7 @@ export function Header() {
             <a href={`mailto:${site.email}`} className="text-white/80 hover:text-white">
               {site.email}
             </a>
+            <LangSwitch dark />
           </div>
         </div>
       </div>
@@ -137,16 +139,20 @@ export function Header() {
           scrolled ? "border-dm-line shadow-sm" : "border-transparent",
         )}
       >
-        <div className="dm-container flex h-[68px] items-center gap-6">
+        {/* o menu com os nomes completos pede mais largura que o conteúdo das páginas (1240 px) */}
+        <div className="dm-container dm-container--header flex h-[76px] items-center gap-4 min-[1600px]:gap-6">
           <Link href="/" className="shrink-0" aria-label="Demakine, página inicial">
             <img
-              src="/img/site/logo-blue.png"
+              src="/img/site/logo-blue.webp"
+              width={1406}
+              height={302}
               alt="Demakine Equipamentos Agroindustriais"
-              className="h-8 w-auto object-contain md:h-9"
+              className="h-[42px] w-auto object-contain md:h-[54px]"
             />
           </Link>
 
-          <nav className="ml-auto hidden items-center gap-1 xl:flex">
+          {/* nomes completos no menu: ele aparece a partir de 1380 px; abaixo disso, o menu do celular */}
+          <nav className="ml-auto hidden items-center gap-0.5 min-[1380px]:flex">
             {nav.slice(1).map((item) => {
               const active = location === item.to || location.startsWith(`${item.to}/`);
               if (item.to === "/produtos") {
@@ -162,7 +168,7 @@ export function Header() {
                       onFocus={openMega}
                       aria-expanded={mega}
                       className={cn(
-                        "flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold transition-colors",
+                        "flex items-center gap-1 whitespace-nowrap rounded-full px-[7px] py-2 text-[13.5px] font-semibold min-[1600px]:px-2.5 min-[1600px]:text-[14px] transition-colors",
                         active || mega
                           ? "bg-dm-blue-soft text-dm-blue"
                           : "text-dm-ink/75 hover:text-dm-blue",
@@ -184,7 +190,7 @@ export function Header() {
                   key={item.to}
                   href={item.to}
                   className={cn(
-                    "whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold transition-colors",
+                    "whitespace-nowrap rounded-full px-[7px] py-2 text-[13.5px] font-semibold min-[1600px]:px-2.5 min-[1600px]:text-[14px] transition-colors",
                     active ? "bg-dm-blue-soft text-dm-blue" : "text-dm-ink/75 hover:text-dm-blue",
                   )}
                 >
@@ -194,25 +200,49 @@ export function Header() {
             })}
           </nav>
 
-          <div className="ml-auto hidden w-[210px] 2xl:ml-4 2xl:block">
+          <div className="ml-auto hidden w-[210px] min-[1800px]:ml-4 min-[1800px]:block">
             <SearchBox />
           </div>
 
-          <a
-            href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden shrink-0 lg:ml-auto rounded-full bg-dm-green px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark lg:block"
-          >
-            Pedir orçamento
-          </a>
+          <div className="hidden shrink-0 items-center gap-2 lg:ml-auto lg:flex min-[1380px]:ml-0">
+            {SHOP_OPEN ? (
+              <a
+                href="/loja"
+                className="rounded-full bg-dm-blue px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#0d3480] min-[1600px]:px-5 min-[1600px]:text-[13px]"
+              >
+                Loja virtual
+              </a>
+            ) : (
+              // etiqueta por cima do botão: não aumenta a largura do topo
+              <span
+                aria-disabled="true"
+                title="Em breve"
+                className="relative cursor-default rounded-full bg-dm-blue/80 px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white min-[1600px]:px-5 min-[1600px]:text-[13px]"
+              >
+                Loja virtual
+                <span className="absolute -top-2.5 right-2 rounded-full bg-dm-red px-1.5 py-px text-[9.5px] font-bold uppercase leading-[14px] tracking-wide text-white shadow-sm">
+                  Em breve
+                </span>
+              </span>
+            )}
+            {/* orçamento vai para o formulário de contato; verde fica reservado ao WhatsApp */}
+            <Link
+              href={quoteHref()}
+              className="rounded-full bg-dm-red px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017] min-[1600px]:px-5 min-[1600px]:text-[13px]"
+            >
+              Pedir orçamento
+            </Link>
+          </div>
+
+          {/* no celular a barra de cima não aparece: o seletor de idioma vem para cá */}
+          <LangSwitch className="ml-auto lg:hidden" />
 
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
-            className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dm-line text-dm-ink lg:ml-3 xl:hidden"
+            className="ml-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dm-line text-dm-ink lg:ml-3 min-[1380px]:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -222,14 +252,14 @@ export function Header() {
           <div
             onMouseEnter={openMega}
             onMouseLeave={scheduleClose}
-            className="absolute left-0 right-0 top-full hidden xl:block"
+            className="absolute left-0 right-0 top-full hidden min-[1380px]:block"
           >
             <ProductsMega onNavigate={() => setMega(false)} />
           </div>
         )}
 
         {open && (
-          <div className="border-t border-dm-line bg-white xl:hidden">
+          <div className="border-t border-dm-line bg-white min-[1380px]:hidden">
             <div className="dm-container max-h-[calc(100dvh-120px)] overflow-y-auto py-5">
               <SearchBox onDone={() => setOpen(false)} />
               <nav className="mt-4 flex flex-col">
@@ -264,14 +294,29 @@ export function Header() {
                 })}
               </nav>
               <div className="mt-5 flex flex-col gap-3">
-                <a
-                  href={waLink("Olá! Vim pelo site da Demakine e quero um orçamento.")}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-dm-green px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
+                {SHOP_OPEN ? (
+                  <a
+                    href="/loja"
+                    className="rounded-full bg-dm-blue px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
+                  >
+                    Loja virtual
+                  </a>
+                ) : (
+                  <span
+                    aria-disabled="true"
+                    className="flex items-center justify-center gap-2 rounded-full bg-dm-blue/80 px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
+                  >
+                    Loja virtual
+                    <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10.5px]">Em breve</span>
+                  </span>
+                )}
+                <Link
+                  href={quoteHref()}
+                  onClick={() => setOpen(false)}
+                  className="rounded-full bg-dm-red px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
                 >
-                  Pedir orçamento no WhatsApp
-                </a>
+                  Pedir orçamento
+                </Link>
                 <a
                   href={site.mobileHref}
                   className="rounded-full border border-dm-line px-6 py-3.5 text-center text-sm font-bold text-dm-ink"

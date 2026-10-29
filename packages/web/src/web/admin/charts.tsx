@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowDownRight, ArrowUpRight, BarChart3, Minus, Table2 } from "lucide-react";
 import mapRaw from "../data/br-map.json";
 import { LEAD_STATUSES, STATUS_META, type LeadStatus } from "./lead-status";
+import { RingChart, type RingSegment } from "@/components/ui/ring-chart";
 
 /** Azul de marcas validado contra o fundo branco (o azul da marca é escuro demais para barra). */
 export const MARK_BLUE = "#2f6bd8";
@@ -11,10 +12,10 @@ const MARK_GREEN = STATUS_META.ganho.color;
 const fmt = (n: number, decimals = 0) =>
   n.toLocaleString("pt-BR", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
-const plural = (n: number, one: string, many: string) => `${fmt(n)} ${n === 1 ? one : many}`;
+export const plural = (n: number, one: string, many: string) => `${fmt(n)} ${n === 1 ? one : many}`;
 
 /** Teto "redondo" do eixo para contagens: 4, 8, 10, 20, 50... */
-function niceScale(max: number) {
+export function niceScale(max: number) {
   if (max <= 4) return { top: 4, step: 1 };
   const raw = max / 4;
   const pow = 10 ** Math.floor(Math.log10(raw));
@@ -167,6 +168,7 @@ export function KpiTile({
   label,
   value,
   decimals = 0,
+  prefix = "",
   suffix = "",
   delta,
   deltaUnit = "%",
@@ -179,11 +181,13 @@ export function KpiTile({
   label: string;
   value: number | null;
   decimals?: number;
+  prefix?: string;
   suffix?: string;
-  delta: number | null;
-  deltaUnit?: "%" | " pts" | "h";
+  /** undefined esconde a linha de comparação (indicador sem período anterior) */
+  delta?: number | null;
+  deltaUnit?: "%" | " pts" | "h" | "";
   goodWhen?: "up" | "down";
-  compareLabel: string;
+  compareLabel?: string;
   footnote?: ReactNode;
   Icon: typeof BarChart3;
   accent: string;
@@ -213,11 +217,13 @@ export function KpiTile({
           <span className="text-[15px] font-semibold text-dm-ink/40">sem dados ainda</span>
         ) : (
           <>
+            {prefix && <span className="mr-1 text-[20px] font-semibold text-dm-ink/60">{prefix}</span>}
             <AnimatedNumber value={value} decimals={decimals} />
             {suffix && <span className="ml-0.5 text-[20px] font-semibold text-dm-ink/60">{suffix}</span>}
           </>
         )}
       </p>
+      {delta !== undefined && (
       <p className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12px]">
         {deltaText ? (
           <span
@@ -233,6 +239,7 @@ export function KpiTile({
         )}
         {deltaText && <span className="text-dm-ink/45">{compareLabel}</span>}
       </p>
+      )}
       {footnote && <div className="mt-2 text-[12px] text-dm-ink/60">{footnote}</div>}
     </div>
   );
@@ -378,96 +385,41 @@ function Legend({ color, label }: { color: string; label: string }) {
 export function StatusDonut({
   byStatus,
   onSelect,
+  showDelta,
 }: {
-  byStatus: { status: string; total: number }[];
+  byStatus: { status: string; total: number; previous?: number }[];
   onSelect: (status: LeadStatus) => void;
+  showDelta: boolean;
 }) {
-  const [hover, setHover] = useState<LeadStatus | null>(null);
-  const values = LEAD_STATUSES.map((s) => ({
-    status: s,
-    total: byStatus.find((b) => b.status === s)?.total ?? 0,
-  }));
+  const values = LEAD_STATUSES.map((s) => {
+    const row = byStatus.find((b) => b.status === s);
+    return { status: s, total: row?.total ?? 0, previous: row?.previous ?? 0 };
+  });
   const total = values.reduce((a, v) => a + v.total, 0);
-  const r = 58;
-  const circ = 2 * Math.PI * r;
-  const visible = values.filter((v) => v.total > 0);
-  const gap = visible.length > 1 ? 2.5 : 0;
 
-  let offset = 0;
-  const arcs = values.map((v) => {
-    const len = total ? (v.total / total) * circ : 0;
-    const arc = { ...v, len: Math.max(0, len - gap), offset };
-    offset += len;
-    return arc;
+  const segments: RingSegment[] = values.map((v) => {
+    const meta = STATUS_META[v.status];
+    const d = v.total - v.previous;
+    const tone = d === 0 ? "neutral" : v.status === "ganho" ? (d > 0 ? "good" : "bad") : v.status === "perdido" ? (d > 0 ? "bad" : "good") : "neutral";
+    return {
+      key: v.status,
+      label: meta.label,
+      value: v.total,
+      color: meta.color,
+      icon: <meta.Icon size={14} className="shrink-0 text-dm-ink/40" />,
+      badge: showDelta ? { text: d > 0 ? `+${d}` : d < 0 ? `−${Math.abs(d)}` : "0", tone } : undefined,
+    };
   });
 
-  const focus = hover ? values.find((v) => v.status === hover) : null;
-
   return (
-    <div className="flex flex-col items-center gap-6 sm:flex-row lg:flex-col xl:flex-row">
-      <div className="relative h-[150px] w-[150px] shrink-0">
-        <svg viewBox="0 0 150 150" className="h-full w-full -rotate-90" aria-hidden="true">
-          <circle cx="75" cy="75" r={r} fill="none" stroke="#eef0f4" strokeWidth="16" />
-          {arcs.map(
-            (a) =>
-              a.len > 0 && (
-                <circle
-                  key={a.status}
-                  cx="75"
-                  cy="75"
-                  r={r}
-                  fill="none"
-                  stroke={STATUS_META[a.status].color}
-                  strokeWidth={hover === a.status ? 20 : 16}
-                  strokeDasharray={`${a.len} ${circ - a.len}`}
-                  strokeDashoffset={-a.offset}
-                  className="cursor-pointer transition-[stroke-width,opacity] duration-200"
-                  style={{ opacity: hover && hover !== a.status ? 0.35 : 1 }}
-                  onMouseEnter={() => setHover(a.status)}
-                  onMouseLeave={() => setHover(null)}
-                  onClick={() => onSelect(a.status)}
-                />
-              ),
-          )}
-        </svg>
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="text-[28px] font-bold leading-none text-dm-ink">
-            {focus ? focus.total : <AnimatedNumber value={total} />}
-          </span>
-          <span className="mt-1 max-w-[90px] text-[10.5px] font-semibold uppercase tracking-wide text-dm-ink/50">
-            {focus ? STATUS_META[focus.status].label : "leads"}
-          </span>
-        </div>
-      </div>
-      <ul className="w-full min-w-0 flex-1 space-y-1">
-        {values.map((v) => {
-          const meta = STATUS_META[v.status];
-          return (
-            <li key={v.status}>
-              <button
-                type="button"
-                onClick={() => onSelect(v.status)}
-                onMouseEnter={() => setHover(v.status)}
-                onMouseLeave={() => setHover(null)}
-                onFocus={() => setHover(v.status)}
-                onBlur={() => setHover(null)}
-                className="flex w-full items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left text-[13px] transition-colors hover:bg-black/[0.03]"
-              >
-                <span className="flex items-center gap-2 text-dm-ink/80">
-                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: meta.color }} />
-                  <meta.Icon size={14} className="shrink-0 text-dm-ink/45" />
-                  {meta.label}
-                </span>
-                <span className="tabular-nums text-dm-ink/60">
-                  <b className="text-dm-ink">{v.total}</b>
-                  {total ? ` · ${Math.round((v.total / total) * 100)}%` : ""}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <RingChart
+      segments={segments}
+      centerLabel="Total"
+      centerValue={<AnimatedNumber value={total} />}
+      onSelect={(key) => onSelect(key as LeadStatus)}
+      size={176}
+      thickness={24}
+    />
   );
 }
 
@@ -515,7 +467,7 @@ export function RankList({
   empty,
   valueLabel = (v) => plural(v, "lead", "leads"),
 }: {
-  data: { label: string; value: number; sub?: string }[];
+  data: { label: string; value: number; sub?: string; icon?: ReactNode }[];
   onSelect?: (label: string) => void;
   empty: ReactNode;
   valueLabel?: (v: number) => string;
@@ -528,7 +480,10 @@ export function RankList({
         const body = (
           <>
             <div className="flex items-baseline justify-between gap-3">
-              <span className="truncate text-[13px] font-semibold text-dm-ink">{d.label}</span>
+              <span className="flex min-w-0 items-center gap-2">
+                {d.icon}
+                <span className="truncate text-[13px] font-semibold text-dm-ink">{d.label}</span>
+              </span>
               <span className="shrink-0 text-[12.5px] tabular-nums text-dm-ink/60">
                 <b className="text-dm-ink">{d.value}</b>
                 {d.sub ? <span className="ml-1.5 text-dm-ink/45">{d.sub}</span> : null}
@@ -630,16 +585,24 @@ export function WeekHourHeatmap({ matrix }: { matrix: number[][] }) {
 /* ------------------------------------------------------------------ mapa do Brasil */
 
 type MapData = { w: number; h: number; states: Record<string, { name: string; d: string; c: [number, number] }> };
-const brMap = mapRaw as MapData;
+const brMap = mapRaw as unknown as MapData;
 
 export function LeadsMap({
   byState,
   unknown,
   onSelect,
+  noun = ["lead", "leads"],
+  emptyText = "Nenhum lead do período com estado identificado.",
+  unknownText = (n: number) => `${plural(n, "lead sem", "leads sem")} UF na cidade digitada (ex.: "Limeira/SP").`,
 }: {
   byState: { label: string; total: number }[];
   unknown: number;
-  onSelect: (uf: string) => void;
+  /** sem onSelect o mapa só mostra (tela Visitas) */
+  onSelect?: (uf: string) => void;
+  /** o que está sendo contado, no singular e no plural */
+  noun?: [string, string];
+  emptyText?: string;
+  unknownText?: (n: number) => string;
 }) {
   const [active, setActive] = useState<string | null>(null);
   const counts = useMemo(() => new Map(byState.map((s) => [s.label, s.total])), [byState]);
@@ -657,17 +620,17 @@ export function LeadsMap({
                 key={uf}
                 d={s.d}
                 tabIndex={v ? 0 : -1}
-                aria-label={`${s.name}: ${plural(v, "lead", "leads")}`}
+                aria-label={`${s.name}: ${plural(v, noun[0], noun[1])}`}
                 fill={v ? heat(v / max) : "#eef1f6"}
                 stroke="#ffffff"
                 strokeWidth={1.2}
-                className={`outline-none transition-opacity ${v ? "cursor-pointer" : ""}`}
+                className={`outline-none transition-opacity ${v && onSelect ? "cursor-pointer" : ""}`}
                 style={{ opacity: active && active !== uf ? 0.55 : 1 }}
                 onMouseEnter={() => setActive(uf)}
                 onMouseLeave={() => setActive(null)}
                 onFocus={() => setActive(uf)}
                 onBlur={() => setActive(null)}
-                onClick={() => v && onSelect(uf)}
+                onClick={() => v && onSelect?.(uf)}
               />
             );
           })}
@@ -675,7 +638,7 @@ export function LeadsMap({
         {activeName && (
           <span className="pointer-events-none absolute left-2 top-2 rounded-lg bg-dm-ink px-2.5 py-1.5 shadow-lg">
             <span className="block text-[12.5px] font-bold text-white">
-              {plural(counts.get(active!) ?? 0, "lead", "leads")}
+              {plural(counts.get(active!) ?? 0, noun[0], noun[1])}
             </span>
             <span className="block text-[11px] text-white/65">{activeName}</span>
           </span>
@@ -685,17 +648,10 @@ export function LeadsMap({
         <RankList
           data={byState.slice(0, 6).map((s) => ({ label: s.label, value: s.total, sub: brMap.states[s.label]?.name }))}
           onSelect={onSelect}
-          empty={
-            <p className="text-[12.5px] leading-relaxed text-dm-ink/55">
-              Nenhum lead do período com estado identificado.
-            </p>
-          }
+          valueLabel={(v) => plural(v, noun[0], noun[1])}
+          empty={<p className="text-[12.5px] leading-relaxed text-dm-ink/55">{emptyText}</p>}
         />
-        {unknown > 0 && (
-          <p className="mt-3 px-2 text-[11.5px] leading-relaxed text-dm-ink/45">
-            {plural(unknown, "lead sem", "leads sem")} UF na cidade digitada (ex.: "Limeira/SP").
-          </p>
-        )}
+        {unknown > 0 && <p className="mt-3 px-2 text-[11.5px] leading-relaxed text-dm-ink/45">{unknownText(unknown)}</p>}
       </div>
     </div>
   );

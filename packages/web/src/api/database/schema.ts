@@ -1,12 +1,14 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { boolean, date, index, integer, jsonb, pgTable, primaryKey, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-export const leads = sqliteTable("leads", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const leads = pgTable("leads", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   company: text("company"),
   phone: text("phone").notNull(),
   email: text("email"),
   city: text("city"),
+  /** sigla do estado (SP, MG...) ou "Exterior"; a cidade fica só em city */
+  state: text("state"),
   product: text("product"),
   message: text("message"),
   source: text("source").default("site"),
@@ -17,13 +19,218 @@ export const leads = sqliteTable("leads", {
   /** id do usuario responsavel pelo lead */
   ownerId: text("owner_id"),
   /** data do primeiro/ultimo contato feito pelo time */
-  firstContactAt: integer("first_contact_at", { mode: "timestamp" }),
-  lastContactAt: integer("last_contact_at", { mode: "timestamp" }),
+  firstContactAt: timestamp("first_contact_at", { withTimezone: true }),
+  lastContactAt: timestamp("last_contact_at", { withTimezone: true }),
   /** motivo da perda, obrigatorio ao marcar perdido */
   lossReason: text("loss_reason"),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .$defaultFn(() => new Date()),
+  /** próximo retorno combinado com o cliente */
+  nextActionAt: timestamp("next_action_at", { withTimezone: true }),
+  nextActionNote: text("next_action_note"),
+  /** valor da proposta em reais (inteiro); só o dono do lead e o super admin veem */
+  proposalValue: integer("proposal_value"),
+  /** quando virou ganho, para o fechado do mês */
+  wonAt: timestamp("won_at", { withTimezone: true }),
+  /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  deletedBy: text("deleted_by"),
+  /** de onde veio a visita que gerou o lead (Google, Instagram, anúncio...), ver lib/visits.ts */
+  trafficSource: text("traffic_source"),
+  /** primeira página vista na visita */
+  landingPath: text("landing_path"),
+  utmCampaign: text("utm_campaign"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * Conteúdo editável pelo painel. Cada linha substitui o padrão que vem no código
+ * (content.json / site.ts): collection "site" (key "main"), "produto" (slug),
+ * "post" (slug), "case" (slug). deleted = item do código escondido do site.
+ */
+export const contentDocs = pgTable(
+  "content_docs",
+  {
+    collection: text("collection").notNull(),
+    key: text("key").notNull(),
+    data: jsonb("data").notNull(),
+    deleted: boolean("deleted").default(false).notNull(),
+    updatedBy: text("updated_by"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.collection, t.key] })],
+);
+
+/** Redirecionamentos (301/302) aplicados pelo middleware da Vercel: endereço antigo -> novo. */
+export const redirects = pgTable("redirects", {
+  id: serial("id").primaryKey(),
+  fromPath: text("from_path").notNull().unique(),
+  toPath: text("to_path").notNull(),
+  permanent: boolean("permanent").default(true).notNull(),
+  note: text("note"),
+  createdBy: text("created_by"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Registro de atividades do painel: quem alterou o quê e quando (sem valores sensíveis). */
+export const auditLog = pgTable(
+  "audit_log",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id"),
+    userName: text("user_name"),
+    userRole: text("user_role"),
+    method: text("method").notNull(),
+    path: text("path").notNull(),
+    summary: text("summary").notNull(),
+    status: integer("status").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("audit_log_created_idx").on(t.createdAt)],
+);
+
+/** Configurações internas do painel (nunca vão para o site): avisos por e-mail etc. */
+export const appSettings = pgTable("app_settings", {
+  key: text("key").primaryKey(),
+  value: jsonb("value").notNull(),
+  updatedBy: text("updated_by"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Biblioteca de mídia: imagens no bucket público "midia", usadas por catálogo, blog e cases. */
+export const media = pgTable("media", {
+  id: serial("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  url: text("url").notNull(),
+  name: text("name").notNull(),
+  alt: text("alt"),
+  width: integer("width"),
+  height: integer("height"),
+  size: integer("size"),
+  uploadedBy: text("uploaded_by"),
+  /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  deletedBy: text("deleted_by"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Histórico do lead: status, responsável, anotação e contato feito, com autor e data. */
+export const leadEvents = pgTable(
+  "lead_events",
+  {
+    id: serial("id").primaryKey(),
+    leadId: integer("lead_id")
+      .notNull()
+      .references(() => leads.id, { onDelete: "cascade" }),
+    userId: text("user_id"),
+    /** status | responsavel | nota | contato */
+    type: text("type").notNull(),
+    text: text("text"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("lead_events_lead_idx").on(t.leadId)],
+);
+
+/** Vagas publicadas em /vagas. Requisitos e benefícios: um item por linha. */
+export const jobs = pgTable("jobs", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  area: text("area").notNull(),
+  /** efetivo | estagio | temporario | pj */
+  type: text("type").default("efetivo").notNull(),
+  location: text("location").default("Limeira/SP").notNull(),
+  summary: text("summary").notNull(),
+  description: text("description"),
+  requirements: text("requirements"),
+  benefits: text("benefits"),
+  salary: text("salary"),
+  showSalary: boolean("show_salary").default(false).notNull(),
+  /** aberta | pausada | encerrada */
+  status: text("status").default("aberta").notNull(),
+  /** último dia para se candidatar (inclusive) */
+  deadline: date("deadline"),
+  /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  deletedBy: text("deleted_by"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Candidaturas. jobId nulo = banco de talentos. */
+export const applications = pgTable(
+  "applications",
+  {
+    id: serial("id").primaryKey(),
+    jobId: integer("job_id").references(() => jobs.id, { onDelete: "set null" }),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull(),
+    city: text("city"),
+    /** sigla do estado (SP, MG...) ou "Exterior" */
+    state: text("state"),
+    linkedin: text("linkedin"),
+    salaryExpectation: text("salary_expectation"),
+    message: text("message"),
+    /** key do PDF no bucket privado de currículos; opcional (quem não tem escreve a experiência) */
+    resumeKey: text("resume_key"),
+    /** recebido | analise | entrevista | aprovado | reprovado | banco */
+    status: text("status").default("recebido").notNull(),
+    notes: text("notes"),
+    consentAt: timestamp("consent_at", { withTimezone: true }).notNull(),
+    /** lixeira: apagado aqui fica 30 dias antes de sumir de vez */
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    deletedBy: text("deleted_by"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("applications_job_idx").on(t.jobId)],
+);
+
+/**
+ * Comentários enviados pelo formulário "Deixe seu comentário" da página Clientes.
+ * Entram como "pendente" e só aparecem no site depois de aprovados no painel.
+ */
+export const siteReviews = pgTable(
+  "site_reviews",
+  {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull(),
+    company: text("company").notNull(),
+    /** 1 a 5 estrelas */
+    rating: integer("rating").notNull(),
+    text: text("text").notNull(),
+    /** pendente | aprovada | oculta */
+    status: text("status").default("pendente").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("site_reviews_status_idx").on(t.status)],
+);
+
 export * from "./auth-schema";
+
+/**
+ * Visitas ao site (medição própria, sem cookie). visitor é um hash do IP + navegador com uma chave
+ * que troca todo dia: conta visitantes únicos do dia sem guardar IP nem permitir seguir a pessoa.
+ */
+export const pageViews = pgTable(
+  "page_views",
+  {
+    id: serial("id").primaryKey(),
+    path: text("path").notNull(),
+    visitor: text("visitor").notNull(),
+    /** google, instagram, direto, anuncio-google... (lib/visits.ts classifySource) */
+    source: text("source").notNull(),
+    referrerHost: text("referrer_host"),
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    /** celular | tablet | computador */
+    device: text("device").notNull(),
+    country: text("country"),
+    region: text("region"),
+    city: text("city"),
+    /** primeira página da visita (a pessoa chegou por ela) */
+    entry: boolean("entry").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("page_views_created_idx").on(t.createdAt)],
+);

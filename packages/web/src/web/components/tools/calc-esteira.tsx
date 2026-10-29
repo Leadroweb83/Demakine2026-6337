@@ -1,19 +1,22 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Ruler } from "lucide-react";
-import { materials, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
-import { waLink } from "@/lib/site";
+import { materials, maxAngleFor, num, sizeConveyor, type MaterialKey } from "@/lib/engine";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /**
  * Dimensionador: a partir de distância, altura e material,
  * indica o modelo da tabela real de fábrica.
  */
-export function CalcEsteira({ dark = false }: { dark?: boolean }) {
-  const [material, setMaterial] = useState<MaterialKey>("sacaria");
+export function CalcEsteira({ dark = false, initialMaterial = "sacaria" }: { dark?: boolean; initialMaterial?: MaterialKey }) {
+  const uid = useId();
+  const [material, setMaterial] = useState<MaterialKey>(initialMaterial);
   const [distance, setDistance] = useState(6);
   const [height, setHeight] = useState(2.5);
   const [sanitary, setSanitary] = useState(false);
+  const flat = maxAngleFor(material) === 0;
 
   const result = useMemo(
     () => sizeConveyor({ material, distance, height, sanitary }),
@@ -27,8 +30,8 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
   );
 
   const waMsg = result.model
-    ? `Olá! Usei o dimensionador do site: ${result.product.name}, modelo ${result.model.model} (${num(result.needed, 1)} m, altura ${num(height, 1)} m). Quero um orçamento.`
-    : `Olá! Usei o dimensionador do site e preciso de um projeto sob medida: ${result.product.name}, ${num(result.needed, 1)} m de comprimento e ${num(height, 1)} m de altura.`;
+    ? tr("Olá! Usei o dimensionador do site: {produto}, modelo {modelo} ({comprimento} m, altura {altura} m). Quero um orçamento.", { produto: tr(result.product.name), modelo: result.model.model, comprimento: num(result.needed, 1), altura: num(flat ? 0 : height, 1) })
+    : tr("Olá! Usei o dimensionador do site e preciso de um projeto sob medida: {produto}, {comprimento} m de comprimento e {altura} m de altura.", { produto: tr(result.product.name), comprimento: num(result.needed, 1), altura: num(flat ? 0 : height, 1) });
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.05fr] lg:gap-8">
@@ -40,10 +43,11 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
         </div>
 
         <div className="mt-5">
-          <label className={cn("block text-[14px] font-semibold", dark ? "text-white/80" : "text-dm-ink")}>
+          <label htmlFor={`${uid}-material`} className={cn("block text-[14px] font-semibold", dark ? "text-white/80" : "text-dm-ink")}>
             O que você precisa transportar
           </label>
           <select
+            id={`${uid}-material`}
             value={material}
             onChange={(e) => setMaterial(e.target.value as MaterialKey)}
             className={cn(
@@ -72,16 +76,19 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
             suffix=" m"
             onChange={setDistance}
           />
-          <Slider
-            dark={dark}
-            label="Altura de descarga"
-            value={height}
-            min={0}
-            max={12}
-            step={0.1}
-            suffix=" m"
-            onChange={setHeight}
-          />
+          {/* esteira de triagem é horizontal: altura de descarga não se aplica */}
+          {!flat && (
+            <Slider
+              dark={dark}
+              label="Altura de descarga"
+              value={height}
+              min={0}
+              max={12}
+              step={0.1}
+              suffix=" m"
+              onChange={setHeight}
+            />
+          )}
         </div>
 
         <label
@@ -115,7 +122,7 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
 
         <div className="mt-5 grid grid-cols-2 gap-3">
           <Fact dark={dark} k="Comprimento necessário" v={`${num(result.needed, 1)} m`} />
-          <Fact dark={dark} k="Inclinação" v={`${num(result.angle, 0)}°`} />
+          <Fact dark={dark} k="Inclinação" v={flat ? tr("0° (horizontal)") : `${num(result.angle, 0)}°`} />
           <Fact
             dark={dark}
             k="Modelo indicado"
@@ -139,14 +146,12 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
         )}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={waLink(waMsg)}
-            target="_blank"
-            rel="noreferrer"
-            className="cine-shine inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+          <Link
+            href={quoteHref({ produto: result.product.name, mensagem: waMsg })}
+            className="cine-shine inline-flex items-center justify-center gap-2 rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-red-dark"
           >
             Orçar este modelo
-          </a>
+          </Link>
           <Link
             href={`/produtos/${result.product.slug}`}
             className={cn(
@@ -161,7 +166,7 @@ export function CalcEsteira({ dark = false }: { dark?: boolean }) {
           </Link>
         </div>
 
-        <p className={cn("mt-4 text-[12.5px]", dark ? "text-white/40" : "text-dm-gray/80")}>
+        <p className={cn("mt-4 text-[12.5px]", dark ? "text-white/40" : "text-dm-gray")}>
           Valores de referência das tabelas de fábrica. A confirmação final é feita pela nossa
           engenharia com os dados da sua linha.
         </p>
@@ -262,7 +267,8 @@ export function Fact({
         className={cn(
           "mt-1 text-[16px] font-bold",
           dark ? "text-white" : "text-dm-ink",
-          highlight && "text-dm-red",
+          // vermelho sobre fundo escuro não dá contraste: no escuro o destaque fica na borda
+          highlight && !dark && "text-dm-red",
         )}
       >
         {v}

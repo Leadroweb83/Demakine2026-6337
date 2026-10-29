@@ -4,6 +4,7 @@
  * (nenhum valor inventado; quando a tabela não cobre o caso, cai em "sob medida").
  */
 import { getProduct, products, type Product } from "./content";
+import { formatLocale, tr } from "./i18n";
 
 /* ------------------------------------------------------------------ helpers */
 
@@ -26,7 +27,7 @@ export function parseCv(raw?: string): number | null {
 }
 
 export function brl(v: number, digits = 0): string {
-  return v.toLocaleString("pt-BR", {
+  return v.toLocaleString(formatLocale(), {
     style: "currency",
     currency: "BRL",
     minimumFractionDigits: digits,
@@ -35,7 +36,7 @@ export function brl(v: number, digits = 0): string {
 }
 
 export function num(v: number, digits = 0): string {
-  return v.toLocaleString("pt-BR", {
+  return v.toLocaleString(formatLocale(), {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   });
@@ -75,12 +76,24 @@ const familyBySituation: Record<MaterialKey, string> = {
   "cama-frango": "esteira-transportadora-em-v-para-cama-de-frango-aviario",
 };
 
+/** Material que já abre selecionado no dimensionador da página de um produto. */
+export function materialForProduct(slug: string, category: string): MaterialKey {
+  const exact = (Object.keys(familyBySituation) as MaterialKey[]).find((k) => familyBySituation[k] === slug);
+  if (exact) return exact;
+  if (category === "roscas-transportadoras") return "graos-fechado";
+  if (category === "elevadores") return "granel";
+  return "sacaria";
+}
+
 /* -------------------------------------------------------------- sizing (esteira) */
 
 export type SizingInput = {
   material: MaterialKey;
-  /** distância horizontal entre carga e descarga, em metros */
-  distance: number;
+  /**
+   * distância horizontal entre carga e descarga, em metros. Sem ela (calculadora do topo da home),
+   * a indicação sai só pela altura: o menor modelo da tabela que alcança a descarga.
+   */
+  distance?: number;
   /** altura de descarga desejada, em metros */
   height: number;
   /** ambiente: precisa inox/sanitário? */
@@ -107,12 +120,23 @@ export type SizingResult = {
   alternatives: Product[];
 };
 
+/**
+ * Inclinação máxima que a fábrica trabalha em cada material (passada pela Demakine).
+ * Esteira de triagem (reciclagem) é sempre horizontal. Os demais seguem o limite geral de 30°.
+ */
+const MAX_ANGLE: Partial<Record<MaterialKey, number>> = { sacaria: 35, granel: 30, caixas: 28, reciclagem: 0 };
+export const maxAngleFor = (material: MaterialKey) => MAX_ANGLE[material] ?? 30;
+const sinDeg = (deg: number) => Math.sin((deg * Math.PI) / 180);
+
 export function sizeConveyor(input: SizingInput): SizingResult {
   const notes: string[] = [];
-  const distance = Math.max(0, input.distance);
-  const height = Math.max(0, input.height);
-  const needed = Math.sqrt(distance * distance + height * height);
-  const angle = distance > 0 ? (Math.atan2(height, distance) * 180) / Math.PI : height > 0 ? 90 : 0;
+  const byHeight = input.distance === undefined;
+  const distance = Math.max(0, input.distance ?? 0);
+  const maxAngle = maxAngleFor(input.material);
+  // esteira de triagem trabalha na horizontal: a altura de descarga não entra na conta
+  const height = maxAngle === 0 ? 0 : Math.max(0, input.height);
+  let needed = Math.sqrt(distance * distance + height * height);
+  let angle = distance > 0 ? (Math.atan2(height, distance) * 180) / Math.PI : height > 0 ? 90 : 0;
 
   let slug = familyBySituation[input.material];
 
@@ -129,9 +153,17 @@ export function sizeConveyor(input: SizingInput): SizingResult {
       "Acima de 7 m de elevação com granel, o elevador de canecas é a solução mais eficiente e ocupa menos área.",
     );
   }
-  if (angle > 30 && input.material === "granel") {
+  // distância curta para a altura pedida: a esteira fica mais longa para não passar do limite do material
+  if (!byHeight && height > 0 && angle > maxAngle + 0.01) {
+    needed = height / sinDeg(maxAngle);
+    angle = maxAngle;
     notes.push(
-      "Inclinação acima de 30° com granel exige correia taliscada ou em V para o material não retornar.",
+      tr("Com {material} a inclinação vai até {g}°. Para essa altura a esteira precisa de {m} m, ocupando {d} m no piso.", {
+        material: tr(materials.find((m) => m.key === input.material)?.label ?? "").toLowerCase(),
+        g: maxAngle,
+        m: num(needed, 1),
+        d: num(Math.sqrt(needed * needed - height * height), 1),
+      }),
     );
   }
   if (input.sanitary) {
@@ -156,9 +188,18 @@ export function sizeConveyor(input: SizingInput): SizingResult {
     .filter((m) => m.length !== null)
     .sort((a, b) => (a.length ?? 0) - (b.length ?? 0));
 
-  const fit = rows.find(
-    (m) => (m.length ?? 0) >= needed - 0.01 && (m.heightMax === null || m.heightMax >= height - 0.01),
-  );
+  const fit = byHeight
+    ? rows.find((m) =>
+        // sem altura máxima na tabela, vale o limite de 30° de inclinação
+        m.heightMax !== null ? m.heightMax >= height - 0.01 : (m.length ?? 0) * sinDeg(maxAngle) >= height - 0.01,
+      )
+    : rows.find(
+        (m) => (m.length ?? 0) >= needed - 0.01 && (m.heightMax === null || m.heightMax >= height - 0.01),
+      );
+  if (byHeight) {
+    needed = fit?.length ?? (maxAngle > 0 ? height / sinDeg(maxAngle) : 0);
+    angle = needed > 0 ? (Math.asin(Math.min(1, height / needed)) * 180) / Math.PI : 0;
+  }
 
   const alternatives = products
     .filter((p) => p.slug !== product.slug && p.category === product.category)
@@ -167,7 +208,7 @@ export function sizeConveyor(input: SizingInput): SizingResult {
   if (!fit) {
     if (rows.length > 0) {
       notes.push(
-        `A linha padrão vai até ${num(rows[rows.length - 1].length ?? 0, 0)} m de comprimento. Acima disso fabricamos sob medida ou em módulos.`,
+        tr("A linha padrão vai até {n} m de comprimento. Acima disso fabricamos sob medida ou em módulos.", { n: num(rows[rows.length - 1].length ?? 0, 0) }),
       );
     } else {
       notes.push("Esse equipamento é sempre dimensionado sob medida para a sua operação.");
@@ -287,7 +328,7 @@ export function solveQuiz(a: QuizAnswers): QuizResult | null {
     reasons.push("Para elevar granel a grande altura, o elevador de canecas é o mais eficiente.");
   }
   if (a.material === "granel" && a.height === "media") {
-    slug = "esteira-transportadora-em-v";
+    slug = "esteira-transportadora-para-granel";
     reasons.push("Em V a correia forma calha e segura o granel na subida, sem perda de material.");
   }
 
@@ -326,7 +367,8 @@ export type ConfigInput = {
   family: "sacaria" | "granel" | "caixas" | "reciclagem";
 };
 
-export function configure({ length, angle, family }: ConfigInput) {
+export function configure({ length, angle: rawAngle, family }: ConfigInput) {
+  const angle = Math.min(rawAngle, maxAngleFor(family));
   const slug =
     family === "sacaria"
       ? "esteira-transportadora-para-sacaria"

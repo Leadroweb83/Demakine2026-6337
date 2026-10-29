@@ -1,9 +1,11 @@
-import { Cog, MapPin, PhoneCall, Timer, Wrench } from "lucide-react";
+import { Cog, MapPin, Timer, Wrench } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { VideoAutoplay } from "@/components/video-autoplay";
+import { tr } from "@/lib/i18n";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnGhost, BtnPrimary, BtnWhats, CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
-import { departments, site, waLink } from "@/lib/site";
+import { BtnGhost, CtaBand, PageHero, Section } from "@/components/kit";
+import { departments, site } from "@/lib/site";
 
 const services = [
   {
@@ -36,7 +38,8 @@ const checklist = [
 ];
 
 export default function AssistenciaTecnica() {
-  const support = departments.find((d) => d.name === "Assistência Técnica")!;
+  const support =
+    departments.find((d) => d.name.startsWith("Assist")) ?? departments[0]!;
 
   return (
     <>
@@ -50,7 +53,8 @@ export default function AssistenciaTecnica() {
         eyebrow="Assistência Técnica · SAC"
         title="Suporte que não termina na entrega do equipamento"
         text="Da concepção ao pós-venda, acompanhamos o desempenho de cada máquina. Equipe especializada e parcerias técnicas em todo o território nacional."
-        image="/img/site/projetos.jpg"
+        image="/img/site/assistencia-banner.webp"
+        imageClassName="object-[50%_66%]"
         crumbs={[{ label: "Assistência Técnica" }]}
       />
 
@@ -76,6 +80,14 @@ export default function AssistenciaTecnica() {
               </p>
             </div>
 
+            <VideoAutoplay
+              youtube="Xm-ng5xJknw"
+              poster="/img/site/assistencia-video.webp"
+              label={tr("Assistir ao vídeo: Assistência Técnica Especializada Demakine")}
+              trackId="assistencia-tecnica"
+              className="mt-8 rounded-2xl"
+            />
+
             <div className="mt-8 rounded-2xl border border-dm-line bg-dm-surface p-6">
               <p className="eyebrow text-dm-blue">Canal direto do SAC</p>
               <p className="mt-3 text-[17px] font-bold text-dm-ink">{support.phone}</p>
@@ -86,13 +98,6 @@ export default function AssistenciaTecnica() {
                 {support.email}
               </a>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <BtnWhats
-                  href={waLink("Olá! Preciso de assistência técnica para um equipamento Demakine.")}
-                  className="gap-2"
-                >
-                  <PhoneCall className="h-4 w-4" />
-                  Abrir atendimento
-                </BtnWhats>
                 <BtnGhost to="/downloads">Manuais e downloads</BtnGhost>
               </div>
             </div>
@@ -133,9 +138,9 @@ export default function AssistenciaTecnica() {
               ))}
             </ol>
             <p className="mt-8 text-[14.5px] text-dm-gray">
-              Horário de atendimento: seg a qui 07h30–17h30 · sex 07h30–16h30 ·{" "}
-              <a href={`mailto:${site.email}`} className="font-semibold text-dm-blue hover:underline">
-                {site.email}
+              Horário de atendimento: {site.hoursLine} ·{" "}
+              <a href={`mailto:${support.email}`} className="font-semibold text-dm-blue hover:underline">
+                {support.email}
               </a>
             </p>
           </Reveal>
@@ -154,30 +159,7 @@ export default function AssistenciaTecnica() {
         </div>
       </Section>
 
-      <Section>
-        <SectionHead
-          eyebrow="Fale com o setor certo"
-          title="Contatos por departamento"
-          text="Cada área tem canal próprio para agilizar o seu atendimento."
-        />
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {departments.map((d, idx) => (
-            <Reveal key={d.name} i={idx % 4} className="h-full">
-              <div className="h-full rounded-2xl border border-dm-line bg-white p-5">
-                <p className="eyebrow text-dm-blue">{d.name}</p>
-                <p className="mt-3 text-[15.5px] font-bold text-dm-ink">{d.phone}</p>
-                <a
-                  href={`mailto:${d.email}`}
-                  className="mt-1 block break-all text-[14px] text-dm-gray hover:text-dm-blue"
-                >
-                  {d.email}
-                </a>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
+      {/* contatos dos outros departamentos saíram desta página (pedido do cliente): fica só o SAC, no topo */}
       <CtaBand
         title="Equipamento parado é dinheiro parado"
         text="Fale agora com o nosso SAC e receba orientação técnica de quem fabricou a sua máquina."

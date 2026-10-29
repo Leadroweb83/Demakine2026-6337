@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, Link2, Mail } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /** Ícones de marca em SVG: lucide não traz logos de redes sociais. */
 function IconWhats({ className }: { className?: string }) {
@@ -62,7 +63,7 @@ export function ShareBar({
     },
     {
       label: "E-mail",
-      href: `mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent(`Achei que ia te interessar:\n\n${title}\n${url}`)}`,
+      href: `mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent(`${tr("Achei que ia te interessar:")}\n\n${title}\n${url}`)}`,
       Icon: Mail,
       hover: "hover:border-dm-blue/40 hover:bg-dm-blue-soft hover:text-dm-blue",
     },
@@ -89,7 +90,7 @@ export function ShareBar({
           href={href}
           target="_blank"
           rel="noreferrer"
-          aria-label={`Compartilhar no ${label}`}
+          aria-label={tr("Compartilhar no {rede}", { rede: label })}
           className={cn(
             "flex items-center gap-2 rounded-full border border-dm-line bg-white px-3.5 py-2 text-[13.5px] font-semibold text-dm-ink/75 transition-colors",
             hover,

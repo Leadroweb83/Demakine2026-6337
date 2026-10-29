@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  Activity,
   BarChart3,
   ChevronLeft,
   ClipboardList,
@@ -14,18 +15,41 @@ import {
   Users,
   Briefcase,
   Menu,
+  Bell,
+  History,
+  Signpost,
+  Quote,
+  SearchCheck,
+  House,
+  ListOrdered,
+  Trash2,
 } from "lucide-react";
 import { api } from "../lib/api";
-import { authClient, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
+import { authClient, can, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
 import { AdminLogin } from "../admin/login";
 import { AdminDashboard } from "../admin/dashboard";
 import { AdminLeads, type LeadsFilter } from "../admin/leads";
 import { AdminUsers } from "../admin/users";
 import { AdminAccount } from "../admin/account";
-import { Badge, Card, PageTitle } from "../admin/ui";
-import { caseStudies } from "@/lib/cases";
+import { AdminVagas } from "../admin/vagas";
+import { AdminSiteSettings } from "../admin/site-settings";
+import { AdminMedia } from "../admin/media";
+import { AdminCatalog } from "../admin/catalog";
+import { AdminBlog } from "../admin/blog";
+import { AdminCases } from "../admin/cases";
+import { AdminNotifications } from "../admin/notifications";
+import { AdminActivity } from "../admin/activity";
+import { AdminRedirects } from "../admin/redirects";
+import { AdminLists } from "../admin/lists";
+import { AdminSeo } from "../admin/seo";
+import { AdminHome } from "../admin/home";
+import { AdminSections } from "../admin/sections";
+import { AdminVisits } from "../admin/visits";
+import { AdminTrash } from "../admin/trash";
+import { Card, PageTitle } from "../admin/ui";
+import { UserAvatar } from "../admin/avatar";
 
-type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "livre";
+type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "vagas" | "livre";
 
 type NavItem = {
   id: string;
@@ -37,15 +61,24 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { id: "overview", label: "Dashboard", Icon: BarChart3, area: "livre" },
+  { id: "visitas", label: "Visitas do site", Icon: Activity, area: "config" },
   { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
+  { id: "home", label: "Home", Icon: House, area: "conteudo" },
+  { id: "secoes", label: "Ordem das seções", Icon: ListOrdered, area: "conteudo" },
   { id: "cases", label: "Cases", Icon: Newspaper, area: "conteudo" },
-  { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo", soon: true },
-  { id: "produtos", label: "Catálogo", Icon: Package, area: "conteudo", soon: true },
+  { id: "listas", label: "Clientes e depoimentos", Icon: Quote, area: "conteudo" },
+  { id: "blog", label: "Blog", Icon: Newspaper, area: "conteudo" },
+  { id: "produtos", label: "Catálogo", Icon: Package, area: "conteudo" },
   { id: "loja", label: "Loja", Icon: ShoppingCart, area: "loja", soon: true },
-  { id: "vagas", label: "Vagas", Icon: Briefcase, area: "leads", soon: true },
-  { id: "midia", label: "Mídia", Icon: Images, area: "conteudo", soon: true },
-  { id: "site", label: "Dados do site", Icon: Sliders, area: "config", soon: true },
+  { id: "vagas", label: "Vagas", Icon: Briefcase, area: "vagas" },
+  { id: "midia", label: "Mídia", Icon: Images, area: "conteudo" },
+  { id: "site", label: "Dados do site", Icon: Sliders, area: "config" },
+  { id: "seo", label: "SEO das páginas", Icon: SearchCheck, area: "config" },
+  { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config" },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
+  { id: "avisos", label: "Avisos por e-mail", Icon: Bell, area: "usuarios" },
+  { id: "atividades", label: "Atividades", Icon: History, area: "livre" },
+  { id: "lixeira", label: "Lixeira", Icon: Trash2, area: "config" },
   { id: "conta", label: "Minha conta", Icon: UserCircle2, area: "livre" },
 ];
 
@@ -54,63 +87,18 @@ function allowed(role: string, area: Area) {
   if (role === "super_admin") return true;
   if (role === "admin") return area !== "usuarios";
   if (role === "vendedor") return area === "leads";
-  if (role === "editor") return area === "conteudo";
+  if (role === "editor") return area === "conteudo" || area === "vagas";
+  if (role === "rh") return area === "vagas";
   return false;
-}
-
-/** Checklist do que falta para cada aplicacao virar case real. So aparece no painel. */
-function CasesPending() {
-  return (
-    <div className="space-y-6">
-      <PageTitle
-        title="Cases: o que falta preencher"
-        hint="As páginas em /cases publicam a configuração técnica e um cenário simulado, nunca número de cliente. Para virar case de verdade, cada aplicação precisa dos itens abaixo. Este checklist aparece somente aqui no painel."
-      />
-      <div className="grid gap-4 lg:grid-cols-2">
-        {caseStudies.map((c) => (
-          <Card key={c.slug}>
-            <Badge>{c.segment}</Badge>
-            <h3 className="mt-2 font-display text-[16px] font-bold text-dm-ink">{c.title}</h3>
-            <a
-              href={`/cases/${c.slug}`}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-1 inline-block text-[12.5px] font-semibold text-dm-blue underline"
-            >
-              /cases/{c.slug}
-            </a>
-            <ul className="mt-4 space-y-3">
-              {c.pending.map((p) => (
-                <li key={p.field} className="flex gap-3">
-                  <span className="mt-0.5 h-4 w-4 shrink-0 rounded border-2 border-dm-red" />
-                  <span>
-                    <span className="block text-[13.5px] font-bold text-dm-ink">{p.field}</span>
-                    <span className="block text-[12.5px] leading-relaxed text-dm-ink/60">
-                      {p.why}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        ))}
-      </div>
-      <p className="text-[12.5px] text-dm-ink/50">
-        A edição dos cases com dados reais, fotos e depoimento entra na fase 3 do painel.
-      </p>
-    </div>
-  );
 }
 
 function Soon({ label }: { label: string }) {
   return (
     <div className="space-y-6">
-      <PageTitle title={label} hint="Esta área entra nas próximas fases do painel." />
+      <PageTitle title={label} hint="Esta área ainda está em construção." />
       <Card>
         <p className="text-[13.5px] leading-relaxed text-dm-ink/70">
-          A fase 1 entregou o login por pessoa, os papéis e a estrutura do painel. As telas de
-          edição de conteúdo, loja, vagas e mídia entram nas fases seguintes, na ordem combinada no
-          plano.
+          Em breve você vai poder cuidar desta parte do site direto por aqui.
         </p>
       </Card>
     </div>
@@ -119,7 +107,19 @@ function Soon({ label }: { label: string }) {
 
 function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) {
   const nav = useMemo(() => NAV.filter((n) => allowed(user.role, n.area)), [user.role]);
-  const [current, setCurrent] = useState(user.mustChangePassword ? "conta" : "overview");
+  const [current, setCurrent] = useState(
+    user.mustChangePassword ? "conta" : user.role === "rh" ? "vagas" : "overview",
+  );
+  const newApplications = useQuery({
+    queryKey: ["admin-candidaturas-novas"],
+    enabled: can(user.role, "candidatos"),
+    refetchInterval: 60_000,
+    queryFn: async () => {
+      const res = await api.admin.candidaturas.novas.$get();
+      return res.ok ? (await res.json()).total : 0;
+    },
+  });
+  const badges: Record<string, number> = { vagas: newApplications.data ?? 0 };
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [leadsFilter, setLeadsFilter] = useState<LeadsFilter | undefined>();
@@ -155,9 +155,11 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           <div className="flex items-center justify-between px-4 py-5">
             {!collapsed && (
               <img
-                src="/img/site/logo-white.png"
+                src="/img/site/logo-white.webp"
+                width={1406}
+                height={302}
                 alt="Demakine"
-                className="h-8 w-auto object-contain"
+                className="h-[25px] w-auto object-contain"
               />
             )}
             <button
@@ -193,13 +195,21 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
                   {!collapsed && (
                     <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
                       <span className="truncate">{n.label}</span>
+                      {!n.soon && (badges[n.id] ?? 0) > 0 && (
+                        <span
+                          className="rounded-full bg-dm-red px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white"
+                          title={`${badges[n.id]} candidatura(s) nova(s)`}
+                        >
+                          {badges[n.id]}
+                        </span>
+                      )}
                       {n.soon && (
                         <span
                           className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
                             active ? "bg-dm-blue/10 text-dm-blue" : "bg-white/15 text-white/70"
                           }`}
                         >
-                          fase
+                          em breve
                         </span>
                       )}
                     </span>
@@ -211,14 +221,19 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
         </div>
 
         <div className="border-t border-white/10 px-4 py-5">
-          {!collapsed && (
-            <>
-              <p className="truncate text-[13px] font-bold text-white">{user.name}</p>
-              <p className="truncate text-[11.5px] text-white/55">{user.email}</p>
-              <p className="mt-1.5 text-[10.5px] font-bold uppercase tracking-wide text-white/50">
-                {ROLE_LABEL[user.role] ?? user.role}
-              </p>
-            </>
+          {collapsed ? (
+            <UserAvatar name={user.name} image={user.image} size={38} className="mx-auto ring-white/20" />
+          ) : (
+            <div className="flex items-center gap-3">
+              <UserAvatar name={user.name} image={user.image} size={40} className="ring-white/20" />
+              <div className="min-w-0">
+                <p className="truncate text-[13px] font-bold text-white">{user.name}</p>
+                <p className="truncate text-[11.5px] text-white/55">{user.email}</p>
+                <p className="mt-1 text-[10.5px] font-bold uppercase tracking-wide text-white/50">
+                  {ROLE_LABEL[user.role] ?? user.role}
+                </p>
+              </div>
+            </div>
           )}
           <button
             onClick={onSignOut}
@@ -240,9 +255,11 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
             <Menu size={20} />
           </button>
           <img
-            src="/img/site/logo-white.png"
+            src="/img/site/logo-white.webp"
+            width={1406}
+            height={302}
             alt="Demakine"
-            className="h-7 w-auto object-contain"
+            className="h-[22px] w-auto object-contain"
           />
           <span className="ml-auto truncate text-[11px] font-bold uppercase tracking-wide text-white/60">
             {ROLE_LABEL[user.role] ?? user.role}
@@ -257,9 +274,25 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           )}
 
           {current === "overview" && <AdminDashboard user={user} onGo={go} />}
-          {current === "leads" && <AdminLeads key={JSON.stringify(leadsFilter ?? {})} initial={leadsFilter} />}
-          {current === "cases" && <CasesPending />}
+          {current === "leads" && (
+            <AdminLeads key={JSON.stringify(leadsFilter ?? {})} user={user} initial={leadsFilter} />
+          )}
+          {current === "cases" && <AdminCases user={user} />}
+          {current === "vagas" && <AdminVagas user={user} />}
+          {current === "site" && <AdminSiteSettings />}
+          {current === "midia" && <AdminMedia user={user} />}
+          {current === "produtos" && <AdminCatalog />}
+          {current === "blog" && <AdminBlog user={user} />}
           {current === "usuarios" && <AdminUsers me={user} />}
+          {current === "avisos" && <AdminNotifications />}
+          {current === "atividades" && <AdminActivity user={user} />}
+          {current === "redirecionamentos" && <AdminRedirects />}
+          {current === "listas" && <AdminLists />}
+          {current === "seo" && <AdminSeo />}
+          {current === "home" && <AdminHome />}
+          {current === "secoes" && <AdminSections />}
+          {current === "visitas" && <AdminVisits />}
+          {current === "lixeira" && <AdminTrash user={user} />}
           {current === "conta" && <AdminAccount user={user} forced={user.mustChangePassword} />}
           {item?.soon && <Soon label={item.label} />}
         </div>

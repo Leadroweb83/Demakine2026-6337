@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MoveHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 export type CompareSide = {
   image: string;
@@ -105,7 +106,7 @@ export function CompareSlider({
           max={98}
           value={Math.round(pos)}
           onChange={(e) => setPos(Number(e.target.value))}
-          aria-label={`Comparar ${left.label} com ${right.label}`}
+          aria-label={tr("Comparar {a} com {b}", { a: tr(left.label), b: tr(right.label) })}
           className="absolute bottom-3 left-1/2 h-1 w-2/3 -translate-x-1/2 cursor-ew-resize appearance-none rounded-full bg-white/35 opacity-0 focus-visible:opacity-100"
         />
       </div>

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { blogJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
 import { CtaBand, PageHero, Section } from "@/components/kit";
 import { formatDate, posts } from "@/lib/content";
@@ -24,13 +25,14 @@ export default function Blog() {
         title="Blog Demakine | Guias técnicos sobre transporte industrial"
         description="Guias completos sobre esteiras e roscas transportadoras, manutenção preventiva, escolha de equipamento e presença da Demakine nas maiores feiras do agronegócio."
         path="/blog"
+        jsonLd={blogJsonLd(posts)}
       />
 
       <PageHero
         eyebrow="Blog"
         title="Conteúdo técnico de quem fabrica os equipamentos"
         text="Guias práticos, checklists de manutenção e novidades da Demakine nas principais feiras do agronegócio brasileiro."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Blog" }]}
       />
 

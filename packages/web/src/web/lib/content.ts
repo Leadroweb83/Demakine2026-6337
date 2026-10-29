@@ -1,4 +1,7 @@
 import raw from "../data/content.json";
+import { deletedKeys, editedDocs } from "./runtime-content";
+import { toWebp } from "./images";
+import { formatLocale, locale, tr } from "./i18n";
 
 export type Category = {
   slug: string;
@@ -24,9 +27,12 @@ export type Product = {
   images: string[];
   seoTitle?: string;
   seoDesc?: string;
+  /** vídeos do YouTube editados no painel; sem isto vale a lista de product-videos.ts */
+  videos?: { id: string; title: string }[];
 };
 
-export type Client = { id: number; name: string; segment: string; logo: string };
+/** state: sigla da UF (SP, MG...) onde fica o cliente; usado no mapa da home */
+export type Client = { id: number; name: string; segment: string; logo: string; state?: string };
 export type Testimonial = { name: string; company: string; city: string; text: string };
 export type Project = { slug: string; name: string; desc: string; images: string[] };
 export type Post = {
@@ -37,6 +43,10 @@ export type Post = {
   cover: string;
   blocks: string[];
   images: string[];
+  seoTitle?: string;
+  seoDesc?: string;
+  /** rascunho salvo no painel: não aparece no site */
+  draft?: boolean;
 };
 
 const content = raw as unknown as {
@@ -53,7 +63,6 @@ const FEATURED_ORDER = [
   "esteira-transportadora-para-sacaria",
   "esteira-transportadora-para-granel",
   "esteira-transportadora-horizontal",
-  "esteira-transportadora-em-v",
   "rosca-transportadora",
   "elevador-de-canecas",
   "maquina-de-costurar-sacos-gk-26",
@@ -62,22 +71,99 @@ const FEATURED_ORDER = [
 
 export const categories = content.categories;
 
-export const products = [...content.products].sort((a, b) => {
+/** Produto ainda sem foto própria usa a foto da fábrica, para nenhuma vitrine quebrar. */
+const FALLBACK_IMAGE = "/img/site/hero.webp";
+
+/** Produtos como vêm no código, sem as edições do painel (base do editor de catálogo). */
+export const DEFAULT_PRODUCTS: readonly Product[] = content.products;
+
+export const EMPTY_PRODUCT: Product = {
+  slug: "",
+  name: "",
+  title: "",
+  category: "",
+  applications: [],
+  summary: "",
+  description: [],
+  features: [],
+  models: [],
+  specKeys: [],
+  images: [],
+};
+
+/** Junta o catálogo do código com o painel: edita por slug, acrescenta os novos e tira os ocultos. */
+function withPanelEdits(base: Product[]) {
+  const edits = editedDocs<Product>("produto");
+  const hidden = new Set(deletedKeys("produto"));
+  const known = new Set(base.map((p) => p.slug));
+  const merged = base.map((p) => (edits[p.slug] ? { ...p, ...edits[p.slug], slug: p.slug } : p));
+  for (const [slug, doc] of Object.entries(edits)) {
+    if (!known.has(slug) && doc.name && doc.category) merged.push({ ...EMPTY_PRODUCT, ...doc, slug });
+  }
+  return merged.filter((p) => !hidden.has(p.slug));
+}
+
+export const products = withPanelEdits(content.products).map((p) =>
+  p.images.length ? { ...p, images: p.images.map((i) => toWebp(i)) } : { ...p, images: [FALLBACK_IMAGE] },
+).sort((a, b) => {
   const ia = FEATURED_ORDER.indexOf(a.slug);
   const ib = FEATURED_ORDER.indexOf(b.slug);
   if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
   return a.name.localeCompare(b.name, "pt-BR");
 });
 
-export const clients = content.clients;
-export const testimonials = content.testimonials;
-export const projects = content.projects;
-export const posts = [...content.posts].sort((a, b) => b.date.localeCompare(a.date));
+/** Listas como vêm no código (base do editor de depoimentos e clientes). */
+export const DEFAULT_CLIENTS: readonly Client[] = content.clients;
+export const DEFAULT_TESTIMONIALS: readonly Testimonial[] = content.testimonials;
 
-export const bestSeller = "esteira-transportadora-para-sacaria";
+/** Lista inteira editada no painel substitui a do código (coleção "lista"). */
+export const clients = (editedDocs<{ items: Client[] }>("lista").clientes?.items ?? content.clients).map((c) => ({
+  ...c,
+  logo: toWebp(c.logo),
+}));
+export const testimonials = editedDocs<{ items: Testimonial[] }>("lista").depoimentos?.items ?? content.testimonials;
+export const projects = content.projects;
+/** Posts como vêm no código, sem as edições do painel (base do editor do blog). */
+export const DEFAULT_POSTS: readonly Post[] = content.posts;
+
+export const EMPTY_POST: Post = { slug: "", title: "", category: "", date: "", cover: "", blocks: [], images: [] };
+
+function postsWithPanelEdits(base: Post[]) {
+  const edits = editedDocs<Post>("post");
+  const hidden = new Set(deletedKeys("post"));
+  const known = new Set(base.map((p) => p.slug));
+  const merged = base.map((p) => (edits[p.slug] ? { ...p, ...edits[p.slug], slug: p.slug } : p));
+  for (const [slug, doc] of Object.entries(edits)) {
+    if (!known.has(slug) && doc.title && doc.date) merged.push({ ...EMPTY_POST, ...doc, slug });
+  }
+  return merged.filter((p) => !hidden.has(p.slug) && !p.draft);
+}
+
+export const posts = postsWithPanelEdits(content.posts)
+  .map((p) => ({ ...p, cover: toWebp(p.cover), images: p.images.map((i) => toWebp(i)) }))
+  .sort((a, b) => b.date.localeCompare(a.date));
+
+/** Endereços de produtos que foram unificados; o 301 de verdade fica no vercel.json. */
+export const productAliases: Record<string, string> = {
+  "esteira-transportadora-em-v": "esteira-transportadora-para-granel",
+};
 
 export function getProduct(slug: string) {
-  return products.find((p) => p.slug === slug);
+  const real = productAliases[slug] ?? slug;
+  return products.find((p) => p.slug === real);
+}
+
+/** Artigo certo antes do nome do equipamento: "o Elevador", "a Esteira". */
+export function artigo(name: string) {
+  const here = locale();
+  if (here === "en") return { a: "the", A: "The", da: "for the", para: "for the" };
+  if (here === "es") {
+    // o gênero é o do nome já traduzido ("la cinta", "el elevador")
+    const fem = /^(cinta|máquina|criba|zaranda|canaleta|línea)/i.test(tr(name).trim());
+    return fem ? { a: "la", A: "La", da: "de la", para: "para la" } : { a: "el", A: "El", da: "del", para: "para el" };
+  }
+  const masc = /^(elevador|cartrans|carrinho|mini sistema|sistema)/i.test(name.trim());
+  return masc ? { a: "o", A: "O", da: "do", para: "para o" } : { a: "a", A: "A", da: "da", para: "para a" };
 }
 
 export function getPost(slug: string) {
@@ -101,7 +187,7 @@ export function relatedProducts(product: Product, limit = 3) {
 export function formatDate(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
   if (!y || !m || !d) return iso;
-  return new Date(y, m - 1, d).toLocaleDateString("pt-BR", {
+  return new Date(y, m - 1, d).toLocaleDateString(formatLocale(), {
     day: "2-digit",
     month: "long",
     year: "numeric",

@@ -1,8 +1,9 @@
 import { S3Client } from "@aws-sdk/client-s3";
 
 export const s3 = new S3Client({
-  region: "auto",
+  region: process.env.S3_REGION ?? "auto",
   endpoint: process.env.S3_ENDPOINT,
+  forcePathStyle: true,
   credentials: {
     accessKeyId: process.env.S3_ACCESS_KEY_ID!,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
@@ -10,6 +11,32 @@ export const s3 = new S3Client({
 });
 
 export const S3_BUCKET = process.env.S3_BUCKET!;
+
+/** Fotos de perfil da equipe (bucket público, nome de arquivo aleatório). */
+export const AVATAR_BUCKET = "avatars";
+export const AVATAR_TYPES = ["image/webp", "image/jpeg", "image/png"];
+
+/** URL pública de um arquivo num bucket público do Supabase Storage. */
+export function publicUrl(bucket: string, key: string) {
+  const base = (process.env.S3_ENDPOINT ?? "").replace(
+    ".storage.supabase.co/storage/v1/s3",
+    ".supabase.co/storage/v1/object/public",
+  );
+  return `${base}/${bucket}/${key}`;
+}
+
+export function avatarPublicUrl(key: string) {
+  return publicUrl(AVATAR_BUCKET, key);
+}
+
+/** Biblioteca de mídia do site (bucket público, 8 MB, só WEBP/JPG/PNG no próprio bucket). */
+export const MEDIA_BUCKET = "midia";
+export const MEDIA_TYPES = ["image/webp", "image/jpeg", "image/png"];
+export const MEDIA_MAX_BYTES = 8 * 1024 * 1024;
+
+/** Currículos das candidaturas (bucket privado, só PDF, 5 MB no próprio bucket). */
+export const RESUME_BUCKET = "curriculos";
+export const RESUME_MAX_BYTES = 5 * 1024 * 1024;
 
 /** Só imagem, para o upload de foto de peça. */
 export const ALLOWED_IMAGE_TYPES = [

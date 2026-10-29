@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { MessageCircle, Send } from "lucide-react";
-import { site, waLink } from "@/lib/site";
+import { Send } from "lucide-react";
+import { site } from "@/lib/site";
 import { useCompare } from "./compare";
 
 /** Barra de progresso de leitura no topo. */
@@ -62,15 +62,6 @@ export function StickyCta() {
           <Send className="h-4 w-4" />
           Orçamento
         </Link>
-        <a
-          href={waLink("Olá! Vim pelo site da Demakine e quero falar com um especialista.")}
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-dm-green px-4 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white"
-        >
-          <MessageCircle className="h-4 w-4" />
-          WhatsApp
-        </a>
       </div>
     </div>
   );

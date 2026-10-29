@@ -8,8 +8,9 @@ import {
   type MaterialKey,
   type QuizAnswers,
 } from "@/lib/engine";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 type Step = {
   key: keyof QuizAnswers;
@@ -59,7 +60,7 @@ const steps: Step[] = [
     question: "Como é o ambiente?",
     hint: "Define acabamento: pintura, galvanização ou inox.",
     options: [
-      { value: "comum", label: "Galpão comum", sub: "pintura industrial" },
+      { value: "comum", label: "Galpão comum", sub: "pintura PU" },
       { value: "sanitario", label: "Alimentício / sanitário", sub: "aço inox, correia atóxica" },
       { value: "externo", label: "Exposto ao tempo", sub: "galvanizado a fogo" },
     ],
@@ -94,12 +95,12 @@ export function Quiz({ dark = false }: { dark?: boolean }) {
         </div>
 
         <div className="mt-5 grid gap-6 md:grid-cols-[1fr_1.1fr] md:items-center">
-          <div className="overflow-hidden rounded-2xl bg-dm-surface">
+          <div className="overflow-hidden rounded-2xl bg-white">
             <img
               src={result.main.images[0]}
               alt={result.main.name}
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover"
+              className="aspect-[4/3] w-full object-contain p-2"
             />
           </div>
           <div>
@@ -115,16 +116,15 @@ export function Quiz({ dark = false }: { dark?: boolean }) {
               ))}
             </ul>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={waLink(
-                  `Olá! Fiz o teste no site e o resultado foi: ${result.main.name}. Quero um orçamento.`,
-                )}
-                target="_blank"
-                rel="noreferrer"
-                className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+              <Link
+                href={quoteHref({
+                  produto: result.main.name,
+                  mensagem: tr("Olá! Fiz o teste no site e o resultado foi: {produto}. Quero um orçamento.", { produto: tr(result.main.name) }),
+                })}
+                className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
               >
                 Pedir orçamento
-              </a>
+              </Link>
               <Link
                 href={`/produtos/${result.main.slug}`}
                 className={cn(

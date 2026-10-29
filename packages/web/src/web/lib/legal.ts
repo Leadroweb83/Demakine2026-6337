@@ -105,7 +105,11 @@ export const privacySections: LegalSection[] = [
       },
       {
         kind: "p",
-        text: "Os cookies de medição servem para entender quais páginas e produtos são mais procurados. Eles só são ativados depois que você aceita no banner, e você pode mudar de ideia a qualquer momento pelo próprio banner ou apagando os cookies do navegador.",
+        text: "Os cookies de medição e anúncios são do Google (Google Tag Manager, Google Analytics e Google Ads). Servem para entender quais páginas e produtos são mais procurados e para medir o resultado das nossas campanhas, inclusive quando alguém pede orçamento pelo site ou pelo WhatsApp. O código do Google carrega quando o site abre, mas sem gravar cookies: eles só são ativados depois que você aceita no banner. Sem o aceite, o Google recebe apenas sinais anônimos, sem identificar o seu navegador. Você pode mudar de ideia a qualquer momento pelo link \"Preferências de cookies\", no rodapé, ou apagando os cookies do navegador.",
+      },
+      {
+        kind: "p",
+        text: "Além disso, contamos as visitas com uma medição própria, sem cookies: a página vista, de onde você chegou (por exemplo, uma busca no Google), o tipo de aparelho e a cidade aproximada pela conexão. O endereço IP não é guardado e não dá para identificar você nem acompanhar suas visitas de um dia para o outro. Esses números servem só para melhorar o site e ficam guardados por até 13 meses.",
       },
     ],
   },
@@ -122,7 +126,7 @@ export const privacySections: LegalSection[] = [
         items: [
           "Provedor de hospedagem e banco de dados, que armazena os registros do site",
           "Serviço de armazenamento de arquivos, quando você envia foto de peça",
-          "Ferramenta de medição de audiência, em formato agregado",
+          "Google, para medição de audiência e de campanhas, só com o seu aceite nos cookies",
           "Transportadora, quando há entrega de equipamento ou peça",
           "Autoridades públicas, quando houver obrigação legal ou determinação judicial",
         ],

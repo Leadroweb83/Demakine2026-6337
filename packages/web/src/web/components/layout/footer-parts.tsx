@@ -17,6 +17,7 @@ import { categoryName, products, searchProducts } from "@/lib/content";
 import { site } from "@/lib/site";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /* ------------------------------------------------------- busca no rodapé */
 
@@ -45,11 +46,11 @@ export function FooterSearch() {
 
   return (
     <div ref={boxRef} className="relative">
-      <label className="eyebrow block text-white/45" htmlFor="footer-search">
+      <label className="eyebrow block text-white/60" htmlFor="footer-search">
         Buscar equipamento
       </label>
       <div className="relative mt-3">
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
         <input
           id="footer-search"
           value={query}
@@ -61,16 +62,16 @@ export function FooterSearch() {
             setQuery(e.target.value);
             setOpen(true);
           }}
-          placeholder={`Buscar entre as ${products.length} máquinas`}
+          placeholder="Buscar equipamento"
           autoComplete="off"
-          className="w-full rounded-full border border-white/15 bg-white/[0.06] py-3.5 pl-11 pr-4 text-[14.5px] text-white outline-none transition-colors placeholder:text-white/40 focus:border-dm-green/70 focus:bg-white/[0.09]"
+          className="w-full rounded-full border border-white/15 bg-white/[0.06] py-3.5 pl-11 pr-4 text-[14.5px] text-white outline-none transition-colors placeholder:text-white/55 focus:border-dm-green/70 focus:bg-white/[0.09]"
         />
       </div>
 
       {open && (
         <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-50 overflow-hidden rounded-2xl border border-white/12 bg-[#08182f] shadow-2xl shadow-black/50">
-          <p className="border-b border-white/10 px-4 py-2.5 text-[11.5px] font-bold uppercase tracking-wider text-white/40">
-            {q.length > 0 ? `${results.length} resultado(s)` : "Mais procurados"}
+          <p className="border-b border-white/10 px-4 py-2.5 text-[11.5px] font-bold uppercase tracking-wider text-white/60">
+            {q.length > 0 ? tr("{n} resultado(s)", { n: results.length }) : "Mais procurados"}
           </p>
           {results.length === 0 ? (
             <div className="px-4 py-4">
@@ -166,19 +167,19 @@ function status() {
   const today = HOURS[day];
 
   if (today && hour >= today.open && hour < today.close) {
-    return { open: true, text: `Aberto agora · fecha às ${hhmm(today.close)}` };
+    return { open: true, text: tr("Aberto agora · fecha às {hora}", { hora: hhmm(today.close) }) };
   }
 
   if (today && hour < today.open) {
-    return { open: false, text: `Fechado · abrimos hoje às ${hhmm(today.open)}` };
+    return { open: false, text: tr("Fechado · abrimos hoje às {hora}", { hora: hhmm(today.open) }) };
   }
 
   for (let i = 1; i <= 7; i++) {
     const d = (day + i) % 7;
     const next = HOURS[d];
     if (next) {
-      const when = i === 1 ? "amanhã" : DAY_LABEL[d];
-      return { open: false, text: `Fechado · abrimos ${when} às ${hhmm(next.open)}` };
+      const when = tr(i === 1 ? "amanhã" : DAY_LABEL[d]!);
+      return { open: false, text: tr("Fechado · abrimos {quando} às {hora}", { quando: when, hora: hhmm(next.open) }) };
     }
   }
 
@@ -216,9 +217,9 @@ export function OpenStatus({ className }: { className?: string }) {
         </span>
         {state.text}
       </span>
-      <span className="flex items-center gap-1.5 text-[12.5px] text-white/40">
+      <span className="flex items-center gap-1.5 text-[12.5px] text-white/60">
         <Clock className="h-3.5 w-3.5" />
-        Seg a Qui 07h30 às 17h30 · Sex 07h30 às 16h30
+        {site.hoursLine}
       </span>
     </div>
   );
@@ -227,7 +228,7 @@ export function OpenStatus({ className }: { className?: string }) {
 /* ------------------------------------------------------------------- selos */
 
 const badges = [
-  { Icon: BadgeCheck, label: "+15 anos de mercado" },
+  { Icon: BadgeCheck, label: "+14 anos de mercado" },
   { Icon: Factory, label: "Fábrica própria" },
   { Icon: Truck, label: "Entrega nacional" },
   { Icon: Wrench, label: "Assistência técnica" },
@@ -305,7 +306,7 @@ export function NewsletterBox() {
           }}
           placeholder="seu@email.com.br"
           aria-label="Seu e-mail"
-          className="w-full rounded-full border border-white/15 bg-[#08182f] px-4 py-3 text-[14.5px] text-white outline-none transition-colors placeholder:text-white/35 focus:border-dm-green/70"
+          className="w-full rounded-full border border-white/15 bg-[#08182f] px-4 py-3 text-[14.5px] text-white outline-none transition-colors placeholder:text-white/55 focus:border-dm-green/70"
         />
         <button
           type="submit"
@@ -332,31 +333,19 @@ export function LocalBusinessBlock({ cnpj }: { cnpj?: string }) {
     <div
       itemScope
       itemType="https://schema.org/LocalBusiness"
-      className="grid gap-x-8 gap-y-3 text-[13px] leading-relaxed text-white/45 md:grid-cols-3"
+      className="grid gap-x-8 gap-y-3 text-[13px] leading-relaxed text-white/60 md:grid-cols-2"
     >
-      <meta itemProp="image" content={`${site.url}/img/site/logo-blue.png`} />
+      <meta itemProp="image" content={`${site.url}/img/site/logo-blue.webp`} />
       <meta itemProp="priceRange" content="$$" />
       <link itemProp="url" href={site.url} />
 
-      <p>
-        <span className="block text-[11.5px] font-bold uppercase tracking-wider text-white/35">
-          Razão social
-        </span>
-        <span itemProp="legalName" className="text-white/65">
-          {site.legal}
-        </span>
-        <span className="hidden" itemProp="name">
-          {site.name}
-        </span>
-        {cnpj && (
-          <span className="mt-1 block" itemProp="taxID">
-            CNPJ {cnpj}
-          </span>
-        )}
-      </p>
+      {/* razão social fora da vista (pedido do cliente), mas ainda nos dados para o Google */}
+      <meta itemProp="legalName" content={site.legal} />
+      <meta itemProp="name" content={site.name} />
+      {cnpj && <meta itemProp="taxID" content={cnpj} />}
 
       <p itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
-        <span className="block text-[11.5px] font-bold uppercase tracking-wider text-white/35">
+        <span className="block text-[11.5px] font-bold uppercase tracking-wider text-white/60">
           Endereço da fábrica
         </span>
         <span itemProp="streetAddress" className="text-white/65">
@@ -380,7 +369,7 @@ export function LocalBusinessBlock({ cnpj }: { cnpj?: string }) {
       </p>
 
       <p>
-        <span className="block text-[11.5px] font-bold uppercase tracking-wider text-white/35">
+        <span className="block text-[11.5px] font-bold uppercase tracking-wider text-white/60">
           Atendimento
         </span>
         <a href={site.phoneHref} itemProp="telephone" className="text-white/65 hover:text-white">
@@ -393,7 +382,7 @@ export function LocalBusinessBlock({ cnpj }: { cnpj?: string }) {
         </span>
         <meta itemProp="openingHours" content="Mo-Th 07:30-17:30" />
         <meta itemProp="openingHours" content="Fr 07:30-16:30" />
-        <span className="mt-0.5 block">Seg a Qui 07h30 às 17h30 · Sex 07h30 às 16h30</span>
+        <span className="mt-0.5 block">{site.hoursLine}</span>
       </p>
     </div>
   );
@@ -437,9 +426,7 @@ export function BrandWordmark() {
           transform: `translate3d(${(shift - 0.5) * 3}%, ${(1 - shift) * 14}px, 0)`,
           opacity: 0.1 + shift * 0.16,
         }}
-      >
-        DEMAKINE
-      </span>
+      />
     </div>
   );
 }

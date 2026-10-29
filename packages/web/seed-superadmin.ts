@@ -1,16 +1,12 @@
 /**
  * Cria (ou reseta a senha de) o super admin do painel.
- * Uso: cd packages/web && bun --env-file=../../.env ../../tools/seed-superadmin.ts
+ * Uso: cd packages/web && bun --env-file=../../.env seed-superadmin.ts
  * Senha: usa SUPER_ADMIN_PASSWORD do .env; se nao existir, gera uma forte e imprime.
  */
 import { eq } from "drizzle-orm";
-import { db } from "/home/user/demakine/site-demakine/packages/web/src/api/database";
-import * as schema from "/home/user/demakine/site-demakine/packages/web/src/api/database/schema";
-import {
-  createPanelUser,
-  randomPassword,
-  setUserPassword,
-} from "/home/user/demakine/site-demakine/packages/web/src/api/lib/users";
+import { db } from "./src/api/database";
+import * as schema from "./src/api/database/schema";
+import { createPanelUser, randomPassword, setUserPassword } from "./src/api/lib/users";
 
 const EMAIL = "leandroweb83@gmail.com";
 const NAME = "Leandro";

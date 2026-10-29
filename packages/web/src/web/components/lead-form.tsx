@@ -1,10 +1,15 @@
 import { useState, type ReactNode } from "react";
+import { ABROAD, UFS, withState } from "@/lib/uf";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
+import { track } from "@/lib/tracking";
+import { visitAttribution } from "@/lib/visits";
 import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
-import { waLink } from "@/lib/site";
+import { LeadOriginField } from "@/components/lead-origin-field";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 type LeadFormProps = {
   source?: string;
@@ -20,12 +25,19 @@ type LeadFormProps = {
   successExtra?: ReactNode;
   /** Texto alternativo do painel de sucesso. */
   successTitle?: string;
+  /**
+   * Depois de enviar, abre a página de obrigado (/obrigado), que é a conversão medida no GTM e no
+   * Google Ads. Padrão: sim, menos quando o painel de sucesso tem conteúdo próprio (links liberados).
+   */
+  thankYouPage?: boolean;
   /** Habilita o anexo de foto da peca/maquina (ate 3 imagens). */
   photos?: boolean;
   /** Rotulo do bloco de foto, quando habilitado. */
   photoLabel?: string;
   /** Ajuda do bloco de foto, quando habilitado. */
   photoHint?: string;
+  /** texto que já vem escrito na mensagem (botões de orçamento das ferramentas e produtos) */
+  initialMessage?: string;
 };
 
 const inputBase =
@@ -42,18 +54,23 @@ export function LeadForm({
   onSuccess,
   successExtra,
   successTitle,
+  thankYouPage,
   photos = false,
   photoLabel,
   photoHint,
+  initialMessage = "",
 }: LeadFormProps) {
   const dark = variant === "dark";
+  const [, navigate] = useLocation();
+  const goToThanks = thankYouPage ?? !successExtra;
   const [form, setForm] = useState({
     name: "",
     company: "",
     phone: "",
     email: "",
     city: "",
-    message: "",
+    uf: "",
+    message: initialMessage,
   });
   const [error, setError] = useState<string | null>(null);
   const [shots, setShots] = useState<UploadedPhoto[]>([]);
@@ -61,16 +78,20 @@ export function LeadForm({
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product, source, attachments: shots.map((s) => s.key) },
+        json: { ...withState(form), product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
     },
     onError: () => setError("Não foi possível enviar. Tente pelo WhatsApp."),
-    onSuccess: () => onSuccess?.(),
+    onSuccess: () => {
+      track("generate_lead", { form_source: source, product: product ?? null });
+      onSuccess?.();
+      if (goToThanks) navigate(`/obrigado?origem=${encodeURIComponent(source)}`);
+    },
   });
 
-  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
 
   if (send.isSuccess) {
@@ -87,22 +108,10 @@ export function LeadForm({
         <h3 className={cn("h3 mt-4", dark && "text-white")}>
           {successTitle ?? "Recebemos seu pedido"}
         </h3>
+        {/* sem botão de WhatsApp aqui: a ideia é o cliente aguardar o contato do vendedor */}
         <p className={cn("mt-2 text-[15px]", dark ? "text-white/65" : "text-dm-gray")}>
-          Um especialista da Demakine entra em contato em até 1 dia útil. Quer agilizar? Fale agora no
-          WhatsApp.
+          Um especialista da Demakine entra em contato em até 1 dia útil.
         </p>
-        <a
-          href={waLink(
-            product
-              ? `Olá! Acabei de pedir orçamento no site sobre: ${product}.`
-              : "Olá! Acabei de enviar um pedido de orçamento pelo site da Demakine.",
-          )}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-5 inline-block rounded-full bg-dm-green px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-        >
-          Falar no WhatsApp
-        </a>
         {successExtra && <div className="mt-6">{successExtra}</div>}
       </div>
     );
@@ -113,8 +122,9 @@ export function LeadForm({
       onSubmit={(e) => {
         e.preventDefault();
         setError(null);
-        if (!form.name.trim() || !form.phone.trim()) {
-          setError("Preencha nome e telefone.");
+        const missing = [form.name, form.company, form.phone, form.email, form.city, form.uf, form.message].some((v) => !v.trim());
+        if (missing) {
+          setError("Preencha todos os campos.");
           return;
         }
         send.mutate();
@@ -124,6 +134,7 @@ export function LeadForm({
         dark ? "border-white/12 bg-white/[0.04]" : "border-dm-line bg-white shadow-sm",
       )}
     >
+      <LeadOriginField />
       {title && <h3 className={cn("h3", dark && "text-white")}>{title}</h3>}
       {subtitle && (
         <p className={cn("mt-2 text-[15px]", dark ? "text-white/60" : "text-dm-gray")}>{subtitle}</p>
@@ -162,9 +173,10 @@ export function LeadForm({
 
         <div className="grid gap-3 sm:grid-cols-2">
           <input
+            required
             value={form.company}
             onChange={set("company")}
-            placeholder="Empresa"
+            placeholder="Empresa*"
             aria-label="Empresa"
             className={cn(
               inputBase,
@@ -174,10 +186,13 @@ export function LeadForm({
             )}
           />
           <input
-            value={form.city}
-            onChange={set("city")}
-            placeholder="Cidade / UF"
-            aria-label="Cidade"
+            required
+            type="email"
+            value={form.email}
+            onChange={set("email")}
+            placeholder="E-mail*"
+            aria-label="E-mail"
+            autoComplete="email"
             className={cn(
               inputBase,
               dark
@@ -187,13 +202,15 @@ export function LeadForm({
           />
         </div>
 
-        {!compact && (
+        {/* cidade e estado, cada um na sua coluna */}
+        <div className="grid grid-cols-2 gap-3">
           <input
-            type="email"
-            value={form.email}
-            onChange={set("email")}
-            placeholder="E-mail"
-            aria-label="E-mail"
+            required
+            value={form.city}
+            onChange={set("city")}
+            placeholder="Cidade*"
+            aria-label="Cidade"
+            autoComplete="address-level2"
             className={cn(
               inputBase,
               dark
@@ -201,16 +218,40 @@ export function LeadForm({
                 : "border-dm-line bg-white text-dm-ink placeholder:text-dm-gray/70 focus:border-dm-blue",
             )}
           />
-        )}
+          <select
+            required
+            value={form.uf}
+            onChange={set("uf")}
+            aria-label="Estado"
+            autoComplete="address-level1"
+            className={cn(
+              inputBase,
+              "px-3",
+              dark
+                ? "border-white/15 bg-white/5 focus:border-white/45 [&>option]:text-dm-ink"
+                : "border-dm-line bg-white focus:border-dm-blue",
+              form.uf ? (dark ? "text-white" : "text-dm-ink") : dark ? "text-white/40" : "text-dm-gray/70",
+            )}
+          >
+            <option value="">Estado*</option>
+            {UFS.map((uf) => (
+              <option key={uf} value={uf}>
+                {uf}
+              </option>
+            ))}
+            <option value={ABROAD}>Exterior</option>
+          </select>
+        </div>
 
         <textarea
+          required
           value={form.message}
           onChange={set("message")}
           rows={compact ? 2 : 4}
           placeholder={
             product
-              ? `Conte o que precisa (material transportado, comprimento, altura, capacidade) para ${product}`
-              : "Conte o que precisa: material transportado, comprimento, altura e capacidade"
+              ? `${tr("Conte o que precisa (material transportado, comprimento, altura, capacidade) para {produto}", { produto: tr(product) })}*`
+              : `${tr("Conte o que precisa: material transportado, comprimento, altura e capacidade")}*`
           }
           aria-label="Mensagem"
           className={cn(
@@ -251,7 +292,7 @@ export function LeadForm({
         {send.isPending ? "Enviando..." : buttonLabel}
       </button>
 
-      <p className={cn("mt-3 text-center text-[12.5px]", dark ? "text-white/40" : "text-dm-gray/80")}>
+      <p className={cn("mt-3 text-center text-[12.5px]", dark ? "text-white/40" : "text-dm-gray")}>
         Resposta em até 1 dia útil. Seus dados não são compartilhados.
       </p>
     </form>

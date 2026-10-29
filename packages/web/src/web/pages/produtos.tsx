@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import { useSearch } from "wouter";
-import { Search, X } from "lucide-react";
+import { Download, Search, X } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { itemListJsonLd } from "@/lib/schema";
 import { Reveal } from "@/components/reveal";
 import { CtaBand, PageHero, ProductCard, Section } from "@/components/kit";
 import { categories, categoryName, products } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 export default function Produtos() {
   const search = useSearch();
@@ -37,16 +39,31 @@ export default function Produtos() {
     <>
       <Seo
         title="Catálogo de Equipamentos | Demakine"
-        description="21 equipamentos agroindustriais: esteiras transportadoras, roscas, elevadores de canecas e de sacaria, máquinas de costurar sacos e peneiras. Especificações, modelos e capacidades."
+        description={tr("Mais de {n} equipamentos agroindustriais: esteiras, roscas, elevadores, máquinas de costurar sacos e peneiras, com modelos, medidas e capacidades.", { n: products.length })}
         path="/produtos"
+        jsonLd={itemListJsonLd(
+          "Catálogo de equipamentos Demakine",
+          products.map((p) => ({ name: p.name, path: `/produtos/${p.slug}`, image: p.images[0] })),
+        )}
       />
 
       <PageHero
         eyebrow="Catálogo"
         title="Equipamentos para transportar, elevar, empacotar e costurar"
         text="Todos os modelos são fabricados na nossa unidade em Limeira/SP e podem ser adaptados ao seu layout, material e capacidade."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Produtos" }]}
+        action={
+          <a
+            href="/downloads/catalogo-demakine.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-dm-blue-deep shadow-lg shadow-black/20 transition-colors hover:bg-dm-blue-soft"
+          >
+            <Download className="h-4 w-4" />
+            Baixar catálogo completo (PDF)
+          </a>
+        }
       />
 
       <Section>
@@ -65,9 +82,12 @@ export default function Produtos() {
                 )}
               >
                 {f.name}
-                <span className={cn("ml-1.5 text-[12px]", cat === f.slug ? "text-white/60" : "text-dm-gray/70")}>
-                  {f.count}
-                </span>
+                {/* o total geral não aparece (pedido do cliente); as linhas mostram quantos modelos têm */}
+                {f.slug !== "all" && (
+                  <span className={cn("ml-1.5 text-[12px]", cat === f.slug ? "text-white/60" : "text-dm-gray/70")}>
+                    {f.count}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -96,8 +116,12 @@ export default function Produtos() {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-[14px] text-dm-gray">
-            {list.length} {list.length === 1 ? "equipamento" : "equipamentos"}
-            {cat !== "all" && ` em ${categoryName(cat)}`}
+            {cat === "all" && !query.trim() ? null : (
+              <>
+                {list.length} {list.length === 1 ? "equipamento" : "equipamentos"}
+                {cat !== "all" && ` ${tr("em {categoria}", { categoria: tr(categoryName(cat)) })}`}
+              </>
+            )}
           </p>
           <p className="text-[13.5px] text-dm-gray">
             Marque <strong className="font-semibold text-dm-ink">Comparar</strong> em até 3 cards para

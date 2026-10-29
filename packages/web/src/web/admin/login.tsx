@@ -39,9 +39,11 @@ export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
         className="relative w-full max-w-[400px] rounded-3xl bg-white p-8 shadow-2xl"
       >
         <img
-          src="/img/site/logo-blue.png"
+          src="/img/site/logo-blue.webp"
+          width={1406}
+          height={302}
           alt="Demakine"
-          className="mx-auto h-10 w-auto object-contain"
+          className="mx-auto h-8 w-auto object-contain"
         />
         <h1 className="mt-6 text-center font-display text-[20px] font-extrabold text-dm-ink">
           Painel Demakine
@@ -58,7 +60,6 @@ export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
               onChange={(e) => setEmail(e.target.value)}
               className={inputCls}
               autoComplete="username"
-              autoFocus
               required
             />
           </Field>

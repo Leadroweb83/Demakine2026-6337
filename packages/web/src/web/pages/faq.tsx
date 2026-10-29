@@ -1,17 +1,17 @@
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { FaqAccordion } from "@/components/faq";
-import { BtnGhost, BtnWhats, CtaBand, PageHero, Section } from "@/components/kit";
+import { BtnGhost, BtnPrimary, CtaBand, PageHero, Section } from "@/components/kit";
 import { faqFlat, faqGroups, faqJsonLd } from "@/lib/faq";
-import { site, waLink } from "@/lib/site";
+import { quoteHref, site } from "@/lib/site";
 
 export default function Faq() {
   return (
     <>
       <Seo
         title="Perguntas frequentes | Demakine"
-        description="Prazo, frete, correia, inclinação, instalação, peças de reposição e assistência técnica: as dúvidas que mais recebemos sobre esteiras, roscas, elevadores e empacotamento."
+        description="Prazo, frete, correia, inclinação, instalação, peças e assistência técnica: as dúvidas mais comuns sobre esteiras, roscas, elevadores e empacotamento."
         path="/faq"
         jsonLd={faqJsonLd(faqFlat)}
       />
@@ -20,7 +20,7 @@ export default function Faq() {
         eyebrow="Perguntas frequentes"
         title="As dúvidas que mais chegam na fábrica"
         text="Reunimos aqui o que o comprador industrial pergunta antes de fechar: como funciona o orçamento, como escolher correia e capacidade, o que preparar para instalar e como funciona a assistência depois da entrega."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Perguntas frequentes" }]}
       />
 
@@ -51,13 +51,12 @@ export default function Faq() {
                 operação.
               </p>
               <div className="mt-4 flex flex-col gap-2.5">
-                <BtnWhats
-                  href={waLink("Olá! Tenho uma dúvida sobre equipamentos Demakine.")}
+                <BtnPrimary
+                  to={quoteHref({ mensagem: "Olá! Tenho uma dúvida sobre equipamentos Demakine." })}
                   className="gap-2"
                 >
-                  <MessageCircle className="h-4 w-4" />
-                  Falar no WhatsApp
-                </BtnWhats>
+                  Falar com um especialista
+                </BtnPrimary>
                 <BtnGhost href={site.phoneHref} className="gap-2">
                   <Phone className="h-4 w-4" />
                   {site.phone}

@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 /* --------------------------------------------------------------------- hero */
 
 function Hero() {
-  const hero = "/img/produtos/esteira-transportadora-para-sacaria/1.jpg";
+  const hero = "/img/produtos/esteira-transportadora-para-sacaria/1.webp";
 
   return (
     <section className="relative overflow-hidden border-b border-dm-line bg-white">
@@ -120,7 +120,7 @@ function Hero() {
 
             <div className="mt-3 grid grid-cols-3 divide-x divide-dm-line border-t border-dm-line pt-3 text-center">
               {[
-                { k: "+15", v: "anos de fábrica" },
+                { k: "+14", v: "anos de fábrica" },
                 { k: "21", v: "linhas de produto" },
                 { k: "BR", v: "envio nacional" },
               ].map((s) => (
@@ -452,7 +452,7 @@ const kits = [
     items: ["Costuradeira GK-26", "2 cones de linha 200g", "Cartela de agulhas"],
     price: 1449,
     save: 180,
-    image: "/img/produtos/maquina-de-costurar-sacos-gk-26/1.jpg",
+    image: "/img/produtos/maquina-de-costurar-sacos-gk-26/1.webp",
   },
   {
     code: "KT.02",
@@ -460,7 +460,7 @@ const kits = [
     items: ["Roletes de carga", "Raspador de correia", "Kit de emenda"],
     price: 890,
     save: 150,
-    image: "/img/produtos/esteira-transportadora-horizontal/6.jpg",
+    image: "/img/produtos/esteira-transportadora-horizontal/6.webp",
   },
   {
     code: "KT.03",
@@ -468,7 +468,7 @@ const kits = [
     items: ["4 cones de linha", "Agulhas de reposição", "Óleo lubrificante"],
     price: 189,
     save: 40,
-    image: "/img/produtos/linha-fio-para-costura-de-sacaria/1.jpg",
+    image: "/img/produtos/linha-fio-para-costura-de-sacaria/1.webp",
   },
 ];
 
@@ -824,6 +824,7 @@ export default function Loja() {
         title="Loja Técnica Demakine | Peças, correias e consumíveis direto da fábrica"
         description="Compre peça de reposição, correia, linha e equipamento de movimentação direto da fábrica Demakine, em Limeira/SP. Pix com desconto, cartão em 12x e boleto para CNPJ."
         path="/loja"
+        noindex
       />
 
       <ShopTicker />

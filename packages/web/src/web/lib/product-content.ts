@@ -17,7 +17,7 @@ export const materials = [
   "Resíduo e reciclagem",
   "Areia e brita",
   "Carvão",
-  "Fruta e legume",
+  "Frutas e legumes",
 ] as const;
 
 export type MaterialKey = (typeof materials)[number];
@@ -31,7 +31,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "nao",
     Carvão: "consulta",
-    "Fruta e legume": "consulta",
+    "Frutas e legumes": "consulta",
   },
   "esteira-transportadora-para-granel": {
     "Grão e granel": "sim",
@@ -40,7 +40,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "sim",
     "Areia e brita": "sim",
     Carvão: "sim",
-    "Fruta e legume": "consulta",
+    "Frutas e legumes": "consulta",
   },
   "esteira-transportadora-horizontal": {
     "Grão e granel": "consulta",
@@ -49,16 +49,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "sim",
     "Areia e brita": "consulta",
     Carvão: "consulta",
-    "Fruta e legume": "sim",
-  },
-  "esteira-transportadora-em-v": {
-    "Grão e granel": "sim",
-    Sacaria: "nao",
-    "Caixa e pacote": "nao",
-    "Resíduo e reciclagem": "sim",
-    "Areia e brita": "sim",
-    Carvão: "sim",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "sim",
   },
   "esteira-transportadora-de-caixas": {
     "Grão e granel": "nao",
@@ -67,7 +58,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "nao",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "consulta",
+    "Frutas e legumes": "consulta",
   },
   "esteira-transportadora-articulada": {
     "Grão e granel": "nao",
@@ -76,7 +67,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "sim",
+    "Frutas e legumes": "sim",
   },
   "esteira-transportadora-dalla": {
     "Grão e granel": "consulta",
@@ -85,7 +76,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "consulta",
     Carvão: "consulta",
-    "Fruta e legume": "consulta",
+    "Frutas e legumes": "consulta",
   },
   "esteira-transportadora-para-reciclagem-triagem": {
     "Grão e granel": "consulta",
@@ -94,7 +85,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "sim",
     "Areia e brita": "nao",
     Carvão: "consulta",
-    "Fruta e legume": "consulta",
+    "Frutas e legumes": "consulta",
   },
   "esteira-para-transporte-de-frutas-e-legumes": {
     "Grão e granel": "consulta",
@@ -103,7 +94,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "nao",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "sim",
+    "Frutas e legumes": "sim",
   },
   "esteira-transportadora-para-cesta-basica": {
     "Grão e granel": "nao",
@@ -112,7 +103,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "nao",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "sim",
+    "Frutas e legumes": "sim",
   },
   "esteira-transportadora-em-v-para-cama-de-frango-aviario": {
     "Grão e granel": "sim",
@@ -121,7 +112,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "sim",
     "Areia e brita": "consulta",
     Carvão: "consulta",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
   "rosca-transportadora": {
     "Grão e granel": "sim",
@@ -130,7 +121,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "sim",
     Carvão: "sim",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
   "rosca-transportadora-chupim": {
     "Grão e granel": "sim",
@@ -139,7 +130,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "consulta",
     Carvão: "consulta",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
   "calha-transportadora": {
     "Grão e granel": "sim",
@@ -148,7 +139,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "sim",
     Carvão: "sim",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
   "elevador-de-canecas": {
     "Grão e granel": "sim",
@@ -157,7 +148,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "sim",
     Carvão: "sim",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
   "elevador-de-sacaria": {
     "Grão e granel": "nao",
@@ -166,16 +157,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "consulta",
-  },
-  "peneira-para-carvao": {
-    "Grão e granel": "consulta",
-    Sacaria: "nao",
-    "Caixa e pacote": "nao",
-    "Resíduo e reciclagem": "consulta",
-    "Areia e brita": "consulta",
-    Carvão: "sim",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "consulta",
   },
   "cartrans-carrinho-transportador": {
     "Grão e granel": "nao",
@@ -184,7 +166,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "consulta",
     "Areia e brita": "nao",
     Carvão: "consulta",
-    "Fruta e legume": "consulta",
+    "Frutas e legumes": "consulta",
   },
   "maquina-de-costurar-sacos-gk-26": {
     "Grão e granel": "nao",
@@ -193,7 +175,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "nao",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
   "maquina-de-costurar-sacos-siruba-aa-6": {
     "Grão e granel": "nao",
@@ -202,7 +184,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "nao",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
   "linha-fio-para-costura-de-sacaria": {
     "Grão e granel": "nao",
@@ -211,7 +193,7 @@ const fitBySlug: Record<string, Partial<Record<MaterialKey, Fit>>> = {
     "Resíduo e reciclagem": "nao",
     "Areia e brita": "nao",
     Carvão: "nao",
-    "Fruta e legume": "nao",
+    "Frutas e legumes": "nao",
   },
 };
 
@@ -224,6 +206,11 @@ export function materialFit(slug: string): Record<MaterialKey, Fit> {
     },
     {} as Record<MaterialKey, Fit>,
   );
+}
+
+/** Sem entrada na matriz, tudo viraria "sob consulta": melhor não mostrar a seção. */
+export function hasMaterialFit(slug: string) {
+  return slug in fitBySlug;
 }
 
 /** Produtos que já têm a matriz preenchida, para a tabela geral do site. */

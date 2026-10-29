@@ -1,56 +1,128 @@
-import { Route, Switch } from "wouter";
+import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
+import { Redirect, Route, Switch, useLocation } from "wouter";
+import { track } from "./lib/tracking";
+import { locale, localePath } from "./lib/i18n";
+import { SHOP_OPEN } from "./lib/site";
+import { recordView } from "./lib/visits";
+import { RedirectGate } from "./components/redirect-gate";
+import { endFirstPaint } from "./components/reveal";
 import { Provider } from "./components/provider";
 import { CompareProvider } from "./components/compare";
 import { ScrollProgress, StickyCta } from "./components/sticky-cta";
-import { AgentFeedback } from "@runablehq/website-runtime";
 import { CookieConsent } from "./components/cookie-consent";
 import { Shell } from "./components/layout/shell";
 import { BtnPrimary, Section } from "./components/kit";
-import Home from "./pages/index";
-import Produtos from "./pages/produtos";
-import Produto from "./pages/produto";
-import ProjetosEspeciais from "./pages/projetos-especiais";
-import AEmpresa from "./pages/a-empresa";
-import Clientes from "./pages/clientes";
-import AssistenciaTecnica from "./pages/assistencia-tecnica";
-import Blog from "./pages/blog";
-import Post from "./pages/post";
-import Downloads from "./pages/downloads";
-import Faq from "./pages/faq";
-import Ferramentas from "./pages/ferramentas";
-import Agro from "./pages/agro";
-import Segmento from "./pages/segmento";
-import Cases from "./pages/cases";
-import CaseStudyPage from "./pages/case";
-import Contato from "./pages/contato";
-import TrabalheConosco from "./pages/trabalhe-conosco";
-import Admin from "./pages/admin";
-import Loja from "./pages/loja";
-import ExportLanding from "./pages/export";
-import { PoliticaDePrivacidade, TermosDeUso } from "./pages/legal";
+
+/**
+ * Cada página é um arquivo separado: quem abre a home não baixa o código do blog, das vagas etc.
+ * O HTML pré-renderizado já traz o conteúdo; o código da página chega antes de hidratar
+ * (preloadRoute em main.tsx) e o das demais é baixado em segundo plano (prefetchRoutes).
+ */
+type Loader = () => Promise<{ default: ComponentType }>;
+const named = (load: () => Promise<Record<string, unknown>>, name: string): Loader => () =>
+  load().then((m) => ({ default: m[name] as ComponentType }));
+
+const ROUTES: [pattern: RegExp, load: Loader][] = [
+  [/^\/$/, () => import("./pages/index")],
+  [/^\/produtos$/, () => import("./pages/produtos")],
+  [/^\/produtos\/[^/]+$/, () => import("./pages/produto")],
+  [/^\/projetos-especiais$/, () => import("./pages/projetos-especiais")],
+  [/^\/a-empresa$/, () => import("./pages/a-empresa")],
+  [/^\/clientes$/, () => import("./pages/clientes")],
+  [/^\/assistencia-tecnica$/, () => import("./pages/assistencia-tecnica")],
+  [/^\/blog$/, () => import("./pages/blog")],
+  [/^\/blog\/[^/]+$/, () => import("./pages/post")],
+  [/^\/downloads$/, () => import("./pages/downloads")],
+  [/^\/faq$/, () => import("./pages/faq")],
+  [/^\/ferramentas$/, () => import("./pages/ferramentas")],
+  [/^\/agro$/, () => import("./pages/agro")],
+  [/^\/segmentos\/[^/]+$/, () => import("./pages/segmento")],
+  [/^\/cases$/, () => import("./pages/cases")],
+  [/^\/cases\/[^/]+$/, () => import("./pages/case")],
+  [/^\/contato$/, () => import("./pages/contato")],
+  [/^\/vagas$/, () => import("./pages/vagas")],
+  [/^\/vagas\/[^/]+$/, () => import("./pages/vaga")],
+  [/^\/export$/, () => import("./pages/export")],
+  [/^\/politica-de-privacidade$/, named(() => import("./pages/legal"), "PoliticaDePrivacidade")],
+  [/^\/termos-de-uso$/, named(() => import("./pages/legal"), "TermosDeUso")],
+  [/^\/obrigado$/, () => import("./pages/obrigado")],
+];
+const page = (i: number) => lazy(ROUTES[i]![1]);
+
+/** Baixa o código da página do endereço (antes de hidratar o HTML pré-renderizado). */
+export function preloadRoute(path: string) {
+  return ROUTES.find(([re]) => re.test(path))?.[1]() ?? Promise.resolve();
+}
+
+/** Depois que a página abriu, baixa as outras sem pressa: a navegação no site continua instantânea. */
+export function prefetchRoutes() {
+  const run = () => ROUTES.forEach(([, load]) => void load().catch(() => undefined));
+  if ("requestIdleCallback" in window) window.requestIdleCallback(run, { timeout: 4000 });
+  else setTimeout(run, 2500);
+}
+
+const Home = page(0);
+const Produtos = page(1);
+const Produto = page(2);
+const ProjetosEspeciais = page(3);
+const AEmpresa = page(4);
+const Clientes = page(5);
+const AssistenciaTecnica = page(6);
+const Blog = page(7);
+const Post = page(8);
+const Downloads = page(9);
+const Faq = page(10);
+const Ferramentas = page(11);
+const Agro = page(12);
+const Segmento = page(13);
+const Cases = page(14);
+const CaseStudyPage = page(15);
+const Contato = page(16);
+const Vagas = page(17);
+const Vaga = page(18);
+const ExportLanding = page(19);
+const PoliticaDePrivacidade = page(20);
+const TermosDeUso = page(21);
+const Obrigado = page(22);
+// painel e loja só baixam quando alguém abre essas páginas: o visitante do site não carrega esse código
+const Admin = lazy(() => import("./pages/admin"));
+const Loja = lazy(() => import("./pages/loja"));
 
 function NotFound() {
   return (
-    <Section>
-      <p className="eyebrow text-dm-blue">Erro 404</p>
-      <h1 className="h2 mt-3">Página não encontrada</h1>
-      <p className="mt-4 max-w-xl text-[16.5px] text-dm-gray">
-        O endereço que você acessou não existe ou foi movido. Veja o catálogo de equipamentos ou fale
-        com um especialista.
-      </p>
-      <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-        <BtnPrimary to="/produtos">Ver catálogo</BtnPrimary>
-        <BtnPrimary to="/contato" className="bg-dm-blue hover:bg-[#0d3480]">
-          Falar com a Demakine
-        </BtnPrimary>
-      </div>
-    </Section>
+    <RedirectGate>
+      <Section>
+        <p className="eyebrow text-dm-blue">Erro 404</p>
+        <h1 className="h2 mt-3">Página não encontrada</h1>
+        <p className="mt-4 max-w-xl text-[16.5px] text-dm-gray">
+          O endereço que você acessou não existe ou foi movido. Veja o catálogo de equipamentos ou fale
+          com um especialista.
+        </p>
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <BtnPrimary to="/produtos">Ver catálogo</BtnPrimary>
+          <BtnPrimary to="/contato" className="bg-dm-blue hover:bg-[#0d3480]">
+            Falar com a Demakine
+          </BtnPrimary>
+        </div>
+      </Section>
+    </RedirectGate>
   );
 }
 
+/** Página que só existe em português (vagas): em /en ou /es, vai para a versão em português. */
+function PtOnly() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.location.replace(location + window.location.search);
+  }, [location]);
+  return <div className="min-h-[60vh]" />;
+}
+
 function Site() {
+  const pt = locale() === "pt";
   return (
     <Shell>
+      <Suspense fallback={<div className="min-h-[60vh]" />}>
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/produtos" component={Produtos} />
@@ -69,32 +141,68 @@ function Site() {
         <Route path="/cases" component={Cases} />
         <Route path="/cases/:slug" component={CaseStudyPage} />
         <Route path="/contato" component={Contato} />
-        <Route path="/trabalhe-conosco" component={TrabalheConosco} />
+        <Route path="/vagas" component={pt ? Vagas : PtOnly} />
+        <Route path="/vagas/:slug" component={pt ? Vaga : PtOnly} />
+        <Route path="/trabalhe-conosco">
+          <Redirect to="/vagas" replace />
+        </Route>
         <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
         <Route path="/termos-de-uso" component={TermosDeUso} />
+        <Route path="/obrigado" component={Obrigado} />
         <Route component={NotFound} />
       </Switch>
+      </Suspense>
     </Shell>
   );
 }
 
 function App() {
+  // depois do primeiro desenho, seções que entram na tela voltam a animar (ver components/reveal.tsx)
+  useEffect(() => endFirstPaint(), []);
+  // troca de página dentro do site (sem recarregar) vira page_view_spa no GTM
+  const [location] = useLocation();
+  // medição própria (painel > Visitas): toda página vista, inclusive a primeira
+  // (com o prefixo do idioma: /en/produtos e /produtos contam separado no painel)
+  useEffect(() => recordView(localePath(location)), [location]);
+  const firstView = useRef(true);
+  useEffect(() => {
+    if (firstView.current) {
+      firstView.current = false;
+      return;
+    }
+    // espera a página nova (carregada sob demanda) trocar o título
+    const t = window.setTimeout(() => track("page_view_spa", { page_path: localePath(location), page_title: document.title }), 400);
+    return () => window.clearTimeout(t);
+  }, [location]);
   return (
     <Provider>
       <CompareProvider>
         <ScrollProgress />
         <Switch>
-          <Route path="/admin" component={Admin} />
-          <Route path="/loja" component={Loja} />
-          <Route path="/export" component={ExportLanding} />
+          <Route path="/admin">
+            <Suspense fallback={null}>
+              <Admin />
+            </Suspense>
+          </Route>
+          <Route path="/loja">
+            {SHOP_OPEN ? (
+              <Suspense fallback={null}>
+                <Loja />
+              </Suspense>
+            ) : (
+              <Redirect to="/" replace />
+            )}
+          </Route>
+          <Route path="/export">
+            <Suspense fallback={null}>
+              <ExportLanding />
+            </Suspense>
+          </Route>
           <Route component={Site} />
         </Switch>
         <StickyCta />
       </CompareProvider>
-      {/* Do not remove, off by default, activated by parent iframe via postMessage */}
       <CookieConsent />
-      {import.meta.env.DEV && <AgentFeedback />}
-      {/* "Made with Runable" badge - if user asks to remove the runable badge, remove this code as well as comment */}
     </Provider>
   );
 }

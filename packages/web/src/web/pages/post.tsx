@@ -1,45 +1,16 @@
 import { Link, useParams } from "wouter";
+import { RedirectGate } from "@/components/redirect-gate";
 import { Seo } from "@/components/seo";
+import { clipDescription, fitTitle } from "@/lib/seo-text";
 import { Reveal } from "@/components/reveal";
-import { Breadcrumb, BtnPrimary, BtnWhats, CtaBand, Section } from "@/components/kit";
+import { Breadcrumb, BtnPrimary, CtaBand, Section } from "@/components/kit";
 import { ShareBar } from "@/components/share";
 import { CalcEsteira } from "@/components/tools/calc-esteira";
 import { CalcRoi } from "@/components/tools/calc-roi";
 import { formatDate, getPost, posts } from "@/lib/content";
-import { site, waLink } from "@/lib/site";
-
-function Block({ text }: { text: string }) {
-  if (text.startsWith("#### ")) {
-    return <h4 className="mt-8 text-[16.5px] font-bold text-dm-ink">{text.slice(5)}</h4>;
-  }
-  if (text.startsWith("### ")) {
-    return <h3 className="mt-9 text-[18px] font-bold text-dm-ink">{text.slice(4)}</h3>;
-  }
-  if (text.startsWith("## ")) {
-    return <h2 className="h3 mt-11">{text.slice(3)}</h2>;
-  }
-  if (text.startsWith("# ")) {
-    return <h2 className="h3 mt-11">{text.slice(2)}</h2>;
-  }
-  if (/^(- |\* )/.test(text)) {
-    return (
-      <p className="mt-3 flex gap-3 text-[16.5px] leading-relaxed text-dm-ink/80">
-        <span className="text-dm-blue">•</span>
-        <span>{text.slice(2)}</span>
-      </p>
-    );
-  }
-  const ordered = text.match(/^(\d+)\.\s+(.*)$/);
-  if (ordered) {
-    return (
-      <p className="mt-3 flex gap-3 text-[16.5px] leading-relaxed text-dm-ink/80">
-        <span className="font-bold text-dm-blue">{ordered[1]}.</span>
-        <span>{ordered[2]}</span>
-      </p>
-    );
-  }
-  return <p className="mt-5 text-[16.5px] leading-relaxed text-dm-ink/80">{text}</p>;
-}
+import { quoteHref, site } from "@/lib/site";
+import { Block } from "@/components/post-block";
+import { tr } from "@/lib/i18n";
 
 export default function Post() {
   const { slug } = useParams<{ slug: string }>();
@@ -47,13 +18,15 @@ export default function Post() {
 
   if (!post) {
     return (
-      <Section>
-        <h1 className="h2">Artigo não encontrado</h1>
-        <p className="mt-3 text-[16px] text-dm-gray">Veja os artigos publicados no nosso blog.</p>
-        <div className="mt-6">
-          <BtnPrimary to="/blog">Ir para o blog</BtnPrimary>
-        </div>
-      </Section>
+      <RedirectGate>
+        <Section>
+          <h1 className="h2">Artigo não encontrado</h1>
+          <p className="mt-3 text-[16px] text-dm-gray">Veja os artigos publicados no nosso blog.</p>
+          <div className="mt-6">
+            <BtnPrimary to="/blog">Ir para o blog</BtnPrimary>
+          </div>
+        </Section>
+      </RedirectGate>
     );
   }
 
@@ -71,8 +44,8 @@ export default function Post() {
   return (
     <>
       <Seo
-        title={`${post.title} | Blog Demakine`}
-        description={intro.slice(0, 180)}
+        title={post.seoTitle || fitTitle(post.title, [" | Blog Demakine", " | Demakine"])}
+        description={post.seoDesc || clipDescription(post.blocks.filter((b) => !b.startsWith("#")).join(" ") || intro)}
         path={`/blog/${post.slug}`}
         image={post.cover}
         type="article"
@@ -87,7 +60,7 @@ export default function Post() {
           publisher: {
             "@type": "Organization",
             name: site.legal,
-            logo: { "@type": "ImageObject", url: `${site.url}/img/site/logo-demakine.png` },
+            logo: { "@type": "ImageObject", url: `${site.url}/img/site/logo-demakine.webp` },
           },
         }}
       />
@@ -171,9 +144,9 @@ export default function Post() {
               sob medida.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(`Olá! Li o artigo "${post.title}" e quero falar com um especialista.`)}>
+              <BtnPrimary to={quoteHref({ mensagem: tr('Olá! Li o artigo "{titulo}" e quero falar com um especialista.', { titulo: tr(post.title) }) })}>
                 Falar com especialista
-              </BtnWhats>
+              </BtnPrimary>
             </div>
           </div>
 

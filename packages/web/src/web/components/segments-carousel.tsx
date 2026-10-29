@@ -3,15 +3,28 @@ import { Link } from "wouter";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { segmentList } from "@/lib/segments";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 /**
  * Segmentos atendidos: chips com ícone e cor própria de cada segmento navegam o
  * carrossel, e cada card aponta para o equipamento real que indicamos.
+ * Roda sozinho (pedido do cliente): pausa com o mouse em cima, no toque, com foco do teclado,
+ * fora da tela e para quem pediu menos animação no sistema.
  */
+const AUTOPLAY_MS = 3500;
+/** depois de um clique ou toque, o carrossel espera esse tempo antes de voltar a rodar */
+const RESUME_AFTER_MS = 8000;
 export function SegmentsCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [active, setActive] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const hover = useRef(false);
+  const inView = useRef(false);
+  const holdUntil = useRef(0);
+  const hold = () => {
+    holdUntil.current = Date.now() + RESUME_AFTER_MS;
+  };
 
   const measure = useCallback(() => {
     const el = trackRef.current;
@@ -44,20 +57,55 @@ export function SegmentsCarousel() {
   }, [measure]);
 
   const go = (dir: -1 | 1) => {
+    hold();
     const el = trackRef.current;
     if (!el) return;
     el.scrollBy({ left: dir * el.clientWidth * 0.9, behavior: "smooth" });
   };
 
-  const goTo = (i: number) => {
+  const scrollToCard = useCallback((i: number) => {
     const el = trackRef.current;
     const card = cardRefs.current[i];
     if (!el || !card) return;
     el.scrollTo({ left: card.offsetLeft - 8, behavior: "smooth" });
+  }, []);
+
+  const goTo = (i: number) => {
+    hold();
+    scrollToCard(i);
   };
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const root = rootRef.current;
+    const io = new IntersectionObserver(([e]) => {
+      inView.current = e.isIntersecting;
+    });
+    if (root) io.observe(root);
+    const id = window.setInterval(() => {
+      const el = trackRef.current;
+      if (!el || hover.current || !inView.current || document.hidden || Date.now() < holdUntil.current) return;
+      // anda um card a partir do primeiro visível à esquerda; no fim da faixa, volta para o primeiro
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+      const first = cardRefs.current.findIndex((card) => card && card.offsetLeft >= el.scrollLeft - 4);
+      scrollToCard(atEnd ? 0 : Math.max(0, first) + 1);
+    }, AUTOPLAY_MS);
+    return () => {
+      window.clearInterval(id);
+      io.disconnect();
+    };
+  }, [scrollToCard]);
+
   return (
-    <div className="relative">
+    <div
+      ref={rootRef}
+      className="relative"
+      onMouseEnter={() => (hover.current = true)}
+      onMouseLeave={() => (hover.current = false)}
+      onTouchStart={hold}
+      onFocusCapture={() => (hover.current = true)}
+      onBlurCapture={() => (hover.current = false)}
+    >
       {/* chips: um por segmento, com a cor padrão do segmento */}
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
         {segmentList.map((s, i) => {
@@ -68,7 +116,7 @@ export function SegmentsCarousel() {
               key={s.slug}
               type="button"
               onClick={() => goTo(i)}
-              aria-label={`Ver equipamento indicado para ${s.name}`}
+              aria-label={tr("Ver equipamento indicado para {segmento}", { segmento: tr(s.name) })}
               className={cn(
                 "seg-chip group flex items-center gap-2.5 rounded-xl border bg-white px-3 py-2.5 text-left transition-all duration-300",
                 on
@@ -134,18 +182,18 @@ export function SegmentsCarousel() {
           return (
             <Link
               key={c.slug}
-              href={`/produtos/${c.productSlug}`}
+              href={c.page ?? `/produtos/${c.productSlug}`}
               ref={(el: HTMLAnchorElement | null) => {
                 cardRefs.current[i] = el;
               }}
               className="group w-[268px] shrink-0 snap-start overflow-hidden rounded-2xl border border-dm-line bg-white transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_44px_rgba(17,19,24,0.14)] sm:w-[300px]"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-dm-surface">
+              <div className="relative aspect-[4/3] overflow-hidden bg-white">
                 <img
-                  src={`/img/produtos/${c.productSlug}/1.jpg`}
+                  src={`/img/produtos/${c.productSlug}/1.webp`}
                   alt={`${c.name}: ${c.product} Demakine`}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
                 />
                 <span
                   className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold uppercase tracking-[0.08em] text-white"
@@ -165,7 +213,7 @@ export function SegmentsCarousel() {
                   className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-bold"
                   style={{ color: c.color }}
                 >
-                  {c.product}
+                  {c.page ? tr("Soluções para {segmento}", { segmento: tr(c.name).toLowerCase() }) : c.product}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </p>
               </div>

@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { configure, num } from "@/lib/engine";
+import { configure, maxAngleFor, num } from "@/lib/engine";
 import { Fact, Slider } from "./calc-esteira";
-import { waLink } from "@/lib/site";
+import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 type Family = "sacaria" | "granel" | "caixas" | "reciclagem";
 
@@ -20,8 +21,11 @@ const families: { key: Family; label: string; belt: string }[] = [
  */
 export function Configurator({ dark = true }: { dark?: boolean }) {
   const [length, setLength] = useState(8);
-  const [angle, setAngle] = useState(22);
+  const [rawAngle, setAngle] = useState(22);
   const [family, setFamily] = useState<Family>("sacaria");
+  // cada material tem a sua inclinação máxima; trocar de material traz o valor para dentro do limite
+  const maxAngle = maxAngleFor(family);
+  const angle = Math.min(rawAngle, maxAngle);
   const [wheels, setWheels] = useState(true);
 
   const cfg = useMemo(() => configure({ length, angle, family }), [length, angle, family]);
@@ -59,7 +63,7 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
           viewBox={`0 0 ${W} ${H}`}
           className="my-auto w-full"
           role="img"
-          aria-label={`Esteira de ${num(length, 1)} metros com ${num(angle, 0)} graus de inclinação`}
+          aria-label={tr("Esteira de {m} metros com {g} graus de inclinação", { m: num(length, 1), g: num(angle, 0) })}
         >
           <defs>
             <linearGradient id="cfg-frame" x1="0" y1="0" x2="0" y2="1">
@@ -220,7 +224,10 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
             <button
               key={f.key}
               type="button"
-              onClick={() => setFamily(f.key)}
+              onClick={() => {
+                setFamily(f.key);
+                setAngle((a) => Math.min(a, maxAngleFor(f.key)));
+              }}
               className={cn(
                 "rounded-full border px-4 py-2 text-[13px] font-bold uppercase tracking-wide transition-colors",
                 family === f.key
@@ -246,16 +253,27 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
             suffix=" m"
             onChange={setLength}
           />
-          <Slider
-            dark={dark}
-            label="Inclinação"
-            value={angle}
-            min={0}
-            max={40}
-            step={1}
-            suffix="°"
-            onChange={setAngle}
-          />
+          {maxAngle > 0 ? (
+            <Slider
+              dark={dark}
+              label="Inclinação"
+              value={angle}
+              min={0}
+              max={maxAngle}
+              step={1}
+              suffix="°"
+              onChange={setAngle}
+            />
+          ) : (
+            <p
+              className={cn(
+                "rounded-xl border px-4 py-3 text-[14px]",
+                dark ? "border-white/12 bg-white/[0.04] text-white/75" : "border-dm-line bg-dm-surface text-dm-ink/80",
+              )}
+            >
+              Esteira de triagem trabalha na horizontal.
+            </p>
+          )}
         </div>
 
         <label
@@ -280,7 +298,11 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
             v={cfg.model && !cfg.custom ? cfg.model.model : "Sob medida"}
             highlight
           />
-          <Fact dark={dark} k="Altura de descarga" v={`${num(cfg.discharge, 1)} m`} />
+          {maxAngle > 0 ? (
+            <Fact dark={dark} k="Altura de descarga" v={`${num(cfg.discharge, 1)} m`} />
+          ) : (
+            <Fact dark={dark} k="Inclinação" v="0° (horizontal)" />
+          )}
           <Fact dark={dark} k="Motorização" v={cfg.model?.motor ?? "a definir"} />
           <Fact
             dark={dark}
@@ -293,21 +315,20 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
           <p className={cn("mt-4 text-[13.5px]", dark ? "text-white/60" : "text-dm-gray")}>
             {cfg.overHeight
               ? "Nessa inclinação a altura passa do limite do modelo padrão, por isso fabricamos reforçado sob medida."
-              : `A linha padrão vai até ${num(cfg.maxLen, 0)} m; acima disso fabricamos em módulos ou sob medida.`}
+              : tr("A linha padrão vai até {n} m; acima disso fabricamos em módulos ou sob medida.", { n: num(cfg.maxLen, 0) })}
           </p>
         )}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={waLink(
-              `Olá! Configurei no site: ${cfg.product.name}, ${num(length, 1)} m, ${num(angle, 0)}° de inclinação, descarga a ${num(cfg.discharge, 1)} m${wheels ? ", com rodas" : ""}. Quero um orçamento.`,
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
+          <Link
+            href={quoteHref({
+              produto: cfg.product.name,
+              mensagem: tr("Olá! Configurei no site: {produto}, {m} m, {g}° de inclinação, descarga a {d} m{rodas}. Quero um orçamento.", { produto: tr(cfg.product.name), m: num(length, 1), g: num(angle, 0), d: num(cfg.discharge, 1), rodas: wheels ? tr(", com rodas") : "" }),
+            })}
+            className="cine-shine inline-flex items-center justify-center rounded-full bg-dm-red px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#c31017]"
           >
             Orçar esta configuração
-          </a>
+          </Link>
           <Link
             href={`/produtos/${cfg.product.slug}`}
             className={cn(
@@ -317,7 +338,7 @@ export function Configurator({ dark = true }: { dark?: boolean }) {
                 : "border-dm-line text-dm-ink hover:border-dm-blue hover:text-dm-blue",
             )}
           >
-            {cfg.product.name.split(" ").slice(0, 3).join(" ")}
+            Ver ficha técnica
           </Link>
         </div>
       </div>

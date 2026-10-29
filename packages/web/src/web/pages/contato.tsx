@@ -1,11 +1,27 @@
-import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Clock, Mail, MapPin, Phone, Send } from "lucide-react";
+import { MapEmbed } from "@/components/map-embed";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
-import { BtnWhats, PageHero, Section, SectionHead } from "@/components/kit";
-import { departments, site, waLink } from "@/lib/site";
+import { BtnPrimary, PageHero, Section, SectionHead } from "@/components/kit";
+import { departments, site } from "@/lib/site";
+import { JobsCta } from "@/components/jobs-cta";
 
 export default function Contato() {
+  // botões de orçamento do site chegam aqui com ?produto=&mensagem=: o formulário abre preenchido.
+  // Lido depois de montar (a página é pré-gerada sem esses dados) e o formulário recomeça com eles.
+  const [prefill, setPrefill] = useState<{ produto?: string; mensagem?: string } | null>(null);
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const produto = q.get("produto") ?? undefined;
+    const mensagem = q.get("mensagem") ?? undefined;
+    if (produto || mensagem) setPrefill({ produto, mensagem });
+    if (produto || mensagem || window.location.hash === "#formulario") {
+      window.setTimeout(() => document.getElementById("formulario")?.scrollIntoView({ block: "start" }), 120);
+    }
+  }, []);
+
   return (
     <>
       <Seo
@@ -24,7 +40,7 @@ export default function Contato() {
         eyebrow="Contato"
         title="Fale com a Demakine"
         text="Dúvidas, orçamentos ou assistência técnica: nossa equipe está preparada para atender por telefone, WhatsApp ou e-mail."
-        image="/img/site/fabrica.jpg"
+        image="/img/site/fabrica.webp"
         crumbs={[{ label: "Contato" }]}
       />
 
@@ -35,24 +51,6 @@ export default function Contato() {
             <h2 className="h2 mt-3">Escolha o canal mais rápido para você</h2>
 
             <div className="mt-8 grid gap-4">
-              <a
-                href={waLink("Olá! Vim pelo site da Demakine e quero falar com o comercial.")}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-start gap-4 rounded-2xl border border-dm-line bg-white p-5 transition-colors hover:border-[#25D366]"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#25D366]/12 text-[#1da851]">
-                  <MessageCircle className="h-5 w-5" />
-                </span>
-                <span>
-                  <span className="block text-[16px] font-bold text-dm-ink">WhatsApp comercial</span>
-                  <span className="block text-[15px] text-dm-gray">{site.mobile}</span>
-                  <span className="mt-1 block text-[13.5px] text-dm-gray/80">
-                    Resposta no horário comercial
-                  </span>
-                </span>
-              </a>
-
               <a
                 href={site.phoneHref}
                 className="flex items-start gap-4 rounded-2xl border border-dm-line bg-white p-5 transition-colors hover:border-dm-blue"
@@ -106,21 +104,26 @@ export default function Contato() {
                 <span>
                   <span className="block text-[16px] font-bold text-dm-ink">Horário de atendimento</span>
                   <span className="block text-[15px] text-dm-gray">
-                    Segunda a quinta: 07h30 às 17h30
+                    Segunda a quinta: {site.hours.monThu}
                   </span>
-                  <span className="block text-[15px] text-dm-gray">Sexta: 07h30 às 16h30</span>
+                  <span className="block text-[15px] text-dm-gray">Sexta: {site.hours.fri}</span>
                 </span>
               </div>
             </div>
           </Reveal>
 
           <Reveal i={1}>
-            <LeadForm
-              source="contato"
-              title="Enviar mensagem"
-              subtitle="Preencha o formulário e nossa equipe responde em até 1 dia útil."
-              buttonLabel="Enviar mensagem"
-            />
+            <div id="formulario" className="scroll-mt-28">
+              <LeadForm
+                key={prefill ? "prefill" : "empty"}
+                product={prefill?.produto}
+                initialMessage={prefill?.mensagem}
+                source="contato"
+                title="Enviar mensagem"
+                subtitle="Preencha o formulário e nossa equipe responde em até 1 dia útil."
+                buttonLabel="Enviar mensagem"
+              />
+            </div>
           </Reveal>
         </div>
       </Section>
@@ -147,22 +150,20 @@ export default function Contato() {
             </Reveal>
           ))}
         </div>
+        <div className="mt-8">
+          <JobsCta />
+        </div>
       </Section>
 
       <Section className="pt-0">
         <Reveal className="overflow-hidden rounded-2xl border border-dm-line">
-          <iframe
-            title="Localização da Demakine em Limeira/SP"
-            src="https://www.google.com/maps?q=Rua%20Silvino%20del%20Pietro%2C%20212%20-%20Jd.%20Nova%20Limeira%20-%20Limeira%20SP&output=embed"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="h-[380px] w-full border-0 md:h-[440px]"
-          />
+          <MapEmbed className="h-[380px] md:h-[440px]" />
         </Reveal>
         <div className="mt-8 text-center">
-          <BtnWhats href={waLink("Olá! Quero um orçamento de equipamento Demakine.")}>
+          <BtnPrimary href="#formulario">
+            <Send className="h-4 w-4" />
             Pedir orçamento agora
-          </BtnWhats>
+          </BtnPrimary>
         </div>
       </Section>
     </>

@@ -21,9 +21,9 @@
   --color-ag-gold: #d8a02a;
   --color-ag-cream: #f5f2e7;
 
-  --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Montserrat Variable", "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans Variable", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 @layer base {
@@ -130,6 +130,17 @@
 .reveal.is-in {
   opacity: 1;
   transform: none;
+  /* will-change: transform prenderia qualquer elemento "fixed" lá dentro (ex.: vídeo ampliado) à seção */
+  will-change: auto;
+}
+
+@keyframes bs-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes dm-marquee {
@@ -269,6 +280,18 @@
     padding-inline: 40px;
   }
 }
+/* topo do site: o menu com os nomes completos pede mais largura que o conteúdo das páginas */
+@media (min-width: 1380px) {
+  .dm-container--header {
+    max-width: 1440px;
+    padding-inline: 24px;
+  }
+}
+@media (min-width: 1600px) {
+  .dm-container--header {
+    max-width: 1560px;
+  }
+}
 
 .hero-scrim {
   background: linear-gradient(
@@ -277,6 +300,11 @@
     rgba(10, 31, 61, 0.86) 42%,
     rgba(10, 31, 61, 0.42) 100%
   );
+}
+
+/* grão de filme: ruído fractal em SVG, usado por cima das fotos da trajetória */
+.film-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .grid-lines {
@@ -707,6 +735,23 @@
   fill: #e4141b;
 }
 
+/* foto do estado no mapa da home: troca suave */
+/* barras de crescimento ao lado do número de clientes (mapa da home) */
+.growth-bar {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.growth-bar.is-in {
+  transform: scaleY(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .growth-bar {
+    transform: none;
+    transition: none;
+  }
+}
+
 /* barra de progresso do quiz / etapas */
 .step-bar span {
   transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -971,6 +1016,149 @@
   }
 }
 
+/* ================================================================== *
+ * TEMA POR SEGMENTO (páginas /segmentos/:slug), no espírito do Agro.
+ * Cores vêm de lib/segment-themes.ts pelas variáveis --seg-*.
+ * ================================================================== */
+.seg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--seg-base);
+  color: #fff;
+}
+.seg-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(120% 90% at 12% 0%, var(--seg-glow) 0%, transparent 60%),
+    linear-gradient(160deg, var(--seg-base) 0%, var(--seg-deep) 100%);
+}
+.seg-beam {
+  position: absolute;
+  left: -8%;
+  top: -30%;
+  width: 52%;
+  height: 170%;
+  z-index: -2;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--seg-accent) 30%, transparent), transparent);
+  transform: rotate(-15deg);
+  filter: blur(56px);
+  opacity: 0.8;
+  pointer-events: none;
+}
+.seg-tex {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.9;
+  mask-image: linear-gradient(200deg, transparent 20%, #000 90%);
+}
+/* grânulos de fertilizante */
+.seg-tex-granulos {
+  background-image: radial-gradient(color-mix(in srgb, var(--seg-accent) 22%, transparent) 1.4px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+/* ciclo da reciclagem: anéis concêntricos */
+.seg-tex-ciclo {
+  background-image: repeating-radial-gradient(circle at 85% 110%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 38px);
+}
+/* faixa de obra */
+.seg-tex-obra {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--seg-accent) 9%, transparent) 0 14px,
+    transparent 14px 44px
+  );
+}
+/* brilho limpo, diagonal suave */
+.seg-tex-limpo {
+  background-image: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.06) 50%, transparent 65%);
+}
+/* docas: linhas de piso em perspectiva */
+.seg-tex-docas {
+  inset: auto 0 0 0;
+  height: 45%;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 40px);
+  mask-image: linear-gradient(180deg, transparent, #000);
+  transform: perspective(360px) rotateX(58deg);
+  transform-origin: bottom;
+}
+/* metal escovado */
+.seg-tex-metal {
+  background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 4px);
+}
+/* malha de cruzes (área limpa) */
+.seg-tex-cruz {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpath d='M17 12h2v12h-2zM12 17h12v2H12z' fill='%23ffffff' fill-opacity='.11'/%3E%3C/svg%3E");
+  background-size: 36px 36px;
+}
+/* granulado plástico: hexágonos */
+.seg-tex-hex {
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--seg-accent) 18%, transparent) 0 3px, transparent 3.5px),
+    radial-gradient(circle, color-mix(in srgb, var(--seg-accent) 18%, transparent) 0 3px, transparent 3.5px);
+  background-size: 28px 24px;
+  background-position: 0 0, 14px 12px;
+}
+.seg-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--seg-accent);
+  color: var(--seg-ink);
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  transform: skewX(-12deg);
+}
+.seg-tag > span {
+  transform: skewX(12deg);
+}
+.seg-rule {
+  height: 3px;
+  width: 84px;
+  background: var(--seg-accent);
+  transform-origin: left;
+  animation: cine-rule 0.9s cubic-bezier(0.16, 0.84, 0.28, 1) both;
+}
+.seg-bullets {
+  list-style: none;
+  padding: 0;
+}
+.seg-bullets li {
+  position: relative;
+  padding-left: 1.35rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+.seg-bullets li + li {
+  margin-top: 0.8rem;
+}
+.seg-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--seg-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--seg-accent) 20%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .seg-rule {
+    animation: none !important;
+  }
+}
+
 /* carrossel de segmentos */
 .seg-track {
   scrollbar-width: thin;
@@ -1020,6 +1208,10 @@
   max-height: 118px;
   pointer-events: none;
   user-select: none;
+}
+/* marca d'água decorativa: o texto vem do CSS para não contar como conteúdo (leitor de tela, busca) */
+.dm-wordmark-text::before {
+  content: "DEMAKINE";
 }
 .dm-wordmark-text {
   position: absolute;
@@ -1191,4 +1383,70 @@
   .shop-scan {
     animation: none;
   }
+}
+
+/* ------------------------------------------------ missão, visão e valores (A Empresa) */
+/* linha que liga os três pontos: vertical no celular, horizontal a partir de 768 px */
+.mvv-line {
+  position: absolute;
+  left: 27px;
+  top: 28px;
+  bottom: 0;
+  width: 2px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--color-dm-blue) 0%, var(--color-dm-line) 100%);
+}
+.mvv-flow {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 30%;
+  background: linear-gradient(to bottom, transparent, var(--color-dm-red), transparent);
+  animation: mvv-flow-y 2.4s linear infinite;
+}
+@media (min-width: 768px) {
+  .mvv-line {
+    left: 28px;
+    right: 0;
+    top: 27px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-dm-blue) 0%, var(--color-dm-blue) 70%, transparent 100%);
+  }
+  .mvv-flow {
+    inset: 0 auto 0 0;
+    width: 30%;
+    height: auto;
+    background: linear-gradient(to right, transparent, var(--color-dm-red), transparent);
+    animation-name: mvv-flow-x;
+  }
+}
+@keyframes mvv-flow-y {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(340%); }
+}
+@keyframes mvv-flow-x {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(340%); }
+}
+/* pulsação: um anel vermelho que abre em cada ponto, um depois do outro (atraso em --d) */
+.mvv-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid var(--color-dm-red);
+  animation: mvv-ping 2.4s ease-out infinite;
+  animation-delay: var(--d, 0s);
+  opacity: 0;
+}
+@keyframes mvv-ping {
+  0% { transform: scale(1); opacity: 0.75; }
+  70%, 100% { transform: scale(1.9); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mvv-flow,
+  .mvv-ping {
+    animation: none;
+  }
+  .mvv-flow { display: none; }
 }

@@ -1,11 +1,11 @@
 import { useRef } from "react";
+import { home } from "@/lib/home";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
-import { ArrowRight, ShieldCheck, Wrench, Truck, Factory } from "lucide-react";
-import { BtnGhost, BtnPrimary } from "./kit";
+import { ArrowRight, Download, ShieldCheck, Wrench, Truck, Factory } from "lucide-react";
 import { CineRule, CineStat, CineTag } from "./cine";
 import { Counter } from "./counter";
 import { Rotator } from "./rotator";
-import { QuickSelector } from "./tools/quick-selector";
+import { LeadForm } from "./lead-form";
 import { site } from "@/lib/site";
 
 /* ------------------------------------------------------------------ ticker */
@@ -64,9 +64,9 @@ export function HomeHero() {
       {/* vídeo com parallax no scroll */}
       <motion.video
         style={reduce ? still : { y: mediaY, scale: mediaScale }}
-        className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.3]"
-        src="/video/hero-loop.mp4"
-        poster="/img/site/hero.jpg"
+        className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.55]"
+        src="/video/hero-fabrica.mp4"
+        poster="/img/site/hero-fabrica.webp"
         autoPlay
         muted
         loop
@@ -106,7 +106,7 @@ export function HomeHero() {
               <span className="mt-2 block font-display text-[0.42em] font-extrabold normal-case leading-tight tracking-normal text-white/85 md:text-[0.36em]">
                 para{" "}
                 <Rotator
-                  words={["grãos", "fertilizantes", "reciclagem", "construção", "alimentos"]}
+                  words={home.heroWords}
                 />
               </span>
             </h1>
@@ -114,25 +114,27 @@ export function HomeHero() {
             <CineRule className="mt-6" />
 
             <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-white/72 md:text-lg">
-              Esteiras transportadoras, roscas, elevadores, máquinas de costurar sacos e projetos
-              especiais fabricados sob medida na nossa fábrica em Limeira/SP. Menos gente carregando
-              no braço, mais produtividade na linha.
+              {home.heroText}
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <BtnPrimary to="/contato" className="cine-shine">
-                Solicitar orçamento
-              </BtnPrimary>
-              <BtnGhost dark href="/downloads/catalogo-demakine.pdf" external>
-                Ver catálogo (PDF)
-              </BtnGhost>
+            {/* um botão só, na largura que os dois ocupavam; o pedido de orçamento fica na calculadora ao lado */}
+            <div className="mt-9">
+              <a
+                href="/downloads/catalogo-demakine.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="cine-shine inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-dm-blue-deep shadow-lg shadow-black/20 transition-colors hover:bg-dm-blue-soft sm:w-[27rem]"
+              >
+                <Download className="h-4 w-4" />
+                Baixar catálogo (PDF)
+              </a>
             </div>
 
             <a
-              href="/agro"
+              href="#segmentos"
               className="mt-6 inline-flex items-center gap-2 text-[14px] font-semibold text-[#e8c469] transition-colors hover:text-white"
             >
-              É do agro? Veja a linha para grãos, fertilizantes e ração
+              {home.segmentsLink}
               <ArrowRight className="h-4 w-4" />
             </a>
 
@@ -153,11 +155,15 @@ export function HomeHero() {
             </div>
           </div>
 
+          {/* pedido do cliente: no topo da home entra o formulário (a calculadora segue nos produtos e em Ferramentas) */}
           <div>
-            <QuickSelector />
-            <p className="mt-3 text-center text-[12.5px] text-white/45">
-              Três escolhas e você já cai na ficha técnica do equipamento indicado.
-            </p>
+            <LeadForm
+              variant="dark"
+              compact
+              source="home-topo"
+              title="Peça seu orçamento"
+              subtitle="Um especialista da Demakine responde em até 1 dia útil."
+            />
           </div>
         </div>
       </motion.div>

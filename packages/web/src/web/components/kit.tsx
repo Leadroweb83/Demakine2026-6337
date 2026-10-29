@@ -4,8 +4,9 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "./reveal";
 import { CompareToggle } from "./compare";
+import { YouTubeBg } from "./youtube-bg";
 import { clients, testimonials, type Product } from "@/lib/content";
-import { site, waLink } from "@/lib/site";
+import { quoteHref, site } from "@/lib/site";
 
 /* ------------------------------------------------------------------ section */
 
@@ -57,7 +58,7 @@ export function SectionHead({
     >
       <Reveal className={cn("max-w-2xl", align === "center" && "text-center")}>
         {eyebrow && (
-          <p className={cn("eyebrow", dark ? "text-white/45" : "text-dm-blue")}>{eyebrow}</p>
+          <p className={cn("eyebrow", dark ? "text-white/75" : "text-dm-blue")}>{eyebrow}</p>
         )}
         <h2 className={cn("h2 mt-3", dark ? "text-white" : "text-dm-ink")}>{title}</h2>
         {text && (
@@ -93,31 +94,6 @@ export function BtnPrimary({
   if (to) return <Link href={to} className={cls}>{children}</Link>;
   return (
     <a href={href} className={cls} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>
-      {children}
-    </a>
-  );
-}
-
-/** Botão de WhatsApp: sempre verde, em todo o site. */
-export function BtnWhats({
-  href,
-  children,
-  className,
-}: {
-  href?: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-7 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white shadow-[0_12px_30px_rgba(23,134,79,0.24)] transition-colors hover:bg-dm-green-dark",
-        className,
-      )}
-    >
       {children}
     </a>
   );
@@ -184,13 +160,31 @@ export function PageHero({
   title,
   text,
   image,
+  imageMobile,
+  scrim,
   crumbs,
+  action,
+  youtubeBg,
+  videoBg,
+  imageClassName,
 }: {
   eyebrow: string;
   title: string;
   text?: string;
   image?: string;
+  /** versão da imagem para o celular (até 767 px), quando o recorte da versão larga não serve */
+  imageMobile?: string;
+  /** escurece a imagem para o texto ler bem (use em fotos claras ou cheias de detalhe) */
+  scrim?: boolean;
   crumbs: { label: string; to?: string }[];
+  /** botão abaixo do texto (ex.: baixar o catálogo) */
+  action?: ReactNode;
+  /** id de vídeo do YouTube para tocar no fundo, sem som, com a mesma opacidade da imagem */
+  youtubeBg?: string;
+  /** vídeo local (mp4) no fundo, sem som e em loop; a imagem fica por baixo e vale como poster */
+  videoBg?: string;
+  /** ajuste do enquadramento da imagem (ex.: object-[50%_70%]) */
+  imageClassName?: string;
 }) {
   return (
     <>
@@ -201,15 +195,43 @@ export function PageHero({
       </div>
       <section className="relative overflow-hidden bg-dm-blue-deep">
         {image && (
-          <img
-            src={image}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover opacity-35"
+          <picture>
+            {imageMobile && <source media="(max-width: 767px)" srcSet={imageMobile} />}
+            <img
+              src={image}
+              alt=""
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover opacity-35",
+                // com vídeo de fundo, a imagem só aparece para quem pediu menos movimento (o vídeo some)
+                videoBg && "hidden motion-reduce:block",
+                imageClassName,
+              )}
+            />
+          </picture>
+        )}
+        {scrim && (
+          <div className="absolute inset-0 bg-gradient-to-t from-dm-blue-deep/90 via-dm-blue-deep/55 to-dm-blue-deep/35 md:bg-gradient-to-r md:from-dm-blue-deep/90 md:via-dm-blue-deep/55 md:to-transparent" />
+        )}
+        {videoBg && (
+          <video
+            src={videoBg}
+            poster={image}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover opacity-50 motion-reduce:hidden"
           />
         )}
+        {videoBg && (
+          <div className="absolute inset-0 bg-gradient-to-r from-dm-blue-deep/90 via-dm-blue-deep/60 to-transparent" />
+        )}
+        {youtubeBg && <YouTubeBg id={youtubeBg} />}
         <div className="absolute inset-0 grid-lines" />
         <div className="dm-container relative py-14 md:py-20">
-          <p className="eyebrow text-white/45 hero-in">{eyebrow}</p>
+          <p className="eyebrow text-white/75 hero-in">{eyebrow}</p>
           <h1 className="h1 mt-3 max-w-4xl text-white hero-in" style={{ ["--i" as string]: 1 }}>
             {title}
           </h1>
@@ -220,6 +242,11 @@ export function PageHero({
             >
               {text}
             </p>
+          )}
+          {action && (
+            <div className="mt-8 hero-in" style={{ ["--i" as string]: 3 }}>
+              {action}
+            </div>
           )}
         </div>
       </section>
@@ -244,12 +271,12 @@ export function ProductCard({
         href={`/produtos/${product.slug}`}
         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dm-line bg-white transition-all hover:-translate-y-1 hover:border-dm-blue/35 hover:shadow-xl hover:shadow-dm-blue/10"
       >
-        <div className="relative aspect-[4/3] overflow-hidden bg-dm-surface">
+        <div className="relative aspect-[4/3] overflow-hidden bg-white">
           <img
             src={product.images[0]}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
           />
           {product.tag && (
             <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-dm-blue">
@@ -293,7 +320,7 @@ export function ClientsMarquee({ tone = "white" }: { tone?: "white" | "surface" 
             alt={c.name}
             loading="lazy"
             title={c.name}
-            className="h-[68px] w-auto shrink-0 opacity-70 grayscale transition-all duration-300 hover:scale-105 hover:opacity-100 hover:grayscale-0 md:h-[92px]"
+            className="h-[68px] w-auto shrink-0 transition-transform duration-300 hover:scale-105 motion-reduce:transform-none md:h-[92px]"
           />
         ))}
       </div>
@@ -310,7 +337,7 @@ export function TestimonialGrid({ limit = 6, start = 0 }: { limit?: number; star
       {list.map((t, idx) => (
         <Reveal key={`${t.name}-${idx}`} i={idx % 3} className="h-full">
           <figure className="flex h-full flex-col rounded-2xl border border-dm-line bg-white p-6">
-            <div className="flex gap-0.5 text-dm-red" aria-label="5 de 5">
+            <div className="flex gap-0.5 text-dm-red" role="img" aria-label="5 de 5">
               {Array.from({ length: 5 }).map((_, s) => (
                 <svg key={s} viewBox="0 0 20 20" className="h-4 w-4 fill-current">
                   <path d="M10 1.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L10 14.9l-5.25 2.75 1-5.85L1.5 7.65l5.9-.85L10 1.5z" />
@@ -351,13 +378,8 @@ export function CtaBand({
         <Reveal className="mx-auto max-w-3xl text-center">
           <h2 className="h2 text-white">{title}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-[17px] leading-relaxed text-white/65">{text}</p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <BtnWhats href={waLink(waMessage)}>
-              Falar no WhatsApp
-            </BtnWhats>
-            <BtnGhost dark to="/contato">
-              Enviar especificação
-            </BtnGhost>
+          <div className="mt-8 flex justify-center">
+            <BtnPrimary to={quoteHref({ mensagem: waMessage })}>Solicitar orçamento</BtnPrimary>
           </div>
           <p className="mt-6 text-[13.5px] text-white/45">
             {site.phone} · {site.mobile} · {site.email}

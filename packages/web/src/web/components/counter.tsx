@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { formatLocale } from "@/lib/i18n";
 
 type CounterProps = {
   to: number;
@@ -53,7 +54,7 @@ export function Counter({ to, duration = 1600, decimals = 0, prefix = "", suffix
     return () => io.disconnect();
   }, [to, duration]);
 
-  const shown = value.toLocaleString("pt-BR", {
+  const shown = value.toLocaleString(formatLocale(), {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });

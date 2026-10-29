@@ -12,7 +12,7 @@ import {
   Package,
 } from "lucide-react";
 import { Seo } from "@/components/seo";
-import { Section, SectionHead, BtnGhost, BtnWhats, Breadcrumb } from "@/components/kit";
+import { Section, SectionHead, BtnGhost, BtnPrimary, Breadcrumb } from "@/components/kit";
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
 import { LeadForm } from "@/components/lead-form";
@@ -24,10 +24,9 @@ import {
   agroProducts,
   agroTestimonials,
 } from "@/lib/agro";
-import { site, waLink } from "@/lib/site";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const waMsg = "Olá! Sou do agro e quero um orçamento de equipamento Demakine.";
 
 /* ------------------------------------------------------------------ hero agro */
 
@@ -80,12 +79,9 @@ function AgroHero() {
             </ul>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(waMsg)} className="cine-shine">
-                Falar com especialista agro
-              </BtnWhats>
-              <BtnGhost dark href="#proposta">
+              <BtnPrimary href="#proposta" className="cine-shine">
                 Receber proposta técnica
-              </BtnGhost>
+              </BtnPrimary>
             </div>
 
             <div className="mt-11 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/15 pt-7">
@@ -108,9 +104,11 @@ function AgroHero() {
             <div className="relative overflow-hidden rounded-3xl border border-white/12">
               <motion.img
                 style={reduce ? {} : { y: imgY }}
-                src="/img/site/projetos.jpg"
-                alt="Esteira transportadora Demakine com moega instalada em operação"
-                className="h-[420px] w-full object-cover md:h-[520px]"
+                src="/img/site/agro-esteira-moega.webp"
+                alt="Esteira transportadora Demakine azul e vermelha com moega alimentadora"
+                width={1066}
+                height={1000}
+                className="h-[340px] w-full object-cover sm:h-[480px] md:h-[440px] lg:h-[520px]"
                 loading="eager"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0b2415] via-[#0b2415]/70 to-transparent p-6 pt-16">
@@ -167,8 +165,8 @@ export default function Agro() {
   return (
     <>
       <Seo
-        title="Equipamentos para o Agro: Esteiras, Roscas e Elevadores | Demakine"
-        description="Linha agro Demakine: esteiras transportadoras, roscas, elevadores de canecas e máquinas de costurar sacos para grãos, fertilizantes, sementes, ração e hortifrúti. Fabricação sob medida em Limeira/SP com entrega em todo o Brasil."
+        title="Equipamentos para o Agro: Esteiras e Roscas | Demakine"
+        description="Esteiras, roscas, elevadores de canecas e máquinas de costurar sacos para grãos, fertilizantes, sementes, ração e hortifrúti. Sob medida, em Limeira/SP."
         path="/agro"
       />
 
@@ -223,12 +221,12 @@ export default function Agro() {
           {agroChains.map((c, i) => (
             <Reveal key={c.id} i={i % 3} className="h-full">
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dm-line bg-white transition-all hover:-translate-y-1 hover:border-[#2f7a3f]/45 hover:shadow-xl hover:shadow-[#2f7a3f]/10">
-                <div className="relative aspect-[16/10] overflow-hidden bg-dm-surface">
+                <div className="relative aspect-[16/10] overflow-hidden bg-white">
                   <img
                     src={c.image}
                     alt={c.name}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-contain p-3 transition-transform duration-700 group-hover:scale-105"
                   />
                   <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-[#12331e]/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#e8c469]">
                     <Wheat className="h-3.5 w-3.5" />
@@ -260,7 +258,7 @@ export default function Agro() {
       <Section tone="surface">
         <SectionHead
           eyebrow="Quem já produz com a Demakine"
-          title={`${agroClients.length} empresas do agro na nossa base`}
+          title="Algumas das empresas agro que confiam na Demakine"
           text="Cooperativas, tradings, indústrias de nutrição animal, sementeiras e produtores. Todas as marcas abaixo são clientes reais."
           action={<BtnGhost to="/clientes">Ver todos os clientes</BtnGhost>}
         />
@@ -363,9 +361,7 @@ export default function Agro() {
             </div>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <BtnWhats href={waLink(waMsg)}>
-                Falar no WhatsApp agora
-              </BtnWhats>
+              <BtnPrimary href="#proposta">Receber proposta técnica</BtnPrimary>
               <BtnGhost dark href="/downloads/catalogo-demakine.pdf" external>
                 Baixar catálogo (PDF)
               </BtnGhost>

@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { ArrowRight, Info } from "lucide-react";
 import { Seo } from "@/components/seo";
+import { itemListJsonLd } from "@/lib/schema";
 import { CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
 import { Reveal } from "@/components/reveal";
 import { caseStudies } from "@/lib/cases";
@@ -10,8 +11,12 @@ export default function Cases() {
     <>
       <Seo
         title="Aplicações e cases | Demakine"
-        description="Configurações de equipamento que a Demakine entrega por tipo de operação: recebimento de grãos, triagem de resíduos, ensaque de ração e descarga em centro de distribuição."
+        description="Equipamentos Demakine por tipo de operação: recebimento de grãos, triagem de resíduos, ensaque de ração e descarga de caminhão em centro de distribuição."
         path="/cases"
+        jsonLd={itemListJsonLd(
+          "Aplicações e cases Demakine",
+          caseStudies.map((c) => ({ name: c.title, path: `/cases/${c.slug}`, image: c.image })),
+        )}
       />
 
       <PageHero

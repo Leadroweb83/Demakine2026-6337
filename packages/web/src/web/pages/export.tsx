@@ -3,7 +3,8 @@
  * Fica fora do Shell em português: header e footer próprios, no idioma escolhido.
  * O idioma vem de ?lang=es|en (default es) e o toggle troca sem recarregar.
  */
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
+import { useSearch } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import {
   ArrowRight,
@@ -14,31 +15,29 @@ import {
   Loader2,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
 } from "lucide-react";
-import { Seo } from "@/components/seo";
+import { Seo, organizationJsonLd } from "@/components/seo";
+import { EXPORT_ALTERNATES } from "@/lib/hreflang";
+import { track } from "@/lib/tracking";
+import { visitAttribution } from "@/lib/visits";
 import { Reveal } from "@/components/reveal";
 import { api } from "@/lib/api";
 import { getProduct } from "@/lib/content";
 import { exportCopy, type ExportLang } from "@/lib/export-lp";
-import { site, waLink } from "@/lib/site";
+import { site } from "@/lib/site";
+import { LeadOriginField } from "@/components/lead-origin-field";
 import { cn } from "@/lib/utils";
-
-const waMsg: Record<ExportLang, string> = {
-  es: "Hola! Quiero cotizar un equipo Demakine para exportación.",
-  en: "Hello! I would like a quote for Demakine equipment for export.",
-};
 
 const formLabels: Record<ExportLang, Record<string, string>> = {
   es: {
     name: "Nombre*",
-    company: "Empresa",
+    company: "Empresa*",
     phone: "Teléfono / WhatsApp*",
-    email: "E-mail",
-    country: "País de destino",
-    message: "Material, capacidad por hora, largo y altura necesarios",
-    required: "Complete nombre y teléfono.",
+    email: "E-mail*",
+    country: "País de destino*",
+    message: "Material, capacidad por hora, largo y altura necesarios*",
+    required: "Complete todos los campos.",
     fail: "No fue posible enviar. Escríbanos por WhatsApp.",
     okTitle: "Solicitud recibida",
     okText: "Un especialista de Demakine responde en hasta 1 día hábil.",
@@ -46,18 +45,21 @@ const formLabels: Record<ExportLang, Record<string, string>> = {
   },
   en: {
     name: "Name*",
-    company: "Company",
+    company: "Company*",
     phone: "Phone / WhatsApp*",
-    email: "E-mail",
-    country: "Destination country",
-    message: "Material, capacity per hour, required length and height",
-    required: "Please fill in name and phone.",
+    email: "E-mail*",
+    country: "Destination country*",
+    message: "Material, capacity per hour, required length and height*",
+    required: "Please fill in all fields.",
     fail: "Could not send. Please reach us on WhatsApp.",
     okTitle: "Request received",
     okText: "A Demakine specialist replies within 1 business day.",
     okCta: "Talk on WhatsApp now",
   },
 };
+
+/** o asterisco de obrigatório fica só no texto de exemplo, não no nome lido pelo leitor de tela */
+const bare = (label: string) => label.replace(/\*$/, "");
 
 function ExportForm({ lang }: { lang: ExportLang }) {
   const t = formLabels[lang];
@@ -75,11 +77,12 @@ function ExportForm({ lang }: { lang: ExportLang }) {
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product: "Export inquiry", source: `export-${lang}` },
+        json: { ...form, product: "Export inquiry", source: `export-${lang}`, traffic: visitAttribution() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
     },
+    onSuccess: () => track("generate_lead", { form_source: `export-${lang}`, product: "Export inquiry" }),
     onError: () => setError(t.fail),
   });
 
@@ -99,14 +102,6 @@ function ExportForm({ lang }: { lang: ExportLang }) {
         </span>
         <h3 className="h3 mt-4">{t.okTitle}</h3>
         <p className="mt-2 text-[15px] text-dm-gray">{t.okText}</p>
-        <a
-          href={waLink(waMsg[lang])}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-5 inline-block rounded-full bg-dm-green px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-        >
-          {t.okCta}
-        </a>
       </div>
     );
   }
@@ -116,7 +111,7 @@ function ExportForm({ lang }: { lang: ExportLang }) {
       onSubmit={(e) => {
         e.preventDefault();
         setError(null);
-        if (!form.name.trim() || !form.phone.trim()) {
+        if (Object.values(form).some((v) => !v.trim())) {
           setError(t.required);
           return;
         }
@@ -125,25 +120,27 @@ function ExportForm({ lang }: { lang: ExportLang }) {
       className="rounded-2xl border border-dm-line bg-white p-6 shadow-sm md:p-8"
       lang={c.htmlLang}
     >
+      <LeadOriginField />
       <h3 className="h3">{c.formTitle}</h3>
       <p className="mt-2 text-[15px] text-dm-gray">{c.formSubtitle}</p>
 
       <div className="mt-6 grid gap-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <input required value={form.name} onChange={set("name")} placeholder={t.name} aria-label={t.name} className={input} />
-          <input required value={form.phone} onChange={set("phone")} placeholder={t.phone} aria-label={t.phone} inputMode="tel" className={input} />
+          <input required value={form.name} onChange={set("name")} placeholder={t.name} aria-label={bare(t.name)} className={input} />
+          <input required value={form.phone} onChange={set("phone")} placeholder={t.phone} aria-label={bare(t.phone)} inputMode="tel" className={input} />
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <input value={form.company} onChange={set("company")} placeholder={t.company} aria-label={t.company} className={input} />
-          <input value={form.city} onChange={set("city")} placeholder={t.country} aria-label={t.country} className={input} />
+          <input required value={form.company} onChange={set("company")} placeholder={t.company} aria-label={bare(t.company)} className={input} />
+          <input required value={form.city} onChange={set("city")} placeholder={t.country} aria-label={bare(t.country)} className={input} />
         </div>
-        <input type="email" value={form.email} onChange={set("email")} placeholder={t.email} aria-label={t.email} className={input} />
+        <input required type="email" value={form.email} onChange={set("email")} placeholder={t.email} aria-label={bare(t.email)} autoComplete="email" className={input} />
         <textarea
+          required
           value={form.message}
           onChange={set("message")}
           rows={4}
           placeholder={t.message}
-          aria-label={t.message}
+          aria-label={bare(t.message)}
           className={cn(input, "resize-none")}
         />
       </div>
@@ -163,35 +160,11 @@ function ExportForm({ lang }: { lang: ExportLang }) {
 }
 
 export default function ExportLanding() {
-  const initial: ExportLang = useMemo(() => {
-    const q = new URLSearchParams(window.location.search).get("lang");
-    return q === "en" ? "en" : "es";
-  }, []);
+  // idioma pelo endereço (?lang=en); sem parâmetro, espanhol. useSearch funciona também na pré-renderização
+  const search = useSearch();
+  const initial: ExportLang = new URLSearchParams(search).get("lang") === "en" ? "en" : "es";
   const [lang, setLang] = useState<ExportLang>(initial);
   const c = exportCopy[lang];
-
-  // hreflang das duas versões + lang do documento
-  useEffect(() => {
-    document.documentElement.lang = c.htmlLang;
-    const made: HTMLLinkElement[] = [];
-    for (const [code, href] of [
-      ["es", `${site.url}/export?lang=es`],
-      ["en", `${site.url}/export?lang=en`],
-      ["x-default", `${site.url}/export?lang=en`],
-      ["pt-BR", site.url],
-    ]) {
-      const link = document.createElement("link");
-      link.rel = "alternate";
-      link.hreflang = code!;
-      link.href = href!;
-      document.head.appendChild(link);
-      made.push(link);
-    }
-    return () => {
-      document.documentElement.lang = "pt-BR";
-      made.forEach((l) => l.remove());
-    };
-  }, [c.htmlLang]);
 
   const switchLang = () => {
     const next: ExportLang = lang === "es" ? "en" : "es";
@@ -207,14 +180,17 @@ export default function ExportLanding() {
         title={c.seoTitle}
         description={c.seoDescription}
         path={`/export?lang=${lang}`}
-        image="/img/produtos/esteira-transportadora-para-granel/1.jpg"
+        alternates={EXPORT_ALTERNATES}
+        jsonLd={organizationJsonLd}
+        lang={c.htmlLang}
+        image="/img/produtos/esteira-transportadora-para-granel/1.webp"
       />
 
       {/* header próprio */}
       <header className="sticky top-0 z-40 border-b border-dm-line bg-white/95 backdrop-blur">
         <div className="dm-container flex h-16 items-center justify-between gap-4">
           <a href="/" className="flex items-center gap-3">
-            <img src="/img/site/logo-blue.png" alt="Demakine" className="h-8 w-auto object-contain" />
+            <img src="/img/site/logo-blue.webp" width={1406} height={302} alt="Demakine" className="h-[25px] w-auto object-contain" />
           </a>
           <div className="flex items-center gap-2.5">
             <button
@@ -225,15 +201,6 @@ export default function ExportLanding() {
               <Globe className="h-3.5 w-3.5" />
               {c.switchTo}
             </button>
-            <a
-              href={waLink(waMsg[lang])}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden items-center gap-2 rounded-full bg-dm-green px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark sm:inline-flex"
-            >
-              <MessageCircle className="h-3.5 w-3.5" />
-              WhatsApp
-            </a>
           </div>
         </div>
       </header>
@@ -241,7 +208,7 @@ export default function ExportLanding() {
       {/* hero */}
       <section className="relative overflow-hidden bg-dm-blue-deep">
         <img
-          src="/img/produtos/esteira-transportadora-para-granel/1.jpg"
+          src="/img/produtos/esteira-transportadora-para-granel/1.webp"
           alt=""
           className="absolute inset-0 h-full w-full object-cover opacity-30"
         />
@@ -258,15 +225,6 @@ export default function ExportLanding() {
               >
                 {c.ctaPrimary}
                 <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href={waLink(waMsg[lang])}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-dm-green px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-              >
-                <MessageCircle className="h-4 w-4" />
-                {c.ctaSecondary}
               </a>
             </div>
           </div>
@@ -425,16 +383,6 @@ export default function ExportLanding() {
           </div>
         </div>
       </footer>
-
-      <a
-        href={waLink(waMsg[lang])}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="WhatsApp"
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-dm-green text-white shadow-[0_14px_34px_rgba(23,134,79,0.4)] transition-colors hover:bg-dm-green-dark"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </a>
     </div>
   );
 }

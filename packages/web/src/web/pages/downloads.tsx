@@ -4,9 +4,10 @@ import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { LeadForm } from "@/components/lead-form";
 import { CtaBand, PageHero, Section, SectionHead } from "@/components/kit";
-import { products } from "@/lib/content";
-import { waLink } from "@/lib/site";
+import { getProduct, products } from "@/lib/content";
+import { productMaintenance } from "@/lib/product-maintenance";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/i18n";
 
 const files = [
   {
@@ -18,8 +19,8 @@ const files = [
   },
   {
     Icon: Printer,
-    title: "Checklist de manutenção em 5 minutos por dia",
-    desc: "Rotina diária, semanal e mensal em uma folha para imprimir e pendurar ao lado do equipamento, com folha de registro do que foi feito.",
+    title: "Checklist geral de manutenção",
+    desc: "Rotina diária, semanal e mensal para esteiras e roscas que ainda não têm checklist próprio, com folha de registro do que foi feito.",
     meta: "PDF · 2 páginas",
     href: "/downloads/checklist-manutencao-demakine.pdf",
   },
@@ -77,7 +78,7 @@ export default function Downloads() {
   return (
     <>
       <Seo
-        title="Central de materiais: catálogo, checklists e guias | Demakine"
+        title="Catálogo, Checklists e Guias para Baixar | Demakine"
         description="Baixe o catálogo Demakine, o checklist de manutenção para imprimir, o guia de correias por aplicação e o checklist antes de comprar uma esteira transportadora."
         path="/downloads"
       />
@@ -86,7 +87,7 @@ export default function Downloads() {
         eyebrow="Central de materiais"
         title="Catálogo, checklists e guias técnicos"
         text="Material para você comparar modelos, conferir dimensões, treinar sua equipe na manutenção e apresentar a solução internamente. Download direto, sem enrolação."
-        image="/img/site/hero.jpg"
+        image="/img/site/hero.webp"
         crumbs={[{ label: "Downloads" }]}
       />
 
@@ -124,6 +125,32 @@ export default function Downloads() {
             </Reveal>
           ))}
         </div>
+
+        <Reveal className="mt-10">
+          <h3 className="text-[18px] font-bold text-dm-ink">Checklist por equipamento</h3>
+          <p className="mt-1.5 max-w-2xl text-[14.5px] leading-relaxed text-dm-gray">
+            Tirados do manual técnico de cada máquina, com a frequência certa de cada cuidado e folha
+            de registro.
+          </p>
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {Object.entries(productMaintenance).map(([slug, m]) => (
+              <li key={slug}>
+                <a
+                  href={m.checklistPdf}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-center gap-3 rounded-xl border border-dm-line bg-white px-4 py-3.5 transition-colors hover:border-dm-blue/40 hover:bg-dm-blue-soft/40"
+                >
+                  <Printer className="h-5 w-5 shrink-0 text-dm-blue" />
+                  <span className="flex-1 text-[14.5px] font-semibold text-dm-ink group-hover:text-dm-blue">
+                    {getProduct(slug)?.name ?? slug}
+                  </span>
+                  <Download className="h-4 w-4 shrink-0 text-dm-ink/40 group-hover:text-dm-blue" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </Section>
 
       {/* ------------------------------------------------------------ kit gated */}
@@ -210,7 +237,7 @@ export default function Downloads() {
         <SectionHead
           eyebrow="Sob solicitação"
           title="Documentos técnicos personalizados"
-          text={`Enviamos por e-mail ou WhatsApp em até 1 dia útil. ${withTable.length} equipamentos já têm tabela de modelos publicada no catálogo do site.`}
+          text={tr("Enviamos por e-mail ou WhatsApp em até 1 dia útil. {n} equipamentos já têm tabela de modelos publicada no catálogo do site.", { n: withTable.length })}
         />
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {onRequest.map(({ Icon, title, desc }, idx) => (
@@ -233,14 +260,6 @@ export default function Downloads() {
               Diga qual equipamento e modelo você precisa. Se ainda não souber o modelo, descreva a
               operação e a gente indica.
             </p>
-            <a
-              href={waLink("Olá! Quero receber a ficha técnica de um equipamento Demakine.")}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-dm-green px-6 py-3 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-            >
-              Ou peça direto no WhatsApp →
-            </a>
           </Reveal>
           <Reveal i={1}>
             <LeadForm

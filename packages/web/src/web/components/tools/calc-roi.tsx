@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Calculator, TrendingUp } from "lucide-react";
 import { brl, computeRoi, num, roiAssumptions } from "@/lib/engine";
 import { LeadForm } from "@/components/lead-form";
-import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { RingChart } from "@/components/ui/ring-chart";
+import { tr } from "@/lib/i18n";
 
 /**
  * Calculadora de retorno: compara o custo da movimentação manual
@@ -18,6 +19,7 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
   const [daysPerMonth, setDays] = useState(22);
   const [investment, setInvestment] = useState<number | "">("");
   const [showForm, setShowForm] = useState(false);
+  const uid = useId();
 
   const r = useMemo(
     () =>
@@ -61,8 +63,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <label className={fieldLabel}>Volumes movimentados por dia</label>
+            <label htmlFor={`${uid}-volume`} className={fieldLabel}>Volumes movimentados por dia</label>
             <input
+              id={`${uid}-volume`}
               type="number"
               min={1}
               value={volumePerDay}
@@ -71,8 +74,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Dias trabalhados por mês</label>
+            <label htmlFor={`${uid}-dias`} className={fieldLabel}>Dias trabalhados por mês</label>
             <input
+              id={`${uid}-dias`}
               type="number"
               min={1}
               max={31}
@@ -82,8 +86,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Pessoas nessa tarefa hoje</label>
+            <label htmlFor={`${uid}-pessoas`} className={fieldLabel}>Pessoas nessa tarefa hoje</label>
             <input
+              id={`${uid}-pessoas`}
               type="number"
               min={1}
               value={people}
@@ -92,8 +97,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Pessoas depois da esteira</label>
+            <label htmlFor={`${uid}-depois`} className={fieldLabel}>Pessoas depois da esteira</label>
             <input
+              id={`${uid}-depois`}
               type="number"
               min={0}
               value={peopleAfter}
@@ -102,8 +108,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Custo mensal por pessoa</label>
+            <label htmlFor={`${uid}-custo`} className={fieldLabel}>Custo mensal por pessoa</label>
             <input
+              id={`${uid}-custo`}
               type="number"
               min={0}
               step={100}
@@ -113,8 +120,9 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             />
           </div>
           <div>
-            <label className={fieldLabel}>Investimento (opcional)</label>
+            <label htmlFor={`${uid}-investimento`} className={fieldLabel}>Investimento (opcional)</label>
             <input
+              id={`${uid}-investimento`}
               type="number"
               min={0}
               step={1000}
@@ -153,10 +161,53 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
           <Big
             dark={dark}
             k="Payback estimado"
-            v={r.paybackMonths ? `${num(r.paybackMonths, 1)} meses` : "informe o investimento"}
+            v={r.paybackMonths ? tr("{n} meses", { n: num(r.paybackMonths, 1) }) : "informe o investimento"}
           />
           <Big dark={dark} k="Horas/mês liberadas" v={`${num(r.hoursSavedPerMonth, 0)} h`} />
         </div>
+
+        {(() => {
+          const today = Math.max(1, people) * costPerPerson;
+          const stays = Math.max(0, today - r.monthlySaving);
+          const share = today > 0 ? Math.round((r.monthlySaving / today) * 100) : 0;
+          return today > 0 ? (
+            <div
+              className={cn(
+                "mt-5 rounded-xl border p-5",
+                dark ? "border-white/10 bg-white/[0.03]" : "border-dm-line bg-white",
+              )}
+            >
+              <p className={cn("text-[13px] font-semibold", dark ? "text-white/75" : "text-dm-ink/80")}>
+                Custo mensal de mão de obra nessa tarefa
+              </p>
+              <RingChart
+                dark={dark}
+                size={200}
+                thickness={20}
+                className="mt-4 sm:flex-row sm:items-center sm:gap-8"
+                centerLabel="Hoje, por mês"
+                centerValue={brl(today)}
+                segments={[
+                  {
+                    key: "economia",
+                    label: "Economia com a esteira",
+                    value: r.monthlySaving,
+                    display: brl(r.monthlySaving),
+                    color: dark ? "#7fa8ff" : "#103d94",
+                    badge: { text: `−${share}%`, tone: share > 0 ? "good" : "neutral" },
+                  },
+                  {
+                    key: "continua",
+                    label: "Custo que continua",
+                    value: stays,
+                    display: brl(stays),
+                    color: dark ? "rgba(255,255,255,0.3)" : "#c5cad3",
+                  },
+                ]}
+              />
+            </div>
+          ) : null;
+        })()}
 
         <div
           className={cn(
@@ -198,7 +249,7 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
               variant={dark ? "dark" : "light"}
               compact
               source="calculadora-roi"
-              product={`ROI: economia de ${brl(r.monthlySaving)}/mês, ${num(volumePerDay)} volumes/dia`}
+              product={tr("ROI: economia de {valor}/mês, {n} volumes/dia", { valor: brl(r.monthlySaving), n: num(volumePerDay) })}
               buttonLabel="Receber o cálculo"
               title="Receber este cálculo"
               subtitle="Enviamos o memorial com a máquina indicada para a sua operação."
@@ -213,16 +264,6 @@ export function CalcRoi({ dark = false }: { dark?: boolean }) {
             >
               Receber este cálculo
             </button>
-            <a
-              href={waLink(
-                `Olá! Fiz a conta no site: ${num(volumePerDay)} volumes/dia, economia estimada de ${brl(r.monthlySaving)} por mês. Quero avaliar a máquina.`,
-              )}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-dm-green px-6 py-3.5 text-[13px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-dm-green-dark"
-            >
-              Falar no WhatsApp
-            </a>
           </div>
         )}
       </div>

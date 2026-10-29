@@ -58,7 +58,6 @@ export async function setUserPassword(userId: string, password: string) {
 
 export function randomPassword(len = 12) {
   const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$";
-  let out = "";
-  for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)];
-  return out;
+  const bytes = crypto.getRandomValues(new Uint32Array(len));
+  return Array.from(bytes, (b) => chars[b % chars.length]).join("");
 }

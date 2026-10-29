@@ -2,15 +2,16 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { bearer } from "better-auth/plugins";
 import { db } from "./database";
+import { trustedOriginList } from "./lib/origins";
 
 /** Papéis do painel Demakine. */
-export const ROLES = ["super_admin", "admin", "editor", "vendedor"] as const;
+export const ROLES = ["super_admin", "admin", "editor", "vendedor", "rh"] as const;
 export type Role = (typeof ROLES)[number];
 
 export const auth = betterAuth({
   basePath: "/api/auth",
   baseURL: process.env.WEBSITE_URL,
-  database: drizzleAdapter(db, { provider: "sqlite" }),
+  database: drizzleAdapter(db, { provider: "pg" }),
   emailAndPassword: {
     enabled: true,
     // Ninguém se cadastra sozinho: o super admin cria os usuários no painel.
@@ -29,9 +30,7 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
   },
-  trustedOrigins: (request) => {
-    const origin = request?.headers.get("origin");
-    return origin ? [origin] : ["*"];
-  },
+  // só o próprio site e os domínios oficiais: confiar em qualquer origem desligaria a defesa contra CSRF
+  trustedOrigins: (request) => trustedOriginList(request),
   plugins: [bearer()],
 });
