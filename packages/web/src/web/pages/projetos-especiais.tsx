@@ -64,9 +64,7 @@ const benefits = [
  */
 const DESIGN_DESC = "Projeto 3D desenvolvido pela engenharia da Demakine.";
 const designProjects = [
-  "Moega de recebimento para pá carregadeira com esteira inclinada",
   "Esteira longa sobre pórticos treliçados com moega para pá carregadeira",
-  "Linha de esteiras com transferência elevada sobre caçambas",
   "Esteira inclinada sobre rodas para carga de caminhão",
   "Esteiras sobre rodízios em dois lances com calhas de descarga",
   "Esteiras sobre rodízios com descarga em sequência",
@@ -83,7 +81,7 @@ const designProjects = [
   images: [`/img/projetos-3d/${String(i + 1).padStart(2, "0")}.webp`],
 }));
 
-const FIRST_BATCH = 9;
+const FIRST_BATCH = 12;
 
 const engineeringText = [
   "Nem toda operação se encaixa em uma solução pronta. Existem processos que exigem dimensões específicas, diferentes capacidades, adaptações de layout ou até um equipamento desenvolvido exclusivamente para aquela aplicação.",
@@ -209,7 +207,7 @@ export default function ProjetosEspeciais() {
           ))}
         </div>
 
-        {!showAll && (
+        {!showAll && designProjects.length > FIRST_BATCH && (
           <div className="mt-10 flex justify-center">
             <button
               type="button"
