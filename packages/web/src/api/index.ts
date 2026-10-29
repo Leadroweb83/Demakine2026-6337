@@ -35,6 +35,7 @@ import {
 } from "./lib/jobs";
 import { canSeeLeadValue, isLeadStatus, ownerChangeError } from "./lib/leads";
 import { UFS, placeFrom } from "./lib/place";
+import { isTrustedOrigin } from "./lib/origins";
 import { getContentSnapshot } from "./lib/content-snapshot";
 import { purgeOldVisits, recordPageView, visitsSummary } from "./lib/visits";
 import { TEAM_VIEW, blockedFor, cleanAccess, getDashboardAccess, saveDashboardAccess, stripDashboard } from "./lib/dashboard-access";
@@ -67,7 +68,7 @@ type Env = {
 const clipText = (v: unknown, max: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : null);
 
 const app = new Hono<Env>()
-  .use(cors({ origin: (origin) => origin ?? "*", credentials: true, exposeHeaders: ["set-auth-token"] }))
+  .use(cors({ origin: (origin, c) => (isTrustedOrigin(origin, c.req.raw) ? origin : null), credentials: true, exposeHeaders: ["set-auth-token"] }))
   .on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw))
   .basePath('api')
   .use(authMiddleware)

@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { bearer } from "better-auth/plugins";
 import { db } from "./database";
+import { trustedOriginList } from "./lib/origins";
 
 /** Papéis do painel Demakine. */
 export const ROLES = ["super_admin", "admin", "editor", "vendedor", "rh"] as const;
@@ -29,9 +30,7 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
   },
-  trustedOrigins: (request) => {
-    const origin = request?.headers.get("origin");
-    return origin ? [origin] : ["*"];
-  },
+  // só o próprio site e os domínios oficiais: confiar em qualquer origem desligaria a defesa contra CSRF
+  trustedOrigins: (request) => trustedOriginList(request),
   plugins: [bearer()],
 });
