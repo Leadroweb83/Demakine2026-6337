@@ -8,6 +8,9 @@
  * A tag do Google Ads está aqui no código: não crie a mesma tag dentro do GTM (contaria em dobro).
  * Eventos para o GTM/GA4 e conversões do Ads: page_view_spa, generate_lead, job_application,
  * whatsapp_click e phone_click (dataLayer).
+ *
+ * Conversão "Formulário Novo" do Google Ads: disparada na página /obrigado (pages/obrigado.tsx) com
+ * trackAdsConversion, só depois de um envio de formulário e uma vez por visita àquela página.
  */
 export const GTM_ID = "GTM-W4686GTS";
 export const ADS_ID = "AW-969480580";
@@ -94,6 +97,33 @@ export function applyConsent(choice: "all" | "essential") {
   granted = next;
   // quem abriu direto no /admin e depois foi para o site ainda não tem o GTM
   load();
+}
+
+/** Conversão "Formulário Novo" (Google Ads): conta quando o visitante cai em /obrigado depois de enviar um formulário. */
+export const ADS_CONVERSION_FORM = `${ADS_ID}/gpVZCPen--gYEISzpM4D`;
+
+/** Endereços em que a conversão conta. Teste local e prévias da Vercel não podem gerar conversão falsa no Ads. */
+const CONVERSION_HOSTS = /^(www\.)?demakine\.com\.br$|^demakine-five\.vercel\.app$/;
+
+/**
+ * Conversão do Google Ads (`gtag('event','conversion')`). Devolve se disparou. Vale com ou sem aceite dos
+ * cookies: sem aceite o Google recebe só o sinal anônimo do Modo de Consentimento.
+ */
+export function trackAdsConversion(sendTo: string) {
+  const win = w();
+  if (!win || !loaded || isAdmin() || !CONVERSION_HOSTS.test(win.location.hostname)) return false;
+  gtag("event", "conversion", { send_to: sendTo });
+  return true;
+}
+
+/**
+ * Esta visita à /obrigado ainda não foi contada? Só conta quem chegou pelo formulário (`?origem=`, que o
+ * LeadForm coloca no endereço) e uma vez por entrada do histórico: recarregar a página, voltar nela ou abrir
+ * o endereço direto não repete a conversão.
+ */
+export function claimFormConversion(search: string, historyState: unknown) {
+  if (!new URLSearchParams(search).has("origem")) return false;
+  return !(historyState as { dmConv?: boolean } | null)?.dmConv;
 }
 
 /** Evento para o GTM (sem aceite, o Google recebe só o sinal anônimo do Modo de Consentimento). */

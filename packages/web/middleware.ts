@@ -43,10 +43,15 @@ export default async function middleware(request: Request) {
   if (url.pathname === "/export" && url.searchParams.get("lang") === "en") return rewrite(new URL("/export-en", url));
   // arquivos do build (js, css, imagens) passam direto; .html e .php podem ser endereço antigo
   if (/\.(?!html?$|php$)[a-z0-9]{2,5}$/i.test(url.pathname)) return next();
-  const rule = (await rules(url.origin)).get(key(url.pathname));
+  const all = await rules(url.origin);
+  const k = key(url.pathname);
+  // o site antigo também respondia dentro de /produtos-e-servicos/<página>/ (e redirecionava para a raiz): vale a mesma regra, em 1 salto
+  const rule = all.get(k) ?? all.get(k.replace(/^\/produtos-e-servicos(?=\/)/, ""));
   if (!rule) return next();
   const target = new URL(rule.to, url.origin);
-  if (!target.search && url.search) target.search = url.search;
+  // parâmetros do anúncio (gclid, utm_*...) seguem junto, inclusive quando o destino já tem os seus (?cat=...):
+  // sem eles o Google Ads perde a atribuição e o formulário grava a origem como "Direto"
+  for (const [name, value] of url.searchParams) if (!target.searchParams.has(name)) target.searchParams.append(name, value);
   return new Response(null, {
     status: rule.permanent ? 301 : 302,
     headers: { Location: target.toString(), "Cache-Control": "public, max-age=300" },
