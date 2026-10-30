@@ -41,6 +41,11 @@ Bun.serve({
       if (req.method === "DELETE") violations.length = 0;
       return Response.json([...new Set(violations)]);
     }
+    // conteúdo do painel gravado no build (o mesmo que /api/conteudo devolve em produção): faz o site hidratar como na Vercel
+    if (p === "/api/conteudo") {
+      const snap = [...new Bun.Glob("conteudo-*.json").scanSync(root)].sort()[0];
+      if (snap) return new Response(Bun.file(path.join(root, snap)), { headers: { "content-type": "application/json" } });
+    }
     if (p.startsWith("/api")) return new Response("{}", { status: 404 });
     if (p.startsWith("/admin") || p.startsWith("/loja")) p = "/_app";
     const tries = p === "/" ? ["/index.html"] : [p, `${p}.html`, `${p}/index.html`];

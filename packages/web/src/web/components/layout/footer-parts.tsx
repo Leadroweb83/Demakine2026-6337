@@ -188,18 +188,26 @@ function status() {
 }
 
 export function OpenStatus({ className }: { className?: string }) {
-  const [state, setState] = useState(status);
+  // "Aberto agora" depende do dia e da hora. Calcular na renderização faria o HTML pré-renderizado (gerado no
+  // build) divergir do que o navegador monta, e o React descartaria a página inteira (erro de hidratação #418,
+  // que também derruba o CLS). Por isso o cálculo só roda depois que a página monta, com a faixa reservada.
+  const [live, setLive] = useState<ReturnType<typeof status> | null>(null);
 
   useEffect(() => {
-    const id = setInterval(() => setState(status()), 30_000);
+    setLive(status());
+    const id = setInterval(() => setLive(status()), 30_000);
     return () => clearInterval(id);
   }, []);
+
+  const state = live ?? { open: false, text: tr("Aberto agora · fecha às {hora}", { hora: "17h30" }) };
 
   return (
     <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1.5", className)}>
       <span
+        aria-hidden={live ? undefined : true}
         className={cn(
           "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[12.5px] font-bold",
+          !live && "invisible",
           state.open
             ? "bg-dm-green/18 text-[#5fe0a5]"
             : "bg-white/[0.07] text-white/60",
