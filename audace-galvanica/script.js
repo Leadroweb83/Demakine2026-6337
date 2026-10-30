@@ -93,7 +93,7 @@
       '*Marca / Empresa:* ' + f.empresa.value.trim(),
       '*Cidade / UF:* ' + f.cidade.value.trim(),
       '*Momento:* ' + f.momento.value,
-      '*Volume de peças:* ' + f.volume.value,
+      '*Volume aproximado:* ' + f.volume.value,
       '*Principal necessidade:* ' + f.necessidade.value,
       '',
       '_Enviado pela landing page Audace Galvânica_'
@@ -126,7 +126,7 @@
       'Marca / Empresa': f.empresa.value.trim(),
       'Cidade / UF': f.cidade.value.trim(),
       'Momento': f.momento.value,
-      'Volume aproximado de peças': f.volume.value,
+      'Volume aproximado em quilos': f.volume.value,
       'Principal necessidade': f.necessidade.value,
       'Responder pelo WhatsApp': 'https://wa.me/55' + onlyDigits(f.whatsapp.value)
     };

@@ -35,7 +35,7 @@ originais do pacote (`originais/`) e o logo oficial transparente (`logo/`). Nada
 
 - Endereço: Av. Marechal Floriano Peixoto, 176 - Parque Hipolyto, Limeira - SP, 13486-554.
   Rodapé mostra "Limeira - SP" (como na arte) com link para o mapa; endereço completo no JSON-LD.
-- WhatsApp: (19) 99455-5679. Instagram: https://www.instagram.com/audacegalvanica/
+- WhatsApp: (19) 97179-3528. Instagram: https://www.instagram.com/audacegalvanica/
 - Formulário: valida os 7 campos, envia um e-mail organizado (tabela, via FormSubmit) e abre o WhatsApp da Audace
   com os dados. O e-mail identifica a origem ("Landing page Audace Galvânica" + utm_*/gclid/fbclid) e traz data/hora
   e link para responder pelo WhatsApp; a mensagem do WhatsApp termina com "Enviado pela landing page".
