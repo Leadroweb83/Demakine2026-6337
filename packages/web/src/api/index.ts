@@ -135,7 +135,7 @@ const app = new Hono<Env>()
       /** origem da visita que gerou o pedido (lib/visits.ts no site) */
       traffic?: { source?: unknown; landing?: unknown; campaign?: unknown } | null;
       hp?: string;
-      startedAt?: number;
+      elapsed?: number;
     }>();
     const verdict = botVerdict(body);
     if (verdict === 'trap') return c.json({ lead: { id: 0 } }, 201);
@@ -206,7 +206,7 @@ const app = new Hono<Env>()
     return c.body(null, 204);
   })
   .post('/newsletter', limit('newsletter', 5, 600), smallBody, async (c) => {
-    const body = await c.req.json<{ email: string; source?: string; hp?: string; startedAt?: number }>();
+    const body = await c.req.json<{ email: string; source?: string; hp?: string; elapsed?: number }>();
     const verdict = botVerdict(body);
     if (verdict === 'trap') return c.json({ ok: true }, 201);
     if (verdict === 'fast') return c.json({ error: BOT_FAST_MSG }, 400);
@@ -247,7 +247,7 @@ const app = new Hono<Env>()
     return c.json({ items }, 200);
   })
   .post('/avaliacoes', limit('avaliacoes', 5, 3600), smallBody, async (c) => {
-    type ReviewBody = { name?: string; company?: string; rating?: number; text?: string; hp?: string; startedAt?: number };
+    type ReviewBody = { name?: string; company?: string; rating?: number; text?: string; hp?: string; elapsed?: number };
     const body = await c.req.json<ReviewBody>().catch(() => ({}) as ReviewBody);
     const verdict = botVerdict(body);
     // campo invisível preenchido: responde como se tivesse dado certo e descarta
@@ -355,7 +355,7 @@ const app = new Hono<Env>()
       resumeKey?: string | null;
       consent?: boolean;
       hp?: string;
-      startedAt?: number;
+      elapsed?: number;
     }>();
     const verdict = botVerdict(body);
     if (verdict === 'trap') return c.json({ ok: true }, 201);
