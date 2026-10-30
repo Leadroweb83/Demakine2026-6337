@@ -28,6 +28,7 @@ import { exportCopy, type ExportLang } from "@/lib/export-lp";
 import { site } from "@/lib/site";
 import { LeadOriginField } from "@/components/lead-origin-field";
 import { cn } from "@/lib/utils";
+import { useBotTrap } from "@/lib/bot-trap";
 
 const formLabels: Record<ExportLang, Record<string, string>> = {
   es: {
@@ -73,11 +74,12 @@ function ExportForm({ lang }: { lang: ExportLang }) {
     message: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const bot = useBotTrap();
 
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product: "Export inquiry", source: `export-${lang}`, traffic: visitAttribution() },
+        json: { ...form, product: "Export inquiry", source: `export-${lang}`, traffic: visitAttribution(), ...bot.trap() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
@@ -121,6 +123,7 @@ function ExportForm({ lang }: { lang: ExportLang }) {
       lang={c.htmlLang}
     >
       <LeadOriginField />
+      {bot.field}
       <h3 className="h3">{c.formTitle}</h3>
       <p className="mt-2 text-[15px] text-dm-gray">{c.formSubtitle}</p>
 

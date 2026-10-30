@@ -8,6 +8,7 @@ import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { PhotoUpload, type UploadedPhoto } from "@/components/photo-upload";
 import { LeadOriginField } from "@/components/lead-origin-field";
+import { useBotTrap } from "@/lib/bot-trap";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
@@ -74,11 +75,12 @@ export function LeadForm({
   });
   const [error, setError] = useState<string | null>(null);
   const [shots, setShots] = useState<UploadedPhoto[]>([]);
+  const bot = useBotTrap();
 
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...withState(form), product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution() },
+        json: { ...withState(form), product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution(), ...bot.trap() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
@@ -135,6 +137,7 @@ export function LeadForm({
       )}
     >
       <LeadOriginField />
+      {bot.field}
       {title && <h3 className={cn("h3", dark && "text-white")}>{title}</h3>}
       {subtitle && (
         <p className={cn("mt-2 text-[15px]", dark ? "text-white/60" : "text-dm-gray")}>{subtitle}</p>

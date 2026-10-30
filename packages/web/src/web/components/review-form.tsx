@@ -4,6 +4,7 @@ import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
+import { useBotTrap } from "@/lib/bot-trap";
 
 const field =
   "w-full rounded-xl border border-dm-line bg-white px-4 py-3 text-[15px] text-dm-ink outline-none transition-colors placeholder:text-dm-gray/70 focus:border-dm-blue";
@@ -12,19 +13,20 @@ const STAR = "M10 1.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L10 14.9l-5.25 2.75 1-5.85L
 
 /** Formulário "Deixe seu comentário": todos os campos obrigatórios; o comentário só aparece depois de aprovado no painel. */
 export function ReviewForm() {
-  const [form, setForm] = useState({ name: "", company: "", text: "", website: "" });
+  const [form, setForm] = useState({ name: "", company: "", text: "" });
+  const bot = useBotTrap();
   const [rating, setRating] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   const send = useMutation({
     mutationFn: async () => {
-      const res = await api.avaliacoes.$post({ json: { ...form, rating } });
+      const res = await api.avaliacoes.$post({ json: { ...form, rating, ...bot.trap() } });
       if (!res.ok) throw new Error("fail");
     },
     onError: () => setError("Não foi possível enviar agora. Tente de novo em instantes."),
   });
 
-  const set = (key: "name" | "company" | "text" | "website") => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const set = (key: "name" | "company" | "text") => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
 
   if (send.isSuccess) {
@@ -94,16 +96,7 @@ export function ReviewForm() {
           aria-label={tr("Seu comentário")}
           className={cn(field, "resize-y")}
         />
-        {/* campo-isca: invisível para pessoas, robôs costumam preencher */}
-        <input
-          tabIndex={-1}
-          autoComplete="off"
-          value={form.website}
-          onChange={set("website")}
-          aria-hidden
-          className="absolute -left-[9999px] h-0 w-0 opacity-0"
-          name="website"
-        />
+        {bot.field}
       </div>
 
       {error && (

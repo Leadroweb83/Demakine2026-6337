@@ -18,6 +18,7 @@ import { site } from "@/lib/site";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
+import { useBotTrap } from "@/lib/bot-trap";
 
 /* ------------------------------------------------------- busca no rodapé */
 
@@ -256,13 +257,14 @@ export function TrustRow() {
 export function NewsletterBox() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const bot = useBotTrap();
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (state === "sending") return;
     setState("sending");
     try {
-      const res = await api.newsletter.$post({ json: { email, source: "newsletter-rodape" } });
+      const res = await api.newsletter.$post({ json: { email, source: "newsletter-rodape", ...bot.trap() } });
       if (!res.ok) throw new Error("falha");
       setState("done");
       setEmail("");
@@ -296,6 +298,7 @@ export function NewsletterBox() {
         Sem promoção e sem spam. Só o caso: a carga, o layout, o equipamento e o resultado na linha.
       </p>
       <form onSubmit={submit} className="mt-4 flex flex-col gap-2.5 sm:flex-row">
+        {bot.field}
         <input
           type="email"
           required

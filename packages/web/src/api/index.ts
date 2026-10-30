@@ -1,4 +1,7 @@
 import { Hono } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
+import { createMiddleware } from 'hono/factory';
+import { HTTPException } from 'hono/http-exception';
 import { validator } from 'hono/validator';
 import { cors } from "hono/cors"
 import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
@@ -36,6 +39,10 @@ import {
 import { canSeeLeadValue, isLeadStatus, ownerChangeError } from "./lib/leads";
 import { UFS, placeFrom } from "./lib/place";
 import { isTrustedOrigin } from "./lib/origins";
+import { hit, limit, purgeRateLimits, clientIp } from "./lib/rate-limit";
+import { botVerdict } from "./lib/bot";
+import { LEAD_PHOTO_KEY_RE, verifyUpload } from "./lib/upload-check";
+import { timingSafeEqual, randomBytes } from "node:crypto";
 import { getContentSnapshot } from "./lib/content-snapshot";
 import { purgeOldVisits, recordPageView, visitsSummary } from "./lib/visits";
 import { TEAM_VIEW, blockedFor, cleanAccess, getDashboardAccess, saveDashboardAccess, stripDashboard } from "./lib/dashboard-access";
@@ -67,15 +74,53 @@ type Env = {
 /** texto vindo do navegador: sem espaço sobrando e com tamanho máximo, vazio vira null */
 const clipText = (v: unknown, max: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : null);
 
+/** só o login (e troca de senha) conta tentativa: 10 por 10 minutos por IP */
+const authAttemptLimit = createMiddleware(async (c, next) => {
+  if (c.req.method === 'POST' && /\/(sign-in|sign-up|forget-password|reset-password|change-password|send-verification-email)/.test(c.req.path)) {
+    const r = await hit(`login:${clientIp(c.req.raw.headers)}`, 10, 600);
+    if (!r.ok) {
+      c.header('Retry-After', String(r.retryAfter));
+      return c.json({ error: 'Muitas tentativas. Aguarde alguns minutos e tente de novo.' }, 429);
+    }
+  }
+  return next();
+});
+
+/**
+ * Painel: pedido que muda dado e veio de outro site é recusado. O cookie já é SameSite=Lax, e isto é
+ * a segunda trava (navegador sempre informa a origem em pedido entre sites).
+ */
+const csrfGuard = createMiddleware(async (c, next) => {
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(c.req.method)) {
+    const origin = c.req.header('origin');
+    if (origin && !isTrustedOrigin(origin, c.req.raw)) return c.json({ error: 'Origem não autorizada' }, 403);
+  }
+  return next();
+});
+
+/** formulário público: corpo pequeno */
+const smallBody = bodyLimit({ maxSize: 64 * 1024, onError: (c) => c.json({ error: 'Pedido grande demais' }, 413) });
+const BOT_FAST_MSG = 'Confira os dados e envie de novo.';
+
 const app = new Hono<Env>()
   .use(cors({ origin: (origin, c) => (isTrustedOrigin(origin, c.req.raw) ? origin : null), credentials: true, exposeHeaders: ["set-auth-token"] }))
-  .on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw))
+  .on(["GET", "POST"], "/api/auth/*", authAttemptLimit, (c) => auth.handler(c.req.raw))
   .basePath('api')
+  // nenhum pedido passa de 1 MB (conteúdo do painel tem teto próprio de 200 KB; arquivos sobem direto para o storage)
+  .use(bodyLimit({ maxSize: 1024 * 1024, onError: (c) => c.json({ error: 'Pedido grande demais' }, 413) }))
   .use(authMiddleware)
+  .use('/admin/*', csrfGuard)
   .use('/admin/*', auditMiddleware)
+  .onError((err, c) => {
+    if (err instanceof HTTPException) return err.getResponse();
+    // o detalhe vai só para o log do servidor; quem chamou recebe uma mensagem genérica
+    console.error('[api]', c.req.method, c.req.path, err instanceof Error ? err.message : 'erro');
+    return c.json({ error: 'Não foi possível concluir agora. Tente de novo em instantes.' }, 500);
+  })
+  .notFound((c) => c.json({ error: 'Não encontrado' }, 404))
   .get('/ping', (c) => c.json({ message: `Pong! ${Date.now()}` }, 200))
   .get('/health', (c) => c.json({ status: 'ok' }, 200))
-  .post('/leads', async (c) => {
+  .post('/leads', limit('leads', 8, 600), smallBody, async (c) => {
     const body = await c.req.json<{
       name: string;
       company?: string;
@@ -89,7 +134,12 @@ const app = new Hono<Env>()
       attachments?: string[];
       /** origem da visita que gerou o pedido (lib/visits.ts no site) */
       traffic?: { source?: unknown; landing?: unknown; campaign?: unknown } | null;
+      hp?: string;
+      startedAt?: number;
     }>();
+    const verdict = botVerdict(body);
+    if (verdict === 'trap') return c.json({ lead: { id: 0 } }, 201);
+    if (verdict === 'fast') return c.json({ error: BOT_FAST_MSG }, 400);
 
     // todos os campos são obrigatórios (o formulário já exige, aqui ninguém burla chamando a API direto);
     // no site em inglês e espanhol o campo cidade traz o país de destino e não há estado
@@ -97,11 +147,27 @@ const app = new Hono<Env>()
     const abroadForm = (body.source ?? '').startsWith('export-');
     const filled = (v: unknown) => typeof v === 'string' && v.trim().length > 0;
     const emailOk = typeof body.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email.trim());
+    const within = (v: unknown, max: number) => typeof v !== 'string' || v.length <= max;
     if (
       !filled(body.name) || !filled(body.company) || !filled(body.phone) || !emailOk ||
       !place.city || (!abroadForm && !place.state) || !filled(body.message)
     ) {
       return c.json({ error: 'Preencha todos os campos' }, 400);
+    }
+    // tamanhos máximos: ninguém precisa mandar um texto de megabytes num pedido de orçamento
+    if (
+      !within(body.name, 120) || !within(body.company, 160) || !within(body.phone, 40) || !within(body.email, 160) ||
+      !within(body.message, 4000) || !within(body.product, 160) || !within(body.source, 60)
+    ) {
+      return c.json({ error: 'Algum campo passou do tamanho permitido' }, 400);
+    }
+
+    // fotos anexadas: só chaves geradas pelo envio de foto, que existam, sejam imagem de verdade e caibam em 10 MB
+    const photoKeys = Array.isArray(body.attachments) ? body.attachments.slice(0, 3) : [];
+    for (const key of photoKeys) {
+      if (typeof key !== 'string' || !LEAD_PHOTO_KEY_RE.test(key)) return c.json({ error: 'Foto inválida' }, 400);
+      const v = await verifyUpload(S3_BUCKET, key, 'image', 10 * 1024 * 1024);
+      if (v !== 'ok') return c.json({ error: 'Não foi possível validar uma das fotos. Envie de novo.' }, 400);
     }
 
     const [lead] = await db
@@ -117,9 +183,7 @@ const app = new Hono<Env>()
         message: body.message?.trim() || null,
         source: body.source?.trim() || 'site',
         attachments:
-          Array.isArray(body.attachments) && body.attachments.length
-            ? JSON.stringify(body.attachments.slice(0, 3))
-            : null,
+          photoKeys.length ? JSON.stringify(photoKeys) : null,
         trafficSource: clipText(body.traffic?.source, 40),
         landingPath: clipText(body.traffic?.landing, 300),
         utmCampaign: clipText(body.traffic?.campaign, 120),
@@ -132,7 +196,7 @@ const app = new Hono<Env>()
     return c.json({ lead: { id: lead!.id } }, 201);
   })
   // ------------------------------------------------ medição própria de visitas
-  .post('/v', async (c) => {
+  .post('/v', limit('visita', 240, 600), bodyLimit({ maxSize: 8 * 1024, onError: (c) => c.body(null, 204) }), async (c) => {
     try {
       const body = JSON.parse(await c.req.text()) as Parameters<typeof recordPageView>[1];
       await recordPageView(c.req.raw.headers, body);
@@ -141,26 +205,29 @@ const app = new Hono<Env>()
     }
     return c.body(null, 204);
   })
-  .post('/newsletter', async (c) => {
-    const body = await c.req.json<{ email: string; source?: string }>();
+  .post('/newsletter', limit('newsletter', 5, 600), smallBody, async (c) => {
+    const body = await c.req.json<{ email: string; source?: string; hp?: string; startedAt?: number }>();
+    const verdict = botVerdict(body);
+    if (verdict === 'trap') return c.json({ ok: true }, 201);
+    if (verdict === 'fast') return c.json({ error: BOT_FAST_MSG }, 400);
     const email = body.email?.trim().toLowerCase() ?? '';
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (email.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return c.json({ error: 'Informe um e-mail valido' }, 400);
     }
 
-    const [lead] = await db
+    await db
       .insert(schema.leads)
       .values({
         name: email.split('@')[0] ?? 'Assinante',
         phone: '-',
         email,
         message: 'Assinatura da newsletter tecnica (1 e-mail por mes)',
-        source: body.source?.trim() || 'newsletter-rodape',
-      })
-      .returning();
+        source: (body.source ?? '').trim().slice(0, 60) || 'newsletter-rodape',
+      });
 
-    return c.json({ lead }, 201);
+    // só confirma o recebimento: o registro interno do lead não volta para o navegador
+    return c.json({ ok: true }, 201);
   })
   // ------------------------------------------------ comentários da página Clientes
   .get('/avaliacoes', async (c) => {
@@ -179,12 +246,13 @@ const app = new Hono<Env>()
       .limit(60);
     return c.json({ items }, 200);
   })
-  .post('/avaliacoes', async (c) => {
-    const body = await c.req
-      .json<{ name?: string; company?: string; rating?: number; text?: string; website?: string }>()
-      .catch(() => ({}) as { name?: string; company?: string; rating?: number; text?: string; website?: string });
-    // campo-isca: pessoa não vê, robô preenche. Responde como se tivesse dado certo e descarta
-    if (typeof body.website === 'string' && body.website.trim()) return c.json({ ok: true }, 201);
+  .post('/avaliacoes', limit('avaliacoes', 5, 3600), smallBody, async (c) => {
+    type ReviewBody = { name?: string; company?: string; rating?: number; text?: string; hp?: string; startedAt?: number };
+    const body = await c.req.json<ReviewBody>().catch(() => ({}) as ReviewBody);
+    const verdict = botVerdict(body);
+    // campo invisível preenchido: responde como se tivesse dado certo e descarta
+    if (verdict === 'trap') return c.json({ ok: true }, 201);
+    if (verdict === 'fast') return c.json({ error: BOT_FAST_MSG }, 400);
 
     const name = clipText(body.name, 80);
     const company = clipText(body.company, 80);
@@ -196,18 +264,18 @@ const app = new Hono<Env>()
     await db.insert(schema.siteReviews).values({ name, company, rating, text });
     return c.json({ ok: true }, 201);
   })
-  .post('/upload/presign', async (c) => {
+  .post('/upload/presign', limit('presign', 20, 600), smallBody, async (c) => {
     const body = await c.req.json<{ filename: string; contentType: string; size?: number }>();
     const contentType = body.contentType ?? '';
 
     if (!ALLOWED_IMAGE_TYPES.includes(contentType)) {
       return c.json({ error: 'Envie uma foto em JPG, PNG, WEBP ou HEIC' }, 400);
     }
-    if (typeof body.size === 'number' && body.size > 10 * 1024 * 1024) {
+    if (typeof body.size !== 'number' || body.size < 1 || body.size > 10 * 1024 * 1024) {
       return c.json({ error: 'Cada foto pode ter no maximo 10MB' }, 400);
     }
 
-    const key = `leads/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName(body.filename ?? 'foto.jpg')}`;
+    const key = `leads/${Date.now()}-${randomBytes(4).toString('hex')}-${safeName(typeof body.filename === 'string' ? body.filename : 'foto.jpg')}`;
 
     const url = await getSignedUrl(
       s3,
@@ -256,12 +324,12 @@ const app = new Hono<Env>()
     if (!job) return c.json({ error: 'Vaga não encontrada' }, 404);
     return c.json({ job: publicJob(job) }, 200);
   })
-  .post('/vagas/curriculo', async (c) => {
+  .post('/vagas/curriculo', limit('curriculo', 10, 3600), smallBody, async (c) => {
     const body = await c.req.json<{ contentType?: string; size?: number }>();
     if (body.contentType !== 'application/pdf') {
       return c.json({ error: 'Envie o currículo em PDF' }, 400);
     }
-    if (typeof body.size === 'number' && body.size > RESUME_MAX_BYTES) {
+    if (typeof body.size !== 'number' || body.size < 1 || body.size > RESUME_MAX_BYTES) {
       return c.json({ error: 'O PDF pode ter no máximo 5 MB' }, 400);
     }
     const month = new Date().toISOString().slice(0, 7);
@@ -273,7 +341,7 @@ const app = new Hono<Env>()
     );
     return c.json({ url, key }, 200);
   })
-  .post('/vagas/candidatura', async (c) => {
+  .post('/vagas/candidatura', limit('candidatura', 5, 3600), smallBody, async (c) => {
     const body = await c.req.json<{
       jobSlug?: string | null;
       name?: string;
@@ -286,10 +354,12 @@ const app = new Hono<Env>()
       message?: string;
       resumeKey?: string | null;
       consent?: boolean;
-      website?: string;
+      hp?: string;
+      startedAt?: number;
     }>();
-    // campo invisível: robô preenche, gente não
-    if (body.website) return c.json({ ok: true }, 201);
+    const verdict = botVerdict(body);
+    if (verdict === 'trap') return c.json({ ok: true }, 201);
+    if (verdict === 'fast') return c.json({ error: BOT_FAST_MSG }, 400);
 
     const text = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
     const name = text(body.name, 120);
@@ -311,11 +381,10 @@ const app = new Hono<Env>()
     }
     if (resumeKey) {
       if (!RESUME_KEY_RE.test(resumeKey)) return c.json({ error: 'Arquivo de currículo inválido' }, 400);
-      const exists = await s3
-        .send(new HeadObjectCommand({ Bucket: RESUME_BUCKET, Key: resumeKey }))
-        .then(() => true)
-        .catch(() => false);
-      if (!exists) return c.json({ error: 'O currículo não terminou de enviar. Tente de novo.' }, 400);
+      // existe, é PDF de verdade e cabe em 5 MB (arquivo reprovado é apagado do storage)
+      const v = await verifyUpload(RESUME_BUCKET, resumeKey, 'pdf', RESUME_MAX_BYTES);
+      if (v === 'missing') return c.json({ error: 'O currículo não terminou de enviar. Tente de novo.' }, 400);
+      if (v !== 'ok') return c.json({ error: 'O arquivo precisa ser um PDF de até 5 MB.' }, 400);
     }
 
     let jobId: number | null = null;
@@ -515,7 +584,7 @@ const app = new Hono<Env>()
   })
   .get('/admin/leads', requireRole('admin', 'vendedor'), async (c) => {
     const me = c.get('user')!;
-    const rows = await db.select().from(schema.leads).where(isNull(schema.leads.deletedAt)).orderBy(desc(schema.leads.createdAt));
+    const rows = await db.select().from(schema.leads).where(isNull(schema.leads.deletedAt)).orderBy(desc(schema.leads.createdAt)).limit(5000);
     // o valor de quem não pode ver nem sai do servidor
     const leads = rows.map((l) => {
       const visible = canSeeLeadValue(me, l);
@@ -542,7 +611,8 @@ const app = new Hono<Env>()
       .from(schema.media)
       .leftJoin(schema.user, eq(schema.media.uploadedBy, schema.user.id))
       .where(isNull(schema.media.deletedAt))
-      .orderBy(desc(schema.media.createdAt));
+      .orderBy(desc(schema.media.createdAt))
+      .limit(2000);
     return c.json({ items }, 200);
   })
   .post('/admin/midia/presign', requireRole('admin', 'editor'), async (c) => {
@@ -738,13 +808,16 @@ const app = new Hono<Env>()
   // ------------------------------------------------ rotina diária (Vercel Cron)
   .get('/cron/diario', async (c) => {
     const secret = process.env.CRON_SECRET;
-    if (!secret || c.req.header('authorization') !== `Bearer ${secret}`) return c.json({ error: 'Não autorizado' }, 401);
+    const sent = Buffer.from(c.req.header('authorization') ?? '');
+    const want = Buffer.from(`Bearer ${secret ?? ''}`);
+    if (!secret || sent.length !== want.length || !timingSafeEqual(sent, want)) return c.json({ error: 'Não autorizado' }, 401);
     const day = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', day: '2-digit' }).format(new Date()));
     const followUps = await sendDailyFollowUps();
     const report = day === 1 ? await sendMonthlyReport() : null;
     const purged = await purgeTrash();
     const oldVisits = await purgeOldVisits();
-    return c.json({ ok: true, followUps, report, purged, oldVisits }, 200);
+    const oldLimits = await purgeRateLimits();
+    return c.json({ ok: true, followUps, report, purged, oldVisits, oldLimits }, 200);
   })
   // ---------------------------------------------- avisos por e-mail (super admin)
   .get('/admin/avisos', requireRole(), async (c) => {
