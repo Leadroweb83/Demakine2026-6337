@@ -47,7 +47,16 @@ export default async function middleware(request: Request) {
   const k = key(url.pathname);
   // o site antigo também respondia dentro de /produtos-e-servicos/<página>/ (e redirecionava para a raiz): vale a mesma regra, em 1 salto
   const rule = all.get(k) ?? all.get(k.replace(/^\/produtos-e-servicos(?=\/)/, ""));
-  if (!rule) return next();
+  if (!rule) {
+    // o site responde sem barra no final: com barra, 308 para a versão sem barra, em 1 salto e com os parâmetros
+    // (a plataforma não faz mais isso sozinha, para o redirect das páginas antigas também ficar em 1 salto)
+    if (url.pathname.length > 1 && url.pathname.endsWith("/")) {
+      const clean = new URL(url);
+      clean.pathname = url.pathname.replace(/\/+$/, "") || "/";
+      return new Response(null, { status: 308, headers: { Location: clean.toString(), "Cache-Control": "public, max-age=300" } });
+    }
+    return next();
+  }
   const target = new URL(rule.to, url.origin);
   // parâmetros do anúncio (gclid, utm_*...) seguem junto, inclusive quando o destino já tem os seus (?cat=...):
   // sem eles o Google Ads perde a atribuição e o formulário grava a origem como "Direto"
