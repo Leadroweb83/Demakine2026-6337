@@ -174,10 +174,11 @@ serviço e Instagram; meta robots com prévia grande de imagem; Open Graph e Twi
 1200×630; robots.txt; 404 com a marca; arte e arquivos-fonte fora da pasta publicada.
 Lighthouse SEO 100.
 
-Pendente do domínio definitivo: `<link rel="canonical">`, `og:url`, `og:image`/`twitter:image` com URL
-absoluta, `url`/`logo`/`image` no JSON-LD, `sitemap.xml` + linha no robots.txt, redirecionamentos 301
-(http→https e www↔sem www), cabeçalhos de cache/compressão no servidor e conferir que o noindex do
-endereço de teste não vai para produção.
+Domínio definitivo: https://audacegalvanica.com.br (www redireciona com 308). Feito: `<link rel="canonical">`,
+`og:url`, `og:image`/`twitter:image` com URL absoluta, `url`/`@id`/`logo`/`image` no JSON-LD, `sitemap.xml` e linha
+`Sitemap:` no robots.txt. DNS no Registro.br (e-mail do cliente fica na Hostinger, MX/TXT intocados):
+`A @ 216.198.79.1` e `A @ 64.29.17.1`; `CNAME www 595eaf93b51ccd15.vercel-dns-017.com.`.
+Os endereços *.vercel.app continuam com noindex (vercel.json); o domínio oficial é indexável.
 
 ## Sistema de medidas
 
