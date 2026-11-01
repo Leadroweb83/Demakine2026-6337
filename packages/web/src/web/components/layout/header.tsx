@@ -1,79 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { nav, quoteHref, SHOP_OPEN, site } from "@/lib/site";
-import { categories, searchProducts } from "@/lib/content";
+import { categories } from "@/lib/content";
 import { ProductsMega } from "@/components/layout/mega-menu";
 import { LangSwitch } from "@/components/layout/lang-switch";
+import { SearchPanel } from "@/components/layout/search-panel";
 import { cn } from "@/lib/utils";
-
-function SearchBox({ onDone }: { onDone?: () => void }) {
-  const [query, setQuery] = useState("");
-  const results = searchProducts(query);
-  const boxRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setQuery("");
-    };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, []);
-
-  return (
-    <div ref={boxRef} className="relative w-full">
-      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-dm-gray" />
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Buscar equipamento..."
-        aria-label="Buscar equipamento"
-        className="w-full rounded-full border border-dm-line bg-white py-2.5 pl-9 pr-4 text-sm text-dm-ink outline-none transition-colors placeholder:text-dm-gray/70 focus:border-dm-blue"
-      />
-      {query.trim().length > 1 && (
-        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 overflow-hidden rounded-2xl border border-dm-line bg-white shadow-xl shadow-black/10">
-          {results.length === 0 ? (
-            <p className="px-4 py-4 text-sm text-dm-gray">
-              Nada encontrado. Fale com um especialista para projetos sob medida.
-            </p>
-          ) : (
-            <ul className="max-h-[60vh] overflow-y-auto">
-              {results.map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`/produtos/${p.slug}`}
-                    onClick={() => {
-                      setQuery("");
-                      onDone?.();
-                    }}
-                    className="flex items-center gap-3 border-b border-dm-line/70 px-3 py-2.5 last:border-0 hover:bg-dm-surface"
-                  >
-                    <img
-                      src={p.images[0]}
-                      alt=""
-                      loading="lazy"
-                      className="h-11 w-14 shrink-0 rounded-lg object-cover"
-                    />
-                    <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold text-dm-ink">{p.name}</span>
-                      <span className="block truncate text-xs text-dm-gray">{p.tag ?? p.category}</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export function Header() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mega, setMega] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchBtn = useRef<HTMLButtonElement | null>(null);
   const closeTimer = useRef<number | null>(null);
 
   const openMega = () => {
@@ -95,7 +36,13 @@ export function Header() {
   useEffect(() => {
     setOpen(false);
     setMega(false);
+    setSearchOpen(false);
   }, [location]);
+
+  const closeSearch = useCallback((refocus?: boolean) => {
+    setSearchOpen(false);
+    if (refocus) searchBtn.current?.focus();
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -147,7 +94,7 @@ export function Header() {
               width={1406}
               height={302}
               alt="Demakine Equipamentos Agroindustriais"
-              className="h-[42px] w-auto object-contain md:h-[54px]"
+              className="h-[42px] w-auto object-contain max-[400px]:h-[36px] max-[340px]:h-[30px] md:h-[54px]"
             />
           </Link>
 
@@ -200,11 +147,26 @@ export function Header() {
             })}
           </nav>
 
-          <div className="ml-auto hidden w-[210px] min-[1800px]:ml-4 min-[1800px]:block">
-            <SearchBox />
-          </div>
+          <button
+            ref={searchBtn}
+            type="button"
+            onClick={() => {
+              setMega(false);
+              setOpen(false);
+              setSearchOpen((v) => !v);
+            }}
+            aria-label={searchOpen ? "Fechar busca" : "Abrir busca"}
+            aria-expanded={searchOpen}
+            aria-controls="busca-painel"
+            className={cn(
+              "ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-dm-ink transition-colors hover:border-dm-blue hover:text-dm-blue min-[1380px]:ml-0",
+              searchOpen ? "border-dm-blue text-dm-blue" : "border-dm-line",
+            )}
+          >
+            <Search className="h-[18px] w-[18px]" />
+          </button>
 
-          <div className="hidden shrink-0 items-center gap-2 lg:ml-auto lg:flex min-[1380px]:ml-0">
+          <div className="hidden shrink-0 items-center gap-2 lg:flex">
             {SHOP_OPEN ? (
               <a
                 href="/loja"
@@ -235,11 +197,15 @@ export function Header() {
           </div>
 
           {/* no celular a barra de cima não aparece: o seletor de idioma vem para cá */}
-          <LangSwitch className="ml-auto lg:hidden" />
+          {/* abaixo de 640 px não cabe ao lado da lupa e do hambúrguer: as bandeiras vão para dentro do menu */}
+          <LangSwitch className="max-sm:hidden lg:hidden" />
 
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => {
+              setSearchOpen(false);
+              setOpen((v) => !v);
+            }}
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
             className="ml-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-dm-line text-dm-ink lg:ml-3 min-[1380px]:hidden"
@@ -258,11 +224,12 @@ export function Header() {
           </div>
         )}
 
+        <SearchPanel open={searchOpen} onClose={closeSearch} />
+
         {open && (
           <div className="border-t border-dm-line bg-white min-[1380px]:hidden">
             <div className="dm-container max-h-[calc(100dvh-120px)] overflow-y-auto py-5">
-              <SearchBox onDone={() => setOpen(false)} />
-              <nav className="mt-4 flex flex-col">
+              <nav className="flex flex-col">
                 {nav.map((item) => {
                   const active = location === item.to;
                   return (
@@ -293,6 +260,7 @@ export function Header() {
                   );
                 })}
               </nav>
+              <LangSwitch className="mt-4 sm:hidden" />
               <div className="mt-5 flex flex-col gap-3">
                 {SHOP_OPEN ? (
                   <a
