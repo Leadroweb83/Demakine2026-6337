@@ -358,6 +358,14 @@
     gsap.to(o, { v: to, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: c, start: 'top 85%', once: true }, onUpdate: function () { c.textContent = Math.round(o.v); } });
   });
 
+  // ZOOM PARALLAX: guará no centro, fotos da Guará ao redor (escalas do original: 4,5,6,5,6,8,9)
+  var zoomScales = [4, 5, 6, 5, 6, 8, 9];
+  var zoomTl = gsap.timeline({ scrollTrigger: { trigger: '#guara-brasil', start: 'top top', end: 'bottom bottom', scrub: true } });
+  $$('#guara-brasil .zoom__layer').forEach(function (layer, i) {
+    zoomTl.fromTo(layer, { scale: 1 }, { scale: zoomScales[i % zoomScales.length], ease: 'none', duration: 1 }, 0);
+  });
+  zoomTl.fromTo('#guara-brasil .zoom__caption', { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.22 }, 0.72);
+
   // MAPA: seção fixa, os pins caem um por vez e o estado se pinta de laranja
   if (pins.length) {
     var nEl = $('#mapa-n'), ufEl = $('#mapa-uf');

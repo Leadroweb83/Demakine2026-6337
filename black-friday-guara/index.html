@@ -319,6 +319,28 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.8rem}
 .mapa-svg .st{stroke:#C4C4CA;stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 @media(max-width:959px){.mapa-pin{padding:80px 0 20px}.mapa-text{text-align:center}.mapa-text .btn{display:none}.mapa-text h2{font-size:clamp(1.45rem,6.4vw,2.2rem)}.mapa-count{justify-content:center;margin-bottom:0}.mapa-text p{margin:10px 0 12px;font-size:.98rem}.mapa-svg{width:min(440px,90vw);max-height:50svh}}
 
+/* ===== ZOOM PARALLAX: GUARÁ BRASIL ===== */
+.zoom{position:relative;height:300vh;padding:0}
+.zoom__stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--bg)}
+.zoom__layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;will-change:transform}
+.zoom__box{position:relative;width:25vw;height:25vh;overflow:hidden;border-radius:6px}
+.zoom__box img{width:100%;height:100%;object-fit:cover}
+.zoom__layer:nth-child(1) .zoom__box img{object-position:50% 42%}
+.zoom__layer:nth-child(2) .zoom__box{top:-30vh;left:5vw;height:30vh;width:35vw}
+.zoom__layer:nth-child(3) .zoom__box{top:-10vh;left:-25vw;height:45vh;width:20vw}
+.zoom__layer:nth-child(4) .zoom__box{left:27.5vw;height:25vh;width:25vw}
+.zoom__layer:nth-child(5) .zoom__box{top:27.5vh;left:5vw;height:25vh;width:20vw}
+.zoom__layer:nth-child(6) .zoom__box{top:27.5vh;left:-22.5vw;height:25vh;width:30vw}
+.zoom__layer:nth-child(7) .zoom__box{top:22.5vh;left:25vw;height:15vh;width:15vw}
+.zoom__layer:nth-child(1){z-index:2}
+.zoom__caption{position:absolute;inset:auto 0 0 0;z-index:5;padding:0 var(--gutter) clamp(40px,8vh,90px);text-align:center;background:linear-gradient(transparent,rgba(11,11,12,.85) 55%);pointer-events:none}
+.zoom__caption h2{font-size:clamp(2rem,5.6vw,4.6rem)}
+.zoom__caption p{color:#D4D4D8;margin-top:10px;font-size:clamp(1rem,1.4vw,1.15rem)}
+.anim .zoom__caption{opacity:0}
+@media(max-width:760px){.zoom__layer:nth-child(1) .zoom__box{width:44vw;height:30vh}}
+.reduced .zoom,.no-js .zoom{height:auto}
+.reduced .zoom__stage,.no-js .zoom__stage{position:relative;height:100svh}
+
 /* ===== 9. FAQ ===== */
 .faq{max-width:880px;margin-top:28px}
 .faq details{border-bottom:1px solid var(--line)}
@@ -558,6 +580,23 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
       </div>
       <div class="big-stat stripes rv">
         <div><b><span data-count="27">27</span></b><span>estados brasileiros com equipamentos Guará</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7B. ZOOM PARALLAX: O GUARÁ É DO BRASIL -->
+  <section class="zoom" id="guara-brasil" aria-label="O guará é brasileiro, a Guará Equipamentos também">
+    <div class="zoom__stage">
+      <div class="zoom__layer"><div class="zoom__box"><img src="img/guara-brasil.webp" width="736" height="1104" loading="lazy" alt="Lobo-guará caminhando sobre a bandeira do Brasil"></div></div>
+      <div class="zoom__layer"><div class="zoom__box"><img src="img/kit-completo.webp" width="1200" height="675" loading="lazy" alt="Kit Guará com secador, calandra e lavadora extratora"></div></div>
+      <div class="zoom__layer"><div class="zoom__box"><img src="img/diferencial-nr12.webp" width="600" height="800" loading="lazy" alt="Lavadora extratora Guará em conformidade com a NR 12"></div></div>
+      <div class="zoom__layer"><div class="zoom__box"><img src="img/kit-hospitalar.webp" width="1200" height="675" loading="lazy" alt="Kit hospitalar Guará com lavadora de barreira sanitária"></div></div>
+      <div class="zoom__layer"><div class="zoom__box"><img src="img/calandra-multirrolos.webp" width="600" height="450" loading="lazy" alt="Calandra industrial multirrolos Guará"></div></div>
+      <div class="zoom__layer"><div class="zoom__box"><img src="img/dobradeira-lencol.webp" width="600" height="450" loading="lazy" alt="Dobradeira de lençol Guará"></div></div>
+      <div class="zoom__layer"><div class="zoom__box"><img src="img/lavadora-extratora-140kg.webp" width="600" height="450" loading="lazy" alt="Lavadora extratora industrial Guará 140 kg"></div></div>
+      <div class="zoom__caption">
+        <h2>Nascido no Brasil. <em>Feito para o Brasil.</em></h2>
+        <p>Assim como o lobo-guará, a Guará Equipamentos é 100% brasileira.</p>
       </div>
     </div>
   </section>
