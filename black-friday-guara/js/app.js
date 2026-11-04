@@ -308,6 +308,62 @@
       .catch(function () { clearTimeout(timer); return false; });
   }
 
+  /* ---------- Carrossel com fade (fotos + CTA) ---------- */
+  (function () {
+    var card = $('#fade-card'); if (!card) return;
+    var slides = $$('.fslide', card), dotsBox = $('.fade-dots', card), bar = $('.fade-progress span', card);
+    var INTERVAL = 4500, cur = 0, timer = null, started = 0, paused = false, visible = false, raf = 0;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var dots = slides.map(function (s, i) {
+      var b = doc.createElement('button');
+      b.type = 'button'; b.setAttribute('aria-label', 'Mostrar destaque ' + (i + 1) + ' de ' + slides.length);
+      b.addEventListener('click', function () { go(i); restart(); });
+      dotsBox.appendChild(b); return b;
+    });
+    function go(i) {
+      cur = (i + slides.length) % slides.length;
+      slides.forEach(function (s, k) {
+        var on = k === cur;
+        s.classList.toggle('is-active', on);
+        s.setAttribute('aria-hidden', String(!on));
+        $$('a,button', s).forEach(function (el) { el.tabIndex = on ? 0 : -1; });
+      });
+      dots.forEach(function (d, k) { d.setAttribute('aria-current', String(k === cur)); });
+    }
+    function tickBar(now) {
+      raf = 0;
+      if (!timer) return;
+      bar.style.width = Math.min(100, ((now - started) / INTERVAL) * 100) + '%';
+      raf = requestAnimationFrame(tickBar);
+    }
+    function stop() { clearTimeout(timer); timer = null; cancelAnimationFrame(raf); raf = 0; }
+    function restart() {
+      stop();
+      if (reduced || paused || !visible) { bar.style.width = '0%'; return; }
+      started = performance.now();
+      timer = setTimeout(function () { go(cur + 1); restart(); }, INTERVAL);
+      raf = requestAnimationFrame(tickBar);
+    }
+    // Pausa com o mouse em cima ou foco no teclado, para dar tempo de clicar
+    card.addEventListener('mouseenter', function () { paused = true; restart(); });
+    card.addEventListener('mouseleave', function () { paused = false; restart(); });
+    card.addEventListener('focusin', function () { paused = true; restart(); });
+    card.addEventListener('focusout', function (e) { if (!card.contains(e.relatedTarget)) { paused = false; restart(); } });
+    // Toque e arrasto no celular troca o slide
+    var x0 = null;
+    card.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    card.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); restart(); }
+    });
+    // Só roda quando está na tela
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { visible = en[0].isIntersecting; restart(); }, { threshold: 0.3 }).observe(card);
+    } else { visible = true; }
+    go(0); restart();
+  })();
+
   /* ================= MOTION (GSAP) ================= */
   if (!ANIM) {
     if (mapa) { $('#mapa-n').textContent = '27'; }
