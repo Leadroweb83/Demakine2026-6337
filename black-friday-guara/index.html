@@ -180,8 +180,18 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.8rem}
 .stat-card.dark b{color:var(--accent)}
 .stat-card.light{background:#F5F5F4;color:#0B0B0C}
 .stat-card.light span{color:#3f3f46}
-.hero-giant{font:900 clamp(4.6rem,19.5vw,19rem)/.78 Archivo,sans-serif;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap;text-align:center;color:transparent;-webkit-text-stroke:1.5px rgba(231,81,31,.55);margin-top:10px;transform:translateY(18%);user-select:none;pointer-events:none}
-.hero-giant span{color:var(--accent);-webkit-text-stroke:0}
+/* Letreiro BLACK / GUARÁ: duas linhas, inteiro na tela */
+.hero-giant{display:flex;flex-direction:column;align-items:center;gap:.04em;padding:clamp(10px,2vw,30px) 0 clamp(30px,5vw,70px);font:900 clamp(4.2rem,19vw,17.5rem)/.84 Archivo,sans-serif;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap;user-select:none;pointer-events:none}
+/* BLACK: contorno que se preenche de laranja com a rolagem */
+.hg-black{display:inline-block;color:transparent;-webkit-text-stroke:clamp(1.5px,.25vw,3px) var(--accent);background:linear-gradient(90deg,var(--accent) 0 50%,transparent 50% 100%);background-size:200% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 18px rgba(231,81,31,.25))}
+.reduced .hg-black,.no-js .hg-black{background-position:0 0}
+/* GUARÁ: janela com a foto do kit + borda cromada + profundidade laranja em 3D */
+.hg-guara{position:relative;display:inline-block;filter:drop-shadow(0 0 40px rgba(231,81,31,.35))}
+.hg-guara::before{content:attr(data-text);position:absolute;left:0;top:0;z-index:0;color:#2b0f05;text-shadow:.006em .006em 0 #7a2a0c,.012em .012em 0 #8a300e,.018em .018em 0 #9a3610,.024em .024em 0 #a93b12,.03em .03em 0 #b84114,.036em .036em 0 #c84716,.042em .042em 0 #d34b18,.05em .05em 0 #E7511F,.06em .07em .06em rgba(0,0,0,.6)}
+.hg-face{position:relative;z-index:1;display:inline-block;color:transparent;background:url("img/kit-completo.webp") 30% 55%/cover;-webkit-background-clip:text;background-clip:text;-webkit-text-stroke:clamp(1.5px,.22vw,3px) rgba(240,240,244,.85)}
+.hg-guara::after{content:attr(data-text);position:absolute;left:0;top:0;z-index:2;color:transparent;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.85) 47%,rgba(255,255,255,.15) 53%,transparent 62%);background-size:260% 100%;background-position:130% 0;-webkit-background-clip:text;background-clip:text;mix-blend-mode:screen;animation:hgSheen 5s ease-in-out infinite}
+@keyframes hgSheen{0%,20%{background-position:130% 0}70%,100%{background-position:-130% 0}}
+@media(prefers-reduced-motion:reduce){.hg-guara::after{animation:none;opacity:0}}
 
 /* ===== 2. FITAS CRUZADAS ===== */
 .tapes{position:relative;height:clamp(170px,22vw,280px);overflow:hidden;z-index:3}
@@ -548,7 +558,10 @@ footer a:hover{color:var(--ink)}
         </div>
       </div>
     </div>
-    <div class="hero-giant" aria-hidden="true">Black <span>Guará</span></div>
+    <div class="hero-giant" aria-hidden="true">
+      <span class="hg-black">Black</span>
+      <span class="hg-guara" data-text="Guará"><span class="hg-face">Guará</span></span>
+    </div>
   </section>
 
   <!-- 2. FITAS CRUZADAS -->

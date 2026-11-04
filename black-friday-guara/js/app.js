@@ -418,11 +418,18 @@
     .fromTo('.hero-in', { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 1, stagger: 0.08 }, 0.7)
     .to(heroWords, { yPercent: 0, duration: 1.1, stagger: 0.045 }, 0.75)
     .fromTo('.hero-pop', { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 1, stagger: 0.12, ease: 'back.out(1.6)' }, 1.1)
-    .from('.hero-giant', { yPercent: 70, opacity: 0, duration: 1.6, ease: 'expo.out' }, 1.0);
+    .from('.hg-black', { yPercent: 60, opacity: 0, duration: 1.5, ease: 'expo.out' }, 1.0)
+    .from('.hg-guara', { yPercent: 60, opacity: 0, duration: 1.5, ease: 'expo.out' }, 1.15);
 
-  // Vídeo do hero respira e a palavra gigante desliza com a rolagem
+  // Vídeo do hero respira com a rolagem
   gsap.to('.hero-film video', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-  gsap.to('.hero-giant', { xPercent: -8, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  // Letreiro: BLACK acende (contorno vira laranja) e as duas palavras andam em sentidos opostos
+  var giantST = { trigger: '.hero-giant', start: 'top 95%', end: 'bottom 15%', scrub: 0.5 };
+  gsap.fromTo('.hg-black', { backgroundPosition: '100% 0%' }, { backgroundPosition: '0% 0%', ease: 'none', scrollTrigger: giantST });
+  gsap.fromTo('.hg-black', { xPercent: 8 }, { xPercent: -10, ease: 'none', scrollTrigger: { trigger: '.hero-giant', start: 'top bottom', end: 'bottom top', scrub: true } });
+  gsap.fromTo('.hg-guara', { xPercent: -5 }, { xPercent: 7, ease: 'none', scrollTrigger: { trigger: '.hero-giant', start: 'top bottom', end: 'bottom top', scrub: true } });
+  // Dentro de GUARÁ a foto corre devagar, como uma janela
+  gsap.fromTo('.hg-face', { backgroundPosition: '20% 55%' }, { backgroundPosition: '80% 55%', ease: 'none', scrollTrigger: { trigger: '.hero-giant', start: 'top bottom', end: 'bottom top', scrub: true } });
   // Pausa o vídeo fora da tela (economia de bateria) e retoma ao voltar
   var heroVideo = $('#hero-video');
   ScrollTrigger.create({ trigger: '.hero-film', start: 'top bottom', end: 'bottom top', onToggle: function (st) { if (st.isActive) { var p = heroVideo.play(); if (p && p.catch) p.catch(function () {}); } else heroVideo.pause(); } });
