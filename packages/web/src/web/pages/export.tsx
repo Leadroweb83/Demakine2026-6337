@@ -3,7 +3,7 @@
  * Fica fora do Shell em português: header e footer próprios, no idioma escolhido.
  * O idioma vem de ?lang=es|en (default es) e o toggle troca sem recarregar.
  */
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useSearch } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import { Seo, organizationJsonLd } from "@/components/seo";
 import { EXPORT_ALTERNATES } from "@/lib/hreflang";
-import { newEventId, queueLead } from "@/lib/tracking";
 import { visitAttribution } from "@/lib/visits";
 import { Reveal } from "@/components/reveal";
 import { api } from "@/lib/api";
@@ -75,24 +74,20 @@ function ExportForm({ lang }: { lang: ExportLang }) {
   });
   const [error, setError] = useState<string | null>(null);
   const bot = useBotTrap();
-  // um id por tentativa de envio (servidor e medição): a mesma conversão não conta duas vezes
-  const eventId = useRef(newEventId());
 
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...form, product: "Export inquiry", source: `export-${lang}`, traffic: visitAttribution(), event_id: eventId.current, ...bot.trap() },
+        json: { ...form, product: "Export inquiry", source: `export-${lang}`, traffic: visitAttribution(), ...bot.trap() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
     },
     onSuccess: () => {
       // /export fica fora do roteador de idiomas: vai à página de obrigado do idioma com navegação completa
-      const path = queueLead({ form, source: `export-${lang}`, product: "Export inquiry", eventId: eventId.current });
-      window.location.assign(`/${lang}${path}`);
+      window.location.assign(`/${lang}/obrigado?origem=${encodeURIComponent(`export-${lang}`)}`);
     },
     onError: () => {
-      eventId.current = newEventId();
       setError(t.fail);
     },
   });

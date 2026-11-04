@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
-import { track } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
 
 /**
  * Vídeo em "fachada": mostra a capa (guardada no próprio site) com o botão de play e só carrega o
- * player depois do clique. Assim a página não chama o YouTube antes da pessoa querer assistir, e o
- * clique vira o evento video_play no GA4 (trackId identifica qual vídeo foi).
+ * player depois do clique. Assim a página não chama o YouTube antes da pessoa querer assistir.
  */
 export function VideoFacade({
   youtube,
   src,
   poster,
   label,
-  trackId,
   className,
 }: {
   /** id de vídeo do YouTube */
@@ -23,14 +20,12 @@ export function VideoFacade({
   poster?: string;
   /** nome do vídeo, lido por leitor de tela */
   label: string;
-  trackId?: string;
   className?: string;
 }) {
   const [playing, setPlaying] = useState(false);
 
   const play = () => {
     setPlaying(true);
-    track("video_play", { video_id: trackId ?? youtube ?? src ?? null });
   };
 
   return (

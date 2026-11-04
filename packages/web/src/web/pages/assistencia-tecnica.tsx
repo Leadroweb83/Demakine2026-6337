@@ -84,7 +84,6 @@ export default function AssistenciaTecnica() {
               youtube="Xm-ng5xJknw"
               poster="/img/site/assistencia-video.webp"
               label={tr("Assistir ao vídeo: Assistência Técnica Especializada Demakine")}
-              trackId="assistencia-tecnica"
               className="mt-8 rounded-2xl"
             />
 
