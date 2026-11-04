@@ -1,8 +1,8 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { ABROAD, UFS, withState } from "@/lib/uf";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { track } from "@/lib/tracking";
+import { newEventId, queueLead, trackKitDownload } from "@/lib/tracking";
 import { visitAttribution } from "@/lib/visits";
 import { Check, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
@@ -76,20 +76,26 @@ export function LeadForm({
   const [error, setError] = useState<string | null>(null);
   const [shots, setShots] = useState<UploadedPhoto[]>([]);
   const bot = useBotTrap();
+  // um id por tentativa de envio: vai ao servidor e à medição, para a mesma conversão não contar duas vezes
+  const eventId = useRef(newEventId());
 
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.leads.$post({
-        json: { ...withState(form), product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution(), ...bot.trap() },
+        json: { ...withState(form), product, source, attachments: shots.map((s) => s.key), traffic: visitAttribution(), event_id: eventId.current, ...bot.trap() },
       });
       if (!res.ok) throw new Error("fail");
       return res.json();
     },
-    onError: () => setError("Não foi possível enviar. Tente pelo WhatsApp."),
+    onError: () => {
+      eventId.current = newEventId();
+      setError("Não foi possível enviar. Tente pelo WhatsApp.");
+    },
     onSuccess: () => {
-      track("generate_lead", { form_source: source, product: product ?? null });
       onSuccess?.();
-      if (goToThanks) navigate(`/obrigado?origem=${encodeURIComponent(source)}`);
+      // o kit de downloads não é "Formulário Novo": evento só no GA4 e os links aparecem na própria tela
+      if (source.startsWith("downloads:")) trackKitDownload({ source, product, eventId: eventId.current });
+      else if (goToThanks) navigate(queueLead({ form, source, product, eventId: eventId.current }));
     },
   });
 

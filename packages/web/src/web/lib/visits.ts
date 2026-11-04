@@ -7,7 +7,10 @@ import { classifySource } from "./traffic";
  */
 const KEY = "dm_visita";
 
-export type VisitAttribution = { source: string; landing: string; campaign: string | null };
+/** valor dos identificadores de clique da entrada (anúncio): o time precisa deles para subir conversões ao Google Ads */
+export type ClickIds = Partial<Record<"gclid" | "gbraid" | "wbraid" | "fbclid", string>>;
+
+export type VisitAttribution = { source: string; landing: string; campaign: string | null; clickIds?: ClickIds };
 
 let current: VisitAttribution | null = null;
 
@@ -23,6 +26,17 @@ function readStored(): VisitAttribution | null {
 /** Origem da visita atual, para gravar no lead (orçamento). */
 export function visitAttribution(): VisitAttribution | null {
   return current ?? readStored();
+}
+
+const CLICK_ID_KEYS = ["gclid", "gbraid", "wbraid", "fbclid"] as const;
+
+function readClickIds(params: URLSearchParams): ClickIds | undefined {
+  const ids: ClickIds = {};
+  for (const k of CLICK_ID_KEYS) {
+    const v = params.get(k)?.trim();
+    if (v) ids[k] = v.slice(0, 200);
+  }
+  return Object.keys(ids).length ? ids : undefined;
 }
 
 let lastPath = "";
@@ -53,6 +67,7 @@ export function recordView(path: string) {
       }),
       landing: path,
       campaign: utm.campaign,
+      clickIds: readClickIds(params),
     };
     try {
       sessionStorage.setItem(KEY, JSON.stringify(current));

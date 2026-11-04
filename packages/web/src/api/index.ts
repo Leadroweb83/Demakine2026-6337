@@ -72,6 +72,8 @@ type Env = {
 };
 
 /** texto vindo do navegador: sem espaço sobrando e com tamanho máximo, vazio vira null */
+/** UUID ou o formato de reserva do navegador (data-aleatório); nada além de letras, números e hífen */
+const EVENT_ID_RE = /^[A-Za-z0-9-]{8,64}$/;
 const clipText = (v: unknown, max: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : null);
 
 /** só o login (e troca de senha) conta tentativa: 10 por 10 minutos por IP */
@@ -133,7 +135,9 @@ const app = new Hono<Env>()
       source?: string;
       attachments?: string[];
       /** origem da visita que gerou o pedido (lib/visits.ts no site) */
-      traffic?: { source?: unknown; landing?: unknown; campaign?: unknown } | null;
+      traffic?: { source?: unknown; landing?: unknown; campaign?: unknown; clickIds?: Record<string, unknown> | null } | null;
+      /** id da tentativa de envio (medição: Google Ads usa como transaction_id) */
+      event_id?: unknown;
       hp?: string;
       elapsed?: number;
     }>();
@@ -187,6 +191,11 @@ const app = new Hono<Env>()
         trafficSource: clipText(body.traffic?.source, 40),
         landingPath: clipText(body.traffic?.landing, 300),
         utmCampaign: clipText(body.traffic?.campaign, 120),
+        eventId: typeof body.event_id === 'string' && EVENT_ID_RE.test(body.event_id) ? body.event_id : null,
+        gclid: clipText(body.traffic?.clickIds?.gclid, 200),
+        gbraid: clipText(body.traffic?.clickIds?.gbraid, 200),
+        wbraid: clipText(body.traffic?.clickIds?.wbraid, 200),
+        fbclid: clipText(body.traffic?.clickIds?.fbclid, 200),
       })
       .returning();
 

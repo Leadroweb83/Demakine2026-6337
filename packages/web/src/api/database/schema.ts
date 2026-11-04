@@ -38,6 +38,13 @@ export const leads = pgTable("leads", {
   /** primeira página vista na visita */
   landingPath: text("landing_path"),
   utmCampaign: text("utm_campaign"),
+  /** id do envio (UUID do navegador): transaction_id da conversão no Google Ads e chave para conversões offline */
+  eventId: text("event_id"),
+  /** identificadores de clique do anúncio na entrada da visita (Google Ads e Meta), para subir conversões do CRM */
+  gclid: text("gclid"),
+  gbraid: text("gbraid"),
+  wbraid: text("wbraid"),
+  fbclid: text("fbclid"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
