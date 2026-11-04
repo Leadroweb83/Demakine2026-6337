@@ -3,19 +3,17 @@ import { Check } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { BtnGhost, BtnPrimary, Section } from "@/components/kit";
 import { site } from "@/lib/site";
-import { ADS_CONVERSION_FORM, claimFormConversion, trackAdsConversion } from "@/lib/tracking";
+import { fireLeadOnThankYou } from "@/lib/tracking";
 
 /**
  * Página de obrigado depois de qualquer formulário de orçamento (components/lead-form.tsx).
- * Existe para a conversão ser medida pelo endereço (GTM/Google Ads: página /obrigado).
+ * Existe para a conversão ser medida pelo endereço (GTM: GA4 generate_lead e Google Ads "Formulário Novo").
  * Fora do Google (noindex) e sem botão de WhatsApp: o cliente aguarda o contato do vendedor.
  */
 export default function Obrigado() {
-  // conversão do Google Ads: uma vez por envio de formulário (a marca fica no histórico, então recarregar não repete)
+  // generate_lead (GA4 e Google Ads, via GTM): uma vez por envio real; recarregar ou abrir o endereço direto não conta
   useEffect(() => {
-    if (!claimFormConversion(window.location.search, window.history.state)) return;
-    window.history.replaceState({ ...window.history.state, dmConv: true }, "");
-    trackAdsConversion(ADS_CONVERSION_FORM);
+    fireLeadOnThankYou();
   }, []);
 
   return (
