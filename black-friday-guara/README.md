@@ -1,25 +1,36 @@
 # Landing Page Black Guará 2026 (Guará Equipamentos)
 
-Página estática e independente (HTML único + pasta `img/`). Não depende do site da Demakine.
+Página estática e independente. Sem build: basta subir a pasta inteira.
+
+## Estrutura
+- `index.html`: conteúdo, SEO (meta, OG, JSON-LD) e estilos
+- `js/app.js`: configuração da campanha (bloco `CONFIG` no topo), motion com GSAP/ScrollTrigger/Lenis, contagem, mapa, formulário
+- `js/orbital-cards.js`: órbita das dores (scroll), com troca para "A solução tem nome: Guará Equipamentos"
+- `js/brasil-map.js`: contornos dos 27 estados para o mapa
+- `vendor/`: GSAP 3.12.5, ScrollTrigger 3.12.5, Lenis 1.1.13 (servidos localmente)
+- `img/`: vídeo do hero (arquivo original, sem recompressão), fotos e selos
+
+## Seções
+1. Hero com vídeo em loop + contagem regressiva
+2. Fitas cruzadas "Black Guará · 30% de desconto"
+3. Órbita das dores, terminando na solução Guará
+4. Kits e equipamentos (a solução)
+5. Diferenciais 01, 02, 03
+6. Manifesto ("10%? 20%? Que nada!")
+7. Números (+20 anos, 27 estados)
+8. Mapa do Brasil com pins caindo estado por estado
+9. FAQ
+10. CTA final com formulário que abre o WhatsApp
 
 ## Publicar
-Suba a pasta inteira para `guaraequipamentos.com.br/black-friday/` (ou subdomínio).
-Se o endereço final for outro, troque o `canonical`, `og:url`, `og:image` e as URLs do JSON-LD no `<head>`.
-
-## Editar rápido
-Tudo que muda com frequência fica no bloco `CONFIG` no fim do `index.html`:
-- `whatsapp`: número de vendas (hoje 19 99336-9331)
-- `fimCampanha`: data/hora de encerramento do contador
-- `produtos`: equipamentos exibidos (nome, categoria, imagem, descrição)
-- `segmentos`: chips de público
+Suba a pasta para `guaraequipamentos.com.br/black-friday/`. Se o endereço for outro, troque `canonical`, `og:url`, `og:image` e as URLs do JSON-LD.
 
 ## Rastreamento
-- Troque `GTM-XXXXXXX` pelo contêiner da Guará (o GTM só carrega após essa troca).
-- Todo clique em WhatsApp/telefone dispara `generate_lead` no dataLayer com `lead_origin`, `product_name` e `campaign`.
-- UTMs da URL são anexadas à mensagem do WhatsApp (`[origem: meta / bf]`).
+- Troque `GTM-XXXXXXX` pelo contêiner da Guará (só carrega após a troca).
+- Cliques em WhatsApp, telefone e envio do formulário disparam `generate_lead` no dataLayer.
+- UTMs da URL vão no fim da mensagem do WhatsApp.
 
-## Pendências (aguardando materiais do cliente)
-- Composição e % real de cada kit
-- Depoimentos/cases e logos de clientes
-- Mais fotos/vídeos reais (selo, palco, 2 fotos de kits e vídeo do banner já aplicados)
-- Confirmar segmentos atendidos (hotéis, motéis, lavanderias comerciais)
+## Acessibilidade e desempenho
+- Quem ativa "reduzir movimento" vê tudo parado e completo (mapa já colorido).
+- Sem JavaScript, todo o conteúdo continua visível.
+- O vídeo pausa fora da tela.
