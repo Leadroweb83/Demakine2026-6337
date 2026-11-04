@@ -54,7 +54,22 @@
       '<div class="card-media"><img src="' + esc(p.imagem) + '" alt="' + esc(p.nome) + ' Guará" loading="lazy" width="600" height="450"><span class="badge">Até 30% OFF</span></div>' +
       '<div class="card-body"><span class="card-cat">' + esc(p.categoria) + '</span><h4>' + esc(p.nome) + '</h4><p>' + esc(p.descricao) + '</p>' +
       '<a class="btn btn-wa js-wa" data-origin="card" data-product="' + esc(p.nome) + '" href="https://wa.me/' + CONFIG.whatsapp + '" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Pedir condição</a></div></article>';
-  }).join('');
+  }).join('') +
+    // Cards de CTA no fim da grade (não entram no filtro de categorias)
+    '<article class="ccard ccard--kit rv">' +
+      '<span class="ccard-eyebrow">Não sabe por onde começar?</span>' +
+      '<h4>Monte seu kit com até 30% OFF</h4>' +
+      '<p>Diga quantos quilos de roupa sua lavanderia processa por dia. Nosso time dimensiona o kit ideal e aplica a condição da Black Guará.</p>' +
+      '<ul><li>Dimensionamento sem custo</li><li>Atendimento direto com a fábrica</li><li>Kits para hotelaria, hospitais e lavanderias industriais</li></ul>' +
+      '<a class="btn btn-dark js-wa" data-origin="card-monte-kit" data-product="Kit sob medida (dimensionamento)" href="https://wa.me/' + CONFIG.whatsapp + '" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Montar meu kit</a>' +
+    '</article>' +
+    '<article class="ccard ccard--cat rv">' +
+      '<span class="ccard-eyebrow">Catálogo completo</span>' +
+      '<h4>Fichas técnicas de todos os equipamentos</h4>' +
+      '<p>Capacidades, dimensões e opções de aquecimento de lavadoras, secadores, centrífugas, calandras e dobradeiras Guará.</p>' +
+      '<div class="ccard-cd"><small>A Black Guará termina em</small><b data-cd>--d --h --m --s</b></div>' +
+      '<a class="btn btn-ghost" href="https://guaraequipamentos.com.br/wp-content/uploads/2026/05/CATALOGO-GUARA-EQUIPAMENTOS.pdf" target="_blank" rel="noopener" data-origin="card-catalogo">Baixar catálogo (PDF)</a>' +
+    '</article>';
   var cats = ['Todos'].concat(CONFIG.produtos.map(function (p) { return p.categoria; }).filter(function (c, i, a) { return a.indexOf(c) === i; }));
   var filters = $('#filters');
   filters.innerHTML = cats.map(function (c, i) { return '<button type="button" aria-pressed="' + (i === 0) + '" data-f="' + esc(c) + '">' + esc(c) + '</button>'; }).join('');
@@ -119,6 +134,7 @@
     var txt = v.d + 'd ' + v.h + 'h ' + v.m + 'm ' + v.s + 's';
     $('#topbar-cd').textContent = txt;
     $('#final-cd').textContent = txt;
+    $$('[data-cd]').forEach(function (e) { e.textContent = txt; });
     if (end <= Date.now()) {
       $('#topbar-label').textContent = 'A Black Guará foi encerrada. Fale com o time comercial sobre as condições atuais';
       $('#topbar-cd').hidden = true;
@@ -428,8 +444,15 @@
   });
 
   // ZOOM PARALLAX: guará no centro, fotos da Guará ao redor (escalas do original: 4,5,6,5,6,8,9)
-  var zoomScales = [4, 5, 6, 5, 6, 8, 9];
-  var zoomTl = gsap.timeline({ scrollTrigger: { trigger: '#guara-brasil', start: 'top top', end: 'bottom bottom', scrub: true } });
+  // O lobo (camada 1) cresce só até caber inteiro na tela; as outras fotos voam para fora
+  var wolfBox = $('#guara-brasil .zoom__layer .zoom__box');
+  var wolfScale = function () {
+    var w = wolfBox.offsetWidth || 1, h = wolfBox.offsetHeight || 1;
+    var alturaUtil = window.innerWidth < 1000 ? 0.7 : 0.8;
+    return Math.min(window.innerHeight * alturaUtil / h, window.innerWidth * 0.96 / w);
+  };
+  var zoomScales = [wolfScale, 5, 6, 5, 6, 8, 9];
+  var zoomTl = gsap.timeline({ scrollTrigger: { trigger: '#guara-brasil', start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } });
   $$('#guara-brasil .zoom__layer').forEach(function (layer, i) {
     zoomTl.fromTo(layer, { scale: 1 }, { scale: zoomScales[i % zoomScales.length], ease: 'none', duration: 1 }, 0);
   });
