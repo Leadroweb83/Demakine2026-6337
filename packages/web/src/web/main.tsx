@@ -10,7 +10,7 @@ import "@fontsource/anton";
 import "@fontsource-variable/jetbrains-mono";
 import "./styles.css";
 import { loadRuntimeContent, runtimeContent } from "./lib/runtime-content";
-import { initMailbiz } from "./lib/mailbiz";
+import { initGtm } from "./lib/gtm";
 import { loadDict, localePrefix, setLocale, splitLocale } from "./lib/i18n";
 
 /**
@@ -18,8 +18,8 @@ import { loadDict, localePrefix, setLocale, splitLocale } from "./lib/i18n";
  * de entrada, e um await aqui esperando por elas deixaria um esperando o outro para sempre.
  */
 async function start() {
-	// botão flutuante de WhatsApp (Mailbiz); o site não carrega nenhuma tag de medição
-	initMailbiz();
+	// GTM (GA4, Google Ads e botão de WhatsApp da Mailbiz vivem dentro dele); consentimento negado até o aceite
+	initGtm();
 	// idioma pelo endereço (/en, /es); o dicionário chega junto com o conteúdo do painel
 	const { locale, path } = splitLocale(location.pathname);
 	// O conteúdo editado no painel precisa estar pronto antes de o app (e content.ts/site.ts) carregar.
