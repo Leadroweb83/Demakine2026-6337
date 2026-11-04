@@ -6,6 +6,7 @@ import { track } from "@/lib/tracking";
 import { Check, FileText, Loader2, Paperclip, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useBotTrap } from "@/lib/bot-trap";
 
 const MAX_SIZE = 5 * 1024 * 1024;
 const input =
@@ -28,9 +29,9 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
     linkedin: "",
     salaryExpectation: "",
     message: "",
-    website: "",
   });
   const [consent, setConsent] = useState(false);
+  const bot = useBotTrap();
   const [resume, setResume] = useState<Resume | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +63,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
   const send = useMutation({
     mutationFn: async () => {
       const res = await api.vagas.candidatura.$post({
-        json: { ...withState(form), jobSlug: jobSlug ?? null, resumeKey: resume?.key ?? null, consent },
+        json: { ...withState(form), jobSlug: jobSlug ?? null, resumeKey: resume?.key ?? null, consent, ...bot.trap() },
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
@@ -195,15 +196,7 @@ export function ApplicationForm({ jobSlug, jobTitle }: { jobSlug?: string; jobTi
           className={cn(input, "resize-y")}
         />
 
-        {/* campo armadilha para robô, fora da tela */}
-        <input
-          value={form.website}
-          onChange={set("website")}
-          tabIndex={-1}
-          autoComplete="off"
-          aria-hidden="true"
-          className="absolute -left-[9999px] h-0 w-0 opacity-0"
-        />
+        {bot.field}
 
         <label className="flex items-start gap-3 text-[13px] leading-relaxed text-dm-gray">
           <input

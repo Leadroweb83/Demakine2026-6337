@@ -32,5 +32,10 @@ export const auth = betterAuth({
   },
   // só o próprio site e os domínios oficiais: confiar em qualquer origem desligaria a defesa contra CSRF
   trustedOrigins: (request) => trustedOriginList(request),
+  // cookie de sessão: só HTTPS em produção, nunca legível por script e não vai em pedido entre sites
+  advanced: {
+    useSecureCookies: process.env.NODE_ENV === "production",
+    defaultCookieAttributes: { httpOnly: true, sameSite: "lax" },
+  },
   plugins: [bearer()],
 });

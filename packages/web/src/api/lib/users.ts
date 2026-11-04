@@ -32,7 +32,7 @@ export async function createPanelUser(input: {
     role: input.role,
     active: true,
     mustChangePassword: input.mustChangePassword ?? true,
-  } as never);
+  } as never, { method: "admin" });
 
   const hash = await ctx.password.hash(input.password);
   await ctx.internalAdapter.linkAccount({

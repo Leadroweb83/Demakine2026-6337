@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { home } from "@/lib/home";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { ArrowRight, Download, ShieldCheck, Wrench, Truck, Factory } from "lucide-react";
@@ -44,8 +44,42 @@ function Ticker() {
 
 /* ------------------------------------------------------------------ hero */
 
+/**
+ * Garante o vídeo de fundo tocando no celular. O React não mantém o atributo `muted` depois da
+ * hidratação (e o iOS só deixa tocar sozinho com ele), e o Modo de Pouca Energia do iPhone bloqueia o
+ * vídeo automático até o primeiro toque. Então: força o mudo, tenta tocar e, se for barrado, tenta de
+ * novo no primeiro toque, rolagem ou ao voltar para a aba.
+ */
+function useAutoplay(video: React.RefObject<HTMLVideoElement | null>) {
+  useEffect(() => {
+    const v = video.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.setAttribute("muted", "");
+    v.setAttribute("playsinline", "");
+    const events = ["touchstart", "pointerdown", "scroll", "keydown"] as const;
+    const retry = () => {
+      if (!v.paused) return off();
+      void v.play().then(off, () => undefined);
+    };
+    const off = () => {
+      events.forEach((e) => window.removeEventListener(e, retry));
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+    const onVisible = () => document.visibilityState === "visible" && retry();
+    void v.play().catch(() => {
+      events.forEach((e) => window.addEventListener(e, retry, { passive: true }));
+      document.addEventListener("visibilitychange", onVisible);
+    });
+    return off;
+  }, [video]);
+}
+
 export function HomeHero() {
   const ref = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  useAutoplay(videoRef);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
@@ -62,9 +96,12 @@ export function HomeHero() {
       <div className="cine-bg" />
 
       {/* vídeo com parallax no scroll */}
+      {/* no celular o hero tem mais de 1.700 px (texto, botão e formulário empilhados): o vídeo cobre só a primeira
+          tela, com fade na base. Esticado na altura toda ele ficava 2,5x ampliado e parecia parado. */}
       <motion.video
+        ref={videoRef}
         style={reduce ? still : { y: mediaY, scale: mediaScale }}
-        className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.55]"
+        className="absolute inset-0 -z-[2] h-full w-full object-cover opacity-[0.55] max-lg:bottom-auto max-lg:h-[100svh] max-lg:[-webkit-mask-image:linear-gradient(to_bottom,#000_72%,transparent)] max-lg:[mask-image:linear-gradient(to_bottom,#000_72%,transparent)]"
         src="/video/hero-fabrica.mp4"
         poster="/img/site/hero-fabrica.webp"
         autoPlay
@@ -74,7 +111,7 @@ export function HomeHero() {
         preload="metadata"
         aria-hidden="true"
       />
-      <div className="absolute inset-0 -z-[1] bg-gradient-to-r from-[#08192f]/92 via-[#08192f]/70 to-transparent" />
+      <div className="absolute inset-0 -z-[1] bg-gradient-to-r from-[#08192f]/92 via-[#08192f]/70 to-[#08192f]/45 max-lg:bottom-auto max-lg:h-[100svh] lg:to-transparent" />
 
       <div className="cine-beam" />
       <div className="hero-slash" />

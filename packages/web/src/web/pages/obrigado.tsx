@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { Check } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { BtnGhost, BtnPrimary, Section } from "@/components/kit";
 import { site } from "@/lib/site";
+import { ADS_CONVERSION_FORM, claimFormConversion, trackAdsConversion } from "@/lib/tracking";
 
 /**
  * Página de obrigado depois de qualquer formulário de orçamento (components/lead-form.tsx).
@@ -9,6 +11,13 @@ import { site } from "@/lib/site";
  * Fora do Google (noindex) e sem botão de WhatsApp: o cliente aguarda o contato do vendedor.
  */
 export default function Obrigado() {
+  // conversão do Google Ads: uma vez por envio de formulário (a marca fica no histórico, então recarregar não repete)
+  useEffect(() => {
+    if (!claimFormConversion(window.location.search, window.history.state)) return;
+    window.history.replaceState({ ...window.history.state, dmConv: true }, "");
+    trackAdsConversion(ADS_CONVERSION_FORM);
+  }, []);
+
   return (
     <>
       <Seo

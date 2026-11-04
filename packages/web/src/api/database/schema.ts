@@ -205,6 +205,17 @@ export const siteReviews = pgTable(
   (t) => [index("site_reviews_status_idx").on(t.status)],
 );
 
+/**
+ * Contador de tentativas por IP (limite de requisições das rotas públicas e do login). A chave é um
+ * hash de rota + IP (o IP não é guardado), com uma linha por chave: a janela troca e o contador zera.
+ */
+export const rateLimits = pgTable("rate_limits", {
+  key: text("key").primaryKey(),
+  windowId: integer("window_id").notNull(),
+  hits: integer("hits").notNull().default(0),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export * from "./auth-schema";
 
 /**
