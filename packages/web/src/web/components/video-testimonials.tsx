@@ -38,7 +38,7 @@ function VideoCard({ v }: { v: VideoTestimonial }) {
 
   return (
     <figure className="h-full">
-      <VideoFacade youtube={v.youtube} src={v.src} poster={v.poster} label={label} trackId={`depoimento-${v.company || v.name}`} className="rounded-2xl" />
+      <VideoFacade youtube={v.youtube} src={v.src} poster={v.poster} label={label} className="rounded-2xl" />
       <figcaption className="mt-3">
         <span className="block text-[15px] font-bold text-dm-ink">{v.name}</span>
         <span className="block text-[13px] text-dm-gray">{[v.company, v.city].filter(Boolean).join(" · ")}</span>

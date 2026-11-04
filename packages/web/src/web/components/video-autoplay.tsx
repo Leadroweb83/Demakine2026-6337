@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Maximize2, Minimize2, Play, Volume2, VolumeX } from "lucide-react";
-import { track } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 import { VideoFacade } from "./video-facade";
@@ -20,13 +19,11 @@ export function VideoAutoplay({
   youtube,
   poster,
   label,
-  trackId,
   className,
 }: {
   youtube: string;
   poster?: string;
   label: string;
-  trackId?: string;
   className?: string;
 }) {
   const holder = useRef<HTMLDivElement | null>(null);
@@ -42,7 +39,6 @@ export function VideoAutoplay({
   const playingRef = useRef(false);
   const expandedRef = useRef(false);
   expandedRef.current = expanded;
-  const id = trackId ?? youtube;
 
   const send = useCallback((func: string, args: unknown[] = []) => {
     frame.current?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
@@ -135,7 +131,6 @@ export function VideoAutoplay({
     if (muted) {
       send("unMute");
       send("setVolume", [100]);
-      track("video_unmute", { video_id: id });
     } else {
       send("mute");
     }
@@ -143,11 +138,10 @@ export function VideoAutoplay({
   };
 
   const toggleExpand = () => {
-    if (!expanded) track("video_expand", { video_id: id });
     setExpanded(!expanded);
   };
 
-  if (reduce) return <VideoFacade youtube={youtube} poster={poster} label={label} trackId={id} className={cn("rounded-2xl", className)} />;
+  if (reduce) return <VideoFacade youtube={youtube} poster={poster} label={label} className={cn("rounded-2xl", className)} />;
 
   const src = `https://www.youtube-nocookie.com/embed/${youtube}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtube}&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(origin)}`;
 

@@ -6,7 +6,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Cookie, X } from "lucide-react";
-import { updateConsent } from "@/lib/tracking";
 
 const KEY = "demakine_cookie_consent";
 export const COOKIE_PREFS_EVENT = "demakine:open-cookie-prefs";
@@ -43,7 +42,6 @@ export function CookieConsent() {
 
   const decide = (choice: Choice) => {
     window.localStorage.setItem(KEY, choice);
-    updateConsent(choice);
     setOpen(false);
   };
 

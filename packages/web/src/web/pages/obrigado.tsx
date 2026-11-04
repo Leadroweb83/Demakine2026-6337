@@ -1,21 +1,14 @@
-import { useEffect } from "react";
 import { Check } from "lucide-react";
 import { Seo } from "@/components/seo";
 import { BtnGhost, BtnPrimary, Section } from "@/components/kit";
 import { site } from "@/lib/site";
-import { fireLeadOnThankYou } from "@/lib/tracking";
 
 /**
  * Página de obrigado depois de qualquer formulário de orçamento (components/lead-form.tsx).
- * Existe para a conversão ser medida pelo endereço (GTM: GA4 generate_lead e Google Ads "Formulário Novo").
+ * Existe para a conversão ser medida pelo endereço quando a medição voltar (hoje o site não carrega nenhuma tag).
  * Fora do Google (noindex) e sem botão de WhatsApp: o cliente aguarda o contato do vendedor.
  */
 export default function Obrigado() {
-  // generate_lead (GA4 e Google Ads, via GTM): uma vez por envio real; recarregar ou abrir o endereço direto não conta
-  useEffect(() => {
-    fireLeadOnThankYou();
-  }, []);
-
   return (
     <>
       <Seo

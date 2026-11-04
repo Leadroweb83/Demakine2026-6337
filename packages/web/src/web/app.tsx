@@ -1,6 +1,5 @@
-import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
+import { lazy, Suspense, useEffect, type ComponentType } from "react";
 import { Redirect, Route, Switch, useLocation } from "wouter";
-import { track } from "./lib/tracking";
 import { locale, localePath } from "./lib/i18n";
 import { SHOP_OPEN } from "./lib/site";
 import { recordView } from "./lib/visits";
@@ -164,16 +163,6 @@ function App() {
   // medição própria (painel > Visitas): toda página vista, inclusive a primeira
   // (com o prefixo do idioma: /en/produtos e /produtos contam separado no painel)
   useEffect(() => recordView(localePath(location)), [location]);
-  const firstView = useRef(true);
-  useEffect(() => {
-    if (firstView.current) {
-      firstView.current = false;
-      return;
-    }
-    // espera a página nova (carregada sob demanda) trocar o título
-    const t = window.setTimeout(() => track("page_view_spa", { page_path: localePath(location), page_title: document.title }), 400);
-    return () => window.clearTimeout(t);
-  }, [location]);
   return (
     <Provider>
       <CompareProvider>
