@@ -421,9 +421,10 @@
     onUpdate: function () { var on = Math.round(tickState.p * TICKS); tickEls.forEach(function (l, i) { l.classList.toggle('on', i < on); }); }
   });
   $$('[data-count]').forEach(function (c) {
-    var to = +c.dataset.count, o = { v: 0 };
-    c.textContent = '0';
-    gsap.to(o, { v: to, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: c, start: 'top 85%', once: true }, onUpdate: function () { c.textContent = Math.round(o.v); } });
+    var to = +c.dataset.count, from = +(c.dataset.from || 0), o = { v: from };
+    var fmt = function (n) { return Math.round(n).toLocaleString('pt-BR'); }; // 1000 vira "1.000"
+    c.textContent = fmt(from);
+    gsap.to(o, { v: to, duration: to > 100 ? 2.4 : 2, ease: 'power2.out', scrollTrigger: { trigger: c, start: 'top 85%', once: true }, onUpdate: function () { c.textContent = fmt(o.v); } });
   });
 
   // ZOOM PARALLAX: guará no centro, fotos da Guará ao redor (escalas do original: 4,5,6,5,6,8,9)
