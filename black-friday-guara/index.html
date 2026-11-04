@@ -311,6 +311,17 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.8rem}
 .dcard.featured{border-color:rgba(231,81,31,.6)}
 .dcard.featured::after{background:linear-gradient(180deg,rgba(231,81,31,.15),rgba(11,11,12,.15) 30%,rgba(11,11,12,.92) 75%)}
 .dcard.featured .num{color:var(--accent);-webkit-text-stroke:0}
+/* Hover: contorno e brilho neon laranja em cada card */
+.dcard{transition:border-color .35s var(--ease),box-shadow .35s var(--ease)}
+.dcard .num,.dcard h3{transition:color .35s,-webkit-text-stroke-color .35s,text-shadow .35s}
+.dcard .bgimg{transition:filter .5s var(--ease)}
+.dcard:hover{border-color:var(--accent-hi);box-shadow:0 0 0 1px var(--accent-hi),0 0 18px rgba(255,106,51,.65),0 0 48px rgba(231,81,31,.45),0 0 90px rgba(231,81,31,.25),inset 0 0 24px rgba(255,106,51,.25);animation:neonFlicker 2.4s linear infinite}
+.dcard:hover .num{-webkit-text-stroke-color:#FFB38A;text-shadow:0 0 12px rgba(255,106,51,.9),0 0 34px rgba(231,81,31,.6)}
+.dcard.featured:hover .num{color:#FF6A33}
+.dcard:hover h3{color:#FF8A4D;text-shadow:0 0 14px rgba(255,106,51,.7)}
+.dcard:hover .bgimg{filter:brightness(1.12) saturate(1.1)}
+@keyframes neonFlicker{0%,19%,21%,62%,64%,100%{filter:none}20%,63%{filter:brightness(1.25)}}
+@media(prefers-reduced-motion:reduce){.dcard:hover{animation:none}}
 
 /* ===== 6. MANIFESTO ===== */
 .manifesto{text-align:center}
