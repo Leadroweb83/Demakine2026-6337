@@ -18,13 +18,13 @@
 <meta property="og:url" content="https://guaraequipamentos.com.br/black-friday/">
 <meta property="og:image" content="https://guaraequipamentos.com.br/black-friday/img/og-black-guara.jpg">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="331">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="img/hero-black-guara.webp" fetchpriority="high">
+<link rel="preload" as="image" href="img/selo-black-guara.webp" fetchpriority="high">
 
 <!-- Dados estruturados para Google e buscadores com IA (SEO + GEO) -->
 <script type="application/ld+json">
@@ -159,8 +159,17 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.82rem}
 .hero h1 .off{display:block;color:var(--accent);font-size:1.18em}
 .hero .lead{font-size:clamp(1.03rem,1.5vw,1.16rem)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-.hero-media{position:relative}
-.hero-media img{width:100%;height:auto;border-radius:20px;-webkit-mask-image:radial-gradient(120% 100% at 50% 40%,#000 62%,transparent 100%);mask-image:radial-gradient(120% 100% at 50% 40%,#000 62%,transparent 100%)}
+.hero-media{position:relative;display:grid;justify-items:center;padding-bottom:8%}
+.hero-media .palco{position:absolute;left:50%;bottom:0;width:118%;max-width:none;transform:translateX(-50%);z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+.hero-media .selo{position:relative;z-index:1;width:min(78%,400px);height:auto;filter:drop-shadow(0 20px 40px rgba(231,81,31,.45));animation:flutua 5s ease-in-out infinite}
+@keyframes flutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@media(max-width:979px){.hero-media{max-width:520px;margin:0 auto;width:100%}}
+
+/* Faixa de vídeo */
+.video-band{padding:clamp(40px,6vw,72px) 0}
+.video-band a{display:block;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -40px rgba(231,81,31,.6)}
+.video-band video{display:block;width:100%;height:auto;aspect-ratio:1824/496;background:#000}
+@media(max-width:700px){.video-band video{aspect-ratio:4/3;object-fit:cover}}
 .countdown-wrap{margin-top:30px}
 .countdown-wrap p{font:700 .74rem/1 Archivo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .countdown{display:grid;grid-template-columns:repeat(4,minmax(0,78px));gap:8px}
@@ -181,9 +190,12 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.82rem}
 /* Kits */
 .kits{display:grid;gap:18px;margin-top:40px}
 @media(min-width:900px){.kits{grid-template-columns:repeat(3,1fr)}}
-.kit{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;position:relative}
+.kit{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:0 28px 28px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+.kit-media{margin:0 -28px 10px;aspect-ratio:16/9;background:#1C1C1F;position:relative}
+.kit-media img{width:100%;height:100%;object-fit:cover}
+.kit-media .off{position:absolute;right:12px;bottom:12px;background:var(--accent);color:#fff;font:900 .8rem/1 Archivo,sans-serif;text-transform:uppercase;padding:8px 11px;border-radius:7px}
 .kit.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
-.kit .tag{align-self:flex-start;background:var(--bg-3);color:var(--muted);font:700 .72rem/1 Archivo,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:7px 10px;border-radius:6px}
+.kit .tag{align-self:flex-start;margin-top:6px;background:var(--bg-3);color:var(--muted);font:700 .72rem/1 Archivo,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:7px 10px;border-radius:6px}
 .kit.featured .tag{background:var(--accent);color:#fff}
 .kit h3{font-size:1.4rem}
 .kit p{color:var(--muted);font-size:.95rem}
@@ -279,7 +291,7 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
 
 .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.22,.61,.36,1),transform .6s cubic-bezier(.22,.61,.36,1)}
 .reveal.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .reveal{opacity:1;transform:none;transition:none}.btn,.card{transition:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .reveal{opacity:1;transform:none;transition:none}.btn,.card{transition:none}.hero-media .selo{animation:none}}
 </style>
 
 <!-- Google Tag Manager: troque GTM-XXXXXXX pelo contêiner da Guará (o script não carrega enquanto estiver XXXX) -->
@@ -336,8 +348,8 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
         </div>
       </div>
       <div class="hero-media">
-        <img src="img/hero-black-guara.webp" width="1060" height="563" fetchpriority="high"
-             alt="Black Guará: lavadora com barreira sanitária, calandra, centrífuga e secador industrial Guará">
+        <img class="selo" src="img/selo-black-guara.webp" width="431" height="640" fetchpriority="high" alt="Selo da campanha Black Guará, Black Friday da Guará Equipamentos">
+        <img class="palco" src="img/palco.webp" width="1400" height="757" alt="" aria-hidden="true">
       </div>
     </div>
   </section>
@@ -352,14 +364,27 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
     </ul>
   </div>
 
+  <!-- VÍDEO DA CAMPANHA -->
+  <div class="video-band">
+    <div class="wrap">
+      <a class="js-wa" data-origin="video-banner" href="#" rel="noopener" aria-label="Black Guará: kits especiais com até 30% OFF. Falar com o time comercial">
+        <video autoplay muted loop playsinline preload="metadata" poster="img/banner-black-guara-poster.jpg" width="1440" height="392">
+          <source src="img/banner-black-guara.webm" type="video/webm">
+          <source src="img/banner-black-guara.mp4" type="video/mp4">
+        </video>
+      </a>
+    </div>
+  </div>
+
   <!-- KITS -->
   <section id="kits" class="alt">
     <div class="wrap">
       <span class="eyebrow">Kits especiais Black Guará</span>
-      <h2>Monte o kit certo para<br>o <em>volume da sua lavanderia</em></h2>
+      <h2>Kits completos com até<br><em>30% OFF na Black Guará</em></h2>
       <p class="lead" style="margin-top:16px">O time comercial dimensiona cada kit pelo volume de roupas por dia e aplica a condição da campanha. Os exemplos abaixo são pontos de partida.</p>
       <div class="kits">
         <article class="kit reveal">
+          <div class="kit-media"><img src="img/kit-completo.webp" width="1200" height="675" loading="lazy" alt="Kit Guará com secador industrial, calandra elétrica e lavadora extratora"><span class="off">Até 30% OFF</span></div>
           <span class="tag">Hotelaria e comercial</span>
           <h3>Kit Lavanderia Completa</h3>
           <p>Para hotéis, pousadas, motéis e lavanderias comerciais que querem lavar, secar e passar dentro de casa.</p>
@@ -367,13 +392,15 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
           <a class="btn btn-accent js-wa" data-origin="kit" data-product="Kit Lavanderia Completa" href="#" rel="noopener">Quero este kit</a>
         </article>
         <article class="kit featured reveal" style="transition-delay:70ms">
+          <div class="kit-media"><img src="img/kit-hospitalar.webp" width="1200" height="675" loading="lazy" alt="Kit hospitalar Guará com secador, calandra e lavadora extratora com barreira sanitária"><span class="off">Até 30% OFF</span></div>
           <span class="tag">Saúde</span>
           <h3>Kit Lavanderia Hospitalar</h3>
           <p>Para hospitais e clínicas que precisam separar área suja e área limpa com segurança sanitária.</p>
-          <ul><li>Lavadora extratora com barreira sanitária</li><li>Secador industrial</li><li>Calandra monorrol ou multirrolos</li></ul>
+          <ul><li>Lavadora extratora com barreira sanitária</li><li>Secador industrial</li><li>Calandra industrial</li></ul>
           <a class="btn btn-accent js-wa" data-origin="kit" data-product="Kit Lavanderia Hospitalar" href="#" rel="noopener">Quero este kit</a>
         </article>
         <article class="kit reveal" style="transition-delay:140ms">
+          <div class="kit-media"><img src="img/calandra-multirrolos.webp" width="600" height="450" loading="lazy" alt="Calandra industrial multirrolos Guará para acabamento automatizado"><span class="off">Até 30% OFF</span></div>
           <span class="tag">Alta produção</span>
           <h3>Kit Acabamento Automatizado</h3>
           <p>Para lavanderias industriais que querem mais peças por hora com menos mão de obra no acabamento.</p>

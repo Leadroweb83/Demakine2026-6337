@@ -21,5 +21,5 @@ Tudo que muda com frequência fica no bloco `CONFIG` no fim do `index.html`:
 ## Pendências (aguardando materiais do cliente)
 - Composição e % real de cada kit
 - Depoimentos/cases e logos de clientes
-- Vídeo da fábrica ou dos equipamentos
+- Mais fotos/vídeos reais (selo, palco, 2 fotos de kits e vídeo do banner já aplicados)
 - Confirmar segmentos atendidos (hotéis, motéis, lavanderias comerciais)
