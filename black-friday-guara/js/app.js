@@ -395,6 +395,18 @@
     gsap.fromTo(card.querySelector('.bgimg'), { yPercent: 0, scale: 1.12 }, { yPercent: -6 - i * 2, scale: 1.12, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
 
+  // Manifesto: 10% e 20% são riscados, um de cada vez, e o 30% metálico entra gigante
+  var strikes = $$('#mani-nums .strike'), olds = $$('#mani-nums .mani-old');
+  gsap.set(strikes, { scaleX: 0, transformOrigin: 'left center', yPercent: -50, rotation: -12 });
+  gsap.set('.mani-30', { opacity: 0, scale: 0.55, rotationX: 35, transformPerspective: 600 });
+  var numsTl = gsap.timeline({ scrollTrigger: { trigger: '#mani-nums', start: 'top 85%', end: 'top 42%', scrub: 0.8 } });
+  numsTl.fromTo(olds, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.2 }, 0)
+    .to(strikes[0], { scaleX: 1, duration: 0.8, ease: 'power2.inOut' }, 0.7)
+    .to(olds[0], { color: '#3f3f46', scale: 0.92, duration: 0.5 }, 1.2)
+    .to(strikes[1], { scaleX: 1, duration: 0.8, ease: 'power2.inOut' }, 1.5)
+    .to(olds[1], { color: '#3f3f46', scale: 0.92, duration: 0.5 }, 2.0)
+    .to('.mani-30', { opacity: 1, scale: 1, rotationX: 0, duration: 1.2, ease: 'back.out(1.8)' }, 2.3);
+
   // Manifesto: as palavras acendem com a rolagem
   var manTl = gsap.timeline({ scrollTrigger: { trigger: '#manifesto', start: 'top 80%', end: 'bottom 40%', scrub: 0.6 } });
   manWords.forEach(function (w, i) {
