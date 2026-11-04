@@ -415,19 +415,27 @@
   var strikes = $$('#mani-nums .strike'), olds = $$('#mani-nums .mani-old');
   gsap.set(strikes, { scaleX: 0, transformOrigin: 'left center', yPercent: -50, rotation: -12 });
   gsap.set('.mani-30', { opacity: 0, scale: 0.55, rotationX: 35, transformPerspective: 600 });
-  var numsTl = gsap.timeline({ scrollTrigger: { trigger: '#mani-nums', start: 'top 85%', end: 'top 42%', scrub: 0.8 } });
-  numsTl.fromTo(olds, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.2 }, 0)
-    .to(strikes[0], { scaleX: 1, duration: 0.8, ease: 'power2.inOut' }, 0.7)
-    .to(olds[0], { color: '#3f3f46', scale: 0.92, duration: 0.5 }, 1.2)
-    .to(strikes[1], { scaleX: 1, duration: 0.8, ease: 'power2.inOut' }, 1.5)
-    .to(olds[1], { color: '#3f3f46', scale: 0.92, duration: 0.5 }, 2.0)
-    .to('.mani-30', { opacity: 1, scale: 1, rotationX: 0, duration: 1.2, ease: 'back.out(1.8)' }, 2.3);
-
-  // Manifesto: as palavras acendem com a rolagem
-  var manTl = gsap.timeline({ scrollTrigger: { trigger: '#manifesto', start: 'top 80%', end: 'bottom 40%', scrub: 0.6 } });
-  manWords.forEach(function (w, i) {
-    manTl.to(w, { color: w.classList.contains('hl') ? '#E7511F' : '#F5F5F4', duration: 1, ease: 'none' }, i * 0.5);
+  // 10% e 20% surgem quando a seção chega na tela
+  gsap.fromTo(olds, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '#mani-nums', start: 'top 90%', toggleActions: 'play none none reverse' } });
+  // A seção fica fixa na tela e cada risco é desenhado no ritmo da rolagem
+  var manSec = $('.manifesto');
+  var maniTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: manSec,
+      start: function () { return manSec.offsetHeight > window.innerHeight ? 'top top' : 'center center'; },
+      end: '+=230%', pin: true, scrub: 0.4, anticipatePin: 1, invalidateOnRefresh: true
+    }
   });
+  maniTl.to(strikes[0], { scaleX: 1, duration: 1.3, ease: 'none' }, 0)
+    .to(olds[0], { color: '#3f3f46', scale: 0.92, duration: 0.4 }, 1.1)
+    .to(strikes[1], { scaleX: 1, duration: 1.3, ease: 'none' }, 1.6)
+    .to(olds[1], { color: '#3f3f46', scale: 0.92, duration: 0.4 }, 2.7)
+    .to('.mani-30', { opacity: 1, scale: 1, rotationX: 0, duration: 1.2, ease: 'back.out(1.6)' }, 3.2);
+  // Depois do 30%, a frase acende palavra por palavra
+  manWords.forEach(function (w, i) {
+    maniTl.to(w, { color: w.classList.contains('hl') ? '#E7511F' : '#F5F5F4', duration: 0.5, ease: 'none' }, 4.5 + i * 0.12);
+  });
+  maniTl.to({}, { duration: 0.6 }); // respiro com tudo aceso antes de soltar a seção
 
   // +20 anos: tracinhos acendem e o número conta
   var tickState = { p: 0 };
