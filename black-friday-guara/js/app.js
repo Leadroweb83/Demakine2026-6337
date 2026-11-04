@@ -222,21 +222,30 @@
   });
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var nome = form.elements.nome.value.trim();
+    var f = form.elements;
+    var nome = f.nome.value.trim();
     var fone = tel.value.replace(/\D/g, '');
-    var okNome = nome.length >= 2, okFone = fone.length >= 10;
-    form.elements.nome.setAttribute('aria-invalid', String(!okNome));
-    tel.setAttribute('aria-invalid', String(!okFone));
-    if (!okNome || !okFone) {
-      msg.textContent = !okNome ? 'Informe seu nome para continuar.' : 'Informe um WhatsApp válido com DDD.';
-      (okNome ? tel : form.elements.nome).focus();
-      return;
-    }
-    var texto = 'Olá! Sou ' + nome + ' (WhatsApp ' + tel.value + '). Vim pela Black Guará e quero saber dos kits com até 30% OFF.';
-    track({ lead_channel: 'formulario_whatsapp', lead_origin: 'cta-final' });
+    var email = f.email.value.trim();
+    var cidade = f.cidade.value.trim();
+    // Valida na ordem dos campos e foca o primeiro com problema
+    var checks = [
+      [f.nome, nome.length >= 2, 'Informe seu nome para continuar.'],
+      [tel, fone.length >= 10, 'Informe um WhatsApp válido com DDD.'],
+      [f.email, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email), 'Informe um e-mail válido.'],
+      [f.cidade, cidade.length >= 2, 'Informe sua cidade e estado.']
+    ];
+    var erro = null;
+    checks.forEach(function (c) {
+      c[0].setAttribute('aria-invalid', String(!c[1]));
+      if (!c[1] && !erro) erro = c;
+    });
+    if (erro) { msg.textContent = erro[2]; erro[0].focus(); return; }
+    var texto = 'Olá! Vim pela Black Guará e quero saber dos kits com até 30% OFF.\n\n' +
+      'Nome: ' + nome + '\nWhatsApp: ' + tel.value + '\nE-mail: ' + email + '\nCidade: ' + cidade;
+    track({ lead_channel: 'formulario_whatsapp', lead_origin: 'cta-final', lead_city: cidade });
     msg.textContent = 'Perfeito, ' + nome.split(' ')[0] + '! Abrindo o WhatsApp do nosso time comercial...';
-    var w = window.open(waLink(texto), '_blank', 'noopener');
-    if (!w) location.href = waLink(texto);
+    var w = window.open(waLink(texto), '_blank');
+    if (w) w.opener = null; else location.href = waLink(texto);
   });
 
   /* ================= MOTION (GSAP) ================= */
