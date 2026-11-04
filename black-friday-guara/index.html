@@ -278,10 +278,12 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.8rem}
 .dcard h3{font-size:1.3rem;font-weight:800;color:var(--accent);margin-bottom:10px}
 .dcard p{color:#D4D4D8;font-size:.93rem;max-width:30ch}
 .dcard:not(.photo){padding-bottom:clamp(96px,10vw,130px)}
-.dcard.photo{border-color:rgba(231,81,31,.6)}
 .dcard.photo .bgimg{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
-.dcard.photo::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(231,81,31,.15),rgba(11,11,12,.15) 30%,rgba(11,11,12,.92) 75%)}
-.dcard.photo .num{top:-.08em;bottom:auto;color:var(--accent);-webkit-text-stroke:0}
+.dcard.photo::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(11,11,12,.55),rgba(11,11,12,.1) 30%,rgba(11,11,12,.94) 74%)}
+.dcard.photo .num{top:-.08em;bottom:auto;-webkit-text-stroke:1.5px rgba(255,255,255,.75)}
+.dcard.featured{border-color:rgba(231,81,31,.6)}
+.dcard.featured::after{background:linear-gradient(180deg,rgba(231,81,31,.15),rgba(11,11,12,.15) 30%,rgba(11,11,12,.92) 75%)}
+.dcard.featured .num{color:var(--accent);-webkit-text-stroke:0}
 
 /* ===== 6. MANIFESTO ===== */
 .manifesto{text-align:center}
@@ -560,9 +562,9 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
         <p class="rv">Da escolha do kit ao pós-venda, você fala direto com quem fabrica.</p>
       </div>
       <div class="diff-cards">
-        <article class="dcard rv"><span class="num" aria-hidden="true">01</span><h3>Barreira sanitária</h3><p>Separa área suja e área limpa na lavanderia hospitalar, com controle total do processo.</p></article>
-        <article class="dcard photo rv"><img class="bgimg" src="img/diferencial-nr12.webp" width="600" height="800" loading="lazy" alt="Lavadora extratora Guará com selos NR 12 e força G de 300"><span class="num" aria-hidden="true">02</span><h3>Força G de 300</h3><p>Alta centrifugação: a roupa sai mais seca, o secador trabalha menos e a conta de energia agradece.</p></article>
-        <article class="dcard rv"><span class="num" aria-hidden="true">03</span><h3>Assistência própria</h3><p>Suporte técnico direto da fábrica, com WhatsApp exclusivo para atendimento.</p></article>
+        <article class="dcard photo rv"><img class="bgimg" src="img/card-barreira-sanitaria.webp" width="600" height="800" loading="lazy" alt="Lavadora horizontal Guará com barreira sanitária e selo NR 12"><span class="num" aria-hidden="true">01</span><h3>Barreira sanitária</h3><p>Separa área suja e área limpa na lavanderia hospitalar, com controle total do processo.</p></article>
+        <article class="dcard photo featured rv"><img class="bgimg" src="img/diferencial-nr12.webp" width="600" height="800" loading="lazy" alt="Lavadora extratora Guará com selos NR 12 e força G de 300"><span class="num" aria-hidden="true">02</span><h3>Força G de 300</h3><p>Alta centrifugação: a roupa sai mais seca, o secador trabalha menos e a conta de energia agradece.</p></article>
+        <article class="dcard photo rv"><img class="bgimg" src="img/card-assistencia.webp" width="600" height="800" loading="lazy" alt="Técnico da Guará fazendo manutenção em uma lavadora industrial"><span class="num" aria-hidden="true">03</span><h3>Assistência própria</h3><p>Suporte técnico direto da fábrica, com WhatsApp exclusivo para atendimento.</p></article>
       </div>
     </div>
   </section>

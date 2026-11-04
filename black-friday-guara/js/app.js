@@ -390,7 +390,10 @@
   $$('.dcard .num').forEach(function (n) {
     gsap.fromTo(n, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: n.parentNode, start: 'top 80%', once: true } });
   });
-  gsap.to('.dcard.photo .bgimg', { yPercent: -8, scale: 1.08, ease: 'none', scrollTrigger: { trigger: '.dcard.photo', start: 'top bottom', end: 'bottom top', scrub: true } });
+  $$('.dcard.photo').forEach(function (card, i) {
+    // Parallax leve em cada foto, com intensidade um pouco diferente por card
+    gsap.fromTo(card.querySelector('.bgimg'), { yPercent: 0, scale: 1.12 }, { yPercent: -6 - i * 2, scale: 1.12, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
 
   // Manifesto: as palavras acendem com a rolagem
   var manTl = gsap.timeline({ scrollTrigger: { trigger: '#manifesto', start: 'top 80%', end: 'bottom 40%', scrub: 0.6 } });
