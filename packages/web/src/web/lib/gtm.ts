@@ -12,6 +12,8 @@
  *  - Whatsapp Novo (Ads, rótulo Er2mCPKx--gYEISzpM4D): envio válido do pop-up "Iniciar conversa" do
  *    botão flutuante da Mailbiz (o evento `submit` do navegador só ocorre com os campos válidos).
  *  - Kit do comprador (downloads:kit): evento download_kit no GA4, não conta como conversão.
+ *  - Demais links de WhatsApp (wa.me) e de telefone (tel:): eventos whatsapp_click e phone_click só no
+ *    GA4, sem conversão no Ads. O botão de compartilhar do blog (wa.me/?text=) não conta.
  *
  * ATENÇÃO, contagem em dobro: se o GTM publicar "GA4 - Google tag", "Google Ads - Google tag
  * (AW-969480580)", as conversões 210/211 ou o "Listener - WhatsApp flutuante (Mailbiz)", apague o item
@@ -81,6 +83,7 @@ function loadTags() {
   win.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
   addScript(`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`);
   bindMailbizListener();
+  bindClickTracking();
 }
 
 /** Na abertura do site: consentimento negado (ou concedido, se já aceitou antes) e tags carregadas. */
@@ -324,4 +327,46 @@ function bindMailbizListener() {
     },
     true,
   );
+}
+
+/* ------------------------------------------------------------------ */
+/* Cliques em links de WhatsApp (wa.me) e telefone: só GA4              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * click_location: `data-track-location="header|footer|produto|contato|blog"` no link ou num pai.
+ * Sem o atributo, vale o primeiro bloco encontrado. "floating" é reservado ao botão da Mailbiz.
+ */
+function clickLocation(el: Element): string {
+  const tagged = el.closest("[data-track-location]");
+  if (tagged) return tagged.getAttribute("data-track-location") ?? "unknown";
+  if (el.closest("header")) return "header";
+  if (el.closest("footer")) return "footer";
+  if (el.closest("form, #formulario")) return "form";
+  return "content";
+}
+
+// wa.me/<número> ou api.whatsapp.com/send; ignora wa.me/?text= (botão de compartilhar do blog)
+const WA_LINK = /^https:\/\/(wa\.me\/\d|api\.whatsapp\.com\/send)/;
+
+let clickBound = false;
+function bindClickTracking() {
+  if (clickBound) return;
+  clickBound = true;
+  const handler = (e: MouseEvent) => {
+    if (e.type === "auxclick" && e.button !== 1) return; // só o botão do meio (nova aba)
+    const a = (e.target as Element | null)?.closest?.("a[href]");
+    if (!a) return;
+    const href = a.getAttribute("href") ?? "";
+    const isWhatsapp = WA_LINK.test(href);
+    if (!isWhatsapp && !href.startsWith("tel:")) return;
+    sendEvent(isWhatsapp ? "whatsapp_click" : "phone_click", {
+      event_id: newEventId(),
+      page_path: location.pathname,
+      origin_path: location.pathname,
+      click_location: clickLocation(a),
+    });
+  };
+  document.addEventListener("click", handler, { capture: true });
+  document.addEventListener("auxclick", handler, { capture: true });
 }
