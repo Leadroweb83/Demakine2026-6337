@@ -516,16 +516,28 @@
 
   // ZOOM PARALLAX: guará no centro, fotos da Guará ao redor (escalas do original: 4,5,6,5,6,8,9)
   // O lobo (camada 1) cresce só até caber inteiro na tela; as outras fotos voam para fora
+  // Nitidez: o lobo é desenhado já no tamanho final e o zoom parte de uma versão reduzida
+  // (reduzir mantém a imagem nítida; ampliar uma imagem pequena borra).
   var wolfBox = $('#guara-brasil .zoom__layer .zoom__box');
-  var wolfScale = function () {
+  var wolfS = 1;
+  function wolfFit() {
+    wolfBox.style.width = ''; wolfBox.style.height = '';
     var w = wolfBox.offsetWidth || 1, h = wolfBox.offsetHeight || 1;
     var alturaUtil = window.innerWidth < 1000 ? 0.7 : 0.8;
-    return Math.min(window.innerHeight * alturaUtil / h, window.innerWidth * 0.96 / w);
-  };
-  var zoomScales = [wolfScale, 5, 6, 5, 6, 8, 9];
+    wolfS = Math.min(window.innerHeight * alturaUtil / h, window.innerWidth * 0.96 / w);
+    wolfBox.style.width = (w * wolfS) + 'px';
+    wolfBox.style.height = (h * wolfS) + 'px';
+  }
+  wolfFit();
+  ScrollTrigger.addEventListener('refreshInit', wolfFit);
+  var zoomScales = [5, 5, 6, 5, 6, 8, 9];
   var zoomTl = gsap.timeline({ scrollTrigger: { trigger: '#guara-brasil', start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } });
   $$('#guara-brasil .zoom__layer').forEach(function (layer, i) {
-    zoomTl.fromTo(layer, { scale: 1 }, { scale: zoomScales[i % zoomScales.length], ease: 'none', duration: 1 }, 0);
+    if (i === 0) {
+      zoomTl.fromTo(layer, { scale: function () { return 1 / wolfS; } }, { scale: 1, ease: 'none', duration: 1 }, 0);
+    } else {
+      zoomTl.fromTo(layer, { scale: 1 }, { scale: zoomScales[i], ease: 'none', duration: 1 }, 0);
+    }
   });
   zoomTl.fromTo('#guara-brasil .zoom__caption', { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.22 }, 0.72);
 
