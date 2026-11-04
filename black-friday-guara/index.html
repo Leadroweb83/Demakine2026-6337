@@ -43,6 +43,7 @@
       "address": {"@type": "PostalAddress", "streetAddress": "Estrada Municipal Antonio Cavinatto, 790, Bairro dos Pereiras", "addressLocality": "Limeira", "addressRegion": "SP", "postalCode": "13487-515", "addressCountry": "BR"},
       "contactPoint": [
         {"@type": "ContactPoint", "contactType": "sales", "telephone": "+55-19-99336-9331", "areaServed": "BR", "availableLanguage": "Portuguese"},
+        {"@type": "ContactPoint", "contactType": "sales", "telephone": "+55-19-99301-7018", "areaServed": "BR", "availableLanguage": "Portuguese"},
         {"@type": "ContactPoint", "contactType": "technical support", "telephone": "+55-19-99338-0787", "areaServed": "BR", "availableLanguage": "Portuguese"}
       ],
       "sameAs": ["https://www.instagram.com/guaraequipamentos", "https://www.facebook.com/guaraequipamentos", "https://www.youtube.com/c/GrupoGuar%C3%A1", "https://www.linkedin.com/company/guara-equipamentos/"]
@@ -369,6 +370,8 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.8rem}
 .lead-form input::placeholder{color:#71717a}
 .lead-form .btn{min-height:56px}
 .final-box .form-msg{margin:12px 0 0;font-weight:700;min-height:1.4em}
+.final-box .form-legal{margin:6px 0 0;font-size:.78rem;opacity:.8;font-weight:500}
+.lead-form{position:relative}
 
 footer{border-top:1px solid var(--line);padding:46px 0 110px;color:var(--muted);font-size:.88rem}
 footer .cols{display:grid;gap:28px}
@@ -646,9 +649,11 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
           <label><span class="sr-only">Seu WhatsApp com DDD</span><input type="tel" name="whatsapp" placeholder="WhatsApp com DDD" autocomplete="tel" inputmode="tel" required></label>
           <label><span class="sr-only">Seu e-mail</span><input type="email" name="email" placeholder="Seu e-mail" autocomplete="email" inputmode="email" required></label>
           <label><span class="sr-only">Sua cidade e estado</span><input type="text" name="cidade" placeholder="Cidade / UF" autocomplete="address-level2" required></label>
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <button class="btn btn-dark" type="submit"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero meu kit</button>
         </form>
         <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+        <p class="form-legal">Ao enviar, você autoriza a Guará Equipamentos a entrar em contato pelo WhatsApp e por e-mail sobre a Black Guará. Seus dados não são compartilhados.</p>
       </div>
     </div>
   </section>
@@ -665,14 +670,14 @@ footer .legal{border-top:1px solid var(--line);margin-top:32px;padding-top:20px;
         <h3>Contato</h3>
         <ul>
           <li><a href="tel:+551934422196" data-origin="footer-tel">(19) 3442-2196</a></li>
-          <li><a class="js-wa" data-origin="footer" href="https://wa.me/5519993369331" rel="noopener">WhatsApp vendas: (19) 99336-9331</a></li>
-          <li><a href="https://wa.me/5519993380787" target="_blank" rel="noopener">Assistência técnica: (19) 99338-0787</a></li>
+          <li>WhatsApp vendas: <a class="js-wa" data-origin="footer" href="https://wa.me/5519993369331" rel="noopener">(19) 99336-9331</a> | <a class="js-wa" data-origin="footer-vendas-2" data-phone="5519993017018" href="https://wa.me/5519993017018" rel="noopener">(19) 99301-7018</a></li>
+          <li>Assistência técnica: <a href="https://wa.me/5519993380787" target="_blank" rel="noopener">(19) 99338-0787</a></li>
           <li><a href="mailto:contato@guaraequipamentos.com.br">contato@guaraequipamentos.com.br</a></li>
         </ul>
       </div>
       <div>
         <h3>Fábrica</h3>
-        <address style="font-style:normal">Estrada Municipal Antonio Cavinatto, 790<br>Bairro dos Pereiras, Limeira-SP<br>CEP 13487-515</address>
+        <address style="font-style:normal">Estrada Municipal Antonio Cavinatto, 790<br>Bairro dos Pereiras, Limeira, SP<br>CEP: 13487-515</address>
         <p style="margin-top:12px"><a href="https://www.instagram.com/guaraequipamentos" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.linkedin.com/company/guara-equipamentos/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://www.youtube.com/c/GrupoGuar%C3%A1" target="_blank" rel="noopener">YouTube</a></p>
       </div>
     </div>

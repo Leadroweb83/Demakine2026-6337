@@ -6,6 +6,11 @@
   /* ================= CONFIGURAÇÃO DA CAMPANHA ================= */
   var CONFIG = {
     whatsapp: '5519993369331',               // WhatsApp vendas (19) 99336-9331
+    // Cópia de cada lead por e-mail (assunto "Lead BlackFriday").
+    // Padrão: FormSubmit (o 1º envio pede ativação no e-mail contato@).
+    // Para usar o servidor do próprio site, troque por 'enviar-lead.php'.
+    leadEndpoint: 'https://formsubmit.co/ajax/contato@guaraequipamentos.com.br',
+    leadAssunto: 'Lead BlackFriday',
     fimCampanha: '2026-11-30T23:59:59-03:00',
     mensagemPadrao: 'Olá! Vim pela Black Guará e quero saber dos kits com até 30% OFF.',
     produtos: [
@@ -35,7 +40,7 @@
   /* ---------- WhatsApp, UTMs e rastreamento ---------- */
   var params = new URLSearchParams(location.search);
   var utm = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].map(function (k) { return params.get(k); }).filter(Boolean).join(' / ');
-  function waLink(msg) { return 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(msg + (utm ? '\n\n[origem: ' + utm + ']' : '')); }
+  function waLink(msg, phone) { return 'https://wa.me/' + (phone || CONFIG.whatsapp) + '?text=' + encodeURIComponent(msg + (utm ? '\n\n[origem: ' + utm + ']' : '')); }
   function track(data) {
     window.dataLayer = window.dataLayer || [];
     data.event = 'generate_lead'; data.campaign = 'black_guara_2026';
@@ -65,7 +70,7 @@
 
   $$('.js-wa').forEach(function (a) {
     var product = a.dataset.product;
-    a.href = waLink(product ? 'Olá! Vim pela Black Guará e quero a condição especial para: ' + product + '.' : CONFIG.mensagemPadrao);
+    a.href = waLink(product ? 'Olá! Vim pela Black Guará e quero a condição especial para: ' + product + '.' : CONFIG.mensagemPadrao, a.dataset.phone);
     a.target = '_blank';
     a.addEventListener('click', function () { track({ lead_channel: 'whatsapp', lead_origin: a.dataset.origin || 'link', product_name: product || '(geral)' }); });
   });
@@ -242,11 +247,50 @@
     if (erro) { msg.textContent = erro[2]; erro[0].focus(); return; }
     var texto = 'Olá! Vim pela Black Guará e quero saber dos kits com até 30% OFF.\n\n' +
       'Nome: ' + nome + '\nWhatsApp: ' + tel.value + '\nE-mail: ' + email + '\nCidade: ' + cidade;
+    // Robôs preenchem o campo invisível: descarta sem avisar
+    if (f._honey && f._honey.value) return;
     track({ lead_channel: 'formulario_whatsapp', lead_origin: 'cta-final', lead_city: cidade });
-    msg.textContent = 'Perfeito, ' + nome.split(' ')[0] + '! Abrindo o WhatsApp do nosso time comercial...';
+    var primeiro = nome.split(' ')[0];
+    msg.textContent = 'Perfeito, ' + primeiro + '! Abrindo o WhatsApp do nosso time comercial...';
+    // O WhatsApp abre já, ainda dentro do clique (senão o navegador bloqueia a nova aba)
     var w = window.open(waLink(texto), '_blank');
-    if (w) w.opener = null; else location.href = waLink(texto);
+    if (w) w.opener = null;
+    enviarLeadEmail({ nome: nome, whatsapp: tel.value, email: email, cidade: cidade }).then(function (ok) {
+      if (ok) { msg.textContent = 'Recebemos seus dados, ' + primeiro + '! Nosso time comercial vai falar com você.'; form.reset(); }
+      else if (w) msg.textContent = 'WhatsApp aberto, ' + primeiro + '! Se preferir, ligue (19) 3442-2196.';
+      if (!w) location.href = waLink(texto);
+    });
   });
+
+  // Envia a cópia do lead por e-mail para contato@guaraequipamentos.com.br
+  function enviarLeadEmail(lead) {
+    if (!CONFIG.leadEndpoint || !window.fetch) return Promise.resolve(false);
+    var origem = utm || 'direto';
+    var body = {
+      _subject: CONFIG.leadAssunto,
+      _template: 'table',
+      _captcha: 'false',
+      Assunto: CONFIG.leadAssunto,
+      Nome: lead.nome,
+      WhatsApp: lead.whatsapp,
+      'E-mail': lead.email,
+      Cidade: lead.cidade,
+      Origem: origem,
+      Pagina: location.href.split('#')[0],
+      Data: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+    };
+    body._replyto = lead.email;
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 8000);
+    return fetch(CONFIG.leadEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(body),
+      keepalive: true,
+      signal: ctrl ? ctrl.signal : undefined
+    }).then(function (r) { clearTimeout(timer); return r.ok; })
+      .catch(function () { clearTimeout(timer); return false; });
+  }
 
   /* ================= MOTION (GSAP) ================= */
   if (!ANIM) {

@@ -34,3 +34,14 @@ Suba a pasta para `guaraequipamentos.com.br/black-friday/`. Se o endereço for o
 - Quem ativa "reduzir movimento" vê tudo parado e completo (mapa já colorido).
 - Sem JavaScript, todo o conteúdo continua visível.
 - O vídeo pausa fora da tela.
+
+## Leads por e-mail ("Lead BlackFriday")
+Cada envio do formulário final abre o WhatsApp de vendas **e** manda uma cópia para `contato@guaraequipamentos.com.br`
+com assunto **Lead BlackFriday** (nome, WhatsApp, e-mail, cidade, origem/UTM, página e data).
+
+- **Padrão: FormSubmit** (`CONFIG.leadEndpoint` em `js/app.js`). No **primeiro envio** depois de publicar,
+  o FormSubmit manda um e-mail de ativação para contato@guaraequipamentos.com.br: alguém precisa clicar em
+  "Activate Form" uma única vez. Depois disso os leads chegam direto.
+- **Alternativa: servidor próprio.** Troque `leadEndpoint` por `'enviar-lead.php'` (arquivo incluído).
+  Precisa de PHP com envio de e-mail configurado no servidor.
+- Campo invisível anti-robô (`_honey`) descarta envios automáticos.
