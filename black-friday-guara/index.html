@@ -566,9 +566,14 @@ footer a:hover{color:var(--ink)}
 .ft-social a{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--bg-3);border:1px solid var(--line);color:var(--ink)}
 .ft-social a:hover{background:var(--accent);border-color:var(--accent)}
 .ft-social svg{width:18px;height:18px}
-.ft-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:22px 0 calc(100px + env(safe-area-inset-bottom));font-size:.78rem;color:#71717a}
-@media(min-width:760px){.ft-bottom{padding-bottom:26px}}
+.ft-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:22px 0 18px;font-size:.78rem;color:#71717a}
 .ft-bottom p{max-width:70ch}
+/* Assinatura Leal MKT */
+.ft-sign{display:flex;justify-content:center;padding:6px 0 calc(100px + env(safe-area-inset-bottom))}
+@media(min-width:760px){.ft-sign{justify-content:flex-end;padding-bottom:28px}}
+.ft-sign a{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#71717a;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75;transition:opacity .2s}
+.ft-sign a:hover,.ft-sign a:focus-visible{opacity:1}
+.ft-sign img{height:26px;width:auto}
 
 /* WhatsApp flutuante */
 .wa-float{position:fixed;right:clamp(14px,2vw,24px);bottom:calc(clamp(14px,2vw,24px) + env(safe-area-inset-bottom));z-index:80;width:64px;height:64px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 14px 34px -10px rgba(0,0,0,.7);text-decoration:none;transition:transform .25s var(--ease)}
@@ -1153,6 +1158,12 @@ footer a:hover{color:var(--ink)}
     <div class="ft-bottom">
       <p>© 2026 Guará Equipamentos. Ofertas válidas apenas para o mês de novembro de 2026. Descontos de até 30%<sup class="ast">*</sup> em kits e produtos selecionados, conforme proposta comercial. *Consulte as condições de pagamento.</p>
       <p>Fabricado com orgulho em Limeira, SP</p>
+    </div>
+    <div class="ft-sign">
+      <a href="https://lealmkt.com" target="_blank" rel="noopener" aria-label="Desenvolvido por Leal MKT (abre em nova aba)">
+        <span>Desenvolvido por</span>
+        <img src="img/leal-mkt.png" alt="Leal MKT" width="607" height="206" loading="lazy">
+      </a>
     </div>
   </div>
 </footer>
