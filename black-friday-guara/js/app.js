@@ -330,6 +330,32 @@
     }
   })();
 
+  /* ---------- Garantia de play no celular ----------
+     Alguns aparelhos (modo de pouca energia, economia de dados) bloqueiam o play automático
+     até a primeira interação. Tenta de novo ao tocar, clicar, rolar e quando o vídeo entra na tela. */
+  (function () {
+    function visivel(v) { var r = v.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth; }
+    function tentar() {
+      $$('#hero-video, #palco-video, .reel video').forEach(function (v) {
+        if (!v.paused || !visivel(v)) return;
+        if (v.dataset.src && !v.dataset.loaded) { v.dataset.loaded = '1'; v.src = v.dataset.src; v.load(); }
+        v.muted = v.muted !== false ? true : v.muted;
+        var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+      });
+    }
+    ['touchstart', 'touchend', 'click', 'pointerup', 'keydown'].forEach(function (ev) {
+      window.addEventListener(ev, tentar, { passive: true });
+    });
+    var t = 0;
+    window.addEventListener('scroll', function () { clearTimeout(t); t = setTimeout(tentar, 150); }, { passive: true });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) tentar(); });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) { en.forEach(function (e) { if (e.isIntersecting) tentar(); }); }, { threshold: 0.25 });
+      $$('#hero-video, #palco-video').forEach(function (v) { io.observe(v); });
+    }
+    setTimeout(tentar, 600);
+  })();
+
   /* ---------- Vídeo do palco: toca sozinho e sem parar, como o do hero ---------- */
   (function () {
     var v = $('#palco-video'); if (!v) return;
@@ -384,7 +410,7 @@
   (function () {
     var reelTrack = $('#reels-track'); if (!reelTrack) return;
     var reels = $$('.reel', reelTrack);
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var reduced = !window.GUARA_IGNORE_RM && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function load(v) {
       if (v.dataset.loaded) return;
       v.dataset.loaded = '1'; v.src = v.dataset.src; v.load();
@@ -434,7 +460,7 @@
     var card = $('#fade-card'); if (!card) return;
     var slides = $$('.fslide', card), dotsBox = $('.fade-dots', card), bar = $('.fade-progress span', card);
     var INTERVAL = 4500, cur = 0, timer = null, started = 0, paused = false, visible = false, raf = 0;
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var reduced = !window.GUARA_IGNORE_RM && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var dots = slides.map(function (s, i) {
       var b = doc.createElement('button');
       b.type = 'button'; b.setAttribute('aria-label', 'Mostrar destaque ' + (i + 1) + ' de ' + slides.length);

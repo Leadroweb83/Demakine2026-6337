@@ -31,7 +31,7 @@
     function remount() {
       cleanup();
       cleanup = function () {};
-      cleanup = mountMode(root, options, reducedMotion.matches);
+      cleanup = mountMode(root, options, window.GUARA_IGNORE_RM ? false : reducedMotion.matches);
     }
     reducedMotion.addEventListener('change', remount);
     try { remount(); } catch (e) { reducedMotion.removeEventListener('change', remount); throw e; }
