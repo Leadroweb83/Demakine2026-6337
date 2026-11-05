@@ -85,7 +85,14 @@
         {"@type": "Question", "name": "O desconto é mesmo de 30%?", "acceptedAnswer": {"@type": "Answer", "text": "Sim. Kits e equipamentos selecionados da Black Guará têm até 30% de desconto. O time comercial informa a condição exata de cada kit e equipamento."}},
         {"@type": "Question", "name": "Posso comprar só um equipamento na Black Guará?", "acceptedAnswer": {"@type": "Answer", "text": "Sim. Chame o time comercial pelo WhatsApp informando o equipamento de interesse e receba a condição disponível para ele durante a campanha."}},
         {"@type": "Question", "name": "Os equipamentos Guará atendem lavanderias hospitalares?", "acceptedAnswer": {"@type": "Answer", "text": "Sim. A Guará fabrica lavadoras extratoras com barreira sanitária, que separam as áreas suja e limpa, além de secadores, calandras e dobradeiras usados em lavanderias hospitalares."}},
-        {"@type": "Question", "name": "A Guará atende o meu estado?", "acceptedAnswer": {"@type": "Answer", "text": "Sim. A Guará Equipamentos fabrica em Limeira, SP, e está presente em todos os estados brasileiros."}}
+        {"@type": "Question", "name": "A Guará atende o meu estado?", "acceptedAnswer": {"@type": "Answer", "text": "Sim. A Guará Equipamentos fabrica em Limeira, SP, e está presente em todos os estados brasileiros."}},
+        {"@type": "Question", "name": "Quanto custa montar uma lavanderia hospitalar?", "acceptedAnswer": {"@type": "Answer", "text": "O investimento depende do volume de roupa por dia (quilos por leito), do número de turnos e do tipo de aquecimento do secador (elétrico, gás ou vapor). Uma lavanderia hospitalar completa costuma reunir lavadora extratora com barreira sanitária, secador, calandra e, conforme o porte, dobradeira. Como cada projeto é dimensionado sob medida, o time comercial da Guará faz o cálculo sem custo e envia a proposta com a condição da Black Guará, com até 30% de desconto."}},
+        {"@type": "Question", "name": "Lavadora com barreira sanitária: quando é obrigatória?", "acceptedAnswer": {"@type": "Answer", "text": "Em lavanderias de serviços de saúde, como hospitais e clínicas. A RDC nº 6/2012 da Anvisa exige separação física entre a área suja (recebimento e lavagem da roupa contaminada) e a área limpa (retirada, secagem e acabamento). A lavadora extratora com barreira sanitária é a forma mais usada de cumprir essa exigência: a roupa entra por um lado da parede e sai pelo outro, sem cruzar as áreas."}},
+        {"@type": "Question", "name": "Qual a capacidade ideal de lavadora para um hotel de 80 quartos?", "acceptedAnswer": {"@type": "Answer", "text": "Como referência, um hotel gera de 3 a 5 kg de roupa por apartamento ocupado por dia. Com 80 quartos, 75% de ocupação e 4 kg por apartamento, são cerca de 240 kg por dia. Em um turno de 8 horas, com cerca de 6 ciclos, a lavadora precisa processar uns 40 kg por ciclo: uma lavadora de 60 kg em um turno, ou de 30 kg em dois turnos. O time técnico da Guará confirma o dimensionamento pelo seu volume real."}},
+        {"@type": "Question", "name": "Quantos quilos de roupa um hospital lava por dia?", "acceptedAnswer": {"@type": "Answer", "text": "A referência de mercado é de 4 a 6 kg de roupa por leito ocupado por dia. Setores como UTI e centro cirúrgico podem passar de 8 kg por leito. Um hospital de 100 leitos com 80% de ocupação lava, em média, de 320 a 480 kg por dia."}},
+        {"@type": "Question", "name": "Vale mais a pena terceirizar ou ter lavanderia própria?", "acceptedAnswer": {"@type": "Answer", "text": "Com lavanderia própria você controla prazo, qualidade e higienização da roupa e deixa de pagar por quilo processado. Para hotéis, hospitais e clínicas com volume diário constante, o investimento em equipamentos costuma se pagar com a economia mensal. O time comercial da Guará simula o retorno com os seus números."}},
+        {"@type": "Question", "name": "Qual a diferença entre lavadora extratora e centrífuga?", "acceptedAnswer": {"@type": "Answer", "text": "A lavadora extratora lava e centrifuga na mesma máquina. A centrífuga industrial faz só a extração de água e é usada junto com lavadoras convencionais ou para aumentar a produção. Com Força G de 300, a extratora Guará entrega a roupa mais seca, o que reduz o tempo de secador."}},
+        {"@type": "Question", "name": "Calandra elétrica ou calandra multirrolos: qual escolher?", "acceptedAnswer": {"@type": "Answer", "text": "A calandra elétrica dispensa caldeira e é indicada para quem está começando ou tem volume menor de lençóis e toalhas. As calandras monorrol e multirrolos atendem volumes maiores, com até 1.000 peças por hora no caso das multirrolos."}}
       ]
     }
   ]
@@ -444,6 +451,40 @@ header.site.past-hero .hd-cd{opacity:1;visibility:visible;transform:translate(-5
 .reduced .zoom,.no-js .zoom{height:auto}
 .reduced .zoom__stage,.no-js .zoom__stage{position:relative;height:100svh}
 
+/* ===== GUIA RÁPIDO + CALCULADORA ===== */
+.guia{background:radial-gradient(60% 50% at 85% 20%,rgba(231,81,31,.12),transparent 70%),var(--bg)}
+.guia-grid{display:grid;gap:24px;margin-top:40px;align-items:start}
+@media(min-width:960px){.guia-grid{grid-template-columns:1.1fr .9fr;gap:32px}}
+.guia-steps ol{list-style:none;counter-reset:g;display:grid;gap:12px;margin-bottom:24px}
+.guia-steps li{counter-increment:g;display:grid;grid-template-columns:auto 1fr;column-gap:14px;align-items:center;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+.guia-steps li::before{content:counter(g);grid-row:span 2;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font:900 .95rem/1 Archivo,sans-serif}
+.guia-steps li b{font:800 1.02rem/1.2 Archivo,sans-serif}
+.guia-steps li span{color:var(--muted);font-size:.92rem}
+.guia-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.guia-table{width:100%;border-collapse:collapse;font-size:.94rem}
+.guia-table caption{text-align:left;padding:14px 18px 6px;color:var(--muted);font-size:.8rem;letter-spacing:.04em}
+.guia-table th{text-align:left;font:800 .72rem/1 Archivo,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:12px 18px;border-bottom:1px solid var(--line)}
+.guia-table td{padding:12px 18px;border-bottom:1px solid var(--line)}
+.guia-table tr:last-child td{border-bottom:0}
+.guia-table td:last-child{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+.guia-ex{margin-top:18px;color:var(--muted);font-size:.95rem}
+.guia-ex b{color:var(--ink)}
+.calc{background:linear-gradient(160deg,#1C1C1F,#121214);border:1px solid rgba(231,81,31,.45);border-radius:22px;padding:clamp(20px,2.6vw,30px);display:grid;gap:14px;box-shadow:0 40px 80px -40px rgba(231,81,31,.45)}
+.calc h3{font:900 1.3rem/1.1 Archivo,sans-serif;text-transform:uppercase}
+.calc label{display:grid;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted)}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc input,.calc select{width:100%;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:0 14px;font:500 1rem Inter,sans-serif}
+.calc input:focus-visible,.calc select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc-out{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.calc-out>div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:4px}
+.calc-out small{font:700 .66rem/1 Archivo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.calc-out b{font:900 1.5rem/1 Archivo,sans-serif;font-variant-numeric:tabular-nums}
+.calc-sug{grid-column:1/-1;border-color:var(--accent)!important}
+.calc-sug b{color:var(--accent);font-size:1.8rem}
+.calc-sug span{color:var(--muted);font-size:.85rem}
+.calc .btn{width:100%}
+.calc .disclaimer{margin-top:0}
+
 /* ===== 9. FAQ ===== */
 .faq{max-width:880px;margin-top:28px}
 .faq details{border-bottom:1px solid var(--line)}
@@ -785,17 +826,90 @@ footer a:hover{color:var(--ink)}
     </div>
   </section>
 
+  <!-- 8B. GUIA RÁPIDO: DIMENSIONAMENTO -->
+  <section class="guia" id="guia" aria-labelledby="guia-title">
+    <div class="wrap">
+      <span class="eyebrow rv">Guia rápido</span>
+      <h2 id="guia-title" class="split" style="margin-top:14px">Como dimensionar a sua <em>lavanderia</em></h2>
+      <p class="lead rv" style="margin-top:16px">O tamanho da lavadora depende de quantos quilos de roupa sua operação gera por dia. Use a conta abaixo ou a calculadora para chegar a uma estimativa em segundos.</p>
+
+      <div class="guia-grid">
+        <div class="guia-steps rv">
+          <ol>
+            <li><b>Quilos por dia</b><span>unidades &times; ocupação &times; kg por unidade</span></li>
+            <li><b>Ciclos por dia</b><span>cerca de 6 ciclos por turno de 8 horas</span></li>
+            <li><b>Capacidade da lavadora</b><span>quilos por dia &divide; ciclos por dia</span></li>
+          </ol>
+          <div class="guia-table-wrap">
+            <table class="guia-table">
+              <caption>Referência de roupa seca por unidade ocupada, por dia</caption>
+              <thead><tr><th scope="col">Operação</th><th scope="col">Kg por unidade/dia</th></tr></thead>
+              <tbody>
+                <tr><td>Hotel e pousada</td><td>3 a 5 kg por apartamento</td></tr>
+                <tr><td>Motel</td><td>5 a 8 kg por suíte</td></tr>
+                <tr><td>Hospital</td><td>4 a 6 kg por leito</td></tr>
+                <tr><td>Clínica e casa de repouso</td><td>2 a 4 kg por leito</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="guia-ex"><b>Exemplo:</b> hotel com 80 quartos, 75% de ocupação e 4 kg por apartamento = <b>240 kg/dia</b>. Em 1 turno (6 ciclos), são 40 kg por ciclo: uma <b>lavadora de 60 kg</b>.</p>
+        </div>
+
+        <form class="calc rv" id="calc" novalidate aria-labelledby="calc-title">
+          <h3 id="calc-title">Calculadora de dimensionamento</h3>
+          <label>Tipo de operação
+            <select name="tipo">
+              <option value="hotel" data-kg="4" data-oc="75">Hotel ou pousada</option>
+              <option value="motel" data-kg="6" data-oc="70">Motel</option>
+              <option value="hospital" data-kg="5" data-oc="80">Hospital</option>
+              <option value="clinica" data-kg="3" data-oc="85">Clínica ou casa de repouso</option>
+            </select>
+          </label>
+          <div class="calc-row">
+            <label><span data-unit-label>Quartos</span>
+              <input type="number" name="qtd" min="1" max="5000" value="80" inputmode="numeric">
+            </label>
+            <label>Ocupação (%)
+              <input type="number" name="oc" min="10" max="100" value="75" inputmode="numeric">
+            </label>
+          </div>
+          <label>Turnos de trabalho da lavanderia
+            <select name="turnos">
+              <option value="1">1 turno (8 h)</option>
+              <option value="2">2 turnos (16 h)</option>
+              <option value="3">3 turnos (24 h)</option>
+            </select>
+          </label>
+          <div class="calc-out" aria-live="polite">
+            <div><small>Roupa por dia</small><b data-out="kgdia">240 kg</b></div>
+            <div><small>Por ciclo</small><b data-out="ciclo">40 kg</b></div>
+            <div class="calc-sug"><small>Sugestão de lavadora</small><b data-out="sug">60 kg</b><span data-out="obs"></span></div>
+          </div>
+          <a class="btn btn-wa" id="calc-cta" href="https://wa.me/5519993369331" target="_blank" rel="noopener" data-origin="calculadora"><svg aria-hidden="true"><use href="#i-wa"/></svg>Receber proposta com esse cálculo</a>
+          <p class="disclaimer">Estimativa de referência. O dimensionamento final é feito pelo time técnico da Guará.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- 9. FAQ -->
   <section style="background:var(--bg-2);border-block:1px solid var(--line)" aria-labelledby="faq-title">
     <div class="wrap">
       <span class="eyebrow rv">Dúvidas frequentes</span>
-      <h2 id="faq-title" class="split" style="margin-top:14px">Perguntas sobre a Black Guará</h2>
+      <h2 id="faq-title" class="split" style="margin-top:14px">Perguntas sobre lavanderia e a Black Guará</h2>
       <div class="faq">
         <details><summary>Até quando vale a Black Guará?</summary><p>As ofertas da Black Guará são válidas apenas durante o mês de novembro de 2026, até o dia 30 às 23h59.</p></details>
         <details><summary>O desconto é mesmo de 30%<sup class="ast">*</sup>?</summary><p>Sim. Kits e equipamentos selecionados da Black Guará têm até 30%<sup class="ast">*</sup> de desconto. O time comercial informa a condição exata de cada kit e equipamento.</p></details>
         <details><summary>Posso comprar só um equipamento na Black Guará?</summary><p>Sim. Chame o time comercial pelo WhatsApp informando o equipamento de interesse e receba a condição disponível para ele durante a campanha.</p></details>
         <details><summary>Os equipamentos Guará atendem lavanderias hospitalares?</summary><p>Sim. A Guará fabrica lavadoras extratoras com barreira sanitária, que separam as áreas suja e limpa, além de secadores, calandras e dobradeiras usados em lavanderias hospitalares.</p></details>
         <details><summary>A Guará atende o meu estado?</summary><p>Sim. A Guará Equipamentos fabrica em Limeira, SP, e está presente em todos os estados brasileiros.</p></details>
+        <details><summary>Quanto custa montar uma lavanderia hospitalar?</summary><p>O investimento depende do volume de roupa por dia (quilos por leito), do número de turnos e do tipo de aquecimento do secador (elétrico, gás ou vapor). Uma lavanderia hospitalar completa costuma reunir lavadora extratora com barreira sanitária, secador, calandra e, conforme o porte, dobradeira. Como cada projeto é dimensionado sob medida, o time comercial da Guará faz o cálculo sem custo e envia a proposta com a condição da Black Guará, com até 30%<sup class="ast">*</sup> de desconto.</p></details>
+        <details><summary>Lavadora com barreira sanitária: quando é obrigatória?</summary><p>Em lavanderias de serviços de saúde, como hospitais e clínicas. A RDC nº 6/2012 da Anvisa exige separação física entre a área suja (recebimento e lavagem da roupa contaminada) e a área limpa (retirada, secagem e acabamento). A lavadora extratora com barreira sanitária é a forma mais usada de cumprir essa exigência: a roupa entra por um lado da parede e sai pelo outro, sem cruzar as áreas.</p></details>
+        <details><summary>Qual a capacidade ideal de lavadora para um hotel de 80 quartos?</summary><p>Como referência, um hotel gera de 3 a 5 kg de roupa por apartamento ocupado por dia. Com 80 quartos, 75% de ocupação e 4 kg por apartamento, são cerca de 240 kg por dia. Em um turno de 8 horas, com cerca de 6 ciclos, a lavadora precisa processar uns 40 kg por ciclo: uma lavadora de 60 kg em um turno, ou de 30 kg em dois turnos. O time técnico da Guará confirma o dimensionamento pelo seu volume real.</p></details>
+        <details><summary>Quantos quilos de roupa um hospital lava por dia?</summary><p>A referência de mercado é de 4 a 6 kg de roupa por leito ocupado por dia. Setores como UTI e centro cirúrgico podem passar de 8 kg por leito. Um hospital de 100 leitos com 80% de ocupação lava, em média, de 320 a 480 kg por dia.</p></details>
+        <details><summary>Vale mais a pena terceirizar ou ter lavanderia própria?</summary><p>Com lavanderia própria você controla prazo, qualidade e higienização da roupa e deixa de pagar por quilo processado. Para hotéis, hospitais e clínicas com volume diário constante, o investimento em equipamentos costuma se pagar com a economia mensal. O time comercial da Guará simula o retorno com os seus números.</p></details>
+        <details><summary>Qual a diferença entre lavadora extratora e centrífuga?</summary><p>A lavadora extratora lava e centrifuga na mesma máquina. A centrífuga industrial faz só a extração de água e é usada junto com lavadoras convencionais ou para aumentar a produção. Com Força G de 300, a extratora Guará entrega a roupa mais seca, o que reduz o tempo de secador.</p></details>
+        <details><summary>Calandra elétrica ou calandra multirrolos: qual escolher?</summary><p>A calandra elétrica dispensa caldeira e é indicada para quem está começando ou tem volume menor de lençóis e toalhas. As calandras monorrol e multirrolos atendem volumes maiores, com até 1.000 peças por hora no caso das multirrolos.</p></details>
       </div>
     </div>
   </section>
@@ -881,8 +995,8 @@ footer a:hover{color:var(--ink)}
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="vendor/lenis.min.js" defer></script>
-<script src="js/brasil-map.js?v=20261105d" defer></script>
-<script src="js/orbital-cards.js?v=20261105d" defer></script>
-<script src="js/app.js?v=20261105d" defer></script>
+<script src="js/brasil-map.js?v=20261105e" defer></script>
+<script src="js/orbital-cards.js?v=20261105e" defer></script>
+<script src="js/app.js?v=20261105e" defer></script>
 </body>
 </html>

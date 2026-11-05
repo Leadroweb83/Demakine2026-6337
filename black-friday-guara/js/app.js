@@ -11,6 +11,13 @@
     // Para usar o servidor do próprio site, troque por 'enviar-lead.php'.
     leadEndpoint: 'https://formsubmit.co/ajax/contato@guaraequipamentos.com.br',
     leadAssunto: 'Lead BlackFriday',
+    // Resposta automática enviada ao e-mail do lead logo após o envio do formulário
+    autoResposta: 'Olá, {nome}! Recebemos seu contato pela Black Guará e nosso time comercial vai falar com você em breve pelo WhatsApp.\n\n' +
+      'Enquanto isso, conheça todos os equipamentos no catálogo Guará: https://guaraequipamentos.com.br/wp-content/uploads/2026/05/CATALOGO-GUARA-EQUIPAMENTOS.pdf\n\n' +
+      'Black Guará: kits e equipamentos selecionados com até 30% de desconto*, válido até 30/11/2026.\n' +
+      '*Consulte as condições de pagamento com nosso time comercial.\n\n' +
+      'Vendas (WhatsApp): (19) 99336-9331 | (19) 99301-7018\nTelefone: (19) 3442-2196\ncontato@guaraequipamentos.com.br\n\n' +
+      'Guará Equipamentos: fabricado no Brasil, em Limeira-SP.',
     fimCampanha: '2026-11-30T23:59:59-03:00',
     mensagemPadrao: 'Olá! Vim pela Black Guará e quero saber dos kits com até 30% OFF.',
     produtos: [
@@ -295,6 +302,9 @@
       Data: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
     };
     body._replyto = lead.email;
+    // E-mail automático para quem preencheu (o FormSubmit envia para o campo "email")
+    body.email = lead.email;
+    body._autoresponse = CONFIG.autoResposta.replace('{nome}', lead.nome.split(' ')[0]);
     var ctrl = window.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 8000);
     return fetch(CONFIG.leadEndpoint, {
@@ -328,6 +338,46 @@
     v.addEventListener('canplay', play);
     // Alguns celulares só liberam o autoplay depois do primeiro toque
     ['touchstart', 'scroll'].forEach(function (ev) { window.addEventListener(ev, play, { passive: true, once: true }); });
+  })();
+
+  /* ---------- Calculadora de dimensionamento (Guia rápido) ---------- */
+  (function () {
+    var form = $('#calc'); if (!form) return;
+    var f = form.elements, cta = $('#calc-cta');
+    var TAMANHOS = [21, 30, 60, 140];   // capacidades de lavadora Guará (kg)
+    var CICLOS_POR_TURNO = 6;           // ~1 ciclo por hora, com folga para carga e descarga
+    var unidade = { hotel: 'Quartos', motel: 'Suítes', hospital: 'Leitos', clinica: 'Leitos' };
+    var nomeTipo = { hotel: 'hotel/pousada', motel: 'motel', hospital: 'hospital', clinica: 'clínica/casa de repouso' };
+    var fmt = function (n) { return Math.round(n).toLocaleString('pt-BR'); };
+    function calc(trocouTipo) {
+      var opt = f.tipo.selectedOptions[0];
+      if (trocouTipo) f.oc.value = opt.dataset.oc;
+      $('[data-unit-label]', form).textContent = unidade[f.tipo.value];
+      var qtd = Math.max(0, +f.qtd.value || 0);
+      var oc = Math.min(100, Math.max(0, +f.oc.value || 0)) / 100;
+      var turnos = +f.turnos.value || 1;
+      var kgDia = qtd * oc * +opt.dataset.kg;
+      var porCiclo = kgDia / (CICLOS_POR_TURNO * turnos);
+      var sug, obs = '';
+      var cabe = TAMANHOS.filter(function (t) { return t >= porCiclo; })[0];
+      if (!kgDia) { sug = '—'; }
+      else if (cabe) { sug = cabe + ' kg'; }
+      else { var n = Math.ceil(porCiclo / 140); sug = n + ' × 140 kg'; obs = 'Volume alto: o time técnico pode indicar outra combinação de máquinas.'; }
+      if (kgDia && (f.tipo.value === 'hospital' || f.tipo.value === 'clinica')) obs = (obs ? obs + ' ' : '') + 'Para serviços de saúde, use lavadora com barreira sanitária (RDC nº 6/2012 da Anvisa).';
+      $('[data-out="kgdia"]', form).textContent = fmt(kgDia) + ' kg';
+      $('[data-out="ciclo"]', form).textContent = fmt(porCiclo) + ' kg';
+      $('[data-out="sug"]', form).textContent = sug;
+      $('[data-out="obs"]', form).textContent = obs;
+      var msg = 'Olá! Usei a calculadora da Black Guará e quero uma proposta.\n\n' +
+        'Operação: ' + nomeTipo[f.tipo.value] + '\n' + unidade[f.tipo.value] + ': ' + qtd + '\nOcupação: ' + Math.round(oc * 100) + '%\n' +
+        'Turnos: ' + turnos + '\nEstimativa: ' + fmt(kgDia) + ' kg/dia, ' + fmt(porCiclo) + ' kg por ciclo\nSugestão: lavadora de ' + sug;
+      cta.href = waLink(msg);
+    }
+    form.addEventListener('input', function (e) { calc(e.target === f.tipo); });
+    form.addEventListener('change', function (e) { calc(e.target === f.tipo); });
+    form.addEventListener('submit', function (e) { e.preventDefault(); });
+    cta.addEventListener('click', function () { track({ lead_channel: 'whatsapp', lead_origin: 'calculadora', product_name: 'Dimensionamento ' + f.tipo.value }); });
+    calc(false);
   })();
 
   /* ---------- Carrossel com fade (fotos + CTA) ---------- */

@@ -60,5 +60,16 @@ $cabecalhos = [
 ];
 
 $ok = mail($destino, '=?UTF-8?B?' . base64_encode($assunto) . '?=', $corpo, implode("\r\n", $cabecalhos));
+
+// Resposta automática para o lead (mesmo texto do CONFIG.autoResposta em js/app.js)
+$resposta = isset($dados['_autoresponse']) ? mb_substr(strip_tags((string)$dados['_autoresponse']), 0, 3000) : '';
+if ($ok && $resposta !== '') {
+    $cabResp = [
+        'From: Guara Equipamentos <contato@guaraequipamentos.com.br>',
+        'Reply-To: contato@guaraequipamentos.com.br',
+        'Content-Type: text/plain; charset=UTF-8',
+    ];
+    @mail($email, '=?UTF-8?B?' . base64_encode('Recebemos seu contato - Black Guará') . '?=', $resposta, implode("\r\n", $cabResp));
+}
 http_response_code($ok ? 200 : 500);
 echo json_encode(['ok' => $ok]);
