@@ -5,7 +5,7 @@ Página estática e independente. Sem build: basta subir a pasta inteira.
 ## Estrutura
 - `index.html`: conteúdo, SEO (meta, OG, JSON-LD) e estilos
 - `js/app.js`: configuração da campanha (bloco `CONFIG` no topo), motion com GSAP/ScrollTrigger/Lenis, contagem, mapa, formulário
-- `js/orbital-cards.js`: órbita das dores (scroll), com troca para "A solução tem nome: Guará Equipamentos"
+- `js/orbital-cards.js`: órbita das vantagens Guará (scroll), terminando em "Tudo isso agora com até 30% OFF"
 - `js/brasil-map.js`: contornos dos 27 estados para o mapa
 - `vendor/`: GSAP 3.12.5, ScrollTrigger 3.12.5, Lenis 1.1.13 (servidos localmente)
 - `img/`: vídeo do hero (arquivo original, sem recompressão), fotos e selos
@@ -13,7 +13,7 @@ Página estática e independente. Sem build: basta subir a pasta inteira.
 ## Seções
 1. Hero com vídeo em loop + contagem regressiva
 2. Fitas cruzadas "Black Guará · 30% de desconto"
-3. Órbita das dores, terminando na solução Guará
+3. Órbita das vantagens Guará, terminando na oferta de 30%
 4. Kits e equipamentos (a solução)
 5. Diferenciais 01, 02, 03
 6. Manifesto ("10%? 20%? Que nada!")

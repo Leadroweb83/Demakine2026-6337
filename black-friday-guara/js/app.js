@@ -143,7 +143,7 @@
   }
   tick(); timer = setInterval(tick, 1000);
 
-  /* ---------- Órbita das dores ---------- */
+  /* ---------- Órbita das vantagens Guará ---------- */
   if (window.initOrbitalCards) {
     window.initOrbitalCards($('.orb'), { radiusX: 34, radiusY: 17, steps: 5, entry: 1.55, exitStart: 0.78, scatter: 2.4, farBlur: 10, farFade: 0.8 });
   }

@@ -115,12 +115,13 @@
         card.style.zIndex = String(Math.round(depth * 100));
       }
       var headIn = easeInOutCubic(clamp(it * 1.2, 0, 1));
-      var headOut = easeInOutCubic(exit);
+      // O título central some por completo na primeira metade da saída, antes da mensagem final entrar
+      var headOut = easeInOutCubic(clamp(exit / 0.4, 0, 1));
       center.style.transform = 'translate(-50%, -50%) scale(' + (mix(0.92, 1, headIn) * mix(1, 0.96, headOut)).toFixed(3) + ')';
       center.style.opacity = (mix(0.35, 1, headIn) * (1 - headOut)).toFixed(3);
       if (solution) {
-        // A solução entra quando o título das dores sai.
-        var solIn = easeInOutCubic(clamp((exit - 0.25) / 0.6, 0, 1));
+        // A mensagem final entra quando o título central já saiu.
+        var solIn = easeInOutCubic(clamp((exit - 0.35) / 0.5, 0, 1));
         solution.style.transform = 'translate(-50%, -50%) scale(' + mix(1.06, 1, solIn).toFixed(3) + ')';
         solution.style.opacity = solIn.toFixed(3);
         solution.style.visibility = solIn > 0.01 ? 'visible' : 'hidden';
