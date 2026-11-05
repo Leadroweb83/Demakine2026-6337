@@ -135,6 +135,7 @@
     $('#topbar-cd').textContent = txt;
     $('#final-cd').textContent = txt;
     $$('[data-cd]').forEach(function (e) { e.textContent = txt; });
+    $$('[data-hd]').forEach(function (e) { e.textContent = v[e.dataset.hd]; });
     if (end <= Date.now()) {
       $('#topbar-label').textContent = 'A Black Guará foi encerrada. Fale com o time comercial sobre as condições atuais';
       $('#topbar-cd').hidden = true;
@@ -307,6 +308,19 @@
     }).then(function (r) { clearTimeout(timer); return r.ok; })
       .catch(function () { clearTimeout(timer); return false; });
   }
+
+  /* ---------- Contagem no menu: aparece quando o hero sai da tela ---------- */
+  (function () {
+    var header = $('header.site'), hero = $('.hero'), hdCd = $('#hd-cd');
+    if (!header || !hero || !hdCd) return;
+    if (end <= Date.now()) return; // campanha encerrada: não mostra
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) {
+        var past = !en[0].isIntersecting && en[0].boundingClientRect.top < 0;
+        header.classList.toggle('past-hero', past);
+      }, { rootMargin: '-68px 0px 0px 0px' }).observe(hero);
+    }
+  })();
 
   /* ---------- Vídeo do palco: toca sozinho e sem parar, como o do hero ---------- */
   (function () {

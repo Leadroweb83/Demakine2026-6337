@@ -144,6 +144,21 @@ header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 .logo img{height:36px;width:auto}
 header.site .btn{min-height:44px;padding:0 18px;font-size:.8rem}
 @media(max-width:420px){header.site .btn span{display:none}header.site .btn{width:44px;padding:0}}
+/* Contagem no meio do menu: aparece só depois que o hero sai da tela */
+header.site .wrap{position:relative}
+.hd-cd{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:12px;opacity:0;visibility:hidden;transform:translate(-50%,-30%);transition:opacity .4s var(--ease),transform .4s var(--ease),visibility 0s linear .4s;white-space:nowrap;pointer-events:none}
+header.site.past-hero .hd-cd{opacity:1;visibility:visible;transform:translate(-50%,-50%);transition:opacity .4s var(--ease),transform .4s var(--ease),visibility 0s}
+.hd-cd-label{font:700 .7rem/1.2 Archivo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.hd-cd-units{display:flex;gap:6px}
+.hd-cd-units>span{display:flex;align-items:baseline;gap:2px;background:var(--bg-3);border:1px solid rgba(231,81,31,.45);border-radius:8px;padding:6px 8px;box-shadow:0 0 14px rgba(231,81,31,.18)}
+.hd-cd-units b{font:900 1.05rem/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink)}
+.hd-cd-units small{font:700 .66rem/1 Archivo,sans-serif;color:var(--muted);text-transform:uppercase}
+@media(max-width:860px){.hd-cd-label{display:none}}
+@media(max-width:420px){.hd-cd-units{gap:4px}.hd-cd-units>span{padding:5px 6px}.hd-cd-units b{font-size:.92rem}}
+/* No celular não cabe logo + contagem + botão: o logo dá lugar à contagem */
+.logo{transition:opacity .3s var(--ease)}
+@media(max-width:600px){header.site.past-hero .logo{opacity:0;pointer-events:none}}
+@media(prefers-reduced-motion:reduce){.hd-cd,header.site.past-hero .hd-cd{transition:none}}
 
 /* ===== 1. HERO ===== */
 .hero{padding:0;overflow:hidden;isolation:isolate}
@@ -521,6 +536,15 @@ footer a:hover{color:var(--ink)}
     <a class="logo" href="https://guaraequipamentos.com.br/" aria-label="Guará Equipamentos, site oficial">
       <img src="img/logo-guara-branco.png" alt="Guará Equipamentos" width="126" height="36">
     </a>
+    <div class="hd-cd" id="hd-cd" aria-hidden="true">
+      <span class="hd-cd-label">Black Guará termina em</span>
+      <span class="hd-cd-units">
+        <span><b data-hd="d">--</b><small>d</small></span>
+        <span><b data-hd="h">--</b><small>h</small></span>
+        <span><b data-hd="m">--</b><small>m</small></span>
+        <span><b data-hd="s">--</b><small>s</small></span>
+      </span>
+    </div>
     <a class="btn btn-wa js-wa" data-origin="header" href="https://wa.me/5519993369331" rel="noopener" aria-label="Falar com o time comercial no WhatsApp">
       <svg aria-hidden="true"><use href="#i-wa"/></svg><span>Time comercial</span>
     </a>
