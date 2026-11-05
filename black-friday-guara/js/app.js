@@ -308,6 +308,20 @@
       .catch(function () { clearTimeout(timer); return false; });
   }
 
+  /* ---------- Vídeos que só carregam perto da tela e pausam fora dela ---------- */
+  $$('.js-lazy-video').forEach(function (v) {
+    var loaded = false;
+    function load() {
+      if (loaded) return; loaded = true;
+      $$('source[data-src]', v).forEach(function (s) { s.src = s.dataset.src; });
+      v.load();
+    }
+    function play() { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+    if (!('IntersectionObserver' in window)) { load(); play(); return; }
+    new IntersectionObserver(function (en) { if (en[0].isIntersecting) load(); }, { rootMargin: '600px 0px' }).observe(v);
+    new IntersectionObserver(function (en) { if (en[0].isIntersecting) play(); else v.pause(); }, { threshold: 0.15 }).observe(v);
+  });
+
   /* ---------- Carrossel com fade (fotos + CTA) ---------- */
   (function () {
     var card = $('#fade-card'); if (!card) return;

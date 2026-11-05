@@ -197,7 +197,7 @@ header.site .btn{min-height:44px;padding:0 18px;font-size:.8rem}
 
 /* Imagem de ponta a ponta, sem espaçamento */
 .full-bleed{margin:0;padding:0;width:100%;line-height:0;background:#0B0B0C}
-.full-bleed img{display:block;width:100%;max-width:none;height:auto}
+.full-bleed img,.full-bleed video{display:block;width:100%;max-width:none;height:auto;aspect-ratio:16/9;object-fit:cover}
 
 /* ===== 3. ÓRBITA DAS DORES ===== */
 .orb{container-type:inline-size;position:relative;width:100%;max-width:1440px;margin:0 auto;height:320vh;color:var(--ink)}
@@ -570,9 +570,12 @@ footer a:hover{color:var(--ink)}
     </div>
   </section>
 
-  <!-- IMAGEM DE PONTA A PONTA: lobo-guará com o kit -->
+  <!-- VÍDEO DE PONTA A PONTA: lobo-guará com o kit (loop, sem som) -->
   <figure class="full-bleed" aria-label="Kit Black Guará">
-    <img src="img/guara-kit-palco.webp" srcset="img/guara-kit-palco-1000.webp 1000w, img/guara-kit-palco.webp 2000w" sizes="100vw" width="2000" height="1125" loading="lazy" decoding="async" alt="Lobo-guará sobre a calandra, entre o secador industrial e a lavadora extratora Guará, em palco com fumaça laranja da Black Guará">
+    <video class="js-lazy-video" autoplay muted loop playsinline preload="none" poster="img/guara-palco-poster.jpg" width="1280" height="720" aria-label="Lobo-guará sobre a calandra, entre o secador industrial e a lavadora extratora Guará, em palco com fumaça laranja da Black Guará">
+      <source data-src="img/guara-palco.webm" type="video/webm">
+      <source data-src="img/guara-palco.mp4" type="video/mp4">
+    </video>
   </figure>
 
   <!-- 3. ÓRBITA DAS DORES -->
