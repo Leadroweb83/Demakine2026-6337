@@ -210,6 +210,12 @@ header.site.past-hero .hd-cd{opacity:1;visibility:visible;transform:translate(-5
 .tape.a .tape-item img{filter:brightness(0)}
 @keyframes tape{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
+/* Asterisco do 30% e nota de condições de pagamento */
+.ast{font-size:.72em;line-height:0;vertical-align:.55em;margin-left:.06em;font-weight:inherit;color:inherit}
+.ast-big{font:900 clamp(2.4rem,6vw,5rem)/1 Archivo,sans-serif;color:var(--accent);vertical-align:top;margin-left:calc(-1 * clamp(14px,3vw,40px) - .05em);align-self:flex-start;margin-top:.15em;filter:drop-shadow(0 0 16px rgba(231,81,31,.6))}
+.disclaimer{margin-top:14px;font-size:.78rem;line-height:1.4;color:#8b8b94;letter-spacing:.01em}
+.orb__solution .disclaimer,.manifesto .disclaimer{margin-top:4px}
+.manifesto .disclaimer{margin-top:18px}
 /* Imagem de ponta a ponta, sem espaçamento */
 .full-bleed{margin:0;padding:0;width:100%;line-height:0;background:#0B0B0C}
 .full-bleed img,.full-bleed video{display:block;width:100%;max-width:none;height:auto;aspect-ratio:16/9;object-fit:cover}
@@ -526,7 +532,7 @@ footer a:hover{color:var(--ink)}
 
 <div class="topbar" role="region" aria-label="Prazo da campanha">
   <div class="wrap">
-    <span id="topbar-label">Black Guará: até 30% OFF só até 30/11. Encerra em</span>
+    <span id="topbar-label">Black Guará: até 30% OFF<sup class="ast">*</sup> só até 30/11. Encerra em</span>
     <span class="cd" id="topbar-cd">--d --h --m --s</span>
   </div>
 </div>
@@ -572,11 +578,11 @@ footer a:hover{color:var(--ink)}
       <div>
         <span class="bf-tag hero-in"><b>Black Guará</b> Só em novembro</span>
         <h1 id="hero-title" class="split">Chegou a hora de equipar ou ampliar a sua lavanderia com a <em>Black Guará!</em></h1>
-        <p class="lead hero-in">Kits e equipamentos selecionados para lavanderia industrial e hospitalar com <strong>até 30% de desconto</strong>. Descontos de verdade, fabricados no Brasil pela Guará.</p>
+        <p class="lead hero-in">Kits e equipamentos selecionados para lavanderia industrial e hospitalar com <strong>até 30%<sup class="ast">*</sup> de desconto</strong>. Descontos de verdade, fabricados no Brasil pela Guará.</p>
         <div class="hero-cta hero-in">
           <a class="btn btn-wa js-wa" data-origin="hero" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Falar com o time comercial</a>
           <a class="btn btn-ghost js-scroll" href="#kits">Ver os kits</a>
-        </div>
+        </div><p class="disclaimer">*Consulte as condições de pagamento.</p>
       </div>
       <div class="hero-side">
         <span class="cd-label hero-in">A Black Guará termina em</span>
@@ -587,7 +593,7 @@ footer a:hover{color:var(--ink)}
           <div class="cd-unit"><div class="cd-digits" data-u="s"></div><small>seg</small></div>
         </div>
         <div class="stat-cards">
-          <div class="stat-card dark hero-pop"><b>30%</b><span>de desconto em kits e equipamentos</span></div>
+          <div class="stat-card dark hero-pop"><b>30%<sup class="ast">*</sup></b><span>de desconto em kits e equipamentos</span></div>
           <div class="stat-card light hero-pop"><b>4,9★</b><span>avaliação dos clientes no Google</span></div>
         </div>
       </div>
@@ -610,8 +616,8 @@ footer a:hover{color:var(--ink)}
       </div>
       <div class="orb__solution">
         <p class="orb__eyebrow">Black Guará</p>
-        <h2 class="orb__headline">Tudo isso agora com <em>até 30% OFF</em></h2>
-        <p>Kits e equipamentos selecionados com desconto de verdade, só até 30 de novembro.</p>
+        <h2 class="orb__headline">Tudo isso agora com <em>até 30% OFF<sup class="ast">*</sup></em></h2>
+        <p>Kits e equipamentos selecionados com desconto de verdade, só até 30 de novembro.</p><p class="disclaimer">*Consulte as condições de pagamento.</p>
         <a class="btn btn-accent js-scroll" href="#kits">Ver os kits</a>
       </div>
       <article class="orb__card"><span class="orb__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></span><div class="orb__body"><h3 class="orb__title">Fabricação 100% nacional</h3><p class="orb__text">Engenharia e fábrica em Limeira-SP: peças e reposição sem depender de importação.</p></div></article>
@@ -627,11 +633,11 @@ footer a:hover{color:var(--ink)}
   <section id="kits" class="kits-sec" aria-labelledby="kits-title">
     <div class="wrap">
       <span class="eyebrow rv">Kits Black Guará</span>
-      <h2 id="kits-title" class="split" style="margin-top:14px">Kits Guará com até <em>30% OFF</em> para equipar a sua lavanderia</h2>
-      <p class="lead rv" style="margin-top:18px">Os descontos da Black Guará estão gigantes. Kits estratégicos com até 30% de desconto para você tirar seus planos do papel e equipar ou ampliar a sua lavanderia.</p>
+      <h2 id="kits-title" class="split" style="margin-top:14px">Kits Guará com até <em>30% OFF<sup class="ast">*</sup></em> para equipar a sua lavanderia</h2>
+      <p class="lead rv" style="margin-top:18px">Os descontos da Black Guará estão gigantes. Kits estratégicos com até 30%<sup class="ast">*</sup> de desconto para você tirar seus planos do papel e equipar ou ampliar a sua lavanderia.</p>
       <div class="kits">
         <article class="kit rv">
-          <div class="kit-media"><img src="img/kit-completo.webp" width="1200" height="675" loading="lazy" alt="Kit Guará com secador industrial, calandra elétrica e lavadora extratora"><span class="off">Até 30% OFF</span></div>
+          <div class="kit-media"><img src="img/kit-completo.webp" width="1200" height="675" loading="lazy" alt="Kit Guará com secador industrial, calandra elétrica e lavadora extratora"><span class="off">Até 30% OFF<sup class="ast">*</sup></span></div>
           <span class="tag">Hotelaria e comercial</span>
           <h3>Kit Lavanderia Completa</h3>
           <p class="dor">Sem depender de terceiros: lave, seque e passe dentro de casa.</p>
@@ -640,7 +646,7 @@ footer a:hover{color:var(--ink)}
           <a class="btn btn-accent js-wa" data-origin="kit" data-product="Kit Lavanderia Completa" href="https://wa.me/5519993369331" rel="noopener">Quero este kit</a>
         </article>
         <article class="kit featured rv">
-          <div class="kit-media"><img src="img/kit-hospitalar.webp" width="1200" height="675" loading="lazy" alt="Kit hospitalar Guará com secador, calandra e lavadora extratora com barreira sanitária"><span class="off">Até 30% OFF</span></div>
+          <div class="kit-media"><img src="img/kit-hospitalar.webp" width="1200" height="675" loading="lazy" alt="Kit hospitalar Guará com secador, calandra e lavadora extratora com barreira sanitária"><span class="off">Até 30% OFF<sup class="ast">*</sup></span></div>
           <span class="tag">Lavanderia hospitalar</span>
           <h3>Kit Lavanderia Hospitalar</h3>
           <p class="dor">Controle sanitário com barreira sanitária própria.</p>
@@ -649,7 +655,7 @@ footer a:hover{color:var(--ink)}
           <a class="btn btn-accent js-wa" data-origin="kit" data-product="Kit Lavanderia Hospitalar" href="https://wa.me/5519993369331" rel="noopener">Quero este kit</a>
         </article>
         <article class="kit rv">
-          <div class="kit-media"><img src="img/kit-4-equipamentos.webp" width="780" height="496" loading="lazy" alt="Kit Black Guará com 4 equipamentos: lavadora com barreira sanitária, calandra, centrífuga e secador"><span class="off">Até 30% OFF</span></div>
+          <div class="kit-media"><img src="img/kit-4-equipamentos.webp" width="780" height="496" loading="lazy" alt="Kit Black Guará com 4 equipamentos: lavadora com barreira sanitária, calandra, centrífuga e secador"><span class="off">Até 30% OFF<sup class="ast">*</sup></span></div>
           <span class="tag">Kit 4 equipamentos</span>
           <h3>Kit Black Guará Completo</h3>
           <p class="dor">Mais produção e padrão de qualidade em cada lote.</p>
@@ -659,15 +665,17 @@ footer a:hover{color:var(--ink)}
         </article>
       </div>
 
+      <p class="disclaimer">*Consulte as condições de pagamento.</p>
       <div class="equip-head">
         <div>
           <span class="eyebrow rv">Equipamentos na campanha</span>
-          <h3 class="rv">Produtos selecionados<br>com até 30% de desconto</h3>
+          <h3 class="rv">Produtos selecionados<br>com até 30%<sup class="ast">*</sup> de desconto</h3>
           <p class="lead rv" style="margin-top:10px;font-size:.98rem">Saiba os equipamentos e os kits que estão nesta promoção chamando nosso time comercial.</p>
         </div>
         <div class="filters rv" id="filters" role="group" aria-label="Filtrar equipamentos por categoria"></div>
       </div>
       <div class="grid" id="offers"></div>
+      <p class="disclaimer">*Consulte as condições de pagamento.</p>
     </div>
   </section>
 
@@ -695,9 +703,9 @@ footer a:hover{color:var(--ink)}
       <div class="mani-nums" id="mani-nums">
         <span class="mani-old">10%<span class="strike" aria-hidden="true"></span><span class="sr-only"> (riscado)</span></span>
         <span class="mani-old">20%<span class="strike" aria-hidden="true"></span><span class="sr-only"> (riscado)</span></span>
-        <span class="mani-30" data-text="30%"><span class="face">30%</span></span>
+        <span class="mani-30" data-text="30%"><span class="face">30%</span></span><sup class="ast ast-big">*</sup>
       </div>
-      <p class="big" id="manifesto">Pode esquecer tudo o que você já viu de Black Friday por aí. Na Black Guará é <span data-hl>30% de desconto.</span> <span data-hl>É isso mesmo.</span></p>
+      <p class="big" id="manifesto">Pode esquecer tudo o que você já viu de Black Friday por aí. Na Black Guará é <span data-hl>30%<sup class="ast">*</sup> de desconto.</span> <span data-hl>É isso mesmo.</span></p><p class="disclaimer">*Consulte as condições de pagamento.</p>
     </div>
   </section>
 
@@ -711,7 +719,7 @@ footer a:hover{color:var(--ink)}
       <div class="fade-card rv" id="fade-card" role="region" aria-roledescription="carrossel" aria-label="Destaques da Black Guará">
         <article class="fslide is-active" aria-label="1 de 5">
           <img src="img/kit-hospitalar.webp" width="1200" height="675" loading="lazy" alt="Kit hospitalar Guará com secador, calandra e lavadora com barreira sanitária">
-          <div class="fslide-body"><span class="fslide-tag">Até 30% OFF</span><h3>Kit Lavanderia Hospitalar</h3><p>Barreira sanitária e controle total do processo.</p><a class="btn btn-wa js-wa" data-origin="fade-card" data-product="Kit Lavanderia Hospitalar" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero este kit</a></div>
+          <div class="fslide-body"><span class="fslide-tag">Até 30% OFF<sup class="ast">*</sup></span><h3>Kit Lavanderia Hospitalar</h3><p>Barreira sanitária e controle total do processo.</p><a class="btn btn-wa js-wa" data-origin="fade-card" data-product="Kit Lavanderia Hospitalar" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero este kit</a></div>
         </article>
         <article class="fslide" aria-label="2 de 5">
           <img src="img/calandra-multirrolos.webp" width="600" height="450" loading="lazy" alt="Calandra industrial multirrolos Guará">
@@ -719,7 +727,7 @@ footer a:hover{color:var(--ink)}
         </article>
         <article class="fslide" aria-label="3 de 5">
           <img src="img/kit-completo.webp" width="1200" height="675" loading="lazy" alt="Kit Guará com secador, calandra elétrica e lavadora extratora">
-          <div class="fslide-body"><span class="fslide-tag">Até 30% OFF</span><h3>Kit Lavanderia Completa</h3><p>Lave, seque e passe dentro de casa, sem depender de terceiros.</p><a class="btn btn-wa js-wa" data-origin="fade-card" data-product="Kit Lavanderia Completa" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero este kit</a></div>
+          <div class="fslide-body"><span class="fslide-tag">Até 30% OFF<sup class="ast">*</sup></span><h3>Kit Lavanderia Completa</h3><p>Lave, seque e passe dentro de casa, sem depender de terceiros.</p><a class="btn btn-wa js-wa" data-origin="fade-card" data-product="Kit Lavanderia Completa" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero este kit</a></div>
         </article>
         <article class="fslide" aria-label="4 de 5">
           <img src="img/lavadora-extratora-140kg.webp" width="600" height="450" loading="lazy" alt="Lavadora extratora industrial Guará 140 kg">
@@ -727,12 +735,13 @@ footer a:hover{color:var(--ink)}
         </article>
         <article class="fslide" aria-label="5 de 5">
           <img src="img/kit-4-equipamentos.webp" width="780" height="496" loading="lazy" alt="Kit Black Guará com 4 equipamentos">
-          <div class="fslide-body"><span class="fslide-tag">Kit 4 equipamentos</span><h3>Kit Black Guará Completo</h3><p>Lavadora, calandra, centrífuga e secador com até 30% OFF.</p><a class="btn btn-wa js-wa" data-origin="fade-card" data-product="Kit Black Guará 4 equipamentos" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero este kit</a></div>
+          <div class="fslide-body"><span class="fslide-tag">Kit 4 equipamentos</span><h3>Kit Black Guará Completo</h3><p>Lavadora, calandra, centrífuga e secador com até 30% OFF<sup class="ast">*</sup>.</p><a class="btn btn-wa js-wa" data-origin="fade-card" data-product="Kit Black Guará 4 equipamentos" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero este kit</a></div>
         </article>
         <div class="fade-dots" role="group" aria-label="Escolher destaque"></div>
         <div class="fade-progress" aria-hidden="true"><span></span></div>
       </div>
     </div>
+    <div class="wrap"><p class="disclaimer">*Consulte as condições de pagamento.</p></div>
   </section>
 
   <!-- 7B. ZOOM PARALLAX: O GUARÁ É DO BRASIL -->
@@ -775,7 +784,7 @@ footer a:hover{color:var(--ink)}
       <h2 id="faq-title" class="split" style="margin-top:14px">Perguntas sobre a Black Guará</h2>
       <div class="faq">
         <details><summary>Até quando vale a Black Guará?</summary><p>As ofertas da Black Guará são válidas apenas durante o mês de novembro de 2026, até o dia 30 às 23h59.</p></details>
-        <details><summary>O desconto é mesmo de 30%?</summary><p>Sim. Kits e equipamentos selecionados da Black Guará têm até 30% de desconto. O time comercial informa a condição exata de cada kit e equipamento.</p></details>
+        <details><summary>O desconto é mesmo de 30%<sup class="ast">*</sup>?</summary><p>Sim. Kits e equipamentos selecionados da Black Guará têm até 30%<sup class="ast">*</sup> de desconto. O time comercial informa a condição exata de cada kit e equipamento.</p></details>
         <details><summary>Posso comprar só um equipamento na Black Guará?</summary><p>Sim. Chame o time comercial pelo WhatsApp informando o equipamento de interesse e receba a condição disponível para ele durante a campanha.</p></details>
         <details><summary>Os equipamentos Guará atendem lavanderias hospitalares?</summary><p>Sim. A Guará fabrica lavadoras extratoras com barreira sanitária, que separam as áreas suja e limpa, além de secadores, calandras e dobradeiras usados em lavanderias hospitalares.</p></details>
         <details><summary>A Guará atende o meu estado?</summary><p>Sim. A Guará Equipamentos fabrica em Limeira, SP, e está presente em todos os estados brasileiros.</p></details>
@@ -800,7 +809,7 @@ footer a:hover{color:var(--ink)}
           <button class="btn btn-dark" type="submit"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero meu kit</button>
         </form>
         <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
-        <p class="form-legal">Ao enviar, você autoriza a Guará Equipamentos a entrar em contato pelo WhatsApp e por e-mail sobre a Black Guará. Seus dados não são compartilhados.</p>
+        <p class="form-legal">Ao enviar, você autoriza a Guará Equipamentos a entrar em contato pelo WhatsApp e por e-mail sobre a Black Guará. Seus dados não são compartilhados.</p><p class="form-legal">*Consulte as condições de pagamento.</p>
       </div>
     </div>
   </section>
@@ -853,7 +862,7 @@ footer a:hover{color:var(--ink)}
     </div>
 
     <div class="ft-bottom">
-      <p>© 2026 Guará Equipamentos. Ofertas válidas apenas para o mês de novembro de 2026. Descontos de até 30% em kits e produtos selecionados, conforme proposta comercial.</p>
+      <p>© 2026 Guará Equipamentos. Ofertas válidas apenas para o mês de novembro de 2026. Descontos de até 30%<sup class="ast">*</sup> em kits e produtos selecionados, conforme proposta comercial. *Consulte as condições de pagamento.</p>
       <p>Fabricado com orgulho em Limeira, SP</p>
     </div>
   </div>

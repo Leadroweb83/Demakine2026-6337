@@ -51,14 +51,14 @@
   var offers = $('#offers');
   offers.innerHTML = CONFIG.produtos.map(function (p) {
     return '<article class="card rv" data-cat="' + esc(p.categoria) + '">' +
-      '<div class="card-media"><img src="' + esc(p.imagem) + '" alt="' + esc(p.nome) + ' Guará" loading="lazy" width="600" height="450"><span class="badge">Até 30% OFF</span></div>' +
+      '<div class="card-media"><img src="' + esc(p.imagem) + '" alt="' + esc(p.nome) + ' Guará" loading="lazy" width="600" height="450"><span class="badge">Até 30% OFF<sup class="ast">*</sup></span></div>' +
       '<div class="card-body"><span class="card-cat">' + esc(p.categoria) + '</span><h4>' + esc(p.nome) + '</h4><p>' + esc(p.descricao) + '</p>' +
       '<a class="btn btn-wa js-wa" data-origin="card" data-product="' + esc(p.nome) + '" href="https://wa.me/' + CONFIG.whatsapp + '" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Pedir condição</a></div></article>';
   }).join('') +
     // Cards de CTA no fim da grade (não entram no filtro de categorias)
     '<article class="ccard ccard--kit rv">' +
       '<span class="ccard-eyebrow">Não sabe por onde começar?</span>' +
-      '<h4>Monte seu kit com até 30% OFF</h4>' +
+      '<h4>Monte seu kit com até 30% OFF<sup class="ast">*</sup></h4>' +
       '<p>Diga quantos quilos de roupa sua lavanderia processa por dia. Nosso time dimensiona o kit ideal e aplica a condição da Black Guará.</p>' +
       '<ul><li>Dimensionamento sem custo</li><li>Atendimento direto com a fábrica</li><li>Kits para hotelaria, hospitais e lavanderias industriais</li></ul>' +
       '<a class="btn btn-dark js-wa" data-origin="card-monte-kit" data-product="Kit sob medida (dimensionamento)" href="https://wa.me/' + CONFIG.whatsapp + '" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Montar meu kit</a>' +
@@ -94,7 +94,7 @@
   });
 
   /* ---------- Fitas cruzadas ---------- */
-  var tapeItem = '<span class="tape-item">Black Guará <img src="img/favicon.png" alt="" width="32" height="32"> 30% de desconto <i>Black Friday</i> <img src="img/favicon.png" alt="" width="32" height="32"></span>';
+  var tapeItem = '<span class="tape-item">Black Guará <img src="img/favicon.png" alt="" width="32" height="32"> 30% de desconto<sup class="ast">*</sup> <i>Black Friday</i> <img src="img/favicon.png" alt="" width="32" height="32"></span>';
   $$('[data-tape]').forEach(function (t) {
     var half = new Array(7).join(tapeItem);
     t.innerHTML = half + half; // duas metades iguais: o loop em -50% fica contínuo
@@ -168,7 +168,7 @@
         n.textContent.split(/(\s+)/).forEach(function (w) {
           if (!w) return;
           if (/^\s+$/.test(w)) { frag.appendChild(doc.createTextNode(w)); return; }
-          var sp = doc.createElement('span'); sp.className = 'w' + (el.hasAttribute && el.hasAttribute('data-hl') ? ' hl' : ''); sp.textContent = w;
+          var sp = doc.createElement('span'); sp.className = 'w' + (el.closest && el.closest('[data-hl]') ? ' hl' : ''); sp.textContent = w;
           frag.appendChild(sp); manWords.push(sp);
         });
         n.parentNode.replaceChild(frag, n);
@@ -426,6 +426,11 @@
             outer.appendChild(inner); frag.appendChild(outer); words.push(inner);
           });
           n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.classList.contains('ast')) {
+          // Asterisco do 30%: cola na palavra anterior para subir junto com ela
+          var prev = n.previousSibling && n.previousSibling.lastChild ? n.previousSibling : null;
+          var box = prev && prev.classList && prev.classList.contains('split-line') ? prev.firstChild : null;
+          if (box) box.appendChild(n);
         } else if (n.nodeType === 1) walk(n);
       });
     })(elm);
@@ -492,7 +497,7 @@
   // Manifesto: 10% e 20% são riscados, um de cada vez, e o 30% metálico entra gigante
   var strikes = $$('#mani-nums .strike'), olds = $$('#mani-nums .mani-old');
   gsap.set(strikes, { scaleX: 0, transformOrigin: 'left center', yPercent: -50, rotation: -12 });
-  gsap.set('.mani-30', { opacity: 0, scale: 0.55, rotationX: 35, transformPerspective: 600 });
+  gsap.set('.mani-30, .ast-big', { opacity: 0, scale: 0.55, rotationX: 35, transformPerspective: 600 });
   // 10% e 20% surgem quando a seção chega na tela
   gsap.fromTo(olds, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '#mani-nums', start: 'top 90%', toggleActions: 'play none none reverse' } });
   // A seção fica fixa na tela e cada risco é desenhado no ritmo da rolagem
@@ -508,7 +513,7 @@
     .to(olds[0], { color: '#3f3f46', scale: 0.92, duration: 0.4 }, 1.1)
     .to(strikes[1], { scaleX: 1, duration: 1.3, ease: 'none' }, 1.6)
     .to(olds[1], { color: '#3f3f46', scale: 0.92, duration: 0.4 }, 2.7)
-    .to('.mani-30', { opacity: 1, scale: 1, rotationX: 0, duration: 1.2, ease: 'back.out(1.6)' }, 3.2);
+    .to('.mani-30, .ast-big', { opacity: 1, scale: 1, rotationX: 0, duration: 1.2, ease: 'back.out(1.6)' }, 3.2);
   // Depois do 30%, a frase acende palavra por palavra
   manWords.forEach(function (w, i) {
     maniTl.to(w, { color: w.classList.contains('hl') ? '#E7511F' : '#F5F5F4', duration: 0.5, ease: 'none' }, 4.5 + i * 0.12);
