@@ -23,7 +23,7 @@ Página estática e independente. Sem build: basta subir a pasta inteira.
 10. CTA final com formulário que abre o WhatsApp
 
 ## Publicar
-Suba a pasta para `guaraequipamentos.com.br/black-friday/`. Se o endereço for outro, troque `canonical`, `og:url`, `og:image` e as URLs do JSON-LD.
+Publicada na Vercel (projeto `black-guara-lp`) em **https://black.guaraequipamentos.com.br** (CNAME no DNS da Guará). A prévia `*.vercel.app` envia `noindex` para não duplicar no Google.
 
 ## Rastreamento
 - Troque `GTM-XXXXXXX` pelo contêiner da Guará (só carrega após a troca).

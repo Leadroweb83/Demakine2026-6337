@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://black.guaraequipamentos.com.br/sitemap.xml

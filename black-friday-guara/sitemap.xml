@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://black.guaraequipamentos.com.br/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <video:video>
+      <video:thumbnail_loc>https://black.guaraequipamentos.com.br/img/hero-black-guara-poster.jpg</video:thumbnail_loc>
+      <video:title>Black Guará: kits especiais com até 30% OFF</video:title>
+      <video:description>Kits de equipamentos Guará para lavanderia industrial e hospitalar com até 30% de desconto na Black Friday.</video:description>
+      <video:content_loc>https://black.guaraequipamentos.com.br/img/hero-black-guara.mp4</video:content_loc>
+      <video:duration>15</video:duration>
+    </video:video>
+  </url>
+</urlset>
