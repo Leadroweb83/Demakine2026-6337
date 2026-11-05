@@ -380,6 +380,55 @@
     calc(false);
   })();
 
+  /* ---------- Reels da campanha ---------- */
+  (function () {
+    var reelTrack = $('#reels-track'); if (!reelTrack) return;
+    var reels = $$('.reel', reelTrack);
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function load(v) {
+      if (v.dataset.loaded) return;
+      v.dataset.loaded = '1'; v.src = v.dataset.src; v.load();
+    }
+    function play(v) { load(v); var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+    // Toca sem som quando o reel está visível; pausa fora da tela (economiza dados e bateria)
+    if ('IntersectionObserver' in window) {
+      var near = new IntersectionObserver(function (en) {
+        en.forEach(function (e) { if (e.isIntersecting) load(e.target.querySelector('video')); });
+      }, { root: null, rootMargin: '300px 400px' });
+      var vis = new IntersectionObserver(function (en) {
+        en.forEach(function (e) {
+          var v = e.target.querySelector('video');
+          if (e.isIntersecting && !reduced) play(v); else if (!e.isIntersecting) v.pause();
+        });
+      }, { threshold: 0.6 });
+      reels.forEach(function (r) { near.observe(r); vis.observe(r); });
+    }
+    // Botão de som: liga o som de um reel e silencia os outros
+    reels.forEach(function (r) {
+      var v = r.querySelector('video'), b = r.querySelector('.reel-sound');
+      b.addEventListener('click', function () {
+        var ligar = v.muted;
+        reels.forEach(function (o) {
+          var ov = o.querySelector('video'), ob = o.querySelector('.reel-sound');
+          ov.muted = true; ob.setAttribute('aria-pressed', 'false'); ob.setAttribute('aria-label', 'Ativar som do reel');
+        });
+        if (ligar) {
+          v.muted = false; v.currentTime = 0; play(v);
+          b.setAttribute('aria-pressed', 'true'); b.setAttribute('aria-label', 'Desativar som do reel');
+        }
+      });
+      // Tocar no vídeo também liga/desliga o som
+      v.addEventListener('click', function () { b.click(); });
+    });
+    // Setas: avançam um reel por vez
+    $$('.reels-nav button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var step = reels[0].getBoundingClientRect().width + 16;
+        reelTrack.scrollBy({ left: +btn.dataset.dir * step, behavior: reduced ? 'auto' : 'smooth' });
+      });
+    });
+  })();
+
   /* ---------- Carrossel com fade (fotos + CTA) ---------- */
   (function () {
     var card = $('#fade-card'); if (!card) return;

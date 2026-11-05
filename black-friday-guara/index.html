@@ -320,6 +320,32 @@ header.site.past-hero .hd-cd{opacity:1;visibility:visible;transform:translate(-5
 .ccard-cd b{font:900 1.5rem/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink)}
 @media(min-width:1020px){.grid .ccard--kit{grid-column:span 1}}
 
+/* ===== REELS DA CAMPANHA ===== */
+.reels-sec{overflow:hidden}
+.reels-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px}
+.reels-nav{display:flex;gap:10px}
+.reels-nav button{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--bg-2);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:background .2s,border-color .2s}
+.reels-nav button:hover{background:var(--accent);border-color:var(--accent)}
+.reels-nav svg{width:22px;height:22px}
+@media(max-width:700px){.reels-nav{display:none}}
+.reels-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:max(var(--gutter),calc((100vw - var(--max)) / 2 + var(--gutter)));padding:36px max(var(--gutter),calc((100vw - var(--max)) / 2 + var(--gutter))) 24px;scrollbar-width:none;overscroll-behavior-x:contain}
+.reels-track::-webkit-scrollbar{display:none}
+.reels-track:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.reel{position:relative;flex:0 0 clamp(240px,24vw,300px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;scroll-snap-align:start;background:#0B0B0C;border:1px solid var(--line);isolation:isolate;transition:border-color .3s,box-shadow .3s}
+.reel:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 20px 50px -20px rgba(231,81,31,.6)}
+.reel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.reel::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(11,11,12,.35),transparent 22%,transparent 50%,rgba(11,11,12,.92) 88%)}
+.reel-sound{position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(11,11,12,.55);color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.reel-sound svg{width:20px;height:20px}
+.reel-sound .i-on,.reel-sound[aria-pressed="true"] .i-off{display:none}
+.reel-sound[aria-pressed="true"] .i-on{display:block}
+.reel-sound[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+.reel-info{position:absolute;left:0;right:0;bottom:0;padding:16px;display:grid;gap:8px;justify-items:start}
+.reel-tag{background:var(--accent);color:#fff;font:900 .7rem/1 Archivo,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;border-radius:7px}
+.reel-info h3{font:800 1.02rem/1.2 Archivo,sans-serif}
+.reel-info .btn{min-height:44px;width:100%;font-size:.78rem;padding:0 14px}
+.reels-sec .disclaimer{margin-top:4px}
+
 /* ===== 5. DIFERENCIAIS ===== */
 .diff{display:grid;gap:22px}
 @media(min-width:1000px){.diff{grid-template-columns:.9fr 2.1fr;gap:28px}}
@@ -728,6 +754,147 @@ footer a:hover{color:var(--ink)}
     </div>
   </section>
 
+
+  <!-- 4B. REELS DA CAMPANHA -->
+  <section class="reels-sec" id="reels" aria-labelledby="reels-title">
+    <div class="wrap">
+      <div class="reels-head">
+        <div>
+          <span class="eyebrow rv">Direto da fábrica</span>
+          <h2 id="reels-title" class="split" style="margin-top:14px">Quem fabrica <em>mostra</em></h2>
+          <p class="lead rv" style="margin-top:12px">O time Guará apresenta os equipamentos da Black Guará. Toque no alto-falante para ouvir.</p>
+        </div>
+        <div class="reels-nav rv">
+          <button type="button" data-dir="-1" aria-label="Reels anteriores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button type="button" data-dir="1" aria-label="Próximos reels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="reels-track" id="reels-track" tabindex="0" aria-label="Reels da campanha Black Guará">
+        <article class="reel" aria-label="Reel 1 de 10: Pode esquecer o que você já viu de Black Friday">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-9.jpg" width="540" height="960" data-src="img/reels/reel-9.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">30% de desconto<sup class="ast">*</sup></span>
+            <h3>Pode esquecer o que você já viu de Black Friday</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-9" data-product="Black Guará 30% de desconto" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 2 de 10: Descontos de verdade direto da fábrica">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-1.jpg" width="540" height="960" data-src="img/reels/reel-1.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Calandra 1,60 m</span>
+            <h3>Descontos de verdade direto da fábrica</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-1" data-product="Calandra 1,60 m" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 3 de 10: Uma oportunidade incrível para sua lavanderia">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-4.jpg" width="540" height="960" data-src="img/reels/reel-4.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Secador 20 kg</span>
+            <h3>Uma oportunidade incrível para sua lavanderia</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-4" data-product="Secador 20 kg" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 4 de 10: Lave e centrifugue na mesma máquina">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-3.jpg" width="540" height="960" data-src="img/reels/reel-3.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Lavadora extratora 30 kg</span>
+            <h3>Lave e centrifugue na mesma máquina</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-3" data-product="Lavadora extratora 30 kg" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 5 de 10: Roupa mais seca, secador trabalhando menos">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-5.jpg" width="540" height="960" data-src="img/reels/reel-5.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Centrífuga 15 kg</span>
+            <h3>Roupa mais seca, secador trabalhando menos</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-5" data-product="Centrífuga 15 kg" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 6 de 10: Chame nosso time comercial">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-2.jpg" width="540" height="960" data-src="img/reels/reel-2.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Black Guará</span>
+            <h3>Chame nosso time comercial</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-2" data-product="Kits Black Guará" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 7 de 10: Passadoria de lençóis e toalhas">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-7.jpg" width="540" height="960" data-src="img/reels/reel-7.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Calandra 1,60 m</span>
+            <h3>Passadoria de lençóis e toalhas</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-7" data-product="Calandra 1,60 m" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 8 de 10: A Black Friday que você esperava chegou">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-8.jpg" width="540" height="960" data-src="img/reels/reel-8.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Black Guará</span>
+            <h3>A Black Friday que você esperava chegou</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-8" data-product="Kits Black Guará" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 9 de 10: Calandra Guará em operação">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-11.jpg" width="540" height="960" data-src="img/reels/reel-11.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Acabamento</span>
+            <h3>Calandra Guará em operação</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-11" data-product="Calandra industrial" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+        <article class="reel" aria-label="Reel 10 de 10: Mais peças por hora com a linha Guará">
+          <video muted loop playsinline preload="none" poster="img/reels/reel-12.jpg" width="540" height="960" data-src="img/reels/reel-12.mp4"></video>
+          <button class="reel-sound" type="button" aria-pressed="false" aria-label="Ativar som do reel">
+            <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+            <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+          <div class="reel-info">
+            <span class="reel-tag">Acabamento</span>
+            <h3>Mais peças por hora com a linha Guará</h3>
+            <a class="btn btn-wa js-wa" data-origin="reel-12" data-product="Linha de acabamento" href="https://wa.me/5519993369331" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero essa condição</a>
+          </div>
+        </article>
+    </div>
+    <div class="wrap"><p class="disclaimer">*Consulte as condições de pagamento.</p></div>
+  </section>
+
   <!-- 5. DIFERENCIAIS 01 02 03 -->
   <section aria-labelledby="diff-title">
     <div class="wrap diff">
@@ -995,8 +1162,8 @@ footer a:hover{color:var(--ink)}
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="vendor/lenis.min.js" defer></script>
-<script src="js/brasil-map.js?v=20261105e" defer></script>
-<script src="js/orbital-cards.js?v=20261105e" defer></script>
-<script src="js/app.js?v=20261105e" defer></script>
+<script src="js/brasil-map.js?v=20261105f" defer></script>
+<script src="js/orbital-cards.js?v=20261105f" defer></script>
+<script src="js/app.js?v=20261105f" defer></script>
 </body>
 </html>
