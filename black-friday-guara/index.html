@@ -300,6 +300,14 @@ header.site.past-hero .hd-cd{opacity:1;visibility:visible;transform:translate(-5
 .ccard--cat{background:radial-gradient(80% 60% at 100% 0%,rgba(231,81,31,.22),transparent 70%),var(--bg);border:1px solid var(--line)}
 .ccard--cat .ccard-eyebrow{color:var(--accent)}
 .ccard--cat p{color:var(--muted)}
+/* Card com a foto do lobo na bandeira + botão discreto do catálogo */
+.ccard--photo{padding:0;border:1px solid var(--line);background:#0B3D1C;min-height:420px}
+.ccard--photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%;z-index:-1;transition:transform .8s var(--ease)}
+.ccard--photo:hover img{transform:scale(1.04)}
+.ccard--photo::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;z-index:-1;background:linear-gradient(transparent,rgba(11,11,12,.8))}
+.ccard-pdf{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:10px 16px;border-radius:999px;background:rgba(11,11,12,.55);border:1px solid rgba(255,255,255,.25);color:#fff;font:700 .78rem/1 Archivo,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:background .2s,border-color .2s}
+.ccard-pdf:hover{background:var(--accent);border-color:var(--accent)}
+.ccard-pdf svg{width:16px;height:16px}
 .ccard-cd{display:flex;flex-direction:column;gap:6px;background:var(--bg-3);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
 .ccard-cd small{font:700 .68rem/1 Archivo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .ccard-cd b{font:900 1.5rem/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink)}
@@ -873,8 +881,8 @@ footer a:hover{color:var(--ink)}
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="vendor/lenis.min.js" defer></script>
-<script src="js/brasil-map.js?v=20261105c" defer></script>
-<script src="js/orbital-cards.js?v=20261105c" defer></script>
-<script src="js/app.js?v=20261105c" defer></script>
+<script src="js/brasil-map.js?v=20261105d" defer></script>
+<script src="js/orbital-cards.js?v=20261105d" defer></script>
+<script src="js/app.js?v=20261105d" defer></script>
 </body>
 </html>

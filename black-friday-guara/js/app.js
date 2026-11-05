@@ -63,12 +63,10 @@
       '<ul><li>Dimensionamento sem custo</li><li>Atendimento direto com a fábrica</li><li>Kits para hotelaria, hospitais e lavanderias industriais</li></ul>' +
       '<a class="btn btn-dark js-wa" data-origin="card-monte-kit" data-product="Kit sob medida (dimensionamento)" href="https://wa.me/' + CONFIG.whatsapp + '" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Montar meu kit</a>' +
     '</article>' +
-    '<article class="ccard ccard--cat rv">' +
-      '<span class="ccard-eyebrow">Catálogo completo</span>' +
-      '<h4>Fichas técnicas de todos os equipamentos</h4>' +
-      '<p>Capacidades, dimensões e opções de aquecimento de lavadoras, secadores, centrífugas, calandras e dobradeiras Guará.</p>' +
-      '<div class="ccard-cd"><small>A Black Guará termina em</small><b data-cd>--d --h --m --s</b></div>' +
-      '<a class="btn btn-ghost" href="https://guaraequipamentos.com.br/wp-content/uploads/2026/05/CATALOGO-GUARA-EQUIPAMENTOS.pdf" target="_blank" rel="noopener" data-origin="card-catalogo">Baixar catálogo (PDF)</a>' +
+    '<article class="ccard ccard--photo rv">' +
+      '<img src="img/card-lobo-bandeira.webp" width="800" height="1200" loading="lazy" alt="Lobo-guará em pé diante da bandeira do Brasil">' +
+      '<a class="ccard-pdf" href="https://guaraequipamentos.com.br/wp-content/uploads/2026/05/CATALOGO-GUARA-EQUIPAMENTOS.pdf" target="_blank" rel="noopener" data-origin="card-catalogo">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>Baixar catálogo (PDF)</a>' +
     '</article>';
   var cats = ['Todos'].concat(CONFIG.produtos.map(function (p) { return p.categoria; }).filter(function (c, i, a) { return a.indexOf(c) === i; }));
   var filters = $('#filters');
