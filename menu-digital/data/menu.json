@@ -1,0 +1,460 @@
+{
+  "restaurante": {
+    "nome": "Bar do Alemão São Paulo",
+    "unidade": "Vila",
+    "historia": "Família Steiner · Itu, desde 1902",
+    "endereco": "Rua Ramos Batista, 147 · Vila Olímpia, São Paulo, SP",
+    "mapa": "https://www.google.com/maps/search/?api=1&query=Rua+Ramos+Batista+147+Vila+Ol%C3%ADmpia+S%C3%A3o+Paulo+SP",
+    "whatsapp": "5511939460955",
+    "whatsappTexto": "(11) 93946-0955",
+    "whatsappMensagem": "Olá! Vim pelo cardápio digital do Bar do Alemão.",
+    "instagram": "bardoalemaodavila"
+  },
+
+  "grupos": [
+    { "id": "executivo", "nome": "Executivo" },
+    { "id": "cozinha", "nome": "Cozinha" },
+    { "id": "doces", "nome": "Doces" },
+    { "id": "bar", "nome": "Bar" }
+  ],
+
+  "destaques": [
+    { "alvo": "parmegiana", "titulo": "Parmegiana", "sub": "Original de Itu", "foto": "parmegiana" },
+    { "alvo": "eisbein", "titulo": "Eisbein à pururuca", "sub": "Receita da casa", "foto": "eisbein" },
+    { "alvo": "kassler", "titulo": "Kassler", "sub": "Receita da casa", "foto": "kassler" },
+    { "alvo": "file-steiner", "titulo": "Filé Steiner", "sub": "Filé mignon", "foto": "file-steiner" },
+    { "alvo": "apfelstrudel", "titulo": "Apfelstrudel", "sub": "Sobremesa", "foto": "apfelstrudel" }
+  ],
+
+  "sinonimos": {
+    "eisbein": "joelho de porco porco suino",
+    "kassler": "bisteca defumada porco suino",
+    "torresmo": "porco suino",
+    "lombo": "porco suino",
+    "bacon": "porco",
+    "salsichao": "salsicha linguica embutido",
+    "salsicha": "salsichao linguica embutido",
+    "linguica": "salsicha salsichao embutido",
+    "mignon": "file carne bovina boi",
+    "picadinho": "carne bovina",
+    "bife": "carne bovina",
+    "abadejo": "peixe",
+    "camaroes": "camarao frutos do mar",
+    "frango": "galinha ave",
+    "galeto": "frango ave",
+    "parmegiana": "parmigiana",
+    "strogonoff": "estrogonofe stroganoff",
+    "talharim": "massa macarrao",
+    "espaguete": "massa macarrao",
+    "espaguetinho": "massa macarrao",
+    "raviole": "massa",
+    "ravioli": "massa",
+    "lasanha": "massa",
+    "chopp": "chope cerveja",
+    "heineken": "cerveja",
+    "original": "cerveja",
+    "long neck": "cerveja",
+    "red label": "whisky uisque",
+    "black label": "whisky uisque",
+    "chivas": "whisky uisque",
+    "jack daniel": "whisky uisque",
+    "buchanan": "whisky uisque",
+    "whiskeys": "whisky uisque",
+    "steinhager": "destilado",
+    "refrigerante": "refri coca",
+    "expresso": "cafe",
+    "cappuccino": "cafe",
+    "sorvete": "gelado",
+    "petit": "chocolate",
+    "apfelstrudel": "strudel torta de maca",
+    "kids": "crianca infantil"
+  },
+
+  "categorias": [
+    {
+      "id": "executivo",
+      "grupo": "executivo",
+      "tipo": "executivo",
+      "eyebrow": "De segunda a sexta-feira",
+      "nome": "Almoço executivo",
+      "nota": "Entrada + Prato principal + Sobremesa. Válido de segunda a sexta-feira das 11:00 às 15:00 (exceto feriados e delivery).",
+      "entradas": ["Caesar salad", "Salada campestre", "Salada de batata"],
+      "sobremesas": ["Torta de coco", "Pudim de leite", "Abacaxi com raspa de limão", "Bola de sorvete de chocolate ou creme"],
+      "planos": [
+        {
+          "preco": 79.9,
+          "secoes": [
+            { "nome": "Frango", "itens": [
+              { "nome": "Strogonoff", "descricao": "Arroz branco e batata chips." },
+              { "nome": "Frango grelhado", "descricao": "Arroz branco e purê de batata." }
+            ]},
+            { "nome": "Massas", "itens": [
+              { "nome": "Talharim ao molho sugo", "descricao": "Com peito de frango grelhado." },
+              { "nome": "Talharim ao molho branco", "descricao": "Com peito de frango grelhado." },
+              { "nome": "Talharim ao molho bolonhesa" }
+            ]},
+            { "nome": "Outros", "itens": [
+              { "nome": "Omelete", "descricao": "Arroz branco e legumes na manteiga." },
+              { "nome": "Peixe à milanesa", "descricao": "Arroz branco e purê de batata." },
+              { "nome": "Linguiça calabresa", "descricao": "Arroz, feijão e farofa." }
+            ]}
+          ]
+        },
+        {
+          "preco": 94.9,
+          "secoes": [
+            { "nome": "Parmegiana", "itens": [
+              { "nome": "Parmegiana de carne", "descricao": "Arroz branco e batata chips." },
+              { "nome": "Parmegiana de frango", "descricao": "Arroz branco e batata chips." },
+              { "nome": "Parmegiana de berinjela", "descricao": "Arroz branco e batata chips." }
+            ]},
+            { "nome": "Carne", "itens": [
+              { "nome": "Strogonoff de carne", "descricao": "Arroz branco e batata chips." },
+              { "nome": "Picadinho", "descricao": "Arroz branco, batata chips, farofa e ovo frito." },
+              { "nome": "Bife à cavalo", "descricao": "Molho sugo com cebola, arroz branco, batata chips e ovo frito." },
+              { "nome": "Carne ao molho madeira", "descricao": "Arroz branco, batata chips." }
+            ]},
+            { "nome": "Outros", "itens": [
+              { "nome": "Kassler", "descricao": "Arroz branco, chucrute, purê de ervilha, cebola tirolesa." }
+            ]}
+          ]
+        }
+      ],
+      "adicional": ["Ovo frito ou cozido", 3.5]
+    },
+
+    {
+      "id": "porcoes",
+      "grupo": "cozinha",
+      "eyebrow": "Para começar e compartilhar",
+      "nome": "Porções",
+      "itens": [
+        { "id": "couvert", "nome": "Couvert", "descricao": "Berinjela à moda, azeitona temperada, manteiga e cesta de pães quentinhos.", "precos": [["Por pessoa", 19.9]] },
+        { "id": "batata-chips", "nome": "Batata chips", "preco": 44.9 },
+        { "id": "batata-gomo", "nome": "Batata gomo", "preco": 54.9, "foto": "batata-gomo" },
+        { "id": "batata-gomo-bacon", "nome": "Batata gomo c/ bacon", "preco": 74.9 },
+        { "id": "pocket-batatas", "nome": "Pocket de batatas", "descricao": "Para levar para casa e comer a qualquer hora.", "preco": 99.9 },
+        { "id": "bolinho-risoto", "nome": "Bolinho de risoto", "info": ["8 unidades"], "preco": 34.9 },
+        { "id": "bolinho-carne", "nome": "Bolinho de carne alemão", "info": ["12 unidades"], "preco": 74.9 },
+        { "id": "eisbein-aperitivo", "nome": "Eisbein aperitivo", "descricao": "Crocante e macio. Servido com cesta de pães.", "tempo": "40 min", "preco": 219.9 },
+        { "id": "frango-passarinho", "nome": "Frango à passarinho alho e óleo", "preco": 74.9, "foto": "frango-a-passarinho" },
+        { "id": "torresmo", "nome": "Torresmo pururuca", "preco": 44.9, "foto": "torresmo-pururuca" },
+        { "id": "file-aperitivo", "nome": "Filé aperitivo c/ catupiry", "descricao": "Iscas de mignon grelhadas cobertas com queijo Catupiry. Acompanha cesta de pães.", "preco": 174.9 },
+        { "id": "kassler-grelhado", "nome": "Kassler grelhado", "descricao": "Bisteca defumada grelhada. Acompanha cesta de pães.", "preco": 109.9 },
+        { "id": "mix-grill", "nome": "Mix Grill", "descricao": "Prato aperitivo com salsichão lyoner, salsicha de vitela e Kassler (todos grelhados), chucrute e batata gomo. Acompanha cesta de pães.", "preco": 119.9 },
+        { "id": "mix-salsichas", "nome": "Mix de salsichas", "descricao": "Prato aperitivo com salsichão lyoner, calabresa (frita) e linguiça de vitela (frita e cozida). Acompanha cesta de pães.", "preco": 109.9 },
+        { "id": "isca-abadejo", "nome": "Isca de abadejo", "descricao": "Iscas à milanesa e fritas servidas com maionese da casa.", "preco": 189.9 },
+        { "id": "pastel", "nome": "Pastel (misto, carne ou queijo)", "info": ["20 unidades"], "preco": 54.9 },
+        { "id": "provolone", "nome": "Provolone à milanesa", "preco": 99.9 },
+        { "id": "salsichao-lyoner", "nome": "Salsichão Lyoner aperitivo", "descricao": "Salsichão alemão feito à base de carne suína e bovina. Servido cozido ou frito.", "preco": 54.9 }
+      ]
+    },
+
+    {
+      "id": "saladas",
+      "grupo": "cozinha",
+      "eyebrow": "Da horta à mesa",
+      "nome": "Saladas",
+      "itens": [
+        { "id": "caesar", "nome": "Caesar", "descricao": "Alface americana, croutons, parmesão, molho caesar.", "preco": 39.9 },
+        { "id": "chicken-caesar", "nome": "Chicken Caesar", "descricao": "Alface americana, croutons, parmesão, molho caesar e tiras de frango grelhadas.", "preco": 44.9, "foto": "chicken-caesar" },
+        { "id": "campestre", "nome": "Campestre", "descricao": "Mix de alface, tomate, cenoura ralada, palmito picado e molho mostarda.", "preco": 44.9, "foto": "salada-campestre" },
+        { "id": "ituana", "nome": "Ituana", "descricao": "Mix de alface, tomate, pepino, palmito, frios, ervilhas, legumes cozidos, ovos e cebola.", "precos": [["Família", 109.9]], "foto": "salada-ituana" },
+        { "id": "salada-alema", "nome": "Alemã", "descricao": "Batata cozida, molho de maionese, frios, patê de vitela e salsicha Frankfurt.", "precos": [["Família", 154.9]] },
+        { "id": "salada-batata", "nome": "Salada de batata", "descricao": "Batatas com molho de maionese.", "precos": [["Individual", 39.9], ["Família", 89.9]] }
+      ]
+    },
+
+    {
+      "id": "acompanhamentos",
+      "grupo": "cozinha",
+      "eyebrow": "Para completar a mesa",
+      "nome": "Acompanhamentos",
+      "nota": "Nossas porções servem 2 a 3 pessoas.",
+      "itens": [
+        { "id": "arroz-grega", "nome": "Arroz à grega", "preco": 54.9 },
+        { "id": "arroz-branco", "nome": "Arroz branco", "preco": 34.9 },
+        { "id": "arroz-verde", "nome": "Arroz verde", "descricao": "Arroz branco, salsinha e queijo parmesão.", "preco": 54.9 },
+        { "id": "arroz-alemao", "nome": "Arroz do alemão", "descricao": "Arroz branco, salsichão, palmito, ervilha, queijo parmesão, pimentão vermelho e ervas.", "preco": 54.9 },
+        { "id": "brocolis", "nome": "Brócolis alho e óleo", "preco": 49.9 },
+        { "id": "chucrute", "nome": "Chucrute", "preco": 34.9, "foto": "chucrute" },
+        { "id": "farofa", "nome": "Farofa", "preco": 34.9 },
+        { "id": "legumes", "nome": "Legumes na manteiga", "preco": 44.9 },
+        { "id": "pure-batata", "nome": "Purê de batata", "preco": 44.9 },
+        { "id": "pure-ervilhas", "nome": "Purê de ervilhas", "preco": 44.9 }
+      ]
+    },
+
+    {
+      "id": "tradicao-alema",
+      "grupo": "cozinha",
+      "eyebrow": "Receitas da casa",
+      "nome": "Tradição alemã",
+      "selo": "Receita da casa",
+      "itens": [
+        { "id": "eisbein", "nome": "Eisbein à pururuca", "descricao": "Joelho de porco macio e pururuca, purê de ervilha, batatas cozidas, chucrute, cebola tirolesa e linguiça de vitela.", "tempo": "40 min", "precos": [["Família", 329.9]], "foto": "eisbein" },
+        { "id": "kassler", "nome": "Kassler", "descricao": "Bisteca defumada, purê de ervilha, batatas cozidas, chucrute e linguiça de vitela.", "precos": [["Individual", 109.9], ["02 pessoas", 199.9]], "foto": "kassler" },
+        { "id": "salsichao-frankfurt", "nome": "Salsichão Frankfurt", "descricao": "Saboroso salsichão grelhado, coberto com queijo prato e bacon. Servido com salada de batata e chucrute.", "precos": [["Individual", 64.9]] }
+      ]
+    },
+
+    {
+      "id": "parmegiana",
+      "grupo": "cozinha",
+      "eyebrow": "Receitas centenárias",
+      "nome": "Parmegiana",
+      "selo": "Original de Itu",
+      "nota": "Deliciosas e originais de Itu. Todos os parmegianas acompanham arroz branco e a sua batata favorita: gomo ou chips.",
+      "foto": "parmegiana",
+      "itens": [
+        { "id": "parm-berinjela", "nome": "Parmegiana de berinjela", "precos": [["Individual", 89.9], ["Broto", 174.9, "2 pessoas"], ["Mini", 254.9, "3 pessoas"], ["Mega", 329.9, "5 pessoas"]] },
+        { "id": "parm-frango", "nome": "Parmegiana de frango", "precos": [["Individual", 99.9], ["Broto", 199.9, "2 pessoas"], ["Mini", 274.9, "3 pessoas"], ["Mega", 369.9, "5 pessoas"]] },
+        { "id": "parm-mignon", "nome": "Parmegiana de mignon", "precos": [["Individual", 129.9], ["Broto", 259.9, "2 pessoas"], ["Mini", 359.9, "3 pessoas"], ["Mega", 469.9, "5 pessoas"]] }
+      ]
+    },
+
+    {
+      "id": "file-mignon",
+      "grupo": "cozinha",
+      "eyebrow": "Da nossa cozinha",
+      "nome": "Filé mignon",
+      "nota": "Todos os pratos família servem 3 pessoas.",
+      "familia": "3 pessoas",
+      "itens": [
+        { "id": "file-cavalo", "nome": "À cavalo", "descricao": "Escalope grelhado, coberto com molho de tomate e cebola. Servido com arroz branco, ovo e batata chips.", "precos": [["Individual", 99.9], ["Família", 299.9]] },
+        { "id": "file-alemao", "nome": "Alemão", "descricao": "Paillard grelhado recheado com presunto, queijo prato e tomate. Servido com arroz do alemão, batata sauté e ovos cozidos.", "precos": [["Individual", 99.9], ["Família", 299.9]] },
+        { "id": "brochete", "nome": "Brochete", "descricao": "Cubos de mignon, calabresa, bacon, tomate e cebola grelhados na chapa, servido com arroz, farofa e vinagrete.", "precos": [["Individual", 119.9]] },
+        { "id": "chateaubriand", "nome": "Chateaubriand", "descricao": "Escalope grelhado coberto com molho madeira e champignon. Acompanha purê de batata e arroz.", "precos": [["Individual", 119.9]], "foto": "file-chateaubriand" },
+        { "id": "file-milanesa", "nome": "Milanesa", "descricao": "Crocante e sequinho servido com arroz e salada de batata.", "precos": [["Individual", 99.9], ["Família", 299.9]] },
+        { "id": "file-calabres", "nome": "Calabrês", "descricao": "Paillard grelhado recheado com calabresa acebolada e provolone. Servido com arroz do alemão, batata gomo com bacon, coberto com molho rôti.", "precos": [["Individual", 119.9], ["Família", 359.9]], "foto": "file-calabres" },
+        { "id": "pizzaiolo", "nome": "Pizzaiolo", "descricao": "Escalope grelhado coberto com molho de tomate fresco e azeitonas. Acompanha talharim na manteiga.", "precos": [["Individual", 119.9]] },
+        { "id": "poivre", "nome": "Poivre", "descricao": "Escalope grelhado coberto com molho madeira e pimenta verde. Acompanha batata gomo e arroz branco.", "precos": [["Individual", 129.9]], "foto": "file-poivre" },
+        { "id": "file-steiner", "nome": "Steiner", "descricao": "Escalope grelhado servido com palmito, cebola e ervilha na manteiga e batata chips.", "precos": [["Família", 329.9]], "foto": "file-steiner" },
+        { "id": "strogonoff-mignon", "nome": "Strogonoff", "descricao": "Iscas grelhadas cobertas com molho tradicional. Servido com arroz branco e batata chips.", "precos": [["Individual", 99.9], ["Família", 299.9]] }
+      ]
+    },
+
+    {
+      "id": "frango",
+      "grupo": "cozinha",
+      "eyebrow": "Da nossa cozinha",
+      "nome": "Frango",
+      "nota": "Todos os pratos família servem 3 pessoas.",
+      "familia": "3 pessoas",
+      "itens": [
+        { "id": "frango-chefe", "nome": "À moda do chefe", "descricao": "Suculento galeto desossado e grelhado servido com legumes na manteiga e arroz branco.", "precos": [["Individual", 64.9], ["Família", 189.9]], "foto": "frango-moda-do-chefe" },
+        { "id": "frango-milanesa", "nome": "Milanesa", "descricao": "Filé empanado e frito. Acompanha arroz e salada de batata.", "precos": [["Individual", 54.9], ["Família", 154.9]], "foto": "frango-milanesa" },
+        { "id": "frango-grelhado", "nome": "Grelhado", "descricao": "Filé grelhado servido com legumes na manteiga e purê de batata.", "precos": [["Individual", 54.9], ["Família", 154.9]] },
+        { "id": "strogonoff-frango", "nome": "Strogonoff", "descricao": "Iscas grelhadas cobertas com molho tradicional. Servido com arroz branco e batata chips.", "precos": [["Individual", 64.9], ["Família", 199.9]] }
+      ]
+    },
+
+    {
+      "id": "peixes",
+      "grupo": "cozinha",
+      "eyebrow": "Da nossa cozinha",
+      "nome": "Peixes",
+      "itens": [
+        { "id": "peixe-moda", "nome": "À Moda", "descricao": "Suculento filé de abadejo à dorê coberto com molho de camarões, servido com arroz à grega.", "precos": [["Individual", 174.9]], "foto": "peixe-a-moda" },
+        { "id": "belle-meuniere", "nome": "À Belle Meunière", "descricao": "Filé de abadejo grelhado coberto com molho de camarões, champignon e alcaparras. Servido com batata sauté e brócolis no azeite.", "precos": [["Individual", 164.9]] },
+        { "id": "vila-rica", "nome": "Vila Rica", "descricao": "Filé de abadejo grelhado servido com arroz verde e brócolis no azeite.", "precos": [["Individual", 154.9]] }
+      ]
+    },
+
+    {
+      "id": "massas",
+      "grupo": "cozinha",
+      "eyebrow": "Talharim artesanal ou espaguete grano duro",
+      "nome": "Massas",
+      "nota": "Escolha seu molho favorito. Todos os pratos família servem 3 pessoas.",
+      "familia": "3 pessoas",
+      "itens": [
+        { "id": "massa-chefe", "nome": "À moda do chefe", "descricao": "Molho preparado com filé mignon, lombo e tomates frescos.", "precos": [["Individual", 89.9], ["Família", 219.9]] },
+        { "id": "canadense", "nome": "Canadense", "descricao": "Molho à base de creme de leite, bacon e tomates frescos.", "precos": [["Individual", 74.9], ["Família", 164.9]] },
+        { "id": "sugo", "nome": "Sugo", "descricao": "Tradicional molho à base de tomates frescos.", "precos": [["Individual", 64.9], ["Família", 154.9]] },
+        { "id": "alho-oleo", "nome": "Espaguete alho e óleo", "precos": [["Individual", 59.9], ["Família", 144.9]] },
+        { "id": "na-manteiga", "nome": "Na manteiga", "precos": [["Individual", 54.9], ["Família", 129.9]] },
+        { "id": "ravioli", "nome": "Ravióli muçarela de búfala", "descricao": "Feito com nossa massa artesanal, recheado com muçarela de búfala e coberto com molho ao sugo.", "precos": [["Individual", 64.9], ["Família", 164.9]], "foto": "ravioli" },
+        { "id": "lasanha", "nome": "Lasanha à bolonhesa", "descricao": "Deliciosa massa recheada com presunto, queijo prato e Catupiry, coberta com molho sugo e queijo parmesão.", "precos": [["Individual", 99.9], ["Família", 264.9]] }
+      ]
+    },
+
+    {
+      "id": "kids",
+      "grupo": "cozinha",
+      "eyebrow": "Para os pequenos",
+      "nome": "Kids",
+      "nota": "Servido para crianças até 8 anos.",
+      "itens": [
+        { "id": "kids-crocante", "nome": "Crocante", "descricao": "Iscas de frango à milanesa servidas com arroz e purê de batata.", "preco": 34.9 },
+        { "id": "kids-franguinho", "nome": "Franguinho", "descricao": "Filé de frango grelhado servido com arroz e batata chips.", "preco": 39.9 },
+        { "id": "kids-escalopinho", "nome": "Escalopinho", "descricao": "Filé mignon grelhado servido com arroz e batata gomo.", "preco": 64.9 },
+        { "id": "kids-espaguetinho", "nome": "Espaguetinho do alemão", "descricao": "Escolha entre molho ao sugo ou branco.", "preco": 34.9 }
+      ],
+      "adicionais": {
+        "titulo": "Adicionais kids",
+        "itens": [
+          ["Acrescente franguinho grelhado", 14.9],
+          ["Acrescente iscas de frango crocante", 14.9],
+          ["Acrescente escalopinho de mignon", 39.9]
+        ]
+      }
+    },
+
+    {
+      "id": "sobremesas",
+      "grupo": "doces",
+      "eyebrow": "Para adoçar",
+      "nome": "Sobremesas",
+      "itens": [
+        { "id": "apfelstrudel", "nome": "Apfelstrudel", "descricao": "Massa folhada alemã recheada com maçã verde, passas, rum e amêndoas laminadas. Servida quentinha acompanhada de creme inglês.", "precos": [["Simples", 44.9], ["Com sorvete de creme", 49.9]], "foto": "apfelstrudel" },
+        { "id": "gateau-alemao", "nome": "Gateau do alemão", "descricao": "Gigantesco petit gateau de chocolate, cheio de cobertura e caldas de chocolate, morango, castanhas e um delicioso sorvete de palito para completar.", "preco": 89.9 },
+        { "id": "chocolamour", "nome": "Chocolamour", "descricao": "Gigantesca taça de sorvete chocolate, farofa doce, calda de chocolate, bombom e chantilly.", "precos": [["Meio", 39.9], ["Inteiro", 74.9]] },
+        { "id": "petit-gateau", "nome": "Petit gâteau", "descricao": "Bolinho de chocolate quente servido com sorvete de creme.", "preco": 39.9, "foto": "petit-gateau" },
+        { "id": "pudim", "nome": "Pudim de leite condensado", "preco": 19.9, "foto": "pudim" },
+        { "id": "torta-coco", "nome": "Torta de coco", "descricao": "Nossa receita tradicional preparada com coco fresco e leite condensado.", "preco": 34.9 },
+        { "id": "salada-frutas", "nome": "Salada de frutas", "descricao": "Frutas da estação.", "preco": 24.9, "foto": "salada-de-frutas" },
+        { "id": "fruta-estacao", "nome": "Fruta da estação", "descricao": "Verifique as frutas disponíveis com nossos garçons.", "preco": 24.9 },
+        { "id": "sorvete", "nome": "Sorvete", "descricao": "Escolha entre chocolate ou creme.", "preco": 24.9 },
+        { "id": "creme-papaya", "nome": "Creme de Papaya", "preco": 34.9 }
+      ]
+    },
+
+    {
+      "id": "cafes",
+      "grupo": "doces",
+      "eyebrow": "Para completar sua refeição",
+      "nome": "Cafés",
+      "itens": [
+        { "id": "expresso", "nome": "Expresso", "preco": 11.9, "foto": "expresso" },
+        { "id": "expresso-leite", "nome": "Expresso com leite", "preco": 13.9 },
+        { "id": "descafeinado", "nome": "Café descafeinado", "preco": 11.9 },
+        { "id": "cappuccino-p", "nome": "Cappuccino pequeno", "preco": 12.9 },
+        { "id": "cappuccino-g", "nome": "Cappuccino grande", "preco": 15.9 },
+        { "id": "chantilly", "nome": "Acrescente chantilly", "preco": 4.9 }
+      ]
+    },
+
+    {
+      "id": "licores",
+      "grupo": "doces",
+      "eyebrow": "Final feliz",
+      "nome": "Licores",
+      "itens": [
+        { "id": "amaretto", "nome": "Amaretto", "preco": 26.9 },
+        { "id": "baileys", "nome": "Baileys", "preco": 26.9 },
+        { "id": "cointreau", "nome": "Cointreau", "preco": 26.9 },
+        { "id": "drambuie", "nome": "Drambuie", "preco": 26.9 },
+        { "id": "frangelico", "nome": "Frangélico", "preco": 26.9 },
+        { "id": "grappa", "nome": "Grappa", "preco": 26.9 },
+        { "id": "licor-43", "nome": "Licor 43", "preco": 26.9 },
+        { "id": "sambuca", "nome": "Sambuca", "preco": 26.9 }
+      ]
+    },
+
+    {
+      "id": "cervejas",
+      "grupo": "bar",
+      "eyebrow": "Do bar",
+      "nome": "Cervejas & chopp",
+      "itens": [
+        { "id": "chopp-300", "nome": "Chopp Brahma 300 ml", "preco": 18.9 },
+        { "id": "chopp-500", "nome": "Chopp Brahma 500 ml", "preco": 24.9 },
+        { "id": "heineken-600", "nome": "Heineken 600 ml", "preco": 21.9 },
+        { "id": "original-600", "nome": "Original 600 ml", "preco": 18.9 },
+        { "id": "heineken-ln", "nome": "Heineken Long Neck normal", "preco": 17.9 },
+        { "id": "heineken-ln-zero", "nome": "Heineken Long Neck zero", "preco": 17.9 }
+      ]
+    },
+
+    {
+      "id": "classicos",
+      "grupo": "bar",
+      "eyebrow": "Do bar",
+      "nome": "Coquetéis clássicos",
+      "itens": [
+        { "id": "bloody-mary", "nome": "Bloody Mary", "descricao": "Ketel One, suco de tomate, limão, molho inglês, pimenta tabasco, sal e pimenta do reino.", "preco": 34.9 },
+        { "id": "dry-martini", "nome": "Dry Martini", "descricao": "Tanqueray, vermute extra dry e azeitona.", "preco": 44.9 },
+        { "id": "old-fashioned", "nome": "Old fashioned", "descricao": "Johnnie Walker, angostura, xarope de açúcar e twist de laranja.", "preco": 39.9 },
+        { "id": "negroni", "nome": "Negroni", "descricao": "Tanqueray, vermouth rosso e twist de laranja.", "preco": 39.9 },
+        { "id": "margarita", "nome": "Margarita", "descricao": "Tequila, Cointreau, sumo de limão e sal.", "preco": 39.9 }
+      ]
+    },
+
+    {
+      "id": "contemporaneos",
+      "grupo": "bar",
+      "eyebrow": "Coquetéis",
+      "nome": "Contemporâneos",
+      "itens": [
+        { "id": "aperol", "nome": "Aperol spritz", "descricao": "Espumante, Aperol e água com gás.", "preco": 39.9, "foto": "aperol-spritz" },
+        { "id": "apple-martini", "nome": "Apple Martini", "descricao": "Ketel One, Cointreau, xarope de maçã verde e limão siciliano.", "preco": 39.9 },
+        { "id": "gt-tanqueray", "nome": "G&T Tanqueray", "descricao": "Gin Tanqueray, água tônica e limão.", "preco": 39.9 },
+        { "id": "jack-lemonade", "nome": "Jack lemonade", "descricao": "Jack Daniels, Cointreau, água tônica e limão.", "preco": 39.9 },
+        { "id": "moscow-mule", "nome": "Moscow mule", "descricao": "Ketel One, suco de limão, xarope de açúcar e espuma de gengibre.", "preco": 39.9 },
+        { "id": "expresso-martini", "nome": "Expresso Martini", "descricao": "Ketel One, Baileys, café expresso e grãos de café.", "preco": 39.9 }
+      ]
+    },
+
+    {
+      "id": "especiais",
+      "grupo": "bar",
+      "eyebrow": "Coquetéis",
+      "nome": "Especiais",
+      "itens": [
+        { "id": "pink-gin", "nome": "Pink Gin & Tonic", "descricao": "Refrescante, fit e colorido. Gordon's Pink, tônica zero e frutas vermelhas.", "preco": 39.9, "foto": "pink-gin-tonic" },
+        { "id": "pina-colada", "nome": "Piña Colada", "preco": 39.9 },
+        { "id": "sex-on-the-beach", "nome": "Sex On The Beach", "preco": 39.9, "foto": "sex-on-the-beach" }
+      ]
+    },
+
+    {
+      "id": "caipirinhas",
+      "grupo": "bar",
+      "eyebrow": "Do bar",
+      "nome": "Caipirinhas",
+      "nota": "Escolha o seu sabor preferido: abacaxi, limão, morango, tangerina, frutas vermelhas ou maracujá.",
+      "itens": [
+        { "id": "caipi-saque", "nome": "Saquê Azuma", "preco": 34.9 },
+        { "id": "caipi-cabare", "nome": "Cachaça Cabaré", "preco": 34.9 },
+        { "id": "caipi-espirito", "nome": "Cachaça Espírito de Minas", "preco": 39.9 },
+        { "id": "caipi-smirnoff", "nome": "Vodka Smirnoff", "preco": 34.9 },
+        { "id": "caipi-absolut", "nome": "Vodka Absolut", "preco": 39.9 },
+        { "id": "caipi-ciroc", "nome": "Vodka Ciroc", "preco": 44.9 },
+        { "id": "caipi-greygoose", "nome": "Vodka Grey Goose/Belvedere", "preco": 44.9 },
+        { "id": "caipi-bacardi", "nome": "Rum Bacardi", "preco": 39.9 },
+        { "id": "caipi-steinhager", "nome": "Steinhager", "preco": 39.9 }
+      ]
+    },
+
+    {
+      "id": "whiskeys",
+      "grupo": "bar",
+      "eyebrow": "Do bar",
+      "nome": "Whiskeys",
+      "itens": [
+        { "id": "red-label", "nome": "Red Label", "preco": 29.9 },
+        { "id": "black-label", "nome": "Black Label", "preco": 44.9 },
+        { "id": "chivas-12", "nome": "Chivas 12 anos", "preco": 34.9 },
+        { "id": "jack-daniels", "nome": "Jack Daniel's", "preco": 39.9 },
+        { "id": "buchanans-12", "nome": "Buchanan's 12 anos", "preco": 54.9 }
+      ]
+    },
+
+    {
+      "id": "sem-alcool",
+      "grupo": "bar",
+      "eyebrow": "Sem álcool",
+      "nome": "Sucos e softs",
+      "itens": [
+        { "id": "agua", "nome": "Água", "descricao": "Com ou sem gás.", "preco": 7.9 },
+        { "id": "cha-casa", "nome": "Chá da casa", "descricao": "Infusão de chá de frutas vermelhas com um toque de hortelã.", "preco": 14.9 },
+        { "id": "h2o", "nome": "H2O", "descricao": "Limoneto ou Limão.", "preco": 12.9 },
+        { "id": "refrigerante", "nome": "Refrigerante lata", "descricao": "Zero e tradicional.", "preco": 8.9 },
+        { "id": "sucos-tradicionais", "nome": "Sucos tradicionais", "descricao": "Abacaxi, abacaxi com hortelã, acerola, laranja, limão, melancia, maracujá, morango ou tomate.", "preco": 17.9, "foto": "suco-laranja" },
+        { "id": "sucos-especiais", "nome": "Sucos especiais", "descricao": "Combine suas 02 frutas favoritas.", "preco": 19.9 },
+        { "id": "energetico", "nome": "Energético", "preco": 19.9 }
+      ]
+    }
+  ]
+}
