@@ -11,7 +11,7 @@ import { site } from "@/lib/site";
 const values = ["Deus", "Empatia", "Comprometimento", "Perseverança e resiliência", "Excelência", "Humildade"];
 
 /**
- * Trajetória: marcos e fotos fornecidos pela Demakine (documento "Ajustes Site1 - Linha do tempo").
+ * Trajetória: marcos e fotos fornecidos pela Demakine (documentos "Ajustes Site1 - Linha do tempo" e "Ajustes Site - 05/11").
  * Para acrescentar um marco, é só incluir um item com foto real, na ordem cronológica: a linha do
  * tempo se ajusta sozinha. As fotos ficam em public/img/trajetoria/.
  */
@@ -19,15 +19,15 @@ const timeline: Milestone[] = [
   {
     when: "2012",
     kicker: "Limeira/SP",
-    title: "Fábrica própria",
-    text: "Iniciamos nossa trajetória em uma fábrica própria, localizada em Limeira/SP.",
-    images: [{ src: "/img/trajetoria/2012.webp", alt: "Fachada da primeira fábrica da Demakine, com palmeiras na calçada" }],
+    title: "Primeiro escritório",
+    text: "Iniciamos nossa trajetória em um pequeno escritório, localizado em Limeira/SP.",
+    images: [{ src: "/img/trajetoria/2012.webp", alt: "Fachada do primeiro escritório da Demakine, com palmeiras na calçada" }],
   },
   {
     when: "2014",
-    kicker: "Mudança",
-    title: "Um novo endereço",
-    text: "A mudança para um novo endereço, ampliando nossas experiências e nos preparando para os desafios que estavam por vir.",
+    kicker: "Fábrica",
+    title: "Área fabril de 400 m²",
+    text: "Início da nossa área fabril com 400 metros quadrados.",
     images: [
       { src: "/img/trajetoria/2014.webp", alt: "Galpão de dois andares com faixa amarela na fachada e portão de enrolar" },
       { src: "/img/trajetoria/2014-2.webp", alt: "Equipe montando esteiras de correia verde dentro da fábrica" },
@@ -49,13 +49,7 @@ const timeline: Milestone[] = [
     text: "Passamos a contar com uma estrutura que acompanhou um período importante de expansão das nossas atividades e realização de novos projetos.",
     images: [
       { src: "/img/trajetoria/2020-2025.webp", alt: "Prédio da Demakine em azul e vermelho, com a marca na fachada" },
-      { src: "/img/trajetoria/2020-2025-2.webp", alt: "Fachada do prédio de blocos brancos, com a parte de baixo pintada de azul" },
-      { src: "/img/trajetoria/2020-2025-3.webp", alt: "Prédio de dois andares visto de frente, com duas árvores na calçada" },
-      { src: "/img/trajetoria/2020-2025-4.webp", alt: "Prédio visto de lado, com o portão de madeira ao lado" },
       { src: "/img/trajetoria/2020-2025-5.webp", alt: "Interior do galpão, com bancadas de solda e estruturas de aço em montagem" },
-      { src: "/img/trajetoria/2020-2025-6.webp", alt: "Escritório com mesas e notebooks" },
-      { src: "/img/trajetoria/2020-2025-7.webp", alt: "Sala com armário branco, mesa de trabalho e cafeteira", fit: "contain" },
-      { src: "/img/trajetoria/2020-2025-8.webp", alt: "Recepção com parede azul e escada de degraus de madeira", fit: "contain" },
     ],
   },
   {
@@ -65,12 +59,7 @@ const timeline: Milestone[] = [
     text: "Ampliamos para um segundo barracão, mantendo as duas unidades em funcionamento simultaneamente.",
     images: [
       { src: "/img/trajetoria/2025.webp", alt: "Barracão da Demakine visto da rua, com os muros azuis com a marca e as esteiras expostas ao fundo" },
-      { src: "/img/trajetoria/2025-2.webp", alt: "Prédio azul de dois andares, com o barracão vermelho e branco ao lado, visto da esquina" },
-      { src: "/img/trajetoria/2025-3.webp", alt: "Fachada azul com toldo e a entrada do barracão vermelho, vista de baixo" },
-      { src: "/img/trajetoria/2025-7.webp", alt: "Prédio bege com toldo azul e o telhado azul do barracão ao fundo" },
-      { src: "/img/trajetoria/2025-4.webp", alt: "Interior do barracão, com pórtico de içamento e esteiras azuis em montagem" },
       { src: "/img/trajetoria/2025-8.webp", alt: "Área de produção, com bancadas de solda e estruturas de aço em montagem", fit: "contain" },
-      { src: "/img/trajetoria/2025-5.webp", alt: "Escada interna com corrimão preto e poltronas ao fundo" },
       { src: "/img/trajetoria/2025-6.webp", alt: "Equipe trabalhando no escritório, com mesas e notebooks", fit: "contain" },
     ],
   },
@@ -78,7 +67,7 @@ const timeline: Milestone[] = [
     when: "2026",
     kicker: "Marco",
     title: "Nossa maior estrutura",
-    text: "Alcançamos mais um marco importante: nossa maior estrutura até então. E seguimos aprimorando nossos processos e atendendo às necessidades dos nossos clientes com ainda mais eficiência.",
+    text: "Alcançamos mais um marco importante: nossa maior estrutura até então com 50 mil metros quadrados de área total. E seguimos aprimorando nossos processos e atendendo às necessidades dos nossos clientes com ainda mais eficiência.",
     images: [{ src: "/img/trajetoria/2026.webp", alt: "Vista aérea da maior estrutura da Demakine, com a marca no telhado" }],
     stats: true,
   },
@@ -229,7 +218,7 @@ export default function AEmpresa() {
               title: "Missão",
               body: (
                 <p className="text-[17px] leading-relaxed text-dm-ink/85 md:text-[18px]">
-                  Oferecer soluções práticas e inovadoras na fabricação de máquinas e equipamentos
+                  Desenvolver soluções com excelência na fabricação de máquinas e equipamentos
                   para os setores da indústria e do agronegócio.
                 </p>
               ),

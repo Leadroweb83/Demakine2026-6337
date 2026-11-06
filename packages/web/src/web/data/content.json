@@ -1756,7 +1756,9 @@
       ],
       "models": [],
       "specKeys": [],
-      "images": [],
+      "images": [
+        "/img/produtos/mini-sistema-de-costura/1.webp"
+      ],
       "seoTitle": "Mini Sistema de Costura de Sacaria | Demakine",
       "seoDesc": "Mini sistema de costura com esteira e suporte para costuradora portátil: até 2000 sacos por dia, regulagem de altura e rodízios. Fábrica em Limeira/SP."
     }
