@@ -1,21 +1,39 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapPin, Navigation } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { tr } from "@/lib/i18n";
 
 /**
- * Mapa do Google só depois do clique: o iframe traz uns 80 KB de scripts e cookies do Google, que
- * pesavam na página no celular e rodavam para quem nem ia olhar o mapa. Endereço vem de Dados do site.
+ * Mapa do Google carregado só quando chega perto da tela: o iframe traz uns 80 KB de scripts do Google,
+ * que pesavam na página no celular e rodavam para quem nem ia rolar até o mapa. Quem rola até ele vê o
+ * mapa sozinho; o botão "Ver mapa" continua como reserva (navegador sem IntersectionObserver).
+ * Endereço vem de Dados do site.
  */
 export function MapEmbed({ className, tone = "light" }: { className?: string; tone?: "light" | "dark" }) {
   const [open, setOpen] = useState(false);
+  const holder = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = holder.current;
+    if (open || !el || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) setOpen(true);
+      },
+      { rootMargin: "300px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [open]);
+
   if (open) {
     return (
       <iframe
         src={site.mapsEmbed}
         title={tr("Mapa da fábrica Demakine: {endereco}", { endereco: site.address })}
         referrerPolicy="no-referrer-when-downgrade"
+        loading="lazy"
         className={cn("w-full border-0", className)}
       />
     );
@@ -23,6 +41,7 @@ export function MapEmbed({ className, tone = "light" }: { className?: string; to
   const dark = tone === "dark";
   return (
     <div
+      ref={holder}
       className={cn(
         "relative flex w-full flex-col items-center justify-center gap-3 overflow-hidden px-6 text-center",
         dark ? "bg-[#0d2442] text-white" : "bg-dm-surface text-dm-ink",
