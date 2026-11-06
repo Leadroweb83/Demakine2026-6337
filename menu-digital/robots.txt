@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://cardapio-bar-do-alemao-vila.vercel.app/sitemap.xml

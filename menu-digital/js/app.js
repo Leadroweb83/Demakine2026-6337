@@ -48,6 +48,7 @@
     pratoPrincipal: "Prato principal · escolha 1 opção",
     adicional: "Adicional",
     aoVivo: "Disponível agora",
+    feriado: "Hoje é feriado · indisponível",
     horarioExec: "Seg. a sex., 11h às 15h",
     idioma: "View in English",
     erro: "Não foi possível carregar o cardápio agora. Atualize a página ou fale com a gente pelo",
@@ -148,14 +149,19 @@
     var teste = new URLSearchParams(location.search).get("agora"); // ex.: ?agora=2026-11-09T12:00:00-03:00 (para testes)
     var d = teste ? new Date(teste) : new Date();
     if (isNaN(d)) d = new Date();
-    var partes = new Intl.DateTimeFormat("en-US", { timeZone: FUSO, weekday: "short", hour: "numeric", minute: "numeric", hour12: false }).formatToParts(d);
+    var partes = new Intl.DateTimeFormat("en-US", { timeZone: FUSO, weekday: "short", year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", hour12: false }).formatToParts(d);
     var o = {}; partes.forEach(function (p) { o[p.type] = p.value; });
-    return { dia: o.weekday, minutos: (parseInt(o.hour, 10) % 24) * 60 + parseInt(o.minute, 10) };
+    return { dia: o.weekday, data: o.year + "-" + o.month + "-" + o.day, minutos: (parseInt(o.hour, 10) % 24) * 60 + parseInt(o.minute, 10) };
+  }
+  /* Lista de feriados em data/menu.json → categoria executivo → "feriados" (AAAA-MM-DD) */
+  function hojeEFeriado() {
+    var exec = state.catById.executivo;
+    return !!(exec && exec.feriados && exec.feriados.indexOf(agoraSP().data) !== -1);
   }
   function executivoAberto() {
     var a = agoraSP();
     var util = ["Mon", "Tue", "Wed", "Thu", "Fri"].indexOf(a.dia) !== -1;
-    return util && a.minutos >= 11 * 60 && a.minutos < 15 * 60;
+    return util && !hojeEFeriado() && a.minutos >= 11 * 60 && a.minutos < 15 * 60;
   }
   /* Fora do horário, o executivo vai para o fim do menu */
   function gruposOrdenados() {
@@ -344,7 +350,7 @@
     if (cat.tipo === "executivo") {
       badge = state.execAberto
         ? el("span", { class: "badge badge--on" }, [el("span", { class: "badge__dot", "aria-hidden": "true" }), ui("aoVivo")])
-        : el("span", { class: "badge" }, [svgIcon(ICON_RELOGIO), ui("horarioExec")]);
+        : el("span", { class: "badge" }, [svgIcon(ICON_RELOGIO), hojeEFeriado() ? ui("feriado") : ui("horarioExec")]);
     }
     var head = el("div", { class: "section-head" }, [
       cat.eyebrow ? el("p", { class: "eyebrow", text: trCat(cat, "eyebrow") }) : null,
@@ -735,6 +741,11 @@
     return fetch(url, { cache: "no-cache" })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .catch(function (e) { if (opcional) return null; throw e; });
+  }
+
+  /* Funciona sem internet depois da primeira visita (sw.js) */
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
   }
 
   Promise.all([json(DATA_URL), json(EN_URL, true)])
