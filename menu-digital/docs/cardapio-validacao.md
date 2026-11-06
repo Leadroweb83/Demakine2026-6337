@@ -12,20 +12,20 @@ Entrada + Prato principal + Sobremesa.
 **Entrada (escolha 1):** Caesar salad · Salada campestre · Salada de batata
 **Sobremesa (escolha 1):** Torta de coco · Pudim de leite · Abacaxi com raspa de limão · Bola de sorvete de chocolate ou creme
 
-**79,90 por pessoa · Prato principal (escolha 1)** ⚠️
+**79,90 por pessoa · Prato principal (escolha 1)**
 - Frango
   - Strogonoff: arroz branco e batata chips
   - Frango grelhado: arroz branco e purê de batata
 - Massas
-  - Talharini ao molho sugo: com peito de frango grelhado
-  - Talharini ao molho branco: com peito de frango grelhado
-  - Talharini ao molho bolonhesa
+  - Talharim ao molho sugo: com peito de frango grelhado
+  - Talharim ao molho branco: com peito de frango grelhado
+  - Talharim ao molho bolonhesa
 - Outros
   - Omelete: arroz branco e legumes na manteiga
   - Peixe à milanesa: arroz branco e purê de batata
   - Linguiça calabresa: arroz, feijão e farofa
 
-**94,90 por pessoa · Prato principal (escolha 1)** ⚠️
+**94,90 por pessoa · Prato principal (escolha 1)**
 - Parmegiana
   - Carne: arroz branco e batata chips
   - Frango: arroz branco e batata chips
@@ -74,8 +74,8 @@ Adicional: ovo frito ou cozido · 3,50
 | Caesar | Alface americana, croutons, parmesão, molho caesar | 39,90 | |
 | Chicken Caesar | Alface americana, croutons, parmesão, molho caesar e tiras de frango grelhadas | 44,90 | |
 | Campestre | Mix de alface, tomate, cenoura ralada, palmito picado e molho mostarda | 44,90 | |
-| Ituana ⚠️ | Mix de alface, tomate, pepino, palmito, frios, ervilhas, legumes cozidos, ovos e cebola | | 109,90 |
-| Alemã ⚠️ | Batata cozida, molho de maionese, frios, patê de vitela e salsicha Frankfurt | | 154,90 |
+| Ituana | Mix de alface, tomate, pepino, palmito, frios, ervilhas, legumes cozidos, ovos e cebola | | 109,90 |
+| Alemã | Batata cozida, molho de maionese, frios, patê de vitela e salsicha Frankfurt | | 154,90 |
 | Salada de batata | Batatas com molho de maionese | 39,90 | 89,90 |
 
 ## 5. Acompanhamentos · Para completar a mesa (pág. 06)
@@ -102,10 +102,10 @@ Todos os pratos família servem 3 pessoas.
 | Brochete | Cubos de mignon, calabresa, bacon, tomate e cebola grelhados na chapa, servido com arroz, farofa e vinagrete | 119,90 | |
 | Chateaubriand | Escalope grelhado coberto com molho madeira e champignon. Acompanha purê de batata e arroz | 119,90 | |
 | Milanesa | Crocante e sequinho servido com arroz e salada de batata | 99,90 | 299,90 |
-| Calabrês | Paillard grelhado recheado com calabresa acebolada e provolone. Servido com arroz do alemão, batata gomo com bacon, coberto com molho roty | 119,90 | 359,90 |
+| Calabrês | Paillard grelhado recheado com calabresa acebolada e provolone. Servido com arroz do alemão, batata gomo com bacon, coberto com molho rôti | 119,90 | 359,90 |
 | Pizzaiolo | Escalope grelhado coberto com molho de tomate fresco e azeitonas. Acompanha talharim na manteiga | 119,90 | |
 | Poivre | Escalope grelhado coberto com molho madeira e pimenta verde. Acompanha batata gomo e arroz branco | 129,90 | |
-| Steiner ⚠️ | Escalope grelhado servido com palmito, cebola e ervilha na manteiga e batata chips | | 329,90 |
+| Steiner | Escalope grelhado servido com palmito, cebola e ervilha na manteiga e batata chips | | 329,90 |
 | Strogonoff | Iscas grelhadas cobertas com molho tradicional. Servido com arroz branco e batata chips | 99,90 | 299,90 |
 
 ## 7. Tradição alemã · Receitas da casa (pág. 09)
@@ -128,7 +128,7 @@ Todos os pratos família servem 3 pessoas.
 | Item | Descrição | Individual |
 |---|---|---|
 | À Moda | Suculento filé de abadejo à dorê coberto com molho de camarões, servido com arroz à grega | 174,90 |
-| À Belle Meuniere | Filé de abadejo grelhado coberto com molho de camarões, champignon e alcaparras. Servido com batata sauté e brócolis no azeite | 164,90 |
+| À Belle Meunière | Filé de abadejo grelhado coberto com molho de camarões, champignon e alcaparras. Servido com batata sauté e brócolis no azeite | 164,90 |
 | Vila Rica | Filé de abadejo grelhado servido com arroz verde e brócolis no azeite | 154,90 |
 
 ## 10. Kids · Para os pequenos (pág. 12)
@@ -158,14 +158,14 @@ Escolha seu molho favorito. Todos os pratos família servem 3 pessoas.
 | Canadense | Molho à base de creme de leite, bacon e tomates frescos | 74,90 | 164,90 |
 | Sugo | Tradicional molho à base de tomates frescos | 64,90 | 154,90 |
 | Espaguete alho e óleo | | 59,90 | 144,90 |
-| Na manteiga ⚠️ | | 54,9 | 129,9 |
+| Na manteiga | | 54,90 | 129,90 |
 | Ravióli muçarela de búfala | Feito com nossa massa artesanal, recheado com muçarela de búfala e coberto com molho ao sugo | 64,90 | 164,90 |
 | Lasanha à bolonhesa | Deliciosa massa recheada com presunto, queijo prato e Catupiry, coberta com molho sugo e queijo parmesão | 99,90 | 264,90 |
 
 ## 13. Sobremesas · Para adoçar (págs. 15 e 16)
 | Item | Descrição | Preço |
 |---|---|---|
-| Apfestrudel ⚠️ | Massa folhada alemã recheada com maçã verde, passas, rum e amêndoas laminadas. Servida quentinha acompanhada de creme inglês | Simples 44,90 · Com sorvete de creme 49,90 |
+| Apfelstrudel | Massa folhada alemã recheada com maçã verde, passas, rum e amêndoas laminadas. Servida quentinha acompanhada de creme inglês | Simples 44,90 · Com sorvete de creme 49,90 |
 | Chocolamour | Gigantesca taça de sorvete chocolate, farofa doce, calda de chocolate, bombom e chantilly | Meio 39,90 · Inteiro 74,90 |
 | Gateau do alemão | Gigantesco petit gateau de chocolate, cheio de cobertura e caldas de chocolate, morango, castanhas e um delicioso sorvete de palito para completar | 89,90 |
 | Petit gâteau | Bolinho de chocolate quente servido com sorvete de creme | 39,90 |
@@ -179,7 +179,7 @@ Escolha seu molho favorito. Todos os pratos família servem 3 pessoas.
 ## 14. Coquetéis clássicos · Do bar (pág. 17)
 | Item | Descrição | Preço |
 |---|---|---|
-| Blood mary ⚠️ | Ketel One, suco de tomate, limão, molho inglês, pimenta tabasco, sal e pimenta do reino | 34,90 |
+| Bloody Mary | Ketel One, suco de tomate, limão, molho inglês, pimenta tabasco, sal e pimenta do reino | 34,90 |
 | Dry Martini | Tanqueray, vermute extra dry e azeitona | 44,90 |
 | Old fashioned | Johnnie Walker, angostura, xarope de açúcar e twist de laranja | 39,90 |
 | Negroni | Tanqueray, vermouth rosso e twist de laranja | 39,90 |
@@ -198,9 +198,9 @@ Escolha seu molho favorito. Todos os pratos família servem 3 pessoas.
 ## 16. Coquetéis especiais (pág. 19)
 | Item | Descrição | Preço |
 |---|---|---|
-| Pink Gin & Tonic | Refrescante, fit e colorido. Gordons Pink, tônica zero e frutas vermelhas | 39,90 |
-| Pina Colada ⚠️ | (sem descrição no PDF) | 39,90 |
-| Sex On The Beach ⚠️ | (sem descrição no PDF) | 39,90 |
+| Pink Gin & Tonic | Refrescante, fit e colorido. Gordon's Pink, tônica zero e frutas vermelhas | 39,90 |
+| Piña Colada | (sem descrição no PDF) | 39,90 |
+| Sex On The Beach | (sem descrição no PDF) | 39,90 |
 
 ## 17. Caipirinhas & whiskeys · Do bar (pág. 20)
 Caipirinhas: escolha o seu sabor preferido: abacaxi, limão, morango, tangerina, frutas vermelhas ou maracujá.
@@ -212,7 +212,7 @@ Caipirinhas: escolha o seu sabor preferido: abacaxi, limão, morango, tangerina,
 | Vodka Smirnoff | 34,90 |
 | Vodka Absolut | 39,90 |
 | Vodka Ciroc | 44,90 |
-| Vodka Greygoose/Belvedere | 44,90 |
+| Vodka Grey Goose/Belvedere | 44,90 |
 | Rum Bacardi | 39,90 |
 | Steinhager | 39,90 |
 
@@ -220,7 +220,7 @@ Caipirinhas: escolha o seu sabor preferido: abacaxi, limão, morango, tangerina,
 |---|---|
 | Red Label | 29,90 |
 | Black Label | 44,90 |
-| Chivas 12 anos ⚠️ | 34,90 |
+| Chivas 12 anos | 34,90 |
 | Jack Daniel's | 39,90 |
 | Buchanan's 12 anos | 54,90 |
 
@@ -231,7 +231,7 @@ Caipirinhas: escolha o seu sabor preferido: abacaxi, limão, morango, tangerina,
 | Chá da casa | Infusão de chá de frutas vermelhas com um toque de hortelã | 14,90 |
 | H2O | Limoneto ou Limão | 12,90 |
 | Refrigerante lata | Zero e tradicional | 8,90 |
-| Suco tradicionais ⚠️ | Abacaxi, abacaxi com hortelã, acerola, laranja, limão, melancia, maracujá, morango ou tomate | 17,90 |
+| Sucos tradicionais | Abacaxi, abacaxi com hortelã, acerola, laranja, limão, melancia, maracujá, morango ou tomate | 17,90 |
 | Sucos especiais | Combine suas 02 frutas favoritas | 19,90 |
 | Energético | | 19,90 |
 
@@ -251,13 +251,13 @@ Caipirinhas: escolha o seu sabor preferido: abacaxi, limão, morango, tangerina,
 | Expresso | 11,90 |
 | Expresso com leite | 13,90 |
 | Café descafeinado | 11,90 |
-| Capuccino pequeno | 12,90 |
-| Capuccino grande | 15,90 |
-| Acrescente Chantily | 4,90 |
+| Cappuccino pequeno | 12,90 |
+| Cappuccino grande | 15,90 |
+| Acrescente chantilly | 4,90 |
 
 | Licor | Preço |
 |---|---|
-| Amaretto, Baileys, Cointreau, Drambui, Frangélico, Grappa, Licor 43, Sambuca | 26,90 cada |
+| Amaretto, Baileys, Cointreau, Drambuie, Frangélico, Grappa, Licor 43, Sambuca | 26,90 cada |
 
 ## 21. Institucional (págs. 01 e 24)
 - Nome no PDF: Bar do Alemão · Da Vila · Família Steiner
@@ -267,13 +267,21 @@ Caipirinhas: escolha o seu sabor preferido: abacaxi, limão, morango, tangerina,
 
 ---
 
-## Pontos para validar
-1. **Almoço executivo:** os preços 79,90 e 94,90 estão no topo de cada coluna de pratos principais. Interpretei que 79,90 vale para Frango, Massas e Outros (Omelete, Peixe, Linguiça) e 94,90 para Parmegiana, Carne e Kassler.
-2. **Preços parciais:** Salada Ituana e Salada Alemã só têm preço Família. Filé Steiner e Eisbein à pururuca só têm Família. Chateaubriand, Brochete, Pizzaiolo, Poivre, Salsichão Frankfurt e os Peixes só têm Individual. Confirmar se é isso mesmo.
-3. **Conferência visual:** todos os preços foram checados contra a imagem de cada página, além da extração de texto (que havia trocado preços em Filé mignon e Peixes; já corrigido).
-4. **Kassler (prato):** a opção é "02 pessoas" (199,90), diferente do padrão Família para 3 pessoas.
-5. **Chivas 12 anos (34,90)** está mais barato que Black Label (44,90). Confirmar se o valor está correto.
-6. **Sem descrição:** Pina Colada, Sex On The Beach, Creme de Papaya, Provolone à milanesa, batatas, acompanhamentos simples e Energético.
-7. **Grafia (sugestão de correção, só aplico com aprovação):** Apfestrudel → Apfelstrudel · Blood mary → Bloody Mary · Pina Colada → Piña Colada · Capuccino → Cappuccino · Chantily → Chantilly · Drambui → Drambuie · Greygoose → Grey Goose · Gordons → Gordon's · Belle Meuniere → Belle Meunière · molho roty → molho rôti · Suco tradicionais → Sucos tradicionais · Talharini (executivo) × Talharim (massas) · Na manteiga 54,9/129,9 → 54,90/129,90.
-8. **Nome da marca:** a logo diz "Bar do Alemão São Paulo", e o PDF usa "Bar do Alemão Da Vila". Definir qual nome aparece no topo do menu.
-9. **Fotos:** o PDF tem cerca de 30 fotos (aprox. 500 px), sem legenda indicando o prato. Preciso confirmar a correspondência foto ↔ prato antes de usá-las nos cards.
+## Decisões aprovadas (Etapa 1)
+- Status: **cardápio validado pelo cliente.**
+- Nome exibido: **Bar do Alemão São Paulo · Vila**
+- Endereço: Rua Ramos Batista, 147, Vila Olímpia, São Paulo, SP
+- WhatsApp: (11) 93946-0955
+- Instagram: @bardoalemaodavila
+- Preços conforme PDF (inclusive Chivas 12 anos a 34,90 e itens com apenas um tamanho).
+- Almoço executivo: 79,90 para Frango, Massas e Outros; 94,90 para Parmegiana, Carne e Kassler.
+- Correções de grafia aplicadas neste documento.
+- Itens sem descrição permanecem sem descrição.
+- Pendentes (não informados): horário geral de funcionamento e taxa de serviço.
+
+## Melhorias aprovadas
+1. Fonte única de dados (`menu.json`).
+3. Busca com sinônimos e sem acentos.
+4. Etiquetas informativas (tempo de preparo, quantas pessoas serve, receita da casa).
+5. Mapeamento e otimização das fotos do PDF.
+- Não aprovada: seletor de tamanho (2). Pratos com vários preços exibem todas as opções em linhas.
