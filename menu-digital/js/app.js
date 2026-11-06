@@ -1,12 +1,15 @@
 /* =========================================================
    Bar do Alemão São Paulo · Vila · Cardápio digital
-   Todo o conteúdo vem de data/menu.json (fonte única).
+   Conteúdo: data/menu.json (fonte única de pratos e preços)
+   Inglês:   data/en.json (só traduções; preços vêm do menu.json)
    ========================================================= */
 (function () {
   "use strict";
 
   var DATA_URL = "data/menu.json";
+  var EN_URL = "data/en.json";
   var IMG_DIR = "assets/images/";
+  var FUSO = "America/Sao_Paulo";
 
   var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
   var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
@@ -25,22 +28,156 @@
     vazioTermo: $("#vazio-termo"),
     topo: $("#topo"),
     hero: $(".hero"),
-    whats: $("#fab-whats")
+    whats: $("#fab-whats"),
+    idioma: $("#idioma")
+  };
+
+  /* Textos da interface em português (o inglês fica em data/en.json → ui) */
+  var UI_PT = {
+    titulo: document.title,
+    descricao: ($('meta[name="description"]') || {}).content,
+    aPartir: "a partir de",
+    preparo: "Preparo",
+    resultado: "resultado para",
+    resultados: "resultados para",
+    doBar: "Do nosso bar",
+    entrada: "Entrada",
+    sobremesa: "Sobremesa",
+    escolha1: "Escolha 1 opção",
+    porPessoa: "por pessoa",
+    pratoPrincipal: "Prato principal · escolha 1 opção",
+    adicional: "Adicional",
+    aoVivo: "Disponível agora",
+    horarioExec: "Seg. a sex., 11h às 15h",
+    idioma: "View in English",
+    erro: "Não foi possível carregar o cardápio agora. Atualize a página ou fale com a gente pelo",
+    whatsMensagem: null
   };
 
   var state = {
     data: null,
+    en: null,
+    lang: "pt",
     catById: {},
     grupoAtivo: null,
     catAtiva: null,
-    indice: [],          // entradas pesquisáveis
+    indice: [],
     lockSpy: false,
-    buscando: false
+    execAberto: false
   };
 
+  /* ---------- Idioma ---------- */
+  function isEN() { return state.lang === "en" && !!state.en; }
+
+  function ui(chave) {
+    if (isEN() && state.en.ui[chave] != null) return state.en.ui[chave];
+    return UI_PT[chave];
+  }
+  function trCat(cat, campo) {
+    var t = isEN() && state.en.categorias[cat.id];
+    return (t && t[campo] != null) ? t[campo] : cat[campo];
+  }
+  function trItem(item, campo) {
+    var t = isEN() && state.en.itens[item.id];
+    return (t && t[campo] != null) ? t[campo] : item[campo];
+  }
+  function trRotulo(txt) {
+    return (isEN() && state.en.rotulos[txt]) || txt;
+  }
+  function trGrupo(g) { return (isEN() && state.en.grupos[g.id]) || g.nome; }
+
+  /* Texto em pt + en para a busca encontrar nos dois idiomas */
+  function bilingue(ptTxt, enObj, campos) {
+    var partes = [ptTxt];
+    if (state.en && enObj) campos.forEach(function (c) { if (enObj[c]) partes.push(enObj[c]); });
+    return partes.join(" ");
+  }
+
+  function lerIdiomaInicial() {
+    var p = new URLSearchParams(location.search).get("lang");
+    if (p === "en" || p === "pt") return p;
+    try { var s = localStorage.getItem("cardapio-idioma"); if (s === "en" || s === "pt") return s; } catch (e) { /* sem storage */ }
+    return "pt";
+  }
+
+  function aplicarTextosEstaticos() {
+    var en = isEN();
+    document.documentElement.lang = en ? "en" : "pt-BR";
+    document.title = ui("titulo");
+    var md = $('meta[name="description"]'); if (md) md.content = ui("descricao");
+
+    $$("[data-i18n]").forEach(function (n) {
+      if (n.dataset.pt == null) n.dataset.pt = n.textContent;
+      var k = n.getAttribute("data-i18n");
+      n.textContent = en && state.en.ui[k] != null ? state.en.ui[k] : n.dataset.pt;
+    });
+    $$("[data-i18n-attr]").forEach(function (n) {
+      n.getAttribute("data-i18n-attr").split(",").forEach(function (par) {
+        var a = par.split(":"), attr = a[0], k = a[1], chavePt = "pt" + attr.replace(/[^a-z]/gi, "");
+        if (n.dataset[chavePt] == null) n.dataset[chavePt] = n.getAttribute(attr) || "";
+        n.setAttribute(attr, en && state.en.ui[k] != null ? state.en.ui[k] : n.dataset[chavePt]);
+      });
+    });
+    $$("[data-sugestao-en]").forEach(function (b) {
+      if (b.dataset.sugestaoPt == null) b.dataset.sugestaoPt = b.getAttribute("data-sugestao");
+      var v = en ? b.getAttribute("data-sugestao-en") : b.dataset.sugestaoPt;
+      b.setAttribute("data-sugestao", v); b.textContent = v;
+    });
+
+    els.idioma.textContent = en ? "PT" : "EN";
+    els.idioma.setAttribute("lang", en ? "pt-BR" : "en");
+    els.idioma.setAttribute("aria-label", ui("idioma"));
+  }
+
+  function trocarIdioma() {
+    state.lang = isEN() ? "pt" : "en";
+    try { localStorage.setItem("cardapio-idioma", state.lang); } catch (e) { /* sem storage */ }
+    var url = new URL(location.href);
+    if (state.lang === "en") url.searchParams.set("lang", "en"); else url.searchParams.delete("lang");
+    history.replaceState(null, "", url);
+
+    var manter = state.catAtiva;
+    var noTopo = window.pageYOffset < els.hero.offsetHeight;
+    renderTudo();
+    if (els.busca.value) buscar(els.busca.value);
+    if (manter && !noTopo) irPara(manter, true);
+  }
+
+  /* ---------- Almoço executivo: disponível agora? ---------- */
+  function agoraSP() {
+    var teste = new URLSearchParams(location.search).get("agora"); // ex.: ?agora=2026-11-09T12:00:00-03:00 (para testes)
+    var d = teste ? new Date(teste) : new Date();
+    if (isNaN(d)) d = new Date();
+    var partes = new Intl.DateTimeFormat("en-US", { timeZone: FUSO, weekday: "short", hour: "numeric", minute: "numeric", hour12: false }).formatToParts(d);
+    var o = {}; partes.forEach(function (p) { o[p.type] = p.value; });
+    return { dia: o.weekday, minutos: (parseInt(o.hour, 10) % 24) * 60 + parseInt(o.minute, 10) };
+  }
+  function executivoAberto() {
+    var a = agoraSP();
+    var util = ["Mon", "Tue", "Wed", "Thu", "Fri"].indexOf(a.dia) !== -1;
+    return util && a.minutos >= 11 * 60 && a.minutos < 15 * 60;
+  }
+  /* Fora do horário, o executivo vai para o fim do menu */
+  function gruposOrdenados() {
+    var g = state.data.grupos.slice();
+    if (!state.execAberto) {
+      var i = g.findIndex(function (x) { return x.id === "executivo"; });
+      if (i !== -1) g.push(g.splice(i, 1)[0]);
+    }
+    return g;
+  }
+  function categoriasOrdenadas() {
+    var out = [];
+    gruposOrdenados().forEach(function (g) {
+      state.data.categorias.forEach(function (c) { if (c.grupo === g.id) out.push(c); });
+    });
+    return out;
+  }
+
   /* ---------- Utilidades ---------- */
-  var fmt = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  function money(v) { return fmt.format(v); }
+  function money(v) {
+    return new Intl.NumberFormat(isEN() ? "en-US" : "pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
+  }
 
   function norm(s) {
     return String(s || "")
@@ -59,7 +196,6 @@
         if (v === null || v === undefined || v === false) return;
         if (k === "class") node.className = v;
         else if (k === "text") node.textContent = v;
-        else if (k === "html") node.innerHTML = v;
         else if (k.slice(0, 2) === "on") node.addEventListener(k.slice(2), v);
         else node.setAttribute(k, v === true ? "" : v);
       });
@@ -91,20 +227,18 @@
     });
   }
 
-  /* Rótulo do preço, com quantas pessoas serve quando o PDF informa */
-  function rotuloPreco(p, cat) {
-    var rotulo = p[0];
-    var pessoas = p[2] || (rotulo === "Família" && cat.familia ? cat.familia : null);
-    return { rotulo: rotulo, pessoas: pessoas };
+  function precoEl(v) {
+    return el("span", { class: "preco" }, [el("small", { text: "R$" }), money(v)]);
   }
 
+  /* Rótulo do preço, com quantas pessoas serve quando o PDF informa */
   function listaPrecos(precos, cat) {
     return el("ul", { class: "precos" }, precos.map(function (p) {
-      var r = rotuloPreco(p, cat || {});
+      var pessoas = p[2] || (p[0] === "Família" && cat && cat.familia ? cat.familia : null);
       return el("li", null, [
-        el("span", { class: "rotulo" }, [r.rotulo, r.pessoas ? el("em", { text: " · " + r.pessoas }) : null]),
+        el("span", { class: "rotulo" }, [trRotulo(p[0]), pessoas ? el("em", { text: " · " + trRotulo(pessoas) }) : null]),
         el("span", { class: "leader", "aria-hidden": "true" }),
-        el("span", { class: "preco" }, [el("small", { text: "R$" }), money(p[1])])
+        precoEl(p[1])
       ]);
     }));
   }
@@ -117,68 +251,80 @@
 
   /* ---------- Renderização ---------- */
   function renderItem(item, cat) {
+    var nome = trItem(item, "nome");
     var tags = [];
-    if (cat.selo) tags.push(el("span", { class: "tag tag--selo", text: cat.selo }));
-    if (item.tempo) tags.push(el("span", { class: "tag tag--info" }, [svgIcon(ICON_RELOGIO), "Preparo " + item.tempo]));
-    (item.info || []).forEach(function (t) { tags.push(el("span", { class: "tag tag--info", text: t })); });
-
-    var topo = el("div", { class: "item__topo" }, [
-      el("h3", { class: "item__nome", text: item.nome }),
-      typeof item.preco === "number"
-        ? el("span", { class: "preco" }, [el("small", { text: "R$" }), money(item.preco)])
-        : null
-    ]);
+    var selo = trCat(cat, "selo");
+    if (selo) tags.push(el("span", { class: "tag tag--selo", text: selo }));
+    if (item.tempo) tags.push(el("span", { class: "tag tag--info" }, [svgIcon(ICON_RELOGIO), ui("preparo") + " " + item.tempo]));
+    (item.info || []).forEach(function (t) { tags.push(el("span", { class: "tag tag--info", text: trRotulo(t) })); });
+    var desc = trItem(item, "descricao");
 
     var corpo = el("div", { class: "item__corpo" }, [
-      topo,
+      el("div", { class: "item__topo" }, [
+        el("h3", { class: "item__nome", text: nome }),
+        typeof item.preco === "number" ? precoEl(item.preco) : null
+      ]),
       tags.length ? el("div", { class: "tags" }, tags) : null,
-      item.descricao ? el("p", { class: "item__desc", text: item.descricao }) : null,
+      desc ? el("p", { class: "item__desc", text: desc }) : null,
       item.precos ? listaPrecos(item.precos, cat) : null
     ]);
 
     var li = el("li", { class: "item", id: "item-" + item.id }, [
       corpo,
-      item.foto ? el("div", { class: "item__foto" }, [imagem(item.foto, item.nome, 240, 240)]) : null
+      item.foto ? el("div", { class: "item__foto" }, [imagem(item.foto, nome, 240, 240)]) : null
     ]);
 
-    var precosTxt = (item.precos || []).map(function (p) { return p[0]; }).join(" ");
-    indexar(li, [item.nome, item.descricao, (item.info || []).join(" "), cat.nome, cat.selo, precosTxt].join(" "), cat.id, $(".item__nome", li));
+    var enItem = state.en && state.en.itens[item.id];
+    var enCat = state.en && state.en.categorias[cat.id];
+    indexar(li, [
+      bilingue(item.nome, enItem, ["nome"]),
+      bilingue(item.descricao || "", enItem, ["descricao"]),
+      (item.info || []).join(" "),
+      bilingue(cat.nome, enCat, ["nome"]),
+      bilingue(cat.selo || "", enCat, ["selo"]),
+      (item.precos || []).map(function (p) { return p[0] + " " + trRotulo(p[0]); }).join(" ")
+    ].join(" "), cat.id, $(".item__nome", li));
     return li;
   }
 
   function renderExecutivo(cat) {
     var wrap = el("div", { class: "exec" });
+    var ex = isEN() ? state.en.executivo : null;
+    var exEn = state.en ? state.en.executivo : null;
 
-    function blocoSimples(titulo, classe, itens) {
+    function blocoSimples(tituloKey, classe, itensPt, itensEn) {
       var ul = el("ul", { class: "exec__lista" });
-      itens.forEach(function (t) {
-        var li = el("li", { text: t });
+      itensPt.forEach(function (t, i) {
+        var mostra = (ex && itensEn && itensEn[i]) || t;
+        var li = el("li", { text: mostra });
         ul.appendChild(li);
-        indexar(li, t + " " + titulo + " almoco executivo", cat.id);
+        indexar(li, [t, itensEn ? itensEn[i] : "", "almoco executivo executive lunch"].join(" "), cat.id);
       });
       return el("div", { class: "exec__bloco " + classe }, [
-        el("h3", null, [titulo, el("span", { text: "Escolha 1 opção" })]),
+        el("h3", null, [ui(tituloKey), el("span", { text: ui("escolha1") })]),
         ul
       ]);
     }
 
-    wrap.appendChild(blocoSimples("Entrada", "exec__bloco--entradas", cat.entradas));
-    wrap.appendChild(blocoSimples("Sobremesa", "exec__bloco--sobremesas", cat.sobremesas));
+    wrap.appendChild(blocoSimples("entrada", "exec__bloco--entradas", cat.entradas, exEn && exEn.entradas));
+    wrap.appendChild(blocoSimples("sobremesa", "exec__bloco--sobremesas", cat.sobremesas, exEn && exEn.sobremesas));
 
     cat.planos.forEach(function (plano) {
       var bloco = el("div", { class: "exec__bloco" }, [
-        el("div", { class: "exec__preco" }, [el("strong", { text: money(plano.preco) }), el("span", { text: "por pessoa" })]),
-        el("p", { class: "exec__sub", text: "Prato principal · escolha 1 opção" })
+        el("div", { class: "exec__preco" }, [el("strong", { text: money(plano.preco) }), el("span", { text: ui("porPessoa") })]),
+        el("p", { class: "exec__sub", text: ui("pratoPrincipal") })
       ]);
       plano.secoes.forEach(function (sec) {
-        var s = el("div", { class: "exec__secao" }, [el("h4", { text: sec.nome })]);
+        var nomeSec = (ex && ex.secoes[sec.nome]) || sec.nome;
+        var s = el("div", { class: "exec__secao" }, [el("h4", { text: nomeSec })]);
         sec.itens.forEach(function (p) {
-          var div = el("div", { class: "exec__prato" }, [
-            el("b", { text: p.nome }),
-            p.descricao ? ": " + p.descricao : null
-          ]);
+          var tEn = exEn && exEn.pratos[p.nome];
+          var t = ex && tEn;
+          var nome = (t && t.nome) || p.nome;
+          var desc = (t && t.descricao) || p.descricao;
+          var div = el("div", { class: "exec__prato" }, [el("b", { text: nome }), desc ? ": " + desc : null]);
           s.appendChild(div);
-          indexar(div, [p.nome, p.descricao, sec.nome, "almoco executivo"].join(" "), cat.id, $("b", div));
+          indexar(div, [p.nome, p.descricao, sec.nome, tEn ? tEn.nome + " " + (tEn.descricao || "") : "", "almoco executivo executive lunch"].join(" "), cat.id, $("b", div));
         });
         bloco.appendChild(s);
       });
@@ -186,24 +332,30 @@
     });
 
     if (cat.adicional) {
-      wrap.appendChild(el("p", { class: "exec__adicional" },
-        ["Adicional: " + cat.adicional[0] + " · R$ " + money(cat.adicional[1])]));
+      var nomeAd = (ex && ex.adicional) || cat.adicional[0];
+      wrap.appendChild(el("p", { class: "exec__adicional" }, [ui("adicional") + ": " + nomeAd + " · R$ " + money(cat.adicional[1])]));
     }
     return wrap;
   }
 
   function renderCategoria(cat) {
+    var nome = trCat(cat, "nome");
+    var badge = null;
+    if (cat.tipo === "executivo") {
+      badge = state.execAberto
+        ? el("span", { class: "badge badge--on" }, [el("span", { class: "badge__dot", "aria-hidden": "true" }), ui("aoVivo")])
+        : el("span", { class: "badge" }, [svgIcon(ICON_RELOGIO), ui("horarioExec")]);
+    }
     var head = el("div", { class: "section-head" }, [
-      cat.eyebrow ? el("p", { class: "eyebrow", text: cat.eyebrow }) : null,
-      el("h2", { id: "t-" + cat.id, text: cat.nome }),
-      cat.nota ? el("p", { class: "nota", text: cat.nota }) : null
+      cat.eyebrow ? el("p", { class: "eyebrow", text: trCat(cat, "eyebrow") }) : null,
+      el("h2", { id: "t-" + cat.id, text: nome }),
+      badge,
+      cat.nota ? el("p", { class: "nota", text: trCat(cat, "nota") }) : null
     ]);
 
     var sec = el("section", { class: "cat reveal", id: cat.id, "aria-labelledby": "t-" + cat.id, "data-grupo": cat.grupo }, [head]);
 
-    if (cat.foto) {
-      sec.appendChild(el("div", { class: "cat__banner" }, [imagem(cat.foto, cat.nome, 720, 405)]));
-    }
+    if (cat.foto) sec.appendChild(el("div", { class: "cat__banner" }, [imagem(cat.foto, nome, 720, 405)]));
 
     if (cat.tipo === "executivo") {
       sec.appendChild(renderExecutivo(cat));
@@ -214,8 +366,17 @@
     }
 
     if (cat.adicionais) {
-      var box = el("div", { class: "adicionais" }, [el("h3", { text: cat.adicionais.titulo }), listaPrecos(cat.adicionais.itens, cat)]);
-      $$("li", box).forEach(function (li) { indexar(li, li.textContent + " " + cat.nome, cat.id); });
+      var itens = cat.adicionais.itens.map(function (a) {
+        return [(isEN() && state.en.adicionais[a[0]]) || a[0], a[1]];
+      });
+      var box = el("div", { class: "adicionais" }, [
+        el("h3", { text: trCat(cat, "adicionais") || cat.adicionais.titulo }),
+        listaPrecos(itens, cat)
+      ]);
+      $$("li", box).forEach(function (li, i) {
+        var a = cat.adicionais.itens[i];
+        indexar(li, [a[0], state.en ? state.en.adicionais[a[0]] : "", cat.nome, "kids"].join(" "), cat.id);
+      });
       sec.appendChild(box);
     }
     return sec;
@@ -223,11 +384,9 @@
 
   function renderConteudo() {
     var frag = document.createDocumentFragment();
-    state.data.grupos.forEach(function (g) {
+    gruposOrdenados().forEach(function (g) {
       var wrap = el("div", { class: "grupo grupo--" + g.id, "data-grupo": g.id });
-      if (g.id === "bar") {
-        wrap.appendChild(el("div", { class: "grupo-titulo" }, [el("p", { text: "Do nosso bar" })]));
-      }
+      if (g.id === "bar") wrap.appendChild(el("div", { class: "grupo-titulo" }, [el("p", { text: ui("doBar") })]));
       state.data.categorias
         .filter(function (c) { return c.grupo === g.id; })
         .forEach(function (c) { wrap.appendChild(renderCategoria(c)); });
@@ -238,29 +397,29 @@
   }
 
   function renderDestaques() {
+    els.rail.innerHTML = "";
     var frag = document.createDocumentFragment();
     state.data.destaques.forEach(function (d, i) {
+      var t = (isEN() && state.en.destaques[d.alvo]) || {};
+      var titulo = t.titulo || d.titulo, sub = t.sub || d.sub;
       var preco = null;
       if (state.catById[d.alvo]) {
         var valores = state.catById[d.alvo].itens.map(menorPreco).filter(function (v) { return v !== null; });
-        preco = "a partir de R$ " + money(Math.min.apply(null, valores));
+        preco = ui("aPartir") + " R$ " + money(Math.min.apply(null, valores));
       } else {
         var item = acharItem(d.alvo);
-        if (item) {
-          var v = menorPreco(item);
-          preco = (item.precos && item.precos.length > 1 ? "a partir de " : "") + "R$ " + money(v);
-        }
+        if (item) preco = (item.precos && item.precos.length > 1 ? ui("aPartir") + " " : "") + "R$ " + money(menorPreco(item));
       }
       frag.appendChild(el("button", {
         class: "dcard", type: "button",
-        "aria-label": d.titulo + ", " + d.sub + (preco ? ", " + preco : ""),
+        "aria-label": titulo + ", " + sub + (preco ? ", " + preco : ""),
         onclick: function () { irPara(d.alvo); }
       }, [
         imagem(d.foto, "", 480, 600, i < 2),
         el("span", { class: "dcard__txt" }, [
-          el("span", { class: "dcard__sub", text: d.sub }),
-          el("span", { class: "dcard__nome", text: d.titulo, style: "display:block" }),
-          preco ? el("span", { class: "dcard__preco", text: preco, style: "display:block" }) : null
+          el("span", { class: "dcard__sub", text: sub }),
+          el("span", { class: "dcard__nome", text: titulo }),
+          preco ? el("span", { class: "dcard__preco", text: preco }) : null
         ])
       ]));
     });
@@ -277,15 +436,17 @@
 
   /* ---------- Navegação ---------- */
   function renderGrupos() {
-    state.data.grupos.forEach(function (g) {
+    els.grupos.innerHTML = "";
+    gruposOrdenados().forEach(function (g) {
+      var live = g.id === "executivo" && state.execAberto;
       els.grupos.appendChild(el("button", {
-        class: "group", type: "button", "data-grupo": g.id, text: g.nome,
+        class: "group" + (live ? " group--live" : ""), type: "button", "data-grupo": g.id,
         onclick: function () {
           var primeira = state.data.categorias.filter(function (c) { return c.grupo === g.id; })[0];
           limparBusca(true);
           irPara(primeira.id);
         }
-      }));
+      }, [trGrupo(g), live ? el("span", { class: "badge__dot", "aria-hidden": "true" }) : null]));
     });
   }
 
@@ -295,11 +456,13 @@
       .filter(function (c) { return c.grupo === grupoId; })
       .forEach(function (c) {
         els.chips.appendChild(el("button", {
-          class: "chip", type: "button", "data-cat": c.id, text: c.nome,
+          class: "chip", type: "button", "data-cat": c.id, text: trCat(c, "nome"),
           onclick: function () { limparBusca(true); irPara(c.id); }
         }));
       });
   }
+
+  function reduzMovimento() { return matchMedia("(prefers-reduced-motion: reduce)").matches; }
 
   function marcarAtivo(catId) {
     if (!catId || catId === state.catAtiva) return;
@@ -318,22 +481,22 @@
       b.setAttribute("aria-current", on ? "true" : "false");
       if (on) {
         var alvo = b.offsetLeft - parseInt(getComputedStyle(els.chips).paddingLeft || 0, 10);
-        els.chips.scrollTo({ left: Math.max(0, alvo), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        els.chips.scrollTo({ left: Math.max(0, alvo), behavior: reduzMovimento() ? "auto" : "smooth" });
       }
     });
   }
 
   function alturaSticky() { return els.sticky.getBoundingClientRect().height; }
 
-  function irPara(id) {
+  function irPara(id, instantaneo) {
     var alvo = document.getElementById(id) || document.getElementById("item-" + id);
     if (!alvo) return;
     var catId = state.catById[id] ? id : (alvo.closest(".cat") || {}).id;
     state.lockSpy = true;
     marcarAtivo(catId);
     var y = alvo.getBoundingClientRect().top + window.pageYOffset - alturaSticky() - (alvo.classList.contains("item") ? 12 : 0);
-    window.scrollTo({ top: y, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-    if (alvo.classList.contains("item")) {
+    window.scrollTo({ top: y, behavior: instantaneo || reduzMovimento() ? "instant" : "smooth" });
+    if (alvo.classList.contains("item") && !instantaneo) {
       alvo.classList.remove("is-flash"); void alvo.offsetWidth; alvo.classList.add("is-flash");
     }
     // libera o destaque automático só quando a rolagem termina
@@ -343,8 +506,8 @@
       window.removeEventListener("scrollend", liberar);
       state.lockSpy = false; spy();
     };
-    if ("onscrollend" in window) window.addEventListener("scrollend", liberar);
-    irPara._t = setTimeout(liberar, 2000);
+    if ("onscrollend" in window && !instantaneo) window.addEventListener("scrollend", liberar);
+    irPara._t = setTimeout(liberar, instantaneo ? 50 : 2000);
   }
 
   /* Destaca no menu a categoria visível no topo da tela */
@@ -416,7 +579,6 @@
   function buscar(q) {
     var tokens = norm(q).split(" ").filter(Boolean);
     var ativo = tokens.length > 0;
-    state.buscando = ativo;
     document.body.classList.toggle("is-searching", ativo);
     els.limpar.hidden = !q;
 
@@ -432,7 +594,6 @@
     $$(".cat", els.conteudo).forEach(function (sec) {
       sec.hidden = ativo && !porCat[sec.id];
       if (ativo) sec.classList.add("is-in");
-      // blocos do executivo sem pratos visíveis
       $$(".exec__bloco, .exec__secao, .adicionais", sec).forEach(function (b) {
         var visiveis = $$("li, .exec__prato", b).filter(function (x) { return !x.hidden; }).length;
         b.hidden = ativo && visiveis === 0;
@@ -445,9 +606,7 @@
     });
 
     if (ativo) {
-      els.status.textContent = total
-        ? total + (total === 1 ? " resultado" : " resultados") + " para “" + q.trim() + "”"
-        : "";
+      els.status.textContent = total ? total + " " + ui(total === 1 ? "resultado" : "resultados") + " “" + q.trim() + "”" : "";
       els.vazio.hidden = total > 0;
       els.vazioTermo.textContent = q.trim();
     } else {
@@ -488,6 +647,20 @@
   }
 
   /* ---------- Rolagem: topo, sombra e revelação ---------- */
+  var io = null;
+  function observarRevelacao() {
+    var secoes = $$(".reveal:not(.is-in)");
+    if (!("IntersectionObserver" in window)) { secoes.forEach(function (s) { s.classList.add("is-in"); }); return; }
+    if (!io) {
+      io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
+    }
+    secoes.forEach(function (s) { io.observe(s); });
+  }
+
   function ligarRolagem() {
     var tick = false;
     function onScroll() {
@@ -507,45 +680,49 @@
       document.documentElement.style.setProperty("--sticky-h", alturaSticky() + "px");
     });
     els.topo.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: reduzMovimento() ? "instant" : "smooth" });
       els.busca.focus({ preventScroll: true });
     });
-
-    var secoes = $$(".reveal");
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
-        });
-      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
-      secoes.forEach(function (s) { io.observe(s); });
-    } else {
-      secoes.forEach(function (s) { s.classList.add("is-in"); });
-    }
   }
 
   function ligarContato() {
     var r = state.data.restaurante;
-    var wa = "https://wa.me/" + r.whatsapp + "?text=" + encodeURIComponent(r.whatsappMensagem);
-    $("#fab-whats").href = wa;
+    var msg = (isEN() && state.en.ui.whatsMensagem) || r.whatsappMensagem;
+    var wa = "https://wa.me/" + r.whatsapp + "?text=" + encodeURIComponent(msg);
+    els.whats.href = wa;
     $("#link-whats").href = wa;
     $("#link-mapa").href = r.mapa;
   }
 
   /* ---------- Início ---------- */
-  function iniciar(data) {
-    state.data = data;
-    data.categorias.forEach(function (c) { state.catById[c.id] = c; });
-
+  function renderTudo() {
+    state.indice = [];
+    state.catAtiva = null;
+    state.grupoAtivo = null;
+    aplicarTextosEstaticos();
     renderGrupos();
     renderConteudo();
     renderDestaques();
     ligarContato();
+    observarRevelacao();
+    document.documentElement.style.setProperty("--sticky-h", alturaSticky() + "px");
+    marcarAtivo(categoriasOrdenadas()[0].id);
+  }
+
+  function iniciar(resultados) {
+    state.data = resultados[0];
+    state.en = resultados[1];
+    state.data.categorias.forEach(function (c) { state.catById[c.id] = c; });
+    state.execAberto = executivoAberto();
+    state.lang = lerIdiomaInicial();
+    if (!state.en) state.lang = "pt";
+    els.idioma.hidden = !state.en;
+
+    renderTudo();
+    document.body.classList.remove("is-loading");
     ligarBusca();
     ligarRolagem();
-
-    document.documentElement.style.setProperty("--sticky-h", alturaSticky() + "px");
-    marcarAtivo(data.categorias[0].id);
+    els.idioma.addEventListener("click", trocarIdioma);
 
     // abre direto numa categoria ou prato: index.html#parmegiana
     if (location.hash.length > 1) {
@@ -554,13 +731,19 @@
     }
   }
 
-  fetch(DATA_URL, { cache: "no-cache" })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+  function json(url, opcional) {
+    return fetch(url, { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .catch(function (e) { if (opcional) return null; throw e; });
+  }
+
+  Promise.all([json(DATA_URL), json(EN_URL, true)])
     .then(iniciar)
     .catch(function () {
+      document.body.classList.remove("is-loading");
       els.conteudo.innerHTML = "";
       els.conteudo.appendChild(el("p", { class: "aviso" }, [
-        "Não foi possível carregar o cardápio agora. Atualize a página ou fale com a gente pelo ",
+        UI_PT.erro + " ",
         el("a", { href: "https://wa.me/5511939460955", text: "WhatsApp (11) 93946-0955" }), "."
       ]));
     });

@@ -389,3 +389,48 @@ mark { background: rgba(184, 122, 31, .28); color: inherit; border-radius: 3px; 
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; }
 }
+
+/* =========================================================
+   Etapa 4: idioma, executivo ao vivo, título SEO
+   ========================================================= */
+.hero { position: relative; }
+.hero__titulo { margin: 0; font-size: 0; line-height: 0; }
+.dcard__nome, .dcard__preco { display: block; }
+
+.lang {
+  position: absolute; top: 12px; right: 12px;
+  min-width: 44px; height: 36px; padding: 0 12px;
+  border: 1px solid rgba(243, 231, 207, .35); border-radius: 999px;
+  background: rgba(243, 231, 207, .08); color: var(--creme-claro);
+  font: 600 12.5px var(--sans); letter-spacing: .08em; cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.lang:hover { background: rgba(243, 231, 207, .16); border-color: rgba(243, 231, 207, .6); }
+.lang:focus-visible { outline-color: #e0b268; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+  padding: 6px 10px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; line-height: 1;
+  background: #efe5d3; color: var(--texto);
+}
+.badge svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.badge--on { background: #e3f1e8; color: #17603c; }
+.badge__dot {
+  position: relative; display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  background: #1f9d55; flex: none;
+}
+.badge__dot::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid rgba(31, 157, 85, .45);
+  animation: pulso 1.8s ease-out infinite;
+}
+@keyframes pulso { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+.group--live { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.group--live .badge__dot { width: 7px; height: 7px; }
+
+/* Enquanto o cardápio carrega: reserva espaço e esconde o rodapé (evita salto de layout) */
+.is-loading #conteudo { min-height: 100vh; }
+.is-loading .footer, .is-loading .destaques { visibility: hidden; }
+.groups { min-height: 40px; }
+.chips { min-height: 34px; }

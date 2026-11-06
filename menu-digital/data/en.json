@@ -1,0 +1,689 @@
+{
+  "ui": {
+    "titulo": "Menu Bar do Alemão Vila Olímpia · Parmegiana and German food",
+    "skip": "Skip to menu",
+    "h1": "Menu",
+    "heroSub": "Vila Olímpia · Steiner family since 1902",
+    "busca": "Search dishes, drinks or ingredients",
+    "buscaLabel": "Search the menu",
+    "limpar": "Clear search",
+    "navLabel": "Menu sections",
+    "destaquesEyebrow": "Start with tradition",
+    "destaquesTitulo": "House highlights",
+    "aPartir": "from",
+    "preparo": "Prep time",
+    "resultado": "result for",
+    "resultados": "results for",
+    "vazio": "No results for",
+    "vazioDica": "Try another word, such as",
+    "doBar": "From our bar",
+    "entrada": "Starter",
+    "sobremesa": "Dessert",
+    "escolha1": "Choose 1",
+    "porPessoa": "per person",
+    "pratoPrincipal": "Main course · choose 1",
+    "adicional": "Extra",
+    "aoVivo": "Available now",
+    "horarioExec": "Mon to Fri, 11am to 3pm",
+    "historia": "In 1902, Adolf Steiner opened a German confectionery in Itu with his son Max. That is where Bar do Alemão was born, and the family still runs it today.",
+    "legal": "Prices in Brazilian reais (R$). Photos are for illustration only.",
+    "whats": "WhatsApp",
+    "whatsLabel": "Message the restaurant on WhatsApp",
+    "topo": "Back to top",
+    "idioma": "Ver em português",
+    "erro": "We could not load the menu right now. Please refresh the page or message us on",
+    "whatsMensagem": "Hello! I'm viewing the Bar do Alemão digital menu.",
+    "ou": "or",
+    "descricao": "Menu of Bar do Alemão São Paulo in Vila Olímpia: original parmegiana from Itu, Eisbein, Kassler, filet mignon, Brahma draught beer and cocktails. Steiner family since 1902."
+  },
+  "grupos": {
+    "executivo": "Lunch",
+    "cozinha": "Kitchen",
+    "doces": "Sweets",
+    "bar": "Bar"
+  },
+  "rotulos": {
+    "Individual": "Single",
+    "Família": "Family",
+    "02 pessoas": "For 2",
+    "Por pessoa": "Per person",
+    "Broto": "Small",
+    "Mini": "Medium",
+    "Mega": "Large",
+    "Simples": "Plain",
+    "Com sorvete de creme": "With vanilla ice cream",
+    "Meio": "Half",
+    "Inteiro": "Whole",
+    "2 pessoas": "serves 2",
+    "3 pessoas": "serves 3",
+    "5 pessoas": "serves 5",
+    "8 unidades": "8 pieces",
+    "12 unidades": "12 pieces",
+    "20 unidades": "20 pieces"
+  },
+  "destaques": {
+    "parmegiana": {
+      "titulo": "Parmegiana",
+      "sub": "Original from Itu"
+    },
+    "eisbein": {
+      "titulo": "Eisbein",
+      "sub": "House recipe"
+    },
+    "kassler": {
+      "titulo": "Kassler",
+      "sub": "House recipe"
+    },
+    "file-steiner": {
+      "titulo": "Steiner Filet Mignon",
+      "sub": "Filet mignon"
+    },
+    "apfelstrudel": {
+      "titulo": "Apfelstrudel",
+      "sub": "Dessert"
+    }
+  },
+  "categorias": {
+    "executivo": {
+      "eyebrow": "Monday to Friday",
+      "nome": "Executive lunch",
+      "nota": "Starter + Main course + Dessert. Available Monday to Friday from 11am to 3pm (except public holidays and delivery)."
+    },
+    "porcoes": {
+      "eyebrow": "To start and share",
+      "nome": "Sharing plates"
+    },
+    "saladas": {
+      "eyebrow": "From garden to table",
+      "nome": "Salads"
+    },
+    "acompanhamentos": {
+      "eyebrow": "To complete the table",
+      "nome": "Side dishes",
+      "nota": "Our side dishes serve 2 to 3 people."
+    },
+    "tradicao-alema": {
+      "eyebrow": "House recipes",
+      "nome": "German tradition",
+      "selo": "House recipe"
+    },
+    "parmegiana": {
+      "eyebrow": "Century-old recipes",
+      "nome": "Parmegiana",
+      "selo": "Original from Itu",
+      "nota": "Delicious and original from Itu. All parmegianas come with white rice and your favourite potatoes: wedges or chips."
+    },
+    "file-mignon": {
+      "eyebrow": "From our kitchen",
+      "nome": "Filet mignon",
+      "nota": "All family-size dishes serve 3 people."
+    },
+    "frango": {
+      "eyebrow": "From our kitchen",
+      "nome": "Chicken",
+      "nota": "All family-size dishes serve 3 people."
+    },
+    "peixes": {
+      "eyebrow": "From our kitchen",
+      "nome": "Fish"
+    },
+    "massas": {
+      "eyebrow": "Handmade tagliatelle or durum wheat spaghetti",
+      "nome": "Pasta",
+      "nota": "Choose your favourite sauce. All family-size dishes serve 3 people."
+    },
+    "kids": {
+      "eyebrow": "For the little ones",
+      "nome": "Kids",
+      "nota": "For children up to 8 years old.",
+      "adicionais": "Kids extras"
+    },
+    "sobremesas": {
+      "eyebrow": "Something sweet",
+      "nome": "Desserts"
+    },
+    "cafes": {
+      "eyebrow": "To finish your meal",
+      "nome": "Coffee"
+    },
+    "licores": {
+      "eyebrow": "A happy ending",
+      "nome": "Liqueurs"
+    },
+    "cervejas": {
+      "eyebrow": "From the bar",
+      "nome": "Beer & draught"
+    },
+    "classicos": {
+      "eyebrow": "From the bar",
+      "nome": "Classic cocktails"
+    },
+    "contemporaneos": {
+      "eyebrow": "Cocktails",
+      "nome": "Contemporary"
+    },
+    "especiais": {
+      "eyebrow": "Cocktails",
+      "nome": "Specials"
+    },
+    "caipirinhas": {
+      "eyebrow": "From the bar",
+      "nome": "Caipirinhas",
+      "nota": "Brazil's national cocktail. Choose your flavour: pineapple, lime, strawberry, tangerine, red berries or passion fruit."
+    },
+    "whiskeys": {
+      "eyebrow": "From the bar",
+      "nome": "Whiskeys"
+    },
+    "sem-alcool": {
+      "eyebrow": "Alcohol-free",
+      "nome": "Juices & soft drinks"
+    }
+  },
+  "itens": {
+    "couvert": {
+      "nome": "Cover",
+      "descricao": "Seasoned eggplant, marinated olives, butter and a basket of warm bread."
+    },
+    "batata-chips": {
+      "nome": "Potato chips"
+    },
+    "batata-gomo": {
+      "nome": "Potato wedges"
+    },
+    "batata-gomo-bacon": {
+      "nome": "Potato wedges with bacon"
+    },
+    "pocket-batatas": {
+      "nome": "Potato pocket",
+      "descricao": "To take home and enjoy anytime."
+    },
+    "bolinho-risoto": {
+      "nome": "Risotto balls"
+    },
+    "bolinho-carne": {
+      "nome": "German meatballs"
+    },
+    "eisbein-aperitivo": {
+      "nome": "Eisbein bites",
+      "descricao": "German pork knuckle, crispy and tender. Served with a bread basket."
+    },
+    "frango-passarinho": {
+      "nome": "Fried chicken bites with garlic and oil"
+    },
+    "torresmo": {
+      "nome": "Crispy pork crackling"
+    },
+    "file-aperitivo": {
+      "nome": "Filet mignon bites with Catupiry",
+      "descricao": "Grilled filet mignon strips topped with Catupiry cream cheese. Served with a bread basket."
+    },
+    "kassler-grelhado": {
+      "nome": "Grilled Kassler",
+      "descricao": "Grilled smoked pork chop. Served with a bread basket."
+    },
+    "mix-grill": {
+      "nome": "Mix Grill",
+      "descricao": "Platter with Lyoner sausage, veal sausage and Kassler (all grilled), sauerkraut and potato wedges. Served with a bread basket."
+    },
+    "mix-salsichas": {
+      "nome": "Sausage platter",
+      "descricao": "Platter with Lyoner sausage, calabresa sausage (fried) and veal sausage (fried and boiled). Served with a bread basket."
+    },
+    "isca-abadejo": {
+      "nome": "Pollock fish strips",
+      "descricao": "Breaded and fried strips served with house mayonnaise."
+    },
+    "pastel": {
+      "nome": "Pastel (mixed, beef or cheese)",
+      "descricao": "Brazilian crispy fried pastries."
+    },
+    "provolone": {
+      "nome": "Breaded provolone"
+    },
+    "salsichao-lyoner": {
+      "nome": "Lyoner sausage",
+      "descricao": "German sausage made with pork and beef. Served boiled or fried."
+    },
+    "caesar": {
+      "nome": "Caesar",
+      "descricao": "Iceberg lettuce, croutons, parmesan, Caesar dressing."
+    },
+    "chicken-caesar": {
+      "nome": "Chicken Caesar",
+      "descricao": "Iceberg lettuce, croutons, parmesan, Caesar dressing and grilled chicken strips."
+    },
+    "campestre": {
+      "nome": "Country salad",
+      "descricao": "Mixed lettuce, tomato, grated carrot, chopped heart of palm and mustard dressing."
+    },
+    "ituana": {
+      "nome": "Ituana salad",
+      "descricao": "Mixed lettuce, tomato, cucumber, heart of palm, cold cuts, peas, cooked vegetables, eggs and onion."
+    },
+    "salada-alema": {
+      "nome": "German salad",
+      "descricao": "Boiled potatoes, mayonnaise dressing, cold cuts, veal pâté and Frankfurt sausage."
+    },
+    "salada-batata": {
+      "nome": "Potato salad",
+      "descricao": "Potatoes with mayonnaise dressing."
+    },
+    "arroz-grega": {
+      "nome": "Greek-style rice"
+    },
+    "arroz-branco": {
+      "nome": "White rice"
+    },
+    "arroz-verde": {
+      "nome": "Green rice",
+      "descricao": "White rice, parsley and parmesan cheese."
+    },
+    "arroz-alemao": {
+      "nome": "German-style rice",
+      "descricao": "White rice, sausage, heart of palm, peas, parmesan cheese, red pepper and herbs."
+    },
+    "brocolis": {
+      "nome": "Broccoli with garlic and oil"
+    },
+    "chucrute": {
+      "nome": "Sauerkraut"
+    },
+    "farofa": {
+      "nome": "Farofa",
+      "descricao": "Toasted cassava flour."
+    },
+    "legumes": {
+      "nome": "Buttered vegetables"
+    },
+    "pure-batata": {
+      "nome": "Mashed potatoes"
+    },
+    "pure-ervilhas": {
+      "nome": "Pea purée"
+    },
+    "eisbein": {
+      "nome": "Eisbein à pururuca",
+      "descricao": "Tender pork knuckle with crispy crackling, pea purée, boiled potatoes, sauerkraut, Tyrolean onions and veal sausage."
+    },
+    "kassler": {
+      "nome": "Kassler",
+      "descricao": "Smoked pork chop, pea purée, boiled potatoes, sauerkraut and veal sausage."
+    },
+    "salsichao-frankfurt": {
+      "nome": "Frankfurt sausage",
+      "descricao": "Tasty grilled sausage topped with cheese and bacon. Served with potato salad and sauerkraut."
+    },
+    "parm-berinjela": {
+      "nome": "Eggplant parmegiana"
+    },
+    "parm-frango": {
+      "nome": "Chicken parmegiana"
+    },
+    "parm-mignon": {
+      "nome": "Filet mignon parmegiana"
+    },
+    "file-cavalo": {
+      "nome": "À cavalo",
+      "descricao": "Grilled escalope topped with tomato and onion sauce. Served with white rice, fried egg and potato chips."
+    },
+    "file-alemao": {
+      "nome": "Alemão",
+      "descricao": "Grilled paillard stuffed with ham, cheese and tomato. Served with German-style rice, sautéed potatoes and boiled eggs."
+    },
+    "brochete": {
+      "nome": "Brochette",
+      "descricao": "Filet mignon cubes, calabresa sausage, bacon, tomato and onion grilled on the griddle, served with rice, farofa and vinaigrette."
+    },
+    "chateaubriand": {
+      "nome": "Chateaubriand",
+      "descricao": "Grilled escalope topped with Madeira sauce and mushrooms. Served with mashed potatoes and rice."
+    },
+    "file-milanesa": {
+      "nome": "Milanese",
+      "descricao": "Crispy breaded filet served with rice and potato salad."
+    },
+    "file-calabres": {
+      "nome": "Calabrês",
+      "descricao": "Grilled paillard stuffed with sautéed calabresa sausage and onions and provolone. Served with German-style rice and potato wedges with bacon, topped with roast gravy."
+    },
+    "pizzaiolo": {
+      "nome": "Pizzaiolo",
+      "descricao": "Grilled escalope topped with fresh tomato sauce and olives. Served with buttered tagliatelle."
+    },
+    "poivre": {
+      "nome": "Poivre",
+      "descricao": "Grilled escalope topped with Madeira sauce and green peppercorns. Served with potato wedges and white rice."
+    },
+    "file-steiner": {
+      "nome": "Steiner",
+      "descricao": "Grilled escalope served with heart of palm, onion and peas in butter, and potato chips."
+    },
+    "strogonoff-mignon": {
+      "nome": "Stroganoff",
+      "descricao": "Grilled strips in our traditional creamy sauce. Served with white rice and potato chips."
+    },
+    "frango-chefe": {
+      "nome": "Chef's style",
+      "descricao": "Juicy deboned grilled spring chicken served with buttered vegetables and white rice."
+    },
+    "frango-milanesa": {
+      "nome": "Milanese",
+      "descricao": "Breaded and fried chicken breast. Served with rice and potato salad."
+    },
+    "frango-grelhado": {
+      "nome": "Grilled",
+      "descricao": "Grilled chicken breast served with buttered vegetables and mashed potatoes."
+    },
+    "strogonoff-frango": {
+      "nome": "Stroganoff",
+      "descricao": "Grilled strips in our traditional creamy sauce. Served with white rice and potato chips."
+    },
+    "peixe-moda": {
+      "nome": "House style",
+      "descricao": "Juicy egg-battered pollock fillet topped with shrimp sauce, served with Greek-style rice."
+    },
+    "belle-meuniere": {
+      "nome": "À Belle Meunière",
+      "descricao": "Grilled pollock fillet topped with shrimp, mushroom and caper sauce. Served with sautéed potatoes and broccoli in olive oil."
+    },
+    "vila-rica": {
+      "nome": "Vila Rica",
+      "descricao": "Grilled pollock fillet served with green rice and broccoli in olive oil."
+    },
+    "massa-chefe": {
+      "nome": "Chef's style",
+      "descricao": "Sauce made with filet mignon, pork loin and fresh tomatoes."
+    },
+    "canadense": {
+      "nome": "Canadian",
+      "descricao": "Cream sauce with bacon and fresh tomatoes."
+    },
+    "sugo": {
+      "nome": "Sugo",
+      "descricao": "Traditional fresh tomato sauce."
+    },
+    "alho-oleo": {
+      "nome": "Spaghetti with garlic and oil"
+    },
+    "na-manteiga": {
+      "nome": "With butter"
+    },
+    "ravioli": {
+      "nome": "Buffalo mozzarella ravioli",
+      "descricao": "Made with our handmade pasta, filled with buffalo mozzarella and topped with tomato sauce."
+    },
+    "lasanha": {
+      "nome": "Bolognese lasagna",
+      "descricao": "Pasta layered with ham, cheese and Catupiry cream cheese, topped with tomato sauce and parmesan."
+    },
+    "kids-crocante": {
+      "nome": "Crunchy",
+      "descricao": "Breaded chicken strips served with rice and mashed potatoes."
+    },
+    "kids-franguinho": {
+      "nome": "Little chicken",
+      "descricao": "Grilled chicken breast served with rice and potato chips."
+    },
+    "kids-escalopinho": {
+      "nome": "Little escalope",
+      "descricao": "Grilled filet mignon served with rice and potato wedges."
+    },
+    "kids-espaguetinho": {
+      "nome": "Little spaghetti",
+      "descricao": "Choose tomato or white sauce."
+    },
+    "apfelstrudel": {
+      "nome": "Apfelstrudel",
+      "descricao": "German puff pastry filled with green apple, raisins, rum and sliced almonds. Served warm with custard."
+    },
+    "gateau-alemao": {
+      "nome": "Gateau do alemão",
+      "descricao": "A giant chocolate lava cake, loaded with chocolate and strawberry sauces, nuts and an ice cream bar to finish."
+    },
+    "chocolamour": {
+      "nome": "Chocolamour",
+      "descricao": "Giant chocolate ice cream sundae with sweet crumble, chocolate sauce, bonbon and whipped cream."
+    },
+    "petit-gateau": {
+      "nome": "Petit gâteau",
+      "descricao": "Warm chocolate lava cake served with vanilla ice cream."
+    },
+    "pudim": {
+      "nome": "Condensed milk flan"
+    },
+    "torta-coco": {
+      "nome": "Coconut pie",
+      "descricao": "Our traditional recipe made with fresh coconut and condensed milk."
+    },
+    "salada-frutas": {
+      "nome": "Fruit salad",
+      "descricao": "Seasonal fruit."
+    },
+    "fruta-estacao": {
+      "nome": "Seasonal fruit",
+      "descricao": "Ask our waiters which fruit is available."
+    },
+    "sorvete": {
+      "nome": "Ice cream",
+      "descricao": "Choose chocolate or vanilla."
+    },
+    "creme-papaya": {
+      "nome": "Papaya cream"
+    },
+    "expresso": {
+      "nome": "Espresso"
+    },
+    "expresso-leite": {
+      "nome": "Espresso with milk"
+    },
+    "descafeinado": {
+      "nome": "Decaf coffee"
+    },
+    "cappuccino-p": {
+      "nome": "Small cappuccino"
+    },
+    "cappuccino-g": {
+      "nome": "Large cappuccino"
+    },
+    "chantilly": {
+      "nome": "Add whipped cream"
+    },
+    "chopp-300": {
+      "nome": "Brahma draught 300 ml"
+    },
+    "chopp-500": {
+      "nome": "Brahma draught 500 ml"
+    },
+    "heineken-ln": {
+      "nome": "Heineken Long Neck regular"
+    },
+    "heineken-ln-zero": {
+      "nome": "Heineken Long Neck zero"
+    },
+    "bloody-mary": {
+      "descricao": "Ketel One, tomato juice, lime, Worcestershire sauce, Tabasco, salt and black pepper."
+    },
+    "dry-martini": {
+      "descricao": "Tanqueray, extra dry vermouth and olive."
+    },
+    "old-fashioned": {
+      "descricao": "Johnnie Walker, Angostura, sugar syrup and orange twist."
+    },
+    "negroni": {
+      "descricao": "Tanqueray, vermouth rosso and orange twist."
+    },
+    "margarita": {
+      "descricao": "Tequila, Cointreau, lime juice and salt."
+    },
+    "aperol": {
+      "descricao": "Sparkling wine, Aperol and soda water."
+    },
+    "apple-martini": {
+      "descricao": "Ketel One, Cointreau, green apple syrup and lemon."
+    },
+    "gt-tanqueray": {
+      "descricao": "Tanqueray gin, tonic water and lime."
+    },
+    "jack-lemonade": {
+      "descricao": "Jack Daniel's, Cointreau, tonic water and lime."
+    },
+    "moscow-mule": {
+      "descricao": "Ketel One, lime juice, sugar syrup and ginger foam."
+    },
+    "expresso-martini": {
+      "nome": "Espresso Martini",
+      "descricao": "Ketel One, Baileys, espresso and coffee beans."
+    },
+    "pink-gin": {
+      "descricao": "Refreshing, light and colourful. Gordon's Pink, zero-sugar tonic and red berries."
+    },
+    "caipi-saque": {
+      "nome": "Azuma sake"
+    },
+    "caipi-cabare": {
+      "nome": "Cabaré cachaça"
+    },
+    "caipi-espirito": {
+      "nome": "Espírito de Minas cachaça"
+    },
+    "caipi-smirnoff": {
+      "nome": "Smirnoff vodka"
+    },
+    "caipi-absolut": {
+      "nome": "Absolut vodka"
+    },
+    "caipi-ciroc": {
+      "nome": "Ciroc vodka"
+    },
+    "caipi-greygoose": {
+      "nome": "Grey Goose/Belvedere vodka"
+    },
+    "caipi-bacardi": {
+      "nome": "Bacardi rum"
+    },
+    "chivas-12": {
+      "nome": "Chivas 12 years"
+    },
+    "buchanans-12": {
+      "nome": "Buchanan's 12 years"
+    },
+    "agua": {
+      "nome": "Water",
+      "descricao": "Still or sparkling."
+    },
+    "cha-casa": {
+      "nome": "House tea",
+      "descricao": "Red berry tea infusion with a touch of mint."
+    },
+    "h2o": {
+      "descricao": "Limoneto or lemon."
+    },
+    "refrigerante": {
+      "nome": "Canned soft drink",
+      "descricao": "Regular and zero sugar."
+    },
+    "sucos-tradicionais": {
+      "nome": "Fresh juices",
+      "descricao": "Pineapple, pineapple with mint, acerola, orange, lime, watermelon, passion fruit, strawberry or tomato."
+    },
+    "sucos-especiais": {
+      "nome": "Special juices",
+      "descricao": "Mix your 2 favourite fruits."
+    },
+    "energetico": {
+      "nome": "Energy drink"
+    }
+  },
+  "executivo": {
+    "entradas": [
+      "Caesar salad",
+      "Country salad",
+      "Potato salad"
+    ],
+    "sobremesas": [
+      "Coconut pie",
+      "Flan",
+      "Pineapple with lime zest",
+      "Scoop of chocolate or vanilla ice cream"
+    ],
+    "secoes": {
+      "Frango": "Chicken",
+      "Massas": "Pasta",
+      "Outros": "Others",
+      "Parmegiana": "Parmegiana",
+      "Carne": "Beef"
+    },
+    "pratos": {
+      "Strogonoff": {
+        "nome": "Chicken stroganoff",
+        "descricao": "White rice and potato chips."
+      },
+      "Frango grelhado": {
+        "nome": "Grilled chicken",
+        "descricao": "White rice and mashed potatoes."
+      },
+      "Talharim ao molho sugo": {
+        "nome": "Tagliatelle with tomato sauce",
+        "descricao": "With grilled chicken breast."
+      },
+      "Talharim ao molho branco": {
+        "nome": "Tagliatelle with white sauce",
+        "descricao": "With grilled chicken breast."
+      },
+      "Talharim ao molho bolonhesa": {
+        "nome": "Tagliatelle bolognese"
+      },
+      "Omelete": {
+        "nome": "Omelette",
+        "descricao": "White rice and buttered vegetables."
+      },
+      "Peixe à milanesa": {
+        "nome": "Breaded fish",
+        "descricao": "White rice and mashed potatoes."
+      },
+      "Linguiça calabresa": {
+        "nome": "Calabresa sausage",
+        "descricao": "Rice, beans and farofa."
+      },
+      "Parmegiana de carne": {
+        "nome": "Beef parmegiana",
+        "descricao": "White rice and potato chips."
+      },
+      "Parmegiana de frango": {
+        "nome": "Chicken parmegiana",
+        "descricao": "White rice and potato chips."
+      },
+      "Parmegiana de berinjela": {
+        "nome": "Eggplant parmegiana",
+        "descricao": "White rice and potato chips."
+      },
+      "Strogonoff de carne": {
+        "nome": "Beef stroganoff",
+        "descricao": "White rice and potato chips."
+      },
+      "Picadinho": {
+        "nome": "Picadinho (diced beef stew)",
+        "descricao": "White rice, potato chips, farofa and fried egg."
+      },
+      "Bife à cavalo": {
+        "nome": "Steak with fried egg",
+        "descricao": "Tomato and onion sauce, white rice, potato chips and fried egg."
+      },
+      "Carne ao molho madeira": {
+        "nome": "Beef in Madeira sauce",
+        "descricao": "White rice, potato chips."
+      },
+      "Kassler": {
+        "nome": "Kassler",
+        "descricao": "White rice, sauerkraut, pea purée, Tyrolean onions."
+      }
+    },
+    "adicional": "Fried or boiled egg"
+  },
+  "adicionais": {
+    "Acrescente franguinho grelhado": "Add grilled chicken",
+    "Acrescente iscas de frango crocante": "Add crunchy chicken strips",
+    "Acrescente escalopinho de mignon": "Add filet mignon escalope"
+  }
+}

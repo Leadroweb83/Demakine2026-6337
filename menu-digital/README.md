@@ -9,7 +9,10 @@ menu-digital/
   index.html          página única
   css/style.css       visual (Direção A: Vitral & Madeira)
   js/app.js           montagem do cardápio, busca e navegação
-  data/menu.json      TODO o conteúdo do cardápio (fonte única)
+  data/menu.json      TODO o conteúdo do cardápio (fonte única de pratos e preços)
+  data/en.json        traduções para inglês (sem preços)
+  tools/gerar-seo.py  gera os dados de SEO a partir do menu.json
+  robots.txt          (sitemap.xml é gerado ao informar o domínio)
   assets/
     logo.png, logo.webp, logo-claro.webp
     images/           fotos dos pratos (WebP)
@@ -32,7 +35,35 @@ Tudo fica em `data/menu.json`. Não é preciso mexer no HTML.
 - **Novo prato:** copie um item da mesma categoria e troque o `id`, que precisa ser único.
 - **Busca:** a lista `sinonimos` faz, por exemplo, quem busca "joelho de porco" encontrar o Eisbein.
 
-Depois de editar, valide o JSON (por exemplo, em jsonlint.com) antes de publicar.
+Depois de editar, valide o JSON (por exemplo, em jsonlint.com) e atualize o SEO:
+
+```bash
+python3 tools/gerar-seo.py --dominio https://SEU-DOMINIO
+```
+
+## Versão em inglês
+
+- O botão **EN/PT** fica no topo. A escolha é lembrada no aparelho.
+- Link direto em inglês: `.../?lang=en` (útil para QR Code em recepção de hotel).
+- Para traduzir um prato novo, acrescente em `data/en.json` → `itens` o mesmo `id` do `menu.json`, com `nome` e `descricao`. Sem tradução, o prato aparece em português.
+- A busca funciona nos dois idiomas ao mesmo tempo.
+
+## Almoço executivo automático
+
+- De segunda a sexta, das 11h às 15h (horário de São Paulo), o executivo aparece em primeiro lugar com o selo "Disponível agora".
+- Fora desse horário, ele vai para o fim do menu e mostra o horário de funcionamento.
+- Feriados não são detectados automaticamente (o aviso "exceto feriados" continua no texto).
+- Para testar outro horário: `.../?agora=2026-11-09T12:00:00-03:00`.
+
+## SEO local
+
+- `tools/gerar-seo.py` escreve no `index.html` os dados estruturados Schema.org (`Restaurant` + `Menu`) com todas as seções, pratos e preços. Com `--dominio`, também gera canonical, hreflang pt/en, `sitemap.xml` e `robots.txt`.
+- Depois de publicar:
+  1. Valide em https://search.google.com/test/rich-results
+  2. No Google Search Console, adicione o domínio e envie o `sitemap.xml`.
+  3. No Perfil da Empresa no Google (Google Meu Negócio): Editar perfil → Cardápio → Link do cardápio → cole o endereço publicado.
+  4. Coloque o mesmo link na bio do Instagram @bardoalemaodavila.
+- A hospedagem deve servir os arquivos com compressão (gzip ou brotli). Vercel, Netlify e Cloudflare Pages fazem isso automaticamente.
 
 ## Rodar localmente
 
