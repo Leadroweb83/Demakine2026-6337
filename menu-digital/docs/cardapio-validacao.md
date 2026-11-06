@@ -97,18 +97,16 @@ Nossas porções servem 2 a 3 pessoas.
 Todos os pratos família servem 3 pessoas.
 | Item | Descrição | Individual | Família |
 |---|---|---|---|
-| À cavalo | Escalope grelhado, coberto com molho de tomate e cebola. Servido com arroz branco, ovo e batata chips | 99,90 | |
+| À cavalo | Escalope grelhado, coberto com molho de tomate e cebola. Servido com arroz branco, ovo e batata chips | 99,90 | 299,90 |
 | Alemão | Paillard grelhado recheado com presunto, queijo prato e tomate. Servido com arroz do alemão, batata sauté e ovos cozidos | 99,90 | 299,90 |
 | Brochete | Cubos de mignon, calabresa, bacon, tomate e cebola grelhados na chapa, servido com arroz, farofa e vinagrete | 119,90 | |
-| Chateaubriand | Escalope grelhado coberto com molho madeira e champignon. Acompanha purê de batata e arroz | 119,90 | 299,90 |
+| Chateaubriand | Escalope grelhado coberto com molho madeira e champignon. Acompanha purê de batata e arroz | 119,90 | |
 | Milanesa | Crocante e sequinho servido com arroz e salada de batata | 99,90 | 299,90 |
 | Calabrês | Paillard grelhado recheado com calabresa acebolada e provolone. Servido com arroz do alemão, batata gomo com bacon, coberto com molho roty | 119,90 | 359,90 |
 | Pizzaiolo | Escalope grelhado coberto com molho de tomate fresco e azeitonas. Acompanha talharim na manteiga | 119,90 | |
 | Poivre | Escalope grelhado coberto com molho madeira e pimenta verde. Acompanha batata gomo e arroz branco | 129,90 | |
 | Steiner ⚠️ | Escalope grelhado servido com palmito, cebola e ervilha na manteiga e batata chips | | 329,90 |
 | Strogonoff | Iscas grelhadas cobertas com molho tradicional. Servido com arroz branco e batata chips | 99,90 | 299,90 |
-
-⚠️ À cavalo: no PDF, o "Família 299,90" aparece entre "À cavalo" e "Alemão". Interpretei como pertencente ao Chateaubriand (coluna da direita). Ver ponto 3.
 
 ## 7. Tradição alemã · Receitas da casa (pág. 09)
 | Item | Descrição | Preço |
@@ -130,10 +128,8 @@ Todos os pratos família servem 3 pessoas.
 | Item | Descrição | Individual |
 |---|---|---|
 | À Moda | Suculento filé de abadejo à dorê coberto com molho de camarões, servido com arroz à grega | 174,90 |
-| À Belle Meuniere | Filé de abadejo grelhado coberto com molho de camarões, champignon e alcaparras. Servido com batata sauté e brócolis no azeite | 154,90 |
-| Vila Rica | Filé de abadejo grelhado servido com arroz verde e brócolis no azeite | 164,90 |
-
-⚠️ Os preços de Belle Meuniere (154,90) e Vila Rica (164,90) foram atribuídos pela posição na coluna. Ver ponto 3.
+| À Belle Meuniere | Filé de abadejo grelhado coberto com molho de camarões, champignon e alcaparras. Servido com batata sauté e brócolis no azeite | 164,90 |
+| Vila Rica | Filé de abadejo grelhado servido com arroz verde e brócolis no azeite | 154,90 |
 
 ## 10. Kids · Para os pequenos (pág. 12)
 Servido para crianças até 8 anos.
@@ -273,8 +269,8 @@ Caipirinhas: escolha o seu sabor preferido: abacaxi, limão, morango, tangerina,
 
 ## Pontos para validar
 1. **Almoço executivo:** os preços 79,90 e 94,90 estão no topo de cada coluna de pratos principais. Interpretei que 79,90 vale para Frango, Massas e Outros (Omelete, Peixe, Linguiça) e 94,90 para Parmegiana, Carne e Kassler.
-2. **Preços parciais:** Salada Ituana e Salada Alemã só têm preço Família. Filé Steiner e Eisbein à pururuca só têm Família. Filé à cavalo, Brochete, Pizzaiolo, Poivre, Salsichão Frankfurt e os Peixes só têm Individual. Confirmar se é isso mesmo.
-3. **Atribuição por posição:** o layout em duas colunas deixa dúvida em Filé mignon (Família 299,90 entre À cavalo e Alemão) e nos Peixes. Confirmar os preços destacados.
+2. **Preços parciais:** Salada Ituana e Salada Alemã só têm preço Família. Filé Steiner e Eisbein à pururuca só têm Família. Chateaubriand, Brochete, Pizzaiolo, Poivre, Salsichão Frankfurt e os Peixes só têm Individual. Confirmar se é isso mesmo.
+3. **Conferência visual:** todos os preços foram checados contra a imagem de cada página, além da extração de texto (que havia trocado preços em Filé mignon e Peixes; já corrigido).
 4. **Kassler (prato):** a opção é "02 pessoas" (199,90), diferente do padrão Família para 3 pessoas.
 5. **Chivas 12 anos (34,90)** está mais barato que Black Label (44,90). Confirmar se o valor está correto.
 6. **Sem descrição:** Pina Colada, Sex On The Beach, Creme de Papaya, Provolone à milanesa, batatas, acompanhamentos simples e Energético.
