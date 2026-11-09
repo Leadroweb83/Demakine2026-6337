@@ -34,6 +34,51 @@
       "permanent": true
     },
     {
+      "source": "/categoria-produto/:cat(esteiras-transportadoras|linha-transporte)",
+      "destination": "/produtos?cat=esteiras-transportadoras",
+      "permanent": true
+    },
+    {
+      "source": "/categoria-produto/roscas-transportadoras",
+      "destination": "/produtos?cat=roscas-transportadoras",
+      "permanent": true
+    },
+    {
+      "source": "/categoria-produto/elevadores",
+      "destination": "/produtos?cat=elevadores",
+      "permanent": true
+    },
+    {
+      "source": "/categoria-produto/maquinas-para-costurar-sacos",
+      "destination": "/produtos?cat=empacotamento-e-costura",
+      "permanent": true
+    },
+    {
+      "source": "/categoria-produto/peneira-para-carvao",
+      "destination": "/produtos/peneira-para-carvao",
+      "permanent": true
+    },
+    {
+      "source": "/categoria-produto/:slug*",
+      "destination": "/produtos",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo",
+      "destination": "/downloads",
+      "permanent": true
+    },
+    {
+      "source": "/:old(beneficiamento-e-classificacao|lavador-de-frutas-e-legumes|lavador-de-batata-doce|polidor-de-frutas-e-legumes)",
+      "destination": "/projetos-especiais",
+      "permanent": true
+    },
+    {
+      "source": "/produtos-e-servicos/beneficiamento-e-classificacao",
+      "destination": "/projetos-especiais",
+      "permanent": true
+    },
+    {
       "source": "/trabalhe-conosco",
       "destination": "/vagas",
       "permanent": true
