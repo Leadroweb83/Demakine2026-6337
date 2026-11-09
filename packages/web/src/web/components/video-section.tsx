@@ -64,7 +64,7 @@ export function VideoSection({ stats = true }: { stats?: boolean }) {
                   <span className="sr-only">Assistir ao </span>
                   <img
                     src="/img/site/video-institucional-cover.webp"
-                    alt=""
+                    alt="Capa do vídeo institucional da Demakine"
                     loading="lazy"
                     className="h-full w-full object-cover opacity-85 transition-all duration-500 group-hover:scale-[1.03] group-hover:opacity-100"
                   />

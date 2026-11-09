@@ -42,7 +42,8 @@ import { artigo, categoryName, getProduct, relatedProducts } from "@/lib/content
 import { quoteHref, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { PageSections, type Block } from "@/lib/page-layout";
-import { locale, tr } from "@/lib/i18n";
+import { locale, localePath, tr } from "@/lib/i18n";
+import { productCommerce } from "@/lib/product-schema";
 
 function NotFound() {
   return (
@@ -596,6 +597,7 @@ export default function Produto() {
             category: categoryName(product.category),
             brand: { "@type": "Brand", name: "Demakine" },
             manufacturer: { "@type": "Organization", name: site.legal },
+            ...productCommerce(product.slug, `${site.url}${localePath(`/produtos/${product.slug}`)}`),
           },
           faqJsonLd(pageFaq),
         ]}
