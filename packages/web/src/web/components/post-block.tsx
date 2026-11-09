@@ -1,3 +1,32 @@
+import { Link } from "wouter";
+import { locale, tr } from "@/lib/i18n";
+
+/**
+ * Texto com links no formato [texto](/caminho). Os links apontam para páginas que existem só em português; nos outros
+ * idiomas o texto aparece sem o link.
+ */
+function Inline({ text }: { text: string }) {
+  const out = tr(text);
+  const parts = out.split(/(\[[^\]]+\]\([^)]+\))/g);
+  if (parts.length === 1) return <>{out}</>;
+  const pt = locale() === "pt";
+  return (
+    <>
+      {parts.map((part, i) => {
+        const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (!m) return part;
+        return pt ? (
+          <Link key={i} href={m[2]!} className="font-semibold text-dm-blue underline-offset-2 hover:underline">
+            {m[1]}
+          </Link>
+        ) : (
+          m[1]
+        );
+      })}
+    </>
+  );
+}
+
 /** Um bloco do corpo do post: "# " título, "- " item de lista, "1. " lista numerada, senão parágrafo. */
 export function Block({ text }: { text: string }) {
   if (text.startsWith("#### ")) {
@@ -29,5 +58,9 @@ export function Block({ text }: { text: string }) {
       </p>
     );
   }
-  return <p className="mt-5 text-[16.5px] leading-relaxed text-dm-ink/80">{text}</p>;
+  return (
+    <p className="mt-5 text-[16.5px] leading-relaxed text-dm-ink/80">
+      <Inline text={text} />
+    </p>
+  );
 }

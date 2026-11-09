@@ -11,6 +11,7 @@ import { ScrollProgress, StickyCta } from "./components/sticky-cta";
 import { CookieConsent } from "./components/cookie-consent";
 import { Shell } from "./components/layout/shell";
 import { BtnPrimary, Section } from "./components/kit";
+import { WA } from "@/lib/landing-links";
 
 /**
  * Cada página é um arquivo separado: quem abre a home não baixa o código do blog, das vagas etc.
@@ -20,6 +21,9 @@ import { BtnPrimary, Section } from "./components/kit";
 type Loader = () => Promise<{ default: ComponentType }>;
 const named = (load: () => Promise<Record<string, unknown>>, name: string): Loader => () =>
   load().then((m) => ({ default: m[name] as ComponentType }));
+
+/** as 10 páginas com URL própria (categorias e comerciais), só em português */
+const LANDING_SLUGS = Object.keys(WA);
 
 const ROUTES: [pattern: RegExp, load: Loader][] = [
   [/^\/$/, () => import("./pages/index")],
@@ -45,6 +49,7 @@ const ROUTES: [pattern: RegExp, load: Loader][] = [
   [/^\/politica-de-privacidade$/, named(() => import("./pages/legal"), "PoliticaDePrivacidade")],
   [/^\/termos-de-uso$/, named(() => import("./pages/legal"), "TermosDeUso")],
   [/^\/obrigado$/, () => import("./pages/obrigado")],
+  [new RegExp(`^\\/(${LANDING_SLUGS.join("|")})$`), () => import("./pages/landing")],
 ];
 const page = (i: number) => lazy(ROUTES[i]![1]);
 
@@ -83,6 +88,7 @@ const ExportLanding = page(19);
 const PoliticaDePrivacidade = page(20);
 const TermosDeUso = page(21);
 const Obrigado = page(22);
+const Landing = page(23);
 // painel e loja só baixam quando alguém abre essas páginas: o visitante do site não carrega esse código
 const Admin = lazy(() => import("./pages/admin"));
 const Loja = lazy(() => import("./pages/loja"));
@@ -126,6 +132,9 @@ function Site() {
         <Route path="/" component={Home} />
         <Route path="/produtos" component={Produtos} />
         <Route path="/produtos/:slug" component={Produto} />
+        {LANDING_SLUGS.map((slug) => (
+          <Route key={slug} path={`/${slug}`} component={pt ? Landing : PtOnly} />
+        ))}
         <Route path="/projetos-especiais" component={ProjetosEspeciais} />
         <Route path="/a-empresa" component={AEmpresa} />
         <Route path="/clientes" component={Clientes} />

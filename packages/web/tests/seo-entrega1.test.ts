@@ -34,6 +34,7 @@ const KEPT = [
   "cartrans-carrinho-transportador",
   "maquina-de-costurar-sacos-siruba-aa-6",
   "peneira-para-carvao",
+  "esteira-de-roletes-livres",
 ];
 
 describe("titles dos produtos", () => {
@@ -47,7 +48,7 @@ describe("titles dos produtos", () => {
     });
   }
 
-  test("os 7 produtos que o Marketing mandou manter não mudam", () => {
+  test("os produtos que o Marketing mandou manter (e a roletes livres, nova) têm title com a marca", () => {
     expect(KEPT.every((s) => products.some((p) => p.slug === s))).toBe(true);
     expect(KEPT.every((s) => products.find((p) => p.slug === s)!.seoTitle?.endsWith(" | Demakine"))).toBe(true);
   });

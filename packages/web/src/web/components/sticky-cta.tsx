@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Send } from "lucide-react";
-import { site } from "@/lib/site";
+import { MessageCircle, Send } from "lucide-react";
+import { site, waHref } from "@/lib/site";
+import { isVendorPage, vendorMessage } from "@/lib/landing-links";
+import { tr } from "@/lib/i18n";
 import { useCompare } from "./compare";
 
 /** Barra de progresso de leitura no topo. */
@@ -54,12 +56,29 @@ export function StickyCta() {
       <p className="mb-2 text-center text-[11px] text-dm-gray">
         {site.mobile} · resposta em até 1 dia útil
       </p>
-      <div className="flex gap-2">
+      {/* nas páginas com WhatsApp na barra, sobra 84 px à direita para o botão flutuante da Mailbiz não cobrir o Orçamento */}
+      <div className={isVendorPage(location) ? "flex gap-2 pr-[84px]" : "flex gap-2"}>
+        {isVendorPage(location) && (
+          <a
+            href={waHref(tr(vendorMessage(location)!))}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-track-location="sticky"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-dm-red px-4 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white"
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden />
+            WhatsApp
+          </a>
+        )}
         <Link
           href="/contato"
-          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-dm-red px-4 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white"
+          className={
+            isVendorPage(location)
+              ? "flex flex-1 items-center justify-center gap-2 rounded-full border border-dm-line px-4 py-3 text-[12.5px] font-bold uppercase tracking-wide text-dm-ink"
+              : "flex flex-1 items-center justify-center gap-2 rounded-full bg-dm-red px-4 py-3 text-[12.5px] font-bold uppercase tracking-wide text-white"
+          }
         >
-          <Send className="h-4 w-4" />
+          {!isVendorPage(location) && <Send className="h-4 w-4" />}
           Orçamento
         </Link>
       </div>

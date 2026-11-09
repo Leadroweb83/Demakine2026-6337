@@ -101,6 +101,11 @@ export function quoteHref(opts: { produto?: string; mensagem?: string } = {}) {
   return `/contato${qs ? `?${qs}` : ""}#formulario`;
 }
 
+/** Link do WhatsApp de vendas com a mensagem já escrita (as páginas de esteira usam este botão). */
+export function waHref(message: string) {
+  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
+}
+
 export const departments = site.departments;
 
 /** Loja virtual: enquanto false, o botão do topo mostra "Em breve" e /loja volta para a home. */

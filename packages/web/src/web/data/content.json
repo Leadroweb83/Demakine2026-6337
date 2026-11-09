@@ -1761,6 +1761,115 @@
       ],
       "seoTitle": "Mini Sistema de Costura de Sacaria com Esteira | Demakine",
       "seoDesc": "Mini sistema de costura com esteira e suporte para costuradora portátil: até 2000 sacos por dia, regulagem de altura e rodízios. Fábrica em Limeira/SP."
+    },
+    {
+      "slug": "esteira-de-roletes-livres",
+      "name": "Esteira de Roletes Livres",
+      "title": "Esteira de Roletes Livres",
+      "category": "esteiras-transportadoras",
+      "tag": null,
+      "applications": [
+        "Picking e separação de pedidos",
+        "Armazéns e centros de distribuição",
+        "E-commerce e expedição",
+        "Linhas de produção"
+      ],
+      "summary": "A Esteira de Roletes Livres move caixas e pacotes sem motor, sobre roletes de aço galvanizado com rolamentos. Monta linhas de picking e separação com trechos retos e curvos, em altura de 700 a 1.000 mm.",
+      "description": [
+        "A Esteira de Roletes Livres simplifica a movimentação de caixas e pacotes e reduz o esforço do operador. Os roletes giram livres sobre rolamentos, então a carga corre pela linha sem motor.",
+        "Combine trechos retos e curvos para montar linhas de picking e separação que atravessam o armazém. A estrutura é parafusada e se desmonta rápido, o que ajuda quando o layout muda.",
+        "Atende quem lida com cargas de tamanhos e pesos diferentes. Cada modelo suporta 70 kg por metro, e você escolhe o comprimento, de 5 a 12 m, e a largura, de 50 ou 60 cm."
+      ],
+      "features": [
+        "Estrutura principal em viga “U” reforçada",
+        "Roletes em aço galvanizado com rolamentos",
+        "Sistema de desmontagem rápida (parafusada)",
+        "Rodízios giratórios nos pés (opcional)",
+        "Laterais de apoio em chapa (opcional)",
+        "Pintura azul em esmalte sintético"
+      ],
+      "models": [
+        {
+          "model": "ERL5",
+          "specs": {
+            "Comprimento": "5 m",
+            "Largura": "50 ou 60 cm",
+            "Altura mínima": "700 mm",
+            "Altura máxima": "1.000 mm",
+            "Capacidade": "70 kg/m"
+          }
+        },
+        {
+          "model": "ERL6",
+          "specs": {
+            "Comprimento": "6 m",
+            "Largura": "50 ou 60 cm",
+            "Altura mínima": "700 mm",
+            "Altura máxima": "1.000 mm",
+            "Capacidade": "70 kg/m"
+          }
+        },
+        {
+          "model": "ERL7",
+          "specs": {
+            "Comprimento": "7 m",
+            "Largura": "50 ou 60 cm",
+            "Altura mínima": "700 mm",
+            "Altura máxima": "1.000 mm",
+            "Capacidade": "70 kg/m"
+          }
+        },
+        {
+          "model": "ERL8",
+          "specs": {
+            "Comprimento": "8 m",
+            "Largura": "50 ou 60 cm",
+            "Altura mínima": "700 mm",
+            "Altura máxima": "1.000 mm",
+            "Capacidade": "70 kg/m"
+          }
+        },
+        {
+          "model": "ERL9",
+          "specs": {
+            "Comprimento": "9 m",
+            "Largura": "50 ou 60 cm",
+            "Altura mínima": "700 mm",
+            "Altura máxima": "1.000 mm",
+            "Capacidade": "70 kg/m"
+          }
+        },
+        {
+          "model": "ERL10",
+          "specs": {
+            "Comprimento": "10 m",
+            "Largura": "50 ou 60 cm",
+            "Altura mínima": "700 mm",
+            "Altura máxima": "1.000 mm",
+            "Capacidade": "70 kg/m"
+          }
+        },
+        {
+          "model": "ERL12",
+          "specs": {
+            "Comprimento": "12 m",
+            "Largura": "50 ou 60 cm",
+            "Altura mínima": "700 mm",
+            "Altura máxima": "1.000 mm",
+            "Capacidade": "70 kg/m"
+          }
+        }
+      ],
+      "specKeys": [
+        "Comprimento",
+        "Largura",
+        "Altura mínima",
+        "Altura máxima",
+        "Capacidade"
+      ],
+      "images": [],
+      "seoTitle": "Esteira de Roletes Livres | Demakine",
+      "seoDesc": "Esteira de roletes livres para picking e separação de caixas e pacotes. Modelos ERL de 5 a 12 m, capacidade de 70 kg/m. Fabricada em Limeira/SP."
     }
   ],
   "clients": [
@@ -2554,6 +2663,7 @@
         "7. Tensão elétrica disponível e se a rede é trifásica",
         "8. Ambiente, tipo de limpeza e número de partidas por turno",
         "Com essas oito informações, a proposta sai no primeiro retorno, sem aquele vai e volta de e-mail.",
+        "Quer ver os modelos e entender o que forma o valor? Veja as [esteiras transportadoras](/esteiras-transportadoras) e a página [esteira transportadora: preço](/esteira-transportadora-preco).",
         "## Erros que aparecem quando o dimensionamento é feito no chute",
         "Largura de correia escolhida pelo preço, e não pela peça maior que vai passar. Motor trabalhando no limite, que esquenta e desarma no meio do turno. Correia lisa em subida forte. Estrutura apoiada em piso irregular, que desalinha a correia. Nenhum desses problemas é caro de evitar no projeto, e todos são caros de corrigir depois da máquina instalada.",
         "## Agora é a sua vez",
@@ -2744,6 +2854,7 @@
         "O agronegócio também se beneficia amplamente das roscas transportadoras, especialmente na carga e descarga de grãos em silos, e na transferência entre moegas, secadores e elevadores.",
         "Na indústria química, as roscas são utilizadas para transportar pós e granulados secos, com a vantagem de evitar emissão de poeiras por meio de estruturas tubulares vedadas. Muitas vezes, são fabricadas com materiais resistentes à corrosão química, garantindo durabilidade e segurança na operação.",
         "A construção civil é outro setor onde as roscas demonstram excelente desempenho. Elas são usadas para o manuseio de cimento, areia e cal, sendo comuns os modelos com hélices reforçadas para suportar materiais altamente abrasivos e moegas rasga sacos. Também facilitam a alimentação de betoneiras e silos.",
+        "Para ver os modelos e a capacidade de cada diâmetro, veja as [roscas transportadoras](/roscas-transportadoras) e a página [rosca transportadora: preço](/rosca-transportadora-preco).",
         "## Conclusão",
         "As roscas transportadoras representam uma solução robusta, eficiente e versátil para o transporte de materiais a granel em diversos setores da indústria. Desde aplicações simples até projetos altamente personalizados, esses equipamentos oferecem desempenho confiável, fácil integração com outras máquinas e excelente relação entre custo e benefício. Seus diferentes modelos permitem atender às mais variadas necessidades operacionais, sempre com foco na segurança, na durabilidade e na eficiência do processo.",
         "Além disso, com um bom projeto e a escolha correta dos materiais, as roscas podem operar com baixa necessidade de manutenção e alta resistência a condições severas, o que amplia sua vida útil e reduz paradas inesperadas. Seja no campo, na fábrica ou em linhas de produção, a rosca transportadora helicoidal continua sendo uma escolha estratégica para quem busca melhorar a movimentação de materiais com qualidade e confiabilidade.",
