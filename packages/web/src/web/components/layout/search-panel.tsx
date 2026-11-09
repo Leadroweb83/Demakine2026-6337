@@ -4,6 +4,7 @@ import { Search, X } from "lucide-react";
 import { categories, categoryName, searchProducts } from "@/lib/content";
 import { quoteHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { categoryHref } from "@/lib/landing-links";
 
 const EXIT_MS = 220;
 const MIN_CHARS = 2;
@@ -128,7 +129,7 @@ export function SearchPanel({ open, onClose }: Props) {
                   {categories.map((c) => (
                     <Link
                       key={c.slug}
-                      href={`/produtos?cat=${c.slug}`}
+                      href={categoryHref(c.slug)}
                       onClick={() => onClose()}
                       className="rounded-full border border-dm-line bg-dm-surface px-3.5 py-2 text-[13px] font-semibold text-dm-ink/75 transition-colors hover:border-dm-blue hover:text-dm-blue"
                     >

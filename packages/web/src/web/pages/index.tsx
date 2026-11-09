@@ -53,6 +53,7 @@ import {
 } from "@/lib/content";
 import { site } from "@/lib/site";
 import { PageSections, type Block } from "@/lib/page-layout";
+import { categoryHref } from "@/lib/landing-links";
 
 const categoryIcons: Record<string, typeof Cog> = {
   "esteiras-transportadoras": Truck,
@@ -131,7 +132,7 @@ export default function Home() {
               return (
                 <Reveal key={c.slug} i={idx} className="h-full">
                   <Link
-                    href={`/produtos?cat=${c.slug}`}
+                    href={categoryHref(c.slug)}
                     className="group flex h-full flex-col rounded-2xl border border-dm-line bg-white p-6 transition-all hover:-translate-y-1 hover:border-dm-blue/35 hover:shadow-lg hover:shadow-dm-blue/10"
                   >
                     <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-dm-blue-soft text-dm-blue">

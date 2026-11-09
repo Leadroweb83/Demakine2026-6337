@@ -30,22 +30,22 @@
     },
     {
       "source": "/categoria-produto/:cat(esteiras-transportadoras|linha-transporte)",
-      "destination": "/produtos?cat=esteiras-transportadoras",
+      "destination": "/esteiras-transportadoras",
       "permanent": true
     },
     {
       "source": "/categoria-produto/roscas-transportadoras",
-      "destination": "/produtos?cat=roscas-transportadoras",
+      "destination": "/roscas-transportadoras",
       "permanent": true
     },
     {
       "source": "/categoria-produto/elevadores",
-      "destination": "/produtos?cat=elevadores",
+      "destination": "/elevadores",
       "permanent": true
     },
     {
       "source": "/categoria-produto/maquinas-para-costurar-sacos",
-      "destination": "/produtos?cat=empacotamento-e-costura",
+      "destination": "/maquinas-de-costurar-sacos",
       "permanent": true
     },
     {
@@ -71,6 +71,84 @@
     {
       "source": "/catalogo",
       "destination": "/downloads",
+      "permanent": true
+    },
+    {
+      "source": "/:old(esteira-transportadora|esteirastransportadoras|esteira-transportadora-de-correia|esteira-para-transporte|esteira-de-transporte|linha-transporte)",
+      "destination": "/esteiras-transportadoras",
+      "permanent": true
+    },
+    {
+      "source": "/:old(fabricante-de-esteiras-transportadoras|fabrica-de-esteiras-transportadoras)",
+      "destination": "/fabricante-de-esteira-transportadora",
+      "permanent": true
+    },
+    {
+      "source": "/:old(esteira-industrial|esteira-de-industria|esteiras-industriais|esteira-automatizada)",
+      "destination": "/esteira-transportadora-industrial",
+      "permanent": true
+    },
+    {
+      "source": "/:old(esteira-de-roletes-livres|transportador-de-roletes|transportador-de-roletes-livres|esteira-de-roletes|esteira-de-rolos)",
+      "destination": "/produtos/esteira-de-roletes-livres",
+      "permanent": true
+    },
+    {
+      "source": "/:old(empacotamento-costura|empacotamento-e-costura)",
+      "destination": "/maquinas-de-costurar-sacos",
+      "permanent": true
+    },
+    {
+      "source": "/produtos",
+      "destination": "/esteiras-transportadoras",
+      "permanent": true,
+      "has": [
+        {
+          "type": "query",
+          "key": "cat",
+          "value": "esteiras-transportadoras"
+        }
+      ]
+    },
+    {
+      "source": "/produtos",
+      "destination": "/roscas-transportadoras",
+      "permanent": true,
+      "has": [
+        {
+          "type": "query",
+          "key": "cat",
+          "value": "roscas-transportadoras"
+        }
+      ]
+    },
+    {
+      "source": "/produtos",
+      "destination": "/elevadores",
+      "permanent": true,
+      "has": [
+        {
+          "type": "query",
+          "key": "cat",
+          "value": "elevadores"
+        }
+      ]
+    },
+    {
+      "source": "/produtos",
+      "destination": "/maquinas-de-costurar-sacos",
+      "permanent": true,
+      "has": [
+        {
+          "type": "query",
+          "key": "cat",
+          "value": "empacotamento-e-costura"
+        }
+      ]
+    },
+    {
+      "source": "/:lang(en|es)/:slug(esteiras-transportadoras|roscas-transportadoras|elevadores|maquinas-de-costurar-sacos|fabricante-de-esteira-transportadora|esteira-transportadora-industrial|esteira-para-carga-e-descarga-de-caminhao|esteira-transportadora-preco|rosca-transportadora-preco|maquina-de-costurar-sacos-preco)",
+      "destination": "/:slug",
       "permanent": true
     },
     {

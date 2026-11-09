@@ -1,6 +1,7 @@
 import content from "../../web/data/content.json";
 import { DEFAULT_CASES } from "../../web/lib/cases";
 import { segmentLps } from "../../web/lib/segmentos-lp";
+import { WA } from "../../web/lib/landing-links";
 
 const ORIGIN = "https://www.demakine.com.br";
 
@@ -10,8 +11,9 @@ const LANGS = [
   { hreflang: "en", prefix: "/en" },
   { hreflang: "es", prefix: "/es" },
 ];
-/** só em português: vagas e a página de exportação (que já é uma página em espanhol e inglês) */
-const PT_ONLY = /^\/(vagas|export)(\/|$|\?)/;
+/** só em português: vagas, a página de exportação (que já é uma página em espanhol e inglês) e as 10 páginas de categoria e comerciais */
+const LANDING_SLUGS = Object.keys(WA);
+const PT_ONLY = new RegExp(`^\\/(vagas|export|${LANDING_SLUGS.join("|")})(\\/|$|\\?)`);
 /**
  * Data da última edição de cada página. Só entra aqui página que mudou de verdade: lastmod inventado faz o Google
  * ignorar o campo. Mexeu numa página fixa ou no conteúdo dos produtos, atualize a data junto.
@@ -19,6 +21,7 @@ const PT_ONLY = /^\/(vagas|export)(\/|$|\?)/;
  */
 export const PAGE_LASTMOD: Record<string, string> = {
   "/": "2026-11-09", // H1 novo
+  ...Object.fromEntries(LANDING_SLUGS.map((slug) => [`/${slug}`, "2026-11-09"])), // data de publicação das 10 páginas
 };
 export const PRODUCTS_LASTMOD = "2026-11-09"; // titles e schema Product com offers
 
@@ -30,6 +33,8 @@ const STATIC_PAGES = [
   "/", "/produtos", "/projetos-especiais", "/a-empresa", "/clientes", "/assistencia-tecnica", "/blog",
   "/faq", "/downloads", "/ferramentas", "/agro", "/contato", "/vagas", "/cases",
   "/politica-de-privacidade", "/termos-de-uso",
+  // categorias e páginas comerciais com URL própria (só português)
+  ...LANDING_SLUGS.map((slug) => `/${slug}`),
   // páginas de segmento vêm da lista do site (segmento novo entra sozinho)
   ...segmentLps.map((s) => `/segmentos/${s.slug}`),
   "/export?lang=es", "/export?lang=en",

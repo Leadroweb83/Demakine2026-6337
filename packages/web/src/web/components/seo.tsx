@@ -19,6 +19,8 @@ type SeoProps = {
   alternates?: { hreflang: string; href: string }[];
   /** idioma do documento, quando não é pt-BR */
   lang?: string;
+  /** páginas-mãe da trilha entre o Início e esta página (ex.: Produtos › Categoria); sem isso vale a regra por endereço */
+  parents?: { name: string; path: string }[];
   /** imagem principal da página para pré-carregar no HTML (ex.: capa do vídeo da home) */
   preloadImage?: string;
 };
@@ -62,12 +64,13 @@ const PARENTS: Record<string, string> = {
 };
 
 /** Trilha "Início > Produtos > Esteira Dalla" em BreadcrumbList, montada pelo endereço e pelo título. */
-function breadcrumbJsonLd(path: string, title: string) {
+function breadcrumbJsonLd(path: string, title: string, parents?: { name: string; path: string }[]) {
   const clean = path.split("?")[0]!;
   if (clean === "/" || clean.startsWith("/export")) return null;
   const parent = "/" + clean.split("/")[1];
   const items = [{ name: tr("Início"), url: `${site.url}${localePath("/")}` }];
-  if (parent !== clean && PARENTS[parent]) items.push({ name: tr(PARENTS[parent]), url: `${site.url}${localePath(parent)}` });
+  if (parents) for (const p of parents) items.push({ name: tr(p.name), url: `${site.url}${localePath(p.path)}` });
+  else if (parent !== clean && PARENTS[parent]) items.push({ name: tr(PARENTS[parent]), url: `${site.url}${localePath(parent)}` });
   items.push({ name: title.split(" | ")[0]!.trim(), url: `${site.url}${localePath(clean)}` });
   return {
     "@context": "https://schema.org",
@@ -91,6 +94,7 @@ export function Seo({
   noindex = false,
   alternates: givenAlternates,
   lang: givenLang,
+  parents,
   preloadImage,
 }: SeoProps) {
   const here = locale();
@@ -143,7 +147,7 @@ export function Seo({
     if (lang) head.htmlLang = lang;
     if (preloadImage) head.preloadImage = preloadImage;
     if (jsonLd) head.jsonLd.push(jsonLd);
-    const crumbs = noindex ? null : breadcrumbJsonLd(path, title);
+    const crumbs = noindex ? null : breadcrumbJsonLd(path, title, parents);
     if (crumbs) head.jsonLd.push(crumbs);
   }
 
@@ -176,7 +180,7 @@ export function Seo({
     };
   }, [alternatesKey, lang]);
 
-  const crumbsKey = noindex ? "" : JSON.stringify(breadcrumbJsonLd(path, title) ?? "");
+  const crumbsKey = noindex ? "" : JSON.stringify(breadcrumbJsonLd(path, title, parents) ?? "");
   useEffect(() => {
     if (!crumbsKey || crumbsKey === '""') return;
     const script = document.createElement("script");

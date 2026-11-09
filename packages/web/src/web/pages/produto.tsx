@@ -40,6 +40,8 @@ import {
 } from "@/lib/product-content";
 import { artigo, categoryName, getProduct, relatedProducts } from "@/lib/content";
 import { quoteHref, site } from "@/lib/site";
+import { VendorCta } from "@/components/vendor-cta";
+import { CATEGORY_PAGE, PRICE_PAGE, categoryHref, isVendorPage, vendorMessage } from "@/lib/landing-links";
 import { cn } from "@/lib/utils";
 import { PageSections, type Block } from "@/lib/page-layout";
 import { locale, localePath, tr } from "@/lib/i18n";
@@ -92,6 +94,12 @@ export default function Produto() {
   const art = artigo(product.name);
   const pt = locale() === "pt";
   const produto = tr(product.name);
+  // trilha Início › Produtos › [Categoria] › Produto (a página de categoria existe só em português)
+  const categoryPage = pt ? CATEGORY_PAGE[product.category] : undefined;
+  const categoryCrumbs = [
+    { name: "Produtos", path: "/produtos" },
+    ...(categoryPage ? [{ name: categoryName(product.category), path: categoryPage }] : []),
+  ];
   const waMessage = pt ? `Olá! Quero um orçamento ${art.da} ${product.name}.` : tr("Olá! Quero um orçamento deste equipamento: {produto}.", { produto });
   const isBelt = product.category === "esteiras-transportadoras";
   const spin = images.length >= 4;
@@ -543,6 +551,15 @@ export default function Produto() {
                 descarga e capacidade desejada. Se tiver fotos do local, melhor ainda: mande no
                 WhatsApp.
               </p>
+              {pt && PRICE_PAGE[product.category] && (
+                <p className="mt-3 text-[15px] text-dm-gray">
+                  Quer entender o que forma o valor?{" "}
+                  <Link href={PRICE_PAGE[product.category]!.to} className="font-semibold text-dm-blue hover:underline">
+                    {PRICE_PAGE[product.category]!.label}
+                  </Link>
+                  .
+                </p>
+              )}
               <ul className="mt-6 space-y-2.5 text-[15px] text-dm-ink/80">
                 {[
                   "Projeto dimensionado para a sua operação",
@@ -587,6 +604,7 @@ export default function Produto() {
         path={`/produtos/${product.slug}`}
         image={images[0]}
         type="product"
+        parents={categoryCrumbs}
         jsonLd={[
           {
             "@context": "https://schema.org",
@@ -606,7 +624,7 @@ export default function Produto() {
       <div className="border-b border-dm-line bg-white">
         <div className="dm-container py-3.5">
           <Breadcrumb
-            items={[{ label: "Produtos", to: "/produtos" }, { label: product.name }]}
+            items={[...categoryCrumbs.map((c) => ({ label: c.name, to: c.path })), { label: product.name }]}
           />
         </div>
       </div>
@@ -661,7 +679,7 @@ export default function Produto() {
           {/* info */}
           <div className="min-w-0">
             <Link
-              href={`/produtos?cat=${product.category}`}
+              href={categoryHref(product.category)}
               className="eyebrow text-dm-blue hover:underline"
             >
               {categoryName(product.category)}
@@ -692,16 +710,25 @@ export default function Produto() {
               </p>
             )}
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <BtnPrimary to={quoteHref({ produto: product.name, mensagem: waMessage })} className="gap-2">
-                <Send className="h-4 w-4" />
-                Pedir orçamento
-              </BtnPrimary>
-              <BtnGhost href={site.phoneHref} className="gap-2">
-                <Phone className="h-4 w-4" />
-                {site.phone}
-              </BtnGhost>
-            </div>
+            {isVendorPage(`/produtos/${product.slug}`) ? (
+              <VendorCta
+                waMessage={tr(vendorMessage(`/produtos/${product.slug}`)!)}
+                location="produto-roletes"
+                product={product.name}
+                className="mt-7"
+              />
+            ) : (
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <BtnPrimary to={quoteHref({ produto: product.name, mensagem: waMessage })} className="gap-2">
+                  <Send className="h-4 w-4" />
+                  Pedir orçamento
+                </BtnPrimary>
+                <BtnGhost href={site.phoneHref} className="gap-2">
+                  <Phone className="h-4 w-4" />
+                  {site.phone}
+                </BtnGhost>
+              </div>
+            )}
 
             <div className="mt-4">
               <CompareToggle slug={product.slug} label="Comparar com outro modelo" />

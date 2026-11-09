@@ -4,7 +4,7 @@
  */
 import vercel from "../../vercel.json";
 
-type Rule = { source: string; destination: string; permanent?: boolean };
+type Rule = { source: string; destination: string; permanent?: boolean; has?: { type: string; key: string; value?: string }[] };
 export const rules = (vercel as { redirects: Rule[] }).redirects;
 
 function compile(source: string) {
@@ -53,7 +53,10 @@ export function follow(input: string): { final: string; hops: Hop[] } {
       url = to;
       continue;
     }
-    const rule = compiled.find((r) => r.re.test(path));
+    const params = new URLSearchParams(query ?? "");
+    // `has` de tipo query: o parâmetro precisa existir (e ter o valor, quando a regra pede um)
+    const hasOk = (r: Rule) => (r.has ?? []).every((h) => h.type === "query" && params.has(h.key) && (h.value === undefined || params.get(h.key) === h.value));
+    const rule = compiled.find((r) => r.re.test(path) && hasOk(r));
     if (!rule) break;
     const groups = rule.re.exec(path)!.groups ?? {};
     const to = rule.destination.replace(/:([A-Za-z_]\w*)/g, (_, k: string) => groups[k] ?? "");

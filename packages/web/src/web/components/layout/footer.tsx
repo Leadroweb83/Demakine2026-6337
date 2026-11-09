@@ -4,6 +4,9 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/f
 import { nav, site } from "@/lib/site";
 import { segmentLps } from "@/lib/segmentos-lp";
 import { categories, getProduct } from "@/lib/content";
+import { cn } from "@/lib/utils";
+import { locale } from "@/lib/i18n";
+import { SOLUTIONS, categoryHref } from "@/lib/landing-links";
 import {
   BrandWordmark,
   FooterSearch,
@@ -36,8 +39,9 @@ const FOOTER_EQUIPMENT: { slug?: string; label?: string; href?: string }[] = [
 ];
 
 export function Footer() {
+  const pt = locale() === "pt"; // as páginas de categoria e as comerciais com URL própria existem só em português
   const top = FOOTER_EQUIPMENT.flatMap((item) => {
-    if (item.href) return [{ key: item.href, label: item.label ?? "", href: item.href }];
+    if (item.href) return [{ key: item.href, label: item.label ?? "", href: item.href.startsWith("/produtos?cat=") ? categoryHref(item.href.split("=")[1]!) : item.href }];
     const p = item.slug ? getProduct(item.slug) : undefined;
     return p ? [{ key: p.slug, label: p.name, href: `/produtos/${p.slug}` }] : [];
   });
@@ -45,7 +49,7 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-dm-blue-deep text-white">
       <div className="dm-container py-14 md:py-16">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className={cn("grid gap-10 md:grid-cols-2 lg:grid-cols-3", pt ? "xl:grid-cols-6" : "xl:grid-cols-5")}>
           <div>
             <img
               src="/img/site/logo-white.webp"
@@ -143,6 +147,21 @@ export function Footer() {
             </ul>
           </div>
 
+          {pt && (
+            <div>
+              <h3 className="eyebrow text-white/60">Soluções</h3>
+              <ul className="mt-5 space-y-2.5 text-[15px] text-white/70">
+                {SOLUTIONS.map((item) => (
+                  <li key={item.to}>
+                    <Link href={item.to} className="hover:text-white">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div>
             <h3 className="eyebrow text-white/60">Contato</h3>
             <ul className="mt-5 space-y-4 text-[15px] text-white/70">
@@ -196,7 +215,11 @@ export function Footer() {
 
         <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-[13px] text-white/60">
           {categories.map((c) => (
-            <Link key={c.slug} href={`/produtos?cat=${c.slug}`} className="hover:text-white/80">
+            <Link
+              key={c.slug}
+              href={categoryHref(c.slug)}
+              className="hover:text-white/80"
+            >
               {c.name}
             </Link>
           ))}

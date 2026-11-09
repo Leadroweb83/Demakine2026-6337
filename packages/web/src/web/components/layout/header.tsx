@@ -7,6 +7,7 @@ import { ProductsMega } from "@/components/layout/mega-menu";
 import { LangSwitch } from "@/components/layout/lang-switch";
 import { SearchPanel } from "@/components/layout/search-panel";
 import { cn } from "@/lib/utils";
+import { categoryHref } from "@/lib/landing-links";
 
 export function Header() {
   const [location] = useLocation();
@@ -248,7 +249,7 @@ export function Header() {
                           {categories.map((c) => (
                             <Link
                               key={c.slug}
-                              href={`/produtos?cat=${c.slug}`}
+                              href={categoryHref(c.slug)}
                               className="rounded-full border border-dm-line bg-dm-surface px-3 py-1.5 text-[13px] font-semibold text-dm-ink/75"
                             >
                               {c.short}

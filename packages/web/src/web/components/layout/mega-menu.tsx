@@ -4,6 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { categories, productsByCategory } from "@/lib/content";
 import { segmentLps } from "@/lib/segmentos-lp";
 import { cn } from "@/lib/utils";
+import { locale } from "@/lib/i18n";
+import { CATEGORY_PAGE } from "@/lib/landing-links";
 
 /**
  * Mega menu de Produtos: as 4 linhas do catálogo com a lista de equipamentos e a
@@ -12,6 +14,7 @@ import { cn } from "@/lib/utils";
 export function ProductsMega({ onNavigate }: { onNavigate?: () => void }) {
   const [cat, setCat] = useState(categories[0]!.slug);
   const [hover, setHover] = useState<string | null>(null);
+  const pt = locale() === "pt"; // as páginas de categoria existem só em português
 
   const list = useMemo(() => productsByCategory(cat), [cat]);
   const shown = useMemo(
@@ -90,6 +93,17 @@ export function ProductsMega({ onNavigate }: { onNavigate?: () => void }) {
                 </Link>
               </li>
             ))}
+            {pt && CATEGORY_PAGE[cat] && (
+              <li>
+                <Link
+                  href={CATEGORY_PAGE[cat]!}
+                  onClick={onNavigate}
+                  className="block rounded-lg px-2.5 py-2 text-[14px] font-semibold leading-snug text-dm-blue transition-colors hover:underline"
+                >
+                  {`Todas as ${categories.find((c) => c.slug === cat)!.name.toLowerCase()}`}
+                </Link>
+              </li>
+            )}
             {cat === "esteiras-transportadoras" && (
               <li>
                 <Link
