@@ -24,6 +24,11 @@
       "permanent": true
     },
     {
+      "source": "/produto/esteira-transportadora-em-v",
+      "destination": "/produtos/esteira-transportadora-para-granel",
+      "permanent": true
+    },
+    {
       "source": "/produto/:slug",
       "destination": "/produtos/:slug",
       "permanent": true
@@ -59,6 +64,16 @@
       "permanent": true
     },
     {
+      "source": "/categoria-produto/linha-beneficiamento",
+      "destination": "/agro",
+      "permanent": true
+    },
+    {
+      "source": "/categoria-produto/pecas-para-esteiras-transportadoras",
+      "destination": "/assistencia-tecnica",
+      "permanent": true
+    },
+    {
       "source": "/categoria-produto/:slug*",
       "destination": "/produtos",
       "permanent": true
@@ -81,6 +96,141 @@
     {
       "source": "/trabalhe-conosco",
       "destination": "/vagas",
+      "permanent": true
+    },
+    {
+      "source": "/esteira-logistica",
+      "destination": "/segmentos/logistica-e-distribuicao",
+      "permanent": true
+    },
+    {
+      "source": "/peneira-de-carvao-3",
+      "destination": "/produtos/peneira-para-carvao",
+      "permanent": true
+    },
+    {
+      "source": "/:old(correia-transportadora-tipo-piramide|estareia-principal-para-sacaria)",
+      "destination": "/produtos/esteira-transportadora-para-sacaria",
+      "permanent": true
+    },
+    {
+      "source": "/esteira-transp-com-bica-de-saida-para-materiais-a-granel",
+      "destination": "/produtos/esteira-transportadora-para-granel",
+      "permanent": true
+    },
+    {
+      "source": "/esteiras-transportadoras/esteira-horizontal-22",
+      "destination": "/produtos/esteira-transportadora-horizontal",
+      "permanent": true
+    },
+    {
+      "source": "/demakine.com.br/esteira-transportadora-de-caixas-e-pacotes",
+      "destination": "/produtos/esteira-transportadora-de-caixas",
+      "permanent": true
+    },
+    {
+      "source": "/grimmway-malaga",
+      "destination": "/clientes",
+      "permanent": true
+    },
+    {
+      "source": "/maquina-de-laranja-paint",
+      "destination": "/projetos-especiais",
+      "permanent": true
+    },
+    {
+      "source": "/:old(maq-cebola|fabrica-esteiras-transportadoras|fabricante-de-esteiras-transportadoras-)",
+      "destination": "/produtos",
+      "permanent": true
+    },
+    {
+      "source": "/showrural-2026",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/trabalhe-conosco/:slug",
+      "destination": "/vagas",
+      "permanent": true
+    },
+    {
+      "source": "/a-empresa/:slug",
+      "destination": "/a-empresa",
+      "permanent": true
+    },
+    {
+      "source": "/gallery/:path*",
+      "destination": "/clientes",
+      "permanent": true
+    },
+    {
+      "source": "/gallery-category/:path*",
+      "destination": "/clientes",
+      "permanent": true
+    },
+    {
+      "source": "/home/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/demakine-2/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/contato-2/:path*",
+      "destination": "/contato",
+      "permanent": true
+    },
+    {
+      "source": "/:banner(banner-[a-z0-9-]+)",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/nossos-produtos/:path*",
+      "destination": "/produtos",
+      "permanent": true
+    },
+    {
+      "source": "/produtos-e-servicos/:slug",
+      "destination": "/produtos",
+      "permanent": true
+    },
+    {
+      "source": "/linha-transporte/:slug",
+      "destination": "/produtos",
+      "permanent": true
+    },
+    {
+      "source": "/blog/demakine-marcou-presenca-de-sucesso-na-batatec-2024",
+      "destination": "/blog/demakine-na-5a-edicao-da-batatec",
+      "permanent": true
+    },
+    {
+      "source": "/blog/guia-completo-sobre-esteira",
+      "destination": "/blog/guia-completo-sobre-esteiras-transportadoras",
+      "permanent": true
+    },
+    {
+      "source": "/blog/roscas-transportadoras",
+      "destination": "/blog/guia-completo-sobre-roscas-transportadoras",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:slug(capa-artigo-blog-1|capa-artigo-blog-guia-completo-esteira|batatec-blog)",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:slug(quanto-custa-movimentar-carga-na-mao|como-dimensionar-sua-esteira-transportadora|guia-completo-sobre-esteiras-transportadoras|guia-completo-sobre-roscas-transportadoras|como-escolher-a-esteira-transportadora-ideal-para-a-sua-empresa|10-dicas-para-manutencao-preventiva-de-esteiras-transportadoras|demakine-na-agrobrasilia-2026|demakine-na-agrishow-2026|demakine-na-agrishow-2025|demakine-na-agrishow-2024|demakine-na-5a-edicao-da-batatec)/:att+",
+      "destination": "/blog/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:slug/:att+",
+      "destination": "/blog",
       "permanent": true
     },
     {
@@ -158,6 +308,24 @@
         {
           "key": "Cross-Origin-Opener-Policy",
           "value": "same-origin-allow-popups"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/img/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
         }
       ]
     },

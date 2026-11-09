@@ -12,6 +12,17 @@ const LANGS = [
 ];
 /** só em português: vagas e a página de exportação (que já é uma página em espanhol e inglês) */
 const PT_ONLY = /^\/(vagas|export)(\/|$|\?)/;
+/**
+ * Data da última edição de cada página. Só entra aqui página que mudou de verdade: lastmod inventado faz o Google
+ * ignorar o campo. Mexeu numa página fixa ou no conteúdo dos produtos, atualize a data junto.
+ * Produto editado no painel vale pela data do painel quando ela for mais recente.
+ */
+export const PAGE_LASTMOD: Record<string, string> = {
+  "/": "2026-11-09", // H1 novo
+};
+export const PRODUCTS_LASTMOD = "2026-11-09"; // titles e schema Product com offers
+
+const newest = (a?: string, b?: string) => (a && b ? (a > b ? a : b) : (a ?? b));
 const inLang = (path: string, prefix: string) => (!prefix ? path : path === "/" ? prefix : prefix + path);
 
 /** Páginas fixas do site (as de produto, blog, case e vaga vêm do conteúdo). */
@@ -48,10 +59,10 @@ export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: D
   const c = content as { products: { slug: string }[]; posts: { slug: string; date: string }[] };
   const postDate = new Map(c.posts.map((p) => [p.slug, p.date]));
   const entries: Entry[] = [
-    ...STATIC_PAGES.map((path) => ({ path, priority: path === "/" ? "1.0" : "0.6" })),
+    ...STATIC_PAGES.map((path) => ({ path, lastmod: PAGE_LASTMOD[path], priority: path === "/" ? "1.0" : "0.6" })),
     ...merged(docs, "produto", c.products.map((p) => p.slug), (d) => Boolean(d.name && d.category)).map((p) => ({
       path: `/produtos/${p.key}`,
-      lastmod: day(p.updatedAt),
+      lastmod: newest(day(p.updatedAt), PRODUCTS_LASTMOD),
       priority: "0.8",
     })),
     ...merged(docs, "post", c.posts.map((p) => p.slug), (d) => Boolean(d.title && d.date)).map((p) => {
