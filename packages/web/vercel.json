@@ -14,16 +14,6 @@
       "permanent": true
     },
     {
-      "source": "/:cat(esteiras-transportadoras|roscas-transportadoras|elevadores|empacotamento-e-costura)",
-      "destination": "/produtos?cat=:cat",
-      "permanent": true
-    },
-    {
-      "source": "/:lang(en|es)/:cat(esteiras-transportadoras|roscas-transportadoras|elevadores|empacotamento-e-costura)",
-      "destination": "/:lang/produtos?cat=:cat",
-      "permanent": true
-    },
-    {
       "source": "/produto/:slug",
       "destination": "/produtos/:slug",
       "permanent": true
