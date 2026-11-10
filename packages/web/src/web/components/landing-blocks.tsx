@@ -124,7 +124,7 @@ function BlockView({ b }: { b: Block }) {
       );
     case "quote":
       return (
-        <blockquote className="mt-6 border-l-4 border-dm-blue pl-5 text-[17px] italic leading-relaxed text-dm-ink/80 first:mt-0">
+        <blockquote className="mt-6 rounded-xl bg-dm-surface px-6 py-5 text-[17px] italic leading-relaxed text-dm-ink/80 first:mt-0">
           <Md text={b.md} />
         </blockquote>
       );
