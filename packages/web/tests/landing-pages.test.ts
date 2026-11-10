@@ -6,7 +6,7 @@ import { parseLandingMd, type Block } from "../src/web/lib/landing-md";
 import { internalLinks, plainText } from "../src/web/lib/markdown-inline";
 import { CATEGORY_PAGE, PRICE_PAGE, SOLUTIONS, WA, isVendorPage, vendorMessage } from "../src/web/lib/landing-links";
 import { buildSitemap } from "../src/api/lib/sitemap";
-import { buildLanding, serialize } from "../scripts/landing-from-md";
+import { buildLanding, serialize } from "../vite/landing-from-md";
 
 const c = content as { products: { slug: string; category: string }[]; posts: { slug: string }[]; categories: { slug: string }[] };
 const sitemapPaths = new Set([...buildSitemap([], []).matchAll(/<loc>https:\/\/www\.demakine\.com\.br([^<]*)<\/loc>/g)].map((m) => m[1]!.split("?")[0]!));

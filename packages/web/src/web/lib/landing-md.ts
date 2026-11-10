@@ -1,6 +1,6 @@
 /**
  * Lê uma página escrita pelo Marketing (content/landing/*.md) e devolve os blocos que o site desenha.
- * Roda no conversor (scripts/landing-from-md.ts) e nos testes; o site só carrega o resultado (data/landing.json).
+ * Roda no conversor (vite/landing-from-md.ts) e nos testes; o site só carrega o resultado (data/landing.json).
  *
  * Formato do arquivo (README-dev.md do Marketing):
  *  - frontmatter entre "---": url, title, description, h1, breadcrumb, itens... (não aparece na página)
