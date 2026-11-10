@@ -1,5 +1,4 @@
 import { next } from "@vercel/functions";
-import { exportTarget } from "./src/api/lib/export-redirect";
 
 /**
  * Redirecionamentos cadastrados no painel (endereço antigo -> novo), aplicados na borda
@@ -36,6 +35,14 @@ function key(pathname: string) {
   }
   p = p.toLowerCase().replace(/\/{2,}/g, "/");
   return p.length > 1 ? p.replace(/\/+$/, "") : p;
+}
+
+/** Destino do endereço antigo da página de exportação (/export, com ou sem barra e ?lang=), ou null para qualquer outro endereço. */
+function exportTarget(url: URL): string | null {
+  if (!/^\/export\/?$/.test(url.pathname)) return null;
+  const target = new URL(url.searchParams.get("lang") === "en" ? "/en/export" : "/es/exportacion", url.origin);
+  for (const [name, value] of url.searchParams) if (name !== "lang") target.searchParams.append(name, value);
+  return target.toString();
 }
 
 export default async function middleware(request: Request) {

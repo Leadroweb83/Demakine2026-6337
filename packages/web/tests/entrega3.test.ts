@@ -4,7 +4,7 @@ import content from "../src/web/data/content.json";
 import en from "../src/web/i18n/en.json";
 import es from "../src/web/i18n/es.json";
 import { buildSitemap } from "../src/api/lib/sitemap";
-import { exportTarget } from "../src/api/lib/export-redirect";
+import middleware from "../middleware";
 import { follow } from "./helpers/vercel-redirects";
 
 const c = content as { posts: { slug: string; blocks: string[]; images: string[] }[] };
@@ -164,24 +164,28 @@ describe("sitemap da exportação", () => {
 });
 
 describe("redirects da exportação", () => {
-  const to = (u: string) => exportTarget(new URL(u));
-  test("/export?lang=en vai para /en/export e /export?lang=es para /es/exportacion", () => {
-    expect(to("https://www.demakine.com.br/export?lang=en")).toBe("https://www.demakine.com.br/en/export");
-    expect(to("https://www.demakine.com.br/export?lang=es")).toBe("https://www.demakine.com.br/es/exportacion");
+  const run = (u: string) => middleware(new Request(`https://www.demakine.com.br${u}`));
+  const to = async (u: string) => {
+    const res = await run(u);
+    return res.status === 301 ? res.headers.get("location") : null;
+  };
+  test("/export?lang=en vai para /en/export e /export?lang=es para /es/exportacion, em 301", async () => {
+    expect(await to("/export?lang=en")).toBe("https://www.demakine.com.br/en/export");
+    expect(await to("/export?lang=es")).toBe("https://www.demakine.com.br/es/exportacion");
   });
-  test("sem ?lang= vale o espanhol (era o padrão da página), com ou sem barra final", () => {
-    expect(to("https://www.demakine.com.br/export")).toBe("https://www.demakine.com.br/es/exportacion");
-    expect(to("https://www.demakine.com.br/export/")).toBe("https://www.demakine.com.br/es/exportacion");
+  test("sem ?lang= vale o espanhol (era o padrão da página), com ou sem barra final", async () => {
+    expect(await to("/export")).toBe("https://www.demakine.com.br/es/exportacion");
+    expect(await to("/export/")).toBe("https://www.demakine.com.br/es/exportacion");
   });
-  test("parâmetros de anúncio seguem junto, e só o ?lang= sai", () => {
-    expect(to("https://www.demakine.com.br/export?lang=en&gclid=abc&utm_source=google")).toBe(
-      "https://www.demakine.com.br/en/export?gclid=abc&utm_source=google",
-    );
-    expect(to("https://www.demakine.com.br/export?utm_campaign=x&lang=es")).toBe("https://www.demakine.com.br/es/exportacion?utm_campaign=x");
+  test("parâmetros de anúncio seguem junto, e só o ?lang= sai", async () => {
+    expect(await to("/export?lang=en&gclid=abc&utm_source=google")).toBe("https://www.demakine.com.br/en/export?gclid=abc&utm_source=google");
+    expect(await to("/export?utm_campaign=x&lang=es")).toBe("https://www.demakine.com.br/es/exportacion?utm_campaign=x");
   });
-  test("qualquer outro endereço passa direto", () => {
-    for (const u of ["/exportacion", "/export-en", "/en/export", "/es/exportacion", "/produtos", "/exports"]) {
-      expect(to(`https://www.demakine.com.br${u}`)).toBeNull();
+  test("qualquer outro endereço passa direto, sem redirect e sem erro", async () => {
+    for (const u of ["/exportacion", "/export-en", "/en/export", "/es/exportacion", "/exports"]) {
+      const res = await run(u);
+      expect(res.status, u).toBe(200);
+      expect(res.headers.get("location")).toBeNull();
     }
   });
   test("as páginas novas não são redirecionadas pelo vercel.json, e os apelidos errados vão para a certa", () => {
