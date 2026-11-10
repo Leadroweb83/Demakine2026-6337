@@ -2,6 +2,8 @@ import content from "../../web/data/content.json";
 import { DEFAULT_CASES } from "../../web/lib/cases";
 import { segmentLps } from "../../web/lib/segmentos-lp";
 import { WA } from "../../web/lib/landing-links";
+import { toWebp } from "../../web/lib/images";
+import landing from "../../web/data/landing.json";
 
 const ORIGIN = "https://www.demakine.com.br";
 
@@ -51,7 +53,7 @@ const STATIC_PAGES = [
 ];
 
 type Doc = { collection: string; key: string; data: unknown; deleted: boolean; updatedAt: Date };
-type Entry = { path: string; lastmod?: string; priority: string };
+type Entry = { path: string; lastmod?: string; priority: string; /** fotos da página, para o sitemap de imagens do Google */ images?: string[] };
 
 /** Itens do código + edições do painel: tira oculto e rascunho, soma os novos que estão completos. */
 function merged(docs: Doc[], collection: string, base: string[], isComplete: (d: Record<string, unknown>) => boolean) {
@@ -70,15 +72,44 @@ function merged(docs: Doc[], collection: string, base: string[], isComplete: (d:
 const day = (d?: Date | string) => (d ? new Date(d).toISOString().slice(0, 10) : undefined);
 const esc = (s: string) => s.replace(/&/g, "&amp;");
 
+/** Sitemap de imagens: as fotos que a página mostra, uma vez cada, com endereço completo. */
+const imageTags = (images: string[] = []) =>
+  [...new Set(images.filter(Boolean).map((src) => toWebp(src)))]
+    .map((src) => `<image:image><image:loc>${esc(src.startsWith("http") ? src : ORIGIN + src)}</image:loc></image:image>`)
+    .join("");
+
+/** Fotos de cada categoria e página comercial: a do topo e a primeira de cada produto listado. */
+const landingImages = new Map(
+  (landing as { slug: string; heroImage?: string; items: string[] }[]).map((l) => [`/${l.slug}`, { hero: l.heroImage, items: l.items }]),
+);
+
+/** Fotos do produto: as da lista editada no painel (se houver) ou as do código. */
+function productImages(slug: string, docs: Doc[]): string[] {
+  const edited = docs.find((d) => d.collection === "produto" && d.key === slug)?.data as { images?: string[] } | undefined;
+  const base = (content as { products: { slug: string; images: string[] }[] }).products.find((p) => p.slug === slug)?.images ?? [];
+  return edited?.images ?? base;
+}
+
+/** Foto do case: a editada no painel ou a do código. */
+function caseImage(slug: string, docs: Doc[]): string {
+  const edited = docs.find((d) => d.collection === "case" && d.key === slug)?.data as { image?: string } | undefined;
+  return edited?.image ?? DEFAULT_CASES.find((x) => x.slug === slug)?.image ?? "";
+}
+
 export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: Date }[]) {
   const c = content as { products: { slug: string }[]; posts: { slug: string; date: string }[] };
   const postDate = new Map(c.posts.map((p) => [p.slug, p.date]));
   const entries: Entry[] = [
-    ...STATIC_PAGES.map((path) => ({ path, lastmod: PAGE_LASTMOD[path], priority: path === "/" ? "1.0" : "0.6" })),
+    ...STATIC_PAGES.map((path) => {
+      const l = landingImages.get(path);
+      const photos = l && [l.hero ?? "", ...l.items.map((slug) => productImages(slug, docs)[0] ?? "")];
+      return { path, lastmod: PAGE_LASTMOD[path], priority: path === "/" ? "1.0" : "0.6", ...(photos ? { images: photos } : {}) };
+    }),
     ...merged(docs, "produto", c.products.map((p) => p.slug), (d) => Boolean(d.name && d.category)).map((p) => ({
       path: `/produtos/${p.key}`,
       lastmod: newest(day(p.updatedAt), PRODUCTS_LASTMOD),
       priority: "0.8",
+      images: productImages(p.key, docs),
     })),
     ...merged(docs, "post", c.posts.map((p) => p.slug), (d) => Boolean(d.title && d.date)).map((p) => {
       const edited = docs.find((d) => d.collection === "post" && d.key === p.key)?.data as { date?: string } | undefined;
@@ -88,11 +119,12 @@ export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: D
       path: `/cases/${p.key}`,
       lastmod: day(p.updatedAt),
       priority: "0.5",
+      images: [caseImage(p.key, docs)],
     })),
     ...openJobs.map((j) => ({ path: `/vagas/${j.slug}`, lastmod: day(j.updatedAt), priority: "0.5" })),
   ];
   const row = (e: Entry, loc: string, links = "") =>
-    `  <url><loc>${esc(ORIGIN + loc)}</loc>${links}${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}<priority>${e.priority}</priority></url>`;
+    `  <url><loc>${esc(ORIGIN + loc)}</loc>${links}${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}<priority>${e.priority}</priority>${imageTags(e.images)}</url>`;
   const urls = entries
     .flatMap((e) => {
       if (PT_ONLY.test(e.path)) return [row(e, e.path)];
@@ -111,5 +143,5 @@ export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: D
       }),
     )
     .join("\n");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;
 }

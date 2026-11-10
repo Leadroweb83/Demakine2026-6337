@@ -25,6 +25,8 @@ export type Product = {
   models: Model[];
   specKeys: string[];
   images: string[];
+  /** descrição (alt) de cada foto, pelo caminho dela; ver lib/product-photos.ts */
+  imageAlts?: Record<string, string>;
   seoTitle?: string;
   seoDesc?: string;
   /** vídeos do YouTube editados no painel; sem isto vale a lista de product-videos.ts */

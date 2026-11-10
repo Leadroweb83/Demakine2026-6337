@@ -105,7 +105,7 @@ export function ProductVideos({
                       <span className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-black">
                         <img
                           src={videoThumb(v.id)}
-                          alt=""
+                          alt={v.title}
                           loading="lazy"
                           className="h-full w-full object-cover opacity-90"
                         />

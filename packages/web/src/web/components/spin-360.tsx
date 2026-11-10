@@ -9,13 +9,14 @@ import { cn } from "@/lib/utils";
  */
 export function Spin360({
   images,
-  alt,
+  alts,
   className,
   onIndexChange,
   index,
 }: {
   images: string[];
-  alt: string;
+  /** descrição de cada foto, na mesma ordem de images */
+  alts: string[];
   className?: string;
   index?: number;
   onIndexChange?: (i: number) => void;
@@ -105,7 +106,7 @@ export function Spin360({
             // só a primeira foto baixa de início: as outras disputariam a conexão com ela (LCP)
             src={idx === 0 || warm ? src : undefined}
             fetchPriority={idx === 0 ? "high" : "low"}
-            alt={idx === 0 ? alt : ""}
+            alt={alts[idx] ?? ""}
             className={cn(
               "aspect-[4/3] w-full object-contain p-2 transition-opacity duration-100",
               idx === cur ? "opacity-100" : "pointer-events-none absolute inset-0 opacity-0",
