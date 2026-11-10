@@ -8,6 +8,8 @@
  *
  * O idioma vem do endereço e não muda sem recarregar a página: trocar de idioma é um link comum.
  */
+import { LANDING_SLUGS } from "./landing-slugs";
+
 export type Locale = "pt" | "en" | "es";
 
 export const LOCALES: { code: Locale; label: string; name: string; hreflang: string; prefix: string }[] = [
@@ -49,9 +51,22 @@ export function splitLocale(pathname: string): { locale: Locale; path: string } 
   return { locale: m[1] as Locale, path: m[2] || "/" };
 }
 
-/** Páginas que só existem em português (vagas, loja, painel). A de exportação tem endereço próprio em inglês e espanhol. */
-const PT_ONLY = /^\/(vagas|trabalhe-conosco|loja|admin)(\/|$|\?)/;
+/**
+ * Páginas que só existem em português: vagas, loja, painel e as 10 categorias/páginas comerciais. A de exportação tem
+ * endereço próprio em inglês e espanhol. Fora daqui, toda página declara hreflang para os 3 idiomas.
+ */
+const PT_ONLY = new RegExp(`^\\/(vagas|trabalhe-conosco|loja|admin|${LANDING_SLUGS.join("|")})(\\/|$|\\?)`);
 export const isTranslatedPath = (path: string) => !PT_ONLY.test(path);
+
+/**
+ * Endereço que o <Link> escreve no HTML: sem barra no fim ("/en/" vira "/en") e, nas páginas só em português, sem o
+ * prefixo de idioma ("/en/vagas" vira "/vagas"). Os dois endereços antigos respondiam com redirect.
+ */
+export function routerHref(href: string): string {
+  const clean = href.replace(/(?<=.)\/+(?=[?#]|$)/, "");
+  const m = clean.match(/^\/(?:en|es)(\/.*)$/);
+  return m && !isTranslatedPath(m[1]!) ? m[1]! : clean;
+}
 
 /** Arquivos e serviços: endereço igual em qualquer idioma. */
 const NOT_A_PAGE = /^\/(img|video|downloads|assets|api|fonts)\/|\.[a-z0-9]{2,5}($|\?)/i;

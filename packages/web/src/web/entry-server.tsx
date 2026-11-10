@@ -4,7 +4,7 @@ import { Router } from "wouter";
 import { QueryClient, QueryClientProvider, dehydrate } from "@tanstack/react-query";
 import App from "./app";
 import { beginSsrHead } from "./lib/ssr-head";
-import { i18nState, loadDict, localePrefix, setLocale, splitLocale } from "./lib/i18n";
+import { i18nState, loadDict, localePrefix, routerHref, setLocale, splitLocale } from "./lib/i18n";
 
 export { i18nState, loadDict, setLocale, splitLocale };
 
@@ -22,7 +22,7 @@ export async function render(path: string, search: string, prefill: [unknown[], 
   const stream = await renderToReadableStream(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <Router base={localePrefix()} ssrPath={path} ssrSearch={search}>
+        <Router base={localePrefix()} hrefs={routerHref} ssrPath={path} ssrSearch={search}>
           <App />
         </Router>
       </QueryClientProvider>
