@@ -21,6 +21,7 @@ import { CineBullets, CineRule, CineSection, CineTag, CineTitle } from "@/compon
 import { CompareToggle } from "@/components/compare";
 import { Hotspots } from "@/components/tools/hotspots";
 import { Spin360 } from "@/components/spin-360";
+import { photoAlt } from "@/lib/product-photos";
 import { ProductVideos } from "@/components/product-videos";
 import { videosFor } from "@/lib/product-videos";
 import { ProductProcess } from "@/components/product-process";
@@ -611,7 +612,8 @@ export default function Produto() {
             "@type": "Product",
             name: product.name,
             description: product.summary,
-            image: `${site.url}${images[0]}`,
+            // todas as fotos do produto (o Google mostra mais de uma no resultado de imagens)
+            image: images.map((src) => `${site.url}${src}`),
             category: categoryName(product.category),
             brand: { "@type": "Brand", name: "Demakine" },
             manufacturer: { "@type": "Organization", name: site.legal },
@@ -637,7 +639,7 @@ export default function Produto() {
             {spin ? (
               <Spin360
                 images={images}
-                alt={product.name}
+                alts={images.map((src, i) => photoAlt(product, src, i))}
                 index={active}
                 onIndexChange={setActive}
               />
@@ -645,7 +647,7 @@ export default function Produto() {
               <div className="overflow-hidden rounded-2xl border border-dm-line bg-white">
                 <img
                   src={current}
-                  alt={product.name}
+                  alt={photoAlt(product, current, Math.min(active, images.length - 1))}
                   className="aspect-[4/3] w-full object-contain p-2"
                 />
               </div>
@@ -669,7 +671,7 @@ export default function Produto() {
                       idx === active ? "border-dm-blue" : "border-transparent opacity-70 hover:opacity-100",
                     )}
                   >
-                    <img src={img} alt="" loading="lazy" className="h-full w-full bg-white object-contain p-1" />
+                    <img src={img} alt={photoAlt(product, img, idx)} loading="lazy" className="h-full w-full bg-white object-contain p-1" />
                   </button>
                 ))}
               </div>
