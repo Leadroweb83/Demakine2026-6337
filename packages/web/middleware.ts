@@ -1,4 +1,5 @@
-import { next, rewrite } from "@vercel/functions";
+import { next } from "@vercel/functions";
+import { exportTarget } from "./src/api/lib/export-redirect";
 
 /**
  * Redirecionamentos cadastrados no painel (endereço antigo -> novo), aplicados na borda
@@ -39,8 +40,10 @@ function key(pathname: string) {
 
 export default async function middleware(request: Request) {
   const url = new URL(request.url);
-  // página de exportação: a versão em inglês é outro HTML pré-renderizado (export-en.html)
-  if (url.pathname === "/export" && url.searchParams.get("lang") === "en") return rewrite(new URL("/export-en", url));
+  // página de exportação: cada idioma tem o seu endereço. O antigo /export?lang=en|es (sem ?lang, espanhol) vai para ele em 301,
+  // levando junto os parâmetros de anúncio (gclid, utm_*), sem o próprio ?lang
+  const exportTo = exportTarget(url);
+  if (exportTo) return new Response(null, { status: 301, headers: { Location: exportTo, "Cache-Control": "public, max-age=300" } });
   // arquivos do build (js, css, imagens) passam direto; .html e .php podem ser endereço antigo
   if (/\.(?!html?$|php$)[a-z0-9]{2,5}$/i.test(url.pathname)) return next();
   const all = await rules(url.origin);

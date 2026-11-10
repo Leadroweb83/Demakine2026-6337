@@ -45,7 +45,7 @@ const ROUTES: [pattern: RegExp, load: Loader][] = [
   [/^\/contato$/, () => import("./pages/contato")],
   [/^\/vagas$/, () => import("./pages/vagas")],
   [/^\/vagas\/[^/]+$/, () => import("./pages/vaga")],
-  [/^\/export$/, () => import("./pages/export")],
+  [/^\/(export|exportacion)$/, () => import("./pages/export")],
   [/^\/politica-de-privacidade$/, named(() => import("./pages/legal"), "PoliticaDePrivacidade")],
   [/^\/termos-de-uso$/, named(() => import("./pages/legal"), "TermosDeUso")],
   [/^\/obrigado$/, () => import("./pages/obrigado")],
@@ -192,6 +192,11 @@ function App() {
             )}
           </Route>
           <Route path="/export">
+            <Suspense fallback={null}>
+              <ExportLanding />
+            </Suspense>
+          </Route>
+          <Route path="/exportacion">
             <Suspense fallback={null}>
               <ExportLanding />
             </Suspense>

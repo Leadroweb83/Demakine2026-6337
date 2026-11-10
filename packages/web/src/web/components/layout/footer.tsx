@@ -254,7 +254,7 @@ export function Footer() {
           </button>
           <span className="flex items-center gap-3 md:ml-auto">
             {/* página de exportação: sem este link ela ficava sem nenhuma entrada no site */}
-            <a href="/export?lang=en" hrefLang="en" lang="en" translate="no" className="hover:text-white">
+            <a href="/en/export" hrefLang="en" lang="en" translate="no" className="hover:text-white">
               Export
             </a>
             <LangSwitch dark />

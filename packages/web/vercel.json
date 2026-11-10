@@ -272,6 +272,26 @@
       "permanent": true
     },
     {
+      "source": "/blog/demakine-marcou-presenca-na-agrishow-2024/:att*",
+      "destination": "/blog/demakine-na-agrishow-2024",
+      "permanent": true
+    },
+    {
+      "source": "/blog/batatec-2024-demakine-marcou-presenca-de-sucesso/:att*",
+      "destination": "/blog/demakine-na-5a-edicao-da-batatec",
+      "permanent": true
+    },
+    {
+      "source": "/:lang(en|es)/blog/demakine-marcou-presenca-na-agrishow-2024/:att*",
+      "destination": "/:lang/blog/demakine-na-agrishow-2024",
+      "permanent": true
+    },
+    {
+      "source": "/:lang(en|es)/blog/batatec-2024-demakine-marcou-presenca-de-sucesso/:att*",
+      "destination": "/:lang/blog/demakine-na-5a-edicao-da-batatec",
+      "permanent": true
+    },
+    {
       "source": "/blog/demakine-marcou-presenca-de-sucesso-na-batatec-2024",
       "destination": "/blog/demakine-na-5a-edicao-da-batatec",
       "permanent": true
@@ -312,9 +332,19 @@
       "permanent": false
     },
     {
-      "source": "/:lang(en|es)/:rest(loja|admin|export)",
+      "source": "/:lang(en|es)/:rest(loja|admin)",
       "destination": "/:rest",
       "permanent": false
+    },
+    {
+      "source": "/es/export",
+      "destination": "/es/exportacion",
+      "permanent": true
+    },
+    {
+      "source": "/en/exportacion",
+      "destination": "/en/export",
+      "permanent": true
     }
   ],
   "rewrites": [

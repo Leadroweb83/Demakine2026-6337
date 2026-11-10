@@ -70,11 +70,7 @@ function pageUrls(sitemap: string) {
 function fileFor(url: string) {
   if (url === "/") return "index.html";
   if (url === NOT_FOUND_PATH) return "404.html";
-  const [p, q] = url.split("?");
-  // /export?lang=en vira export-en.html (o middleware reescreve o endereço com ?lang=en)
-  const lang = new URLSearchParams(q ?? "").get("lang");
-  const base = p!.replace(/^\//, "");
-  return `${base}${lang && lang !== "es" ? `-${lang}` : ""}.html`;
+  return `${url.split("?")[0]!.replace(/^\//, "")}.html`;
 }
 
 /**

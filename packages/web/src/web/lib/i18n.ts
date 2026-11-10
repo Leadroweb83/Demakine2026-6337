@@ -49,8 +49,8 @@ export function splitLocale(pathname: string): { locale: Locale; path: string } 
   return { locale: m[1] as Locale, path: m[2] || "/" };
 }
 
-/** Páginas que só existem em português (vagas, loja, painel, página de exportação). */
-const PT_ONLY = /^\/(vagas|trabalhe-conosco|loja|admin|export)(\/|$|\?)/;
+/** Páginas que só existem em português (vagas, loja, painel). A de exportação tem endereço próprio em inglês e espanhol. */
+const PT_ONLY = /^\/(vagas|trabalhe-conosco|loja|admin)(\/|$|\?)/;
 export const isTranslatedPath = (path: string) => !PT_ONLY.test(path);
 
 /** Arquivos e serviços: endereço igual em qualquer idioma. */
@@ -67,6 +67,8 @@ export function localePath(path: string, code: Locale = locale()) {
 export function localHref(href: string) {
   const st = g.__DM_I18N__;
   if (!st || !href.startsWith("/") || href.startsWith("//") || NOT_A_PAGE.test(href)) return href;
+  // já escrito com o prefixo de algum idioma (/en/export, /es/exportacion): vale como está
+  if (/^\/(en|es)(\/|\?|#|$)/.test(href)) return href;
   const prefix = localePrefix(st.locale);
   if (href === prefix || href.startsWith(`${prefix}/`) || href.startsWith(`${prefix}?`) || href.startsWith(`${prefix}#`)) return href;
   return localePath(href, st.locale);
