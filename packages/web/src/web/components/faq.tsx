@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Minus, Plus } from "lucide-react";
 import type { FaqItem } from "@/lib/faq";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,8 @@ export function FaqAccordion({
   className,
   openFirst = false,
 }: {
-  items: FaqItem[];
+  /** `rich` é a resposta com links, para quando o texto puro (o do schema) não basta */
+  items: (FaqItem & { rich?: ReactNode })[];
   className?: string;
   openFirst?: boolean;
 }) {
@@ -38,9 +39,9 @@ export function FaqAccordion({
               )}
             >
               <div className="overflow-hidden">
-                <p className="px-5 pb-5 pl-15 text-[15.5px] leading-relaxed text-dm-gray md:px-6 md:pl-16">
-                  {item.a}
-                </p>
+                <div className="px-5 pb-5 pl-15 text-[15.5px] leading-relaxed text-dm-gray md:px-6 md:pl-16">
+                  {item.rich ?? item.a}
+                </div>
               </div>
             </div>
           </div>
