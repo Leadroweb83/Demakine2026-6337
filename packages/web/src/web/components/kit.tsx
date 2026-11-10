@@ -170,7 +170,7 @@ export function PageHero({
 }: {
   eyebrow: string;
   title: string;
-  text?: string;
+  text?: ReactNode;
   image?: string;
   /** versão da imagem para o celular (até 767 px), quando o recorte da versão larga não serve */
   imageMobile?: string;

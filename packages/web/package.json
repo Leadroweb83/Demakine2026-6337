@@ -8,6 +8,7 @@
   "scripts": {
     "build": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json && vite build",
     "dev": "vite",
+    "landing:build": "bun scripts/landing-from-md.ts",
     "start": "bun src/server.ts",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "lint": "cd ../.. && oxlint packages/web --deny-warnings --no-error-on-unmatched-pattern",

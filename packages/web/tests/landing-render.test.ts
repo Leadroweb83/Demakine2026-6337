@@ -22,18 +22,23 @@ const crumbs = (t: string) => {
   return b?.itemListElement.map((i: { name: string; item: string }) => [i.name, i.item.replace("https://www.demakine.com.br", "")]);
 };
 
+const exists = (to: string) => to === "/" ? existsSync("dist/index.html") : existsSync(`dist${to}.html`) || existsSync(`dist${to}/index.html`);
+
 describe.each(landingPages.map((l) => [l.slug, l] as const))("página pré-renderizada /%s", (slug, l) => {
   const path = `/${slug}`;
   test("o HTML existe", () => expect(existsSync(`dist${path}.html`)).toBe(true));
-  test("tem um único H1", () => {
+  test("tem um único H1, o do Marketing", () => {
     const h1 = [...html(path).matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/g)];
     expect(h1.length).toBe(1);
+    expect(l.h1.length).toBeGreaterThan(20);
     expect(decode(h1[0]![1]!.replace(/<[^>]+>/g, ""))).toBe(l.h1);
   });
-  test("título, descrição e canonical próprios", () => {
+  test("título, descrição, og e canonical próprios", () => {
     const t = html(path);
-    expect(decode(t.match(/<title>([\s\S]*?)<\/title>/)![1]!)).toBe(l.seoTitle);
-    expect(decode(t.match(/<meta name="description" content="([^"]*)"/)![1]!)).toBe(l.seoDesc);
+    expect(decode(t.match(/<title>([\s\S]*?)<\/title>/)![1]!)).toBe(l.title);
+    expect(decode(t.match(/<meta name="description" content="([^"]*)"/)![1]!)).toBe(l.description);
+    expect(decode(t.match(/<meta property="og:title" content="([^"]*)"/)![1]!)).toBe(l.title);
+    expect(decode(t.match(/<meta name="twitter:title" content="([^"]*)"/)![1]!)).toBe(l.title);
     expect(t).toContain(`<link rel="canonical" href="https://www.demakine.com.br${path}"`);
     expect(t).not.toContain('name="robots" content="noindex');
   });
@@ -45,30 +50,43 @@ describe.each(landingPages.map((l) => [l.slug, l] as const))("página pré-rende
     expect(t).toContain("Pedir orçamento");
     expect(t).toContain(`data-track-location="${l.kind === "categoria" ? "categoria" : "pagina"}:${slug}"`);
   });
-  test("lista os produtos e traz FAQPage, ItemList e BreadcrumbList", () => {
+  test("cada seção do Marketing aparece como H2, na ordem", () => {
     const t = html(path);
-    for (const s of l.productSlugs) expect(t).toContain(`/produtos/${s}`);
-    expect(t).toContain('"@type":"FAQPage"');
-    expect(t).toContain('"@type":"ItemList"');
-    expect(t).toContain('"@type":"BreadcrumbList"');
-  });
-  test("trilha: Início › Produtos › [Categoria] › página", () => {
-    const cat = l.category!;
-    const catName = (content as { categories: { slug: string; name: string }[] }).categories.find((x) => x.slug === cat)!.name;
-    const expected =
-      l.kind === "categoria"
-        ? [["Início", "/"], ["Produtos", "/produtos"], [l.seoTitle.split(" | ")[0], path]]
-        : [["Início", "/"], ["Produtos", "/produtos"], [catName, CATEGORY_PAGE[cat]], [l.seoTitle.split(" | ")[0], path]];
-    expect(crumbs(html(path))).toEqual(expected);
-  });
-  test("a lista numerada do guia só tem <li> como filho direto (acessibilidade)", () => {
-    const m = html(path).match(/<ol class="mt-10[^>]*>([\s\S]*?)<\/ol>/);
-    expect(m).not.toBeNull();
-    let depth = 0;
-    for (const [, close, tag] of m![1]!.matchAll(/<(\/?)(li|div)\b/g)) {
-      if (close) depth--; else { if (depth === 0) expect(tag).toBe("li"); depth++; }
+    let last = -1;
+    for (const s of l.sections) {
+      const at = t.indexOf(">" + s.title.replace(/&/g, "&amp;") + "<", last + 1);
+      expect(at, `H2 "${s.title}"`).toBeGreaterThan(last);
+      last = at;
     }
-    expect(depth).toBe(0);
+  });
+  test("a resposta de cada pergunta está no HTML (não só no clique)", () => {
+    const t = decode(html(path).replace(/<[^>]+>/g, ""));
+    for (const f of l.faq) {
+      expect(t).toContain(f.q);
+      expect(t).toContain(f.a.slice(0, 40));
+    }
+  });
+  test("tabelas são <table> de verdade, com cabeçalho", () => {
+    const n = [...l.intro, ...l.sections.flatMap((s) => s.blocks)].filter((b) => b.t === "table").length;
+    const t = html(path);
+    expect(t.split("<table").length - 1).toBe(n);
+    if (n) expect(t).toContain('scope="col"');
+  });
+  test("schema: página, FAQPage e BreadcrumbList (uma de cada), com a trilha do arquivo", () => {
+    const blocks = ldBlocks(html(path)).flat();
+    const type = (x: string) => blocks.filter((b) => b["@type"] === x);
+    expect(type(l.kind === "categoria" ? "CollectionPage" : "Service")).toHaveLength(1);
+    expect(type("FAQPage")).toHaveLength(1);
+    expect(type("BreadcrumbList")).toHaveLength(1);
+    expect(type("FAQPage")[0].mainEntity.map((q: { name: string }) => q.name)).toEqual(l.faq.map((f) => f.q));
+    expect(crumbs(html(path))).toEqual(l.breadcrumb);
+    expect(html(path)).not.toContain("#website");
+  });
+  test("categoria mostra os produtos; todo link interno do texto existe no build", () => {
+    const t = html(path);
+    if (l.kind === "categoria") for (const s of l.items) expect(t).toContain(`/produtos/${s}`);
+    const hrefs = [...t.matchAll(/<a\b[^>]*?\shref="(\/[^"#?]*)/g)].map((m) => m[1]!.replace(/\/$/, "") || "/").filter((h) => !/^\/(en|es)(\/|$)/.test(h)); // seletor de idioma: o Vercel devolve a versão em português
+    for (const to of new Set(hrefs)) expect(exists(to), `${slug} -> ${to}`).toBe(true);
   });
   test("não existe em inglês nem em espanhol", () => {
     for (const lang of ["en", "es"]) {

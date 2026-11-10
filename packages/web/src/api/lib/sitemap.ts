@@ -21,7 +21,7 @@ const PT_ONLY = new RegExp(`^\\/(vagas|export|${LANDING_SLUGS.join("|")})(\\/|$|
  */
 export const PAGE_LASTMOD: Record<string, string> = {
   "/": "2026-11-09", // H1 novo
-  ...Object.fromEntries(LANDING_SLUGS.map((slug) => [`/${slug}`, "2026-11-09"])), // data de publicação das 10 páginas
+  ...Object.fromEntries(LANDING_SLUGS.map((slug) => [`/${slug}`, "2026-11-10"])), // texto do Marketing publicado em 10/11
 };
 export const PRODUCTS_LASTMOD = "2026-11-09"; // titles e schema Product com offers
 
