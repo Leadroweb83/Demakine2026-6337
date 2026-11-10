@@ -1,10 +1,9 @@
 /**
- * /export — landing única de exportação, em espanhol e inglês.
+ * Landing de exportação, em espanhol e inglês, cada idioma no seu endereço: /es/exportacion e /en/export.
  * Fica fora do Shell em português: header e footer próprios, no idioma escolhido.
  * O idioma vem de ?lang=es|en (default es) e o toggle troca sem recarregar.
  */
-import { useRef, useState } from "react";
-import { useSearch } from "wouter";
+import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   ArrowRight,
@@ -18,7 +17,8 @@ import {
   Phone,
 } from "lucide-react";
 import { Seo, organizationJsonLd } from "@/components/seo";
-import { EXPORT_ALTERNATES } from "@/lib/hreflang";
+import { EXPORT_ALTERNATES, EXPORT_PATH } from "@/lib/hreflang";
+import { locale } from "@/lib/i18n";
 import { newEventId, queueLead } from "@/lib/gtm";
 import { visitAttribution } from "@/lib/visits";
 import { Reveal } from "@/components/reveal";
@@ -172,26 +172,27 @@ function ExportForm({ lang }: { lang: ExportLang }) {
 }
 
 export default function ExportLanding() {
-  // idioma pelo endereço (?lang=en); sem parâmetro, espanhol. useSearch funciona também na pré-renderização
-  const search = useSearch();
-  const initial: ExportLang = new URLSearchParams(search).get("lang") === "en" ? "en" : "es";
-  const [lang, setLang] = useState<ExportLang>(initial);
+  // o idioma vem do endereço: /en/export é inglês e /es/exportacion é espanhol
+  const lang: ExportLang = locale() === "en" ? "en" : "es";
+  const other: ExportLang = lang === "es" ? "en" : "es";
   const c = exportCopy[lang];
 
-  const switchLang = () => {
-    const next: ExportLang = lang === "es" ? "en" : "es";
-    setLang(next);
-    const url = new URL(window.location.href);
-    url.searchParams.set("lang", next);
-    window.history.replaceState({}, "", url.toString());
-  };
+  // endereço antigo (/export?lang=en): o servidor já faz o 301; isto cobre quem chega sem passar por ele
+  const legacy = locale() === "pt";
+  useEffect(() => {
+    if (!legacy) return;
+    const q = new URLSearchParams(window.location.search);
+    const to = EXPORT_PATH[q.get("lang") === "en" ? "en" : "es"];
+    q.delete("lang");
+    window.location.replace(q.size ? `${to}?${q}` : to);
+  }, [legacy]);
 
   return (
     <div className="min-h-screen bg-white">
       <Seo
         title={c.seoTitle}
         description={c.seoDescription}
-        path={`/export?lang=${lang}`}
+        path={lang === "en" ? "/export" : "/exportacion"}
         alternates={EXPORT_ALTERNATES}
         jsonLd={organizationJsonLd}
         lang={c.htmlLang}
@@ -205,14 +206,16 @@ export default function ExportLanding() {
             <img src="/img/site/logo-blue.webp" width={1406} height={302} alt="Demakine" className="h-[25px] w-auto object-contain" />
           </a>
           <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={switchLang}
+            <a
+              href={EXPORT_PATH[other]}
+              hrefLang={other}
+              lang={other}
+              translate="no"
               className="inline-flex items-center gap-2 rounded-full border border-dm-line px-3.5 py-2 text-[12.5px] font-bold text-dm-ink/75 transition-colors hover:border-dm-blue/45 hover:text-dm-blue"
             >
               <Globe className="h-3.5 w-3.5" />
               {c.switchTo}
-            </button>
+            </a>
           </div>
         </div>
       </header>
@@ -383,10 +386,10 @@ export default function ExportLanding() {
             <p className="mt-1 text-[13.5px]">Limeira, São Paulo, Brasil · {site.url}</p>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-[13.5px]">
-            <button type="button" onClick={switchLang} className="hover:text-white">
+            <a href={EXPORT_PATH[other]} hrefLang={other} lang={other} translate="no" className="hover:text-white">
               {c.switchTo}
-            </button>
-            <a href="/" className="hover:text-white">
+            </a>
+            <a href="/" translate="no" className="hover:text-white">
               Site em português
             </a>
             <a href="/politica-de-privacidade" className="hover:text-white">

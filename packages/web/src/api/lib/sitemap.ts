@@ -11,9 +11,9 @@ const LANGS = [
   { hreflang: "en", prefix: "/en" },
   { hreflang: "es", prefix: "/es" },
 ];
-/** só em português: vagas, a página de exportação (que já é uma página em espanhol e inglês) e as 10 páginas de categoria e comerciais */
+/** só em português: vagas e as 10 páginas de categoria e comerciais */
 const LANDING_SLUGS = Object.keys(WA);
-const PT_ONLY = new RegExp(`^\\/(vagas|export|${LANDING_SLUGS.join("|")})(\\/|$|\\?)`);
+const PT_ONLY = new RegExp(`^\\/(vagas|${LANDING_SLUGS.join("|")})(\\/|$|\\?)`);
 /**
  * Data da última edição de cada página. Só entra aqui página que mudou de verdade: lastmod inventado faz o Google
  * ignorar o campo. Mexeu numa página fixa ou no conteúdo dos produtos, atualize a data junto.
@@ -24,8 +24,19 @@ export const PAGE_LASTMOD: Record<string, string> = {
   ...Object.fromEntries(LANDING_SLUGS.map((slug) => [`/${slug}`, "2026-11-10"])), // texto do Marketing publicado em 10/11
 };
 export const PRODUCTS_LASTMOD = "2026-11-09"; // titles e schema Product com offers
+/** Posts que mudaram depois da data de publicação (valem no lugar dela). */
+export const POST_LASTMOD: Record<string, string> = {
+  "demakine-na-agrishow-2024": "2026-11-10", // recebeu o balanço e as fotos do post duplicado
+  "demakine-na-5a-edicao-da-batatec": "2026-11-10",
+};
 
 const newest = (a?: string, b?: string) => (a && b ? (a > b ? a : b) : (a ?? b));
+/** Exportação: uma página por idioma, cada uma com o seu endereço e apontando para a outra (hreflang). */
+const EXPORT_PAGES = [
+  { hreflang: "es", path: "/es/exportacion" },
+  { hreflang: "en", path: "/en/export" },
+];
+const EXPORT_LASTMOD = "2026-11-10";
 const inLang = (path: string, prefix: string) => (!prefix ? path : path === "/" ? prefix : prefix + path);
 
 /** Páginas fixas do site (as de produto, blog, case e vaga vêm do conteúdo). */
@@ -37,7 +48,6 @@ const STATIC_PAGES = [
   ...LANDING_SLUGS.map((slug) => `/${slug}`),
   // páginas de segmento vêm da lista do site (segmento novo entra sozinho)
   ...segmentLps.map((s) => `/segmentos/${s.slug}`),
-  "/export?lang=es", "/export?lang=en",
 ];
 
 type Doc = { collection: string; key: string; data: unknown; deleted: boolean; updatedAt: Date };
@@ -72,7 +82,7 @@ export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: D
     })),
     ...merged(docs, "post", c.posts.map((p) => p.slug), (d) => Boolean(d.title && d.date)).map((p) => {
       const edited = docs.find((d) => d.collection === "post" && d.key === p.key)?.data as { date?: string } | undefined;
-      return { path: `/blog/${p.key}`, lastmod: day(p.updatedAt) ?? edited?.date ?? postDate.get(p.key), priority: "0.6" };
+      return { path: `/blog/${p.key}`, lastmod: newest(day(p.updatedAt) ?? edited?.date ?? postDate.get(p.key), POST_LASTMOD[p.key]), priority: "0.6" };
     }),
     ...merged(docs, "case", DEFAULT_CASES.map((x) => x.slug), (d) => Boolean(d.title && d.segment)).map((p) => ({
       path: `/cases/${p.key}`,
@@ -92,6 +102,14 @@ export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: D
         .join("");
       return LANGS.map((l) => row(e, inLang(e.path, l.prefix), links));
     })
+    .concat(
+      EXPORT_PAGES.map((e) => {
+        const links = [...EXPORT_PAGES.map((x) => [x.hreflang, x.path] as const), ["x-default", "/en/export"] as const]
+          .map(([lang, p]) => `<xhtml:link rel="alternate" hreflang="${lang}" href="${esc(ORIGIN + p)}"/>`)
+          .join("");
+        return row({ path: e.path, lastmod: EXPORT_LASTMOD, priority: "0.6" }, e.path, links);
+      }),
+    )
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
 }
