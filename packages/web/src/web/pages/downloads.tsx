@@ -79,7 +79,7 @@ export default function Downloads() {
     <>
       <Seo
         title="Catálogo, Checklists e Guias para Baixar | Demakine"
-        description="Baixe o catálogo Demakine, o checklist de manutenção para imprimir, o guia de correias por aplicação e o checklist antes de comprar uma esteira transportadora."
+        description="Baixe o catálogo Demakine, o checklist de manutenção, o guia de correias por aplicação e o checklist antes de comprar uma esteira transportadora."
         path="/downloads"
       />
 

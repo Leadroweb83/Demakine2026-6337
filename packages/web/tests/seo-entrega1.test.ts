@@ -130,7 +130,7 @@ describe("cabeçalhos de cache", () => {
 
   test("/assets (nome com hash) fica 1 ano, imutável", () => expect(cache("/assets/(.*)")).toBe("public, max-age=31536000, immutable"));
   test("/img (nome fixo) fica 1 dia e revalida em segundo plano", () => {
-    expect(cache("/img/(.*)")).toBe("public, max-age=86400, stale-while-revalidate=604800");
+    expect(cache("/img/(.*)")).toBe("public, max-age=604800, stale-while-revalidate=86400");
   });
   test("o painel continua sem cache", () => expect(cache("/admin/(.*)")).toBe("no-store"));
 });

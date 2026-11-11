@@ -7,6 +7,7 @@ import { site } from "./site";
 export const PRIMARY_SKU: Record<string, string> = {
   "esteira-transportadora-para-sacaria": "ETD8",
   "rosca-transportadora": "RTC10",
+  "esteira-transportadora-para-granel": "EV8",
 };
 
 export const PRICE_ON_REQUEST = "Preço sob consulta: definido em projeto conforme comprimento, correia, motorização e frete";

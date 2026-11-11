@@ -11,7 +11,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "./styles.css";
 import { loadRuntimeContent, runtimeContent } from "./lib/runtime-content";
 import { initGtm } from "./lib/gtm";
-import { loadDict, localePrefix, setLocale, splitLocale } from "./lib/i18n";
+import { loadDict, localePrefix, routerHref, setLocale, splitLocale } from "./lib/i18n";
 
 /**
  * Sem await no nível de cima deste arquivo: as páginas (lazy) importam o React deste mesmo arquivo
@@ -38,7 +38,7 @@ async function start() {
 	const tree = (
 		<StrictMode>
 			<QueryClientProvider client={queryClient}>
-				<Router base={localePrefix()}>
+				<Router base={localePrefix()} hrefs={routerHref}>
 					<App />
 				</Router>
 			</QueryClientProvider>

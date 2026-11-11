@@ -480,7 +480,7 @@ export default function Home() {
         description="Fábrica de esteiras transportadoras, roscas, elevadores e máquinas de costurar sacos sob medida. Mais de 14 anos e 7.000 máquinas entregues. Limeira/SP."
         path="/"
         jsonLd={[organizationJsonLd, websiteJsonLd]}
-        preloadImage="/img/site/hero.webp"
+        preloadImage="/img/site/hero-fabrica.webp"
       />
 
       <HomeHero />
