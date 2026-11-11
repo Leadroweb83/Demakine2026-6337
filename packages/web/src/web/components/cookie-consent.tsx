@@ -1,22 +1,19 @@
 /**
  * Banner de consentimento de cookies (LGPD).
- * Guarda a escolha em localStorage. O GTM já carrega com o consentimento negado; o aceite libera os cookies.
+ * A regra está em lib/consent.ts: sem escolha, medição e anúncios ligados no Brasil e desligados na Europa. O banner
+ * deixa recusar ("Só os essenciais") ou aceitar; o X só fecha, sem registrar escolha.
  * Reabre pelo link "Preferências de cookies" no rodapé (evento custom).
  */
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Cookie, X } from "lucide-react";
 import { updateConsent } from "@/lib/gtm";
+import { bannerDismissed, dismissBanner, readChoice, saveChoice, type Choice } from "@/lib/consent";
 
-const KEY = "demakine_cookie_consent";
 export const COOKIE_PREFS_EVENT = "demakine:open-cookie-prefs";
 
-type Choice = "all" | "essential";
-
 export function getCookieConsent(): Choice | null {
-  if (typeof window === "undefined") return null;
-  const v = window.localStorage.getItem(KEY);
-  return v === "all" || v === "essential" ? v : null;
+  return readChoice();
 }
 
 /** Abre o banner de novo, para o link do rodapé. */
@@ -29,7 +26,7 @@ export function CookieConsent() {
   const [location] = useLocation();
 
   useEffect(() => {
-    if (!getCookieConsent()) {
+    if (!getCookieConsent() && !bannerDismissed()) {
       const t = window.setTimeout(() => setOpen(true), 900);
       return () => window.clearTimeout(t);
     }
@@ -42,8 +39,14 @@ export function CookieConsent() {
   }, []);
 
   const decide = (choice: Choice) => {
-    window.localStorage.setItem(KEY, choice);
+    saveChoice(choice);
     updateConsent(choice);
+    setOpen(false);
+  };
+
+  // o X só fecha: não é escolha, vale a regra do país
+  const close = () => {
+    dismissBanner();
     setOpen(false);
   };
 
@@ -58,8 +61,8 @@ export function CookieConsent() {
     >
       <button
         type="button"
-        onClick={() => decide("essential")}
-        aria-label="Fechar e manter apenas cookies essenciais"
+        onClick={close}
+        aria-label="Fechar o aviso de cookies"
         className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-dm-gray transition-colors hover:bg-dm-surface hover:text-dm-ink"
       >
         <X className="h-4 w-4" />
@@ -75,8 +78,8 @@ export function CookieConsent() {
           </p>
           <p className="mt-2 text-[14px] leading-relaxed text-dm-gray">
             Os essenciais mantêm o site funcionando e não podem ser desativados. Os de medição e
-            anúncios (Google) mostram quais equipamentos geram mais procura e medem nossas campanhas, e
-            só ligam se você aceitar. Detalhes na{" "}
+            anúncios (Google) mostram quais equipamentos geram mais procura e medem nossas campanhas.
+            No Brasil eles ficam ligados por padrão, e você desativa em "Só os essenciais". Detalhes na{" "}
             <Link
               href="/politica-de-privacidade"
               className="font-semibold text-dm-blue hover:underline"
