@@ -10,13 +10,23 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/portifolio/",
-      "destination": "/nossos-servicos/marketing-digital/portfolio/",
+      "source": "/servicos-2/",
+      "destination": "/nossos-servicos/",
       "permanent": true
     },
     {
-      "source": "/servicos-2/:path*",
-      "destination": "/nossos-servicos/:path*",
+      "source": "/servicos-2/:a/",
+      "destination": "/nossos-servicos/:a/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos-2/:a/:b/",
+      "destination": "/nossos-servicos/:a/:b/",
+      "permanent": true
+    },
+    {
+      "source": "/portifolio/",
+      "destination": "/nossos-servicos/marketing-digital/portfolio/",
       "permanent": true
     },
     {
