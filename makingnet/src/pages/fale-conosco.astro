@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { site, whatsappLink } from '../data/site';
+const crumbs = [{ name: 'Fale conosco', href: '/fale-conosco/' }];
+const schema = [{ '@type': 'ContactPage', '@id': `${site.url}/fale-conosco/#contact`, mainEntity: { '@id': `${site.url}/#organization` } }];
+const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.name}, ${site.address.street}, ${site.address.city} ${site.address.state}`)}`;
+---
+<Base title="Fale Conosco | Making TI e Marketing Digital" description="Fale com a Making: telefone, WhatsApp, e-mail e endereço em Santa Bárbara d'Oeste/SP. Envie sua dúvida, sugestão ou pedido pelo formulário." path="/fale-conosco/" crumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Contato" title="Fale conosco" crumbs={crumbs} lead="Quer tirar dúvidas, enviar sugestões ou críticas? Veja nossas formas de contato ou envie uma mensagem pelo formulário." />
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <h2>Informações e contato</h2>
+        <address style="font-style:normal;margin-bottom:1em">
+          {site.address.street}<br />{site.address.district}, {site.address.city}/{site.address.state}<br />CEP {site.address.zip}
+        </address>
+        <ul class="checks">
+          {site.phones.map((p) => <li><a href={`tel:${p.tel}`}>{p.label}</a></li>)}
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn--wa" href={whatsappLink()} target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          <a class="btn btn--ghost" href={mapa} target="_blank" rel="noopener">Ver no mapa</a>
+        </div>
+      </div>
+      <ContactForm kind="contato" />
+    </div>
+  </section>
+</Base>

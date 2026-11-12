@@ -1,0 +1,31 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Cta from '../../../components/Cta.astro';
+import portfolio from '../../../data/portfolio.json';
+import { site } from '../../../data/site';
+const path = '/nossos-servicos/marketing-digital/portfolio/';
+const crumbs = [
+  { name: 'Serviços', href: '/nossos-servicos/' },
+  { name: 'Marketing Digital', href: '/nossos-servicos/marketing-digital/' },
+  { name: 'Portfólio', href: path },
+];
+const schema = [{
+  '@type': 'CollectionPage',
+  name: 'Portfólio de sites e lojas virtuais',
+  hasPart: portfolio.map((p) => ({ '@type': 'CreativeWork', name: `${p.kind} ${p.name}`, image: `${site.url}${p.img}`, creator: { '@id': `${site.url}/#organization` } })),
+}];
+---
+<Base title="Portfólio de Sites e Lojas Virtuais | Making" description={`Veja ${portfolio.length} sites, blogs e lojas virtuais criados pela Making. Projetos modernos e personalizados, com tecnologia, design e técnicas de SEO.`} path={path} crumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Portfólio" title="Portfólio de sites e lojas virtuais" crumbs={crumbs} lead="Modernos e personalizados para a sua empresa. Montamos o site ou e-commerce de acordo com a sua necessidade, unindo tecnologia, design e técnicas de SEO para divulgar melhor a sua marca." />
+  <section class="section">
+    <div class="wrap">
+      <ul class="grid grid--3">
+        {portfolio.map((p, i) => (
+          <li><figure class="work"><img src={p.img} alt={`${p.kind} ${p.name}, desenvolvido pela Making`} width={p.w} height={p.h} loading={i < 3 ? 'eager' : 'lazy'} decoding="async" /><figcaption>{p.name} <span>{p.kind}</span></figcaption></figure></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <Cta title="Quer um site assim para a sua empresa?" button="Quero um site profissional" message="Olá! Vi o portfólio da Making e quero um orçamento de site." />
+</Base>

@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Disallow: /obrigado/
+
+# Buscadores com IA (GEO): acesso liberado para que a Making possa ser citada nas respostas
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.makingnet.com.br/sitemap-index.xml

@@ -1,0 +1,92 @@
+[
+ {
+  "name": "Alemão SP",
+  "img": "/img/clientes/alemao-sp.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Fisio Fernandes",
+  "img": "/img/clientes/fisio-fernandes.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Saci Soluções",
+  "img": "/img/clientes/saci-solucoes.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Toyoda | JTEKT Group",
+  "img": "/img/clientes/toyoda-jtekt-group.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Orsola",
+  "img": "/img/clientes/orsola.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Instituto Bio Sistêmico",
+  "img": "/img/clientes/instituto-bio-sistemico.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Imetextil",
+  "img": "/img/clientes/imetextil.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Atlanta",
+  "img": "/img/clientes/atlanta.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Raiz Implementos",
+  "img": "/img/clientes/raiz-implementos.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "AC Metalúrgica",
+  "img": "/img/clientes/ac-metalurgica.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Clínica Marcelo Parazzi",
+  "img": "/img/clientes/clinica-marcelo-parazzi.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Destilaria Santa Capela",
+  "img": "/img/clientes/destilaria-santa-capela.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Ameriparts",
+  "img": "/img/clientes/ameriparts.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "Usitom",
+  "img": "/img/clientes/usitom.webp",
+  "w": 250,
+  "h": 80
+ },
+ {
+  "name": "MediClass",
+  "img": "/img/clientes/mediclass.webp",
+  "w": 250,
+  "h": 80
+ }
+]

@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import politica from '../data/politica.html?raw';
+const crumbs = [{ name: 'Política de Privacidade', href: '/politica-de-privacidade/' }];
+---
+<Base title="Política de Privacidade e Termos de Uso | Making" description="Saiba como a Making TI e Marketing Digital coleta, usa e protege seus dados pessoais, de acordo com a LGPD." path="/politica-de-privacidade/" crumbs={crumbs}>
+  <PageHero title="Política de Privacidade e Termos de Uso" crumbs={crumbs} />
+  <section class="section"><div class="wrap prose" style="max-width:900px" set:html={politica} /></section>
+</Base>

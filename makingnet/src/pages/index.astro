@@ -1,0 +1,139 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import Faq from '../components/Faq.astro';
+import { site, yearsInBusiness, whatsappLink } from '../data/site';
+import { areas, sistemas } from '../data/servicos';
+import clientes from '../data/clientes.json';
+import portfolio from '../data/portfolio.json';
+
+const title = "Making: Marketing Digital, TI e Sistemas em Santa Bárbara d'Oeste";
+const description = `Agência Google Partner com ${yearsInBusiness} anos de mercado. Criação de sites, SEO, Google Ads, suporte de TI, redes, servidores e o sistema de gestão Velosys.`;
+
+const faq = [
+  {
+    q: 'O que a Making faz?',
+    a: 'A Making atua em três frentes: marketing digital (criação de sites, SEO, Google Ads, anúncios em redes sociais e inbound marketing), hardware e infraestrutura de TI (suporte, redes, servidores, virtualização e venda de equipamentos) e sistemas, com o Velosys, sistema de gestão próprio.',
+  },
+  {
+    q: 'Onde fica a Making?',
+    a: `A sede fica na ${site.address.street}, ${site.address.district}, em ${site.address.city}/${site.address.state}. A equipe atende clientes de todos os portes e segmentos em todo o Brasil.`,
+  },
+  {
+    q: 'Há quanto tempo a Making está no mercado?',
+    a: `Desde julho de ${site.foundingYear}. São ${yearsInBusiness} anos atuando com tecnologia da informação e comunicação focada na web.`,
+  },
+  {
+    q: 'A Making é uma agência certificada?',
+    a: 'Sim. A Making é agência certificada Google Partner e parceira Tray Commerce.',
+  },
+];
+const schema = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+const pilares = [
+  ...areas.map((a) => ({ name: a.name, resumo: a.resumo, href: `/nossos-servicos/${a.slug}/`, itens: a.servicos.map((s) => s.name) })),
+  { name: sistemas.name, resumo: sistemas.resumo, href: '/nossos-servicos/sistemas/', itens: ['Vendas e CRM', 'Estoque e PCP', 'Financeiro e fiscal', 'BI e app mobile'] },
+];
+---
+
+<Base title={title} description={description} path="/" schema={schema}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Marketing digital · TI · Sistemas · desde {site.foundingYear}</span>
+      <h1>Transformando ideias em <em>resultados extraordinários</em></h1>
+      <p class="lead">
+        A Making usa a internet como principal fonte de aquisição de clientes para o seu negócio e cuida da tecnologia que mantém sua empresa funcionando: site, anúncios, SEO, infraestrutura de TI e sistema de gestão em um só parceiro.
+      </p>
+      <div class="actions">
+        <a class="btn btn--primary" href="/orcamento/">Pedir orçamento</a>
+        <a class="btn btn--ghost" href={whatsappLink()} target="_blank" rel="noopener">Falar no WhatsApp</a>
+      </div>
+      <ul class="stats">
+        <li><strong>{yearsInBusiness} anos</strong><span>de mercado, desde {site.foundingYear}</span></li>
+        <li><strong>Google Partner</strong><span>agência certificada</span></li>
+        <li><strong>{portfolio.length}+</strong><span>sites, blogs e lojas no portfólio</span></li>
+        <li><strong>3 frentes</strong><span>marketing, TI e sistemas</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">Nossos serviços</span>
+      <h2>Um parceiro para o marketing e para a tecnologia da sua empresa</h2>
+      <p class="lead">Especialistas em marketing digital e em tecnologia da informação, além de um sistema próprio para gerenciar o controle e o faturamento do seu negócio.</p>
+      <ul class="grid grid--3" style="margin-top:36px">
+        {pilares.map((p) => (
+          <li>
+            <a class="card" href={p.href}>
+              <h3>{p.name}</h3>
+              <p>{p.resumo}</p>
+              <ul class="checks" style="margin-bottom:1.2em">{p.itens.map((i) => <li>{i}</li>)}</ul>
+              <span class="more">Conhecer {p.name} →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <span class="eyebrow">Clientes</span>
+      <h2>Empresas que confiam no nosso trabalho</h2>
+      <ul class="logos">
+        {clientes.map((c) => <li><img src={c.img} alt={`Logo ${c.name}, cliente da Making`} width={c.w} height={c.h} loading="lazy" decoding="async" /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="wrap">
+      <span class="eyebrow">Portfólio</span>
+      <h2>Confira nossos últimos sites</h2>
+      <p class="lead">Modernos e personalizados para a sua empresa. Unimos tecnologia, design e técnicas de SEO para divulgar melhor a sua marca.</p>
+      <ul class="grid grid--3" style="margin-top:36px">
+        {portfolio.slice(0, 6).map((p) => (
+          <li>
+            <figure class="work">
+              <img src={p.img} alt={`${p.kind} ${p.name}, desenvolvido pela Making`} width={p.w} height={p.h} loading="lazy" decoding="async" />
+              <figcaption>{p.name} <span>{p.kind}</span></figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <div class="actions"><a class="btn btn--primary" href="/nossos-servicos/marketing-digital/portfolio/">Ver portfólio completo</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Sobre a Making</span>
+        <h2>{yearsInBusiness} anos fazendo da internet uma fonte de clientes</h2>
+        <p>Atuamos nas áreas de tecnologia da informação e comunicação desde {site.foundingYear}. No início, as atividades eram as de uma agência de publicidade e desenvolvimento de websites, com uma equipe que projetava e criava softwares e sistemas.</p>
+        <p>Com o crescimento do marketing digital, a partir de 2004, já como Making, apostamos nas áreas de TI e comunicação focada na web, atuando com eficiência até hoje.</p>
+        <div class="actions"><a class="btn btn--dark" href="/sobre/">Conhecer a Making</a></div>
+      </div>
+      <div class="card">
+        <h3>Certificações e parcerias</h3>
+        <ul class="checks">
+          <li>Agência certificada Google Partner</li>
+          <li>Parceira Tray Commerce</li>
+          <li>Profissionais certificados em Google Ads e Microsoft Advertising</li>
+          <li>Atendimento a clientes de todos os portes, em todo o Brasil</li>
+        </ul>
+        <div class="partners" style="margin-top:22px">
+          {site.partners.map((p) => <a href={p.url} target="_blank" rel="noopener"><img src={p.img} alt={p.name} width="72" height="72" loading="lazy" style="height:72px;border:1px solid var(--mk-line)" /></a>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq} title="Perguntas frequentes sobre a Making" />
+  <Cta />
+</Base>

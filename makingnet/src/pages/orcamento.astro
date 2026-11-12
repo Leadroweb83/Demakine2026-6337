@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { site, whatsappLink } from '../data/site';
+const crumbs = [{ name: 'Orçamento', href: '/orcamento/' }];
+---
+<Base title="Peça um Orçamento | Making TI e Marketing Digital" description="Peça uma proposta para criação de site, SEO, Google Ads, redes sociais, suporte de TI, redes, servidores ou o sistema Velosys. Resposta da nossa equipe." path="/orcamento/" crumbs={crumbs}>
+  <PageHero eyebrow="Orçamento" title="Peça uma proposta" crumbs={crumbs} lead="Conte o que a sua empresa precisa. Nossa equipe analisa e retorna com uma proposta sob medida." />
+  <section class="section">
+    <div class="wrap split">
+      <ContactForm kind="orcamento" />
+      <div>
+        <h2>Prefere falar agora?</h2>
+        <ul class="checks">
+          {site.phones.map((p) => <li><a href={`tel:${p.tel}`}>{p.label}</a></li>)}
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        </ul>
+        <div class="actions"><a class="btn btn--wa" href={whatsappLink('Olá! Vim pelo site e quero um orçamento.')} target="_blank" rel="noopener">Chamar no WhatsApp</a></div>
+        <h3 style="margin-top:2em">Por que a Making</h3>
+        <ul class="checks">
+          <li>No mercado desde {site.foundingYear}</li>
+          <li>Agência certificada Google Partner</li>
+          <li>Relatórios periódicos com os principais indicadores</li>
+          <li>Marketing, TI e sistema de gestão no mesmo parceiro</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Cta from '../../components/Cta.astro';
+import { areas, sistemas } from '../../data/servicos';
+const crumbs = [{ name: 'Serviços', href: '/nossos-servicos/' }];
+---
+<Base title="Serviços de Marketing Digital, TI e Sistemas | Making" description="Conheça os serviços da Making: marketing digital, hardware e infraestrutura de TI e o sistema de gestão Velosys. Soluções personalizadas desde 2003." path="/nossos-servicos/" crumbs={crumbs}>
+  <PageHero eyebrow="Serviços" title="Serviços da Making" crumbs={crumbs} lead="Especialistas em marketing digital e em tecnologia da informação, além de um sistema próprio para gerenciar o controle e o faturamento da sua empresa." />
+  {areas.map((area, i) => (
+    <section class={`section ${i % 2 ? 'section--surface' : ''}`}>
+      <div class="wrap">
+        <h2><a href={`/nossos-servicos/${area.slug}/`} style="color:inherit;text-decoration:none">{area.name}</a></h2>
+        <p class="lead">{area.resumo}</p>
+        <ul class="grid grid--3" style="margin-top:28px">
+          {area.servicos.map((s) => (
+            <li><a class="card" href={`/nossos-servicos/${area.slug}/${s.slug}/`}><h3>{s.name}</h3><p>{s.resumo}</p><span class="more">Saiba mais →</span></a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
+  <section class="section">
+    <div class="wrap">
+      <h2>{sistemas.name}</h2>
+      <p class="lead">{sistemas.resumo}</p>
+      <div class="actions"><a class="btn btn--dark" href="/nossos-servicos/sistemas/">Conhecer o Velosys</a></div>
+    </div>
+  </section>
+  <Cta />
+</Base>

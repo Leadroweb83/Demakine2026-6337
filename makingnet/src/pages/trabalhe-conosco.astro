@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+const crumbs = [{ name: 'Trabalhe conosco', href: '/trabalhe-conosco/' }];
+const assunto = encodeURIComponent('Banco de talentos Making');
+---
+<Base title="Trabalhe Conosco | Making TI e Marketing Digital" description="Faça parte do time da Making. Confira as vagas abertas ou cadastre seu currículo no banco de talentos de tecnologia e marketing digital." path="/trabalhe-conosco/" crumbs={crumbs}>
+  <PageHero eyebrow="Carreiras" title="Trabalhe conosco" crumbs={crumbs} lead="Na Making, acreditamos que o talento é o motor do nosso sucesso." />
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <h2>Vagas abertas</h2>
+        <div class="card"><h3>Designer / Social Media</h3><p>Participe do processo seletivo enviando seu currículo e portfólio.</p><a class="more" href={`mailto:${site.email}?subject=${encodeURIComponent('Vaga Designer / Social Media')}`}>Candidatar-se por e-mail →</a></div>
+      </div>
+      <div>
+        <h2>Banco de talentos</h2>
+        <p>Não encontrou uma vaga com o seu perfil? Se você é um profissional apaixonado por tecnologia e marketing digital, queremos te conhecer.</p>
+        <p>Cadastre seu currículo. Quando surgir uma oportunidade que combine com suas habilidades e aspirações, entraremos em contato.</p>
+        <div class="actions"><a class="btn btn--dark" href={`mailto:${site.email}?subject=${assunto}`}>Enviar currículo</a></div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,1052 @@
+[
+ {
+  "name": "Pessoas",
+  "items": [
+   {
+    "t": "Clientes",
+    "sub": []
+   },
+   {
+    "t": "Fornecedores",
+    "sub": []
+   },
+   {
+    "t": "Funcionários",
+    "sub": []
+   },
+   {
+    "t": "Emissão de crachá",
+    "sub": []
+   },
+   {
+    "t": "Transportadoras",
+    "sub": []
+   },
+   {
+    "t": "Representantes",
+    "sub": []
+   },
+   {
+    "t": "Empresas",
+    "sub": []
+   },
+   {
+    "t": "Importação de dados do Sintegra através do CNPJ",
+    "sub": []
+   },
+   {
+    "t": "Importação de dados do webservice dos correios",
+    "sub": []
+   },
+   {
+    "t": "Exportação de mailing de pessoas para e-mail marketing formato CSV",
+    "sub": []
+   },
+   {
+    "t": "Possibilidade de anexos de arquivos com controle de validade",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Itens",
+  "items": [
+   {
+    "t": "Organizado por Grupos",
+    "sub": []
+   },
+   {
+    "t": "Elaboração de Estrutura de Produtos sem limitação de níveis",
+    "sub": []
+   },
+   {
+    "t": "Cada Nível pode ser vendido separadamente ou em conjunto",
+    "sub": []
+   },
+   {
+    "t": "Definição de Processo Produtivo",
+    "sub": []
+   },
+   {
+    "t": "Apuração de Custos",
+    "sub": []
+   },
+   {
+    "t": "Possibilidade de anexos de arquivos com controle de validade",
+    "sub": []
+   },
+   {
+    "t": "Controle de Revisões",
+    "sub": []
+   },
+   {
+    "t": "Relacionamento direto entre Produtos e Fornecedores",
+    "sub": []
+   },
+   {
+    "t": "Estoque (Extrato)",
+    "sub": []
+   },
+   {
+    "t": "Estoque de Terceiros",
+    "sub": []
+   },
+   {
+    "t": "Estoque por Local",
+    "sub": []
+   },
+   {
+    "t": "Conversor de Unidade de Medidas",
+    "sub": []
+   },
+   {
+    "t": "FCI",
+    "sub": []
+   },
+   {
+    "t": "Modo de Usar",
+    "sub": []
+   },
+   {
+    "t": "Emissão de Etiquetas com Código de Barras ou QRCode",
+    "sub": []
+   },
+   {
+    "t": "Estatísticas",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Vendas",
+  "items": [
+   {
+    "t": "Orçamento",
+    "sub": [
+     "Controle de Revisões",
+     "Controle de cancelamento de propostas para estatísticas"
+    ]
+   },
+   {
+    "t": "Pedido de Venda",
+    "sub": []
+   },
+   {
+    "t": "Envio por e-mail ou WhatsApp das propostas e pedidos (PDF)",
+    "sub": []
+   },
+   {
+    "t": "Controle de Entregas",
+    "sub": []
+   },
+   {
+    "t": "Meta de Vendas",
+    "sub": [
+     "Via Desktop",
+     "Via Celular / Tablet"
+    ]
+   },
+   {
+    "t": "Definição de vendedores por região",
+    "sub": []
+   },
+   {
+    "t": "Previsão de Vendas",
+    "sub": []
+   },
+   {
+    "t": "Planejamento e Controle Orçamentário",
+    "sub": []
+   },
+   {
+    "t": "Feedback automático através de tarefas para o vendedor",
+    "sub": []
+   },
+   {
+    "t": "Visualização do histórico de vendas do produto geral ou por cliente",
+    "sub": []
+   },
+   {
+    "t": "Follow-up através de tarefas",
+    "sub": []
+   },
+   {
+    "t": "Controle de liberação de orçamentos / pedido por assinatura digital (Comercial, Técnica, Financeira)",
+    "sub": []
+   },
+   {
+    "t": "Venda Balcão (Venda Rápida)",
+    "sub": [
+     "Orçamento",
+     "Pedido",
+     "Devolução",
+     "Empréstimo",
+     "Troca"
+    ]
+   },
+   {
+    "t": "Caixa",
+    "sub": []
+   },
+   {
+    "t": "Emissão de Cupom SAT Fiscal / NF-e",
+    "sub": []
+   },
+   {
+    "t": "Controle de tarifas de cartões de débito / crédito",
+    "sub": []
+   },
+   {
+    "t": "Gerador de XML compactado para envio a contabilidade",
+    "sub": []
+   },
+   {
+    "t": "Emissão de Carnê",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Compras",
+  "items": [
+   {
+    "t": "Requisição de itens",
+    "sub": []
+   },
+   {
+    "t": "Solicitação de compras",
+    "sub": []
+   },
+   {
+    "t": "Necessidade de compras",
+    "sub": []
+   },
+   {
+    "t": "Cotação de compras",
+    "sub": []
+   },
+   {
+    "t": "Pedido de compras",
+    "sub": []
+   },
+   {
+    "t": "Relacionamento direto entre Fornecedores, Materiais e Produtos",
+    "sub": []
+   },
+   {
+    "t": "Follow-up de Compras com Fornecedor",
+    "sub": []
+   },
+   {
+    "t": "Associação da Cotação e Pedido de Compra com Vendas (Rastreabilidade)",
+    "sub": []
+   },
+   {
+    "t": "Previsão de contas a pagar",
+    "sub": []
+   },
+   {
+    "t": "Históricos de compra dos itens",
+    "sub": []
+   },
+   {
+    "t": "Históricos de consumo",
+    "sub": []
+   },
+   {
+    "t": "Envio por e-mail ou WhatsApp das propostas e pedidos (PDF)",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Estoque (Almoxarifado/Automático)",
+  "items": [
+   {
+    "t": "Geração de inventários",
+    "sub": [
+     "Via Desktop",
+     "Via Celular / Tablet"
+    ]
+   },
+   {
+    "t": "Controle de necessidade em relação a estoque mínimo, pedidos de venda e pedidos de compra",
+    "sub": []
+   },
+   {
+    "t": "Movimentação de Estoque Local (Armazenamento e Processo)",
+    "sub": [
+     "Via Desktop",
+     "Via Celular / Tablet"
+    ]
+   },
+   {
+    "t": "Controle de estoque por locais de armazenamento",
+    "sub": []
+   },
+   {
+    "t": "Entrada de Materiais / Produtos / Bens Imobilizados",
+    "sub": []
+   },
+   {
+    "t": "Geração de Código de Barras ou QRCode para rastreabilidade e agilidade no processo",
+    "sub": []
+   },
+   {
+    "t": "Integração com a NF-e (Importação por XML)",
+    "sub": []
+   },
+   {
+    "t": "Integração com o SEFAZ para download de NFe",
+    "sub": []
+   },
+   {
+    "t": "Integração com CTe (Importação por XML)",
+    "sub": []
+   },
+   {
+    "t": "Certificação de Fornecedores",
+    "sub": []
+   },
+   {
+    "t": "Possibilidade de anexos de arquivos com controle de validade",
+    "sub": []
+   },
+   {
+    "t": "Saída de Materiais e Produtos (Consumo e Produção)",
+    "sub": []
+   },
+   {
+    "t": "Cálculo de Custo Médio",
+    "sub": []
+   },
+   {
+    "t": "Cálculo de Consumo Médio",
+    "sub": []
+   },
+   {
+    "t": "Extrato de Estoque",
+    "sub": []
+   },
+   {
+    "t": "Controle de Estoque em Terceiros",
+    "sub": []
+   },
+   {
+    "t": "Controle de Estoque por Lote",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Módulo PCP",
+  "items": [
+   {
+    "t": "Necessidade de Produção",
+    "sub": []
+   },
+   {
+    "t": "Visualização dos itens acumulados para a produção levando em consideração Estoque minimo, Estoque Atual, Quantidade a Produzir, Estoque Terceiros e Quantidade em Produção",
+    "sub": [
+     "Necessidade Geral"
+    ]
+   },
+   {
+    "t": "Visualização dos itens gerais a produzir com definição de status “OS não gerada”, “Produção”, “Estoque”, “A Faturar” e “Faturado Parcial”",
+    "sub": [
+     "Itens sem Gerar OS",
+     "Materiais Necessários para a Produção"
+    ]
+   },
+   {
+    "t": "Visualização da necessidade de itens de composição para atender os pedidos em aberto",
+    "sub": [
+     "Ordem de Serviço / Produção"
+    ]
+   },
+   {
+    "t": "Controle de Composição de itens necessários para a produção",
+    "sub": []
+   },
+   {
+    "t": "Definição de Processo Produtivo",
+    "sub": []
+   },
+   {
+    "t": "Apontamento de Colaboradores",
+    "sub": []
+   },
+   {
+    "t": "Movimentação de Estoque por processo",
+    "sub": []
+   },
+   {
+    "t": "Controle de Perdas",
+    "sub": []
+   },
+   {
+    "t": "Emissão de Etiquetas (Código de Barras ou QRCode)",
+    "sub": []
+   },
+   {
+    "t": "Anexos (projetos, normas, imagens, …) com controle de validade de arquivos",
+    "sub": []
+   },
+   {
+    "t": "Tarefas",
+    "sub": []
+   },
+   {
+    "t": "Fechamento total ou parcial",
+    "sub": []
+   },
+   {
+    "t": "Definição de embalagens de produto acabado e emissão de etiquetas (Código de Barras ou QRCode)",
+    "sub": []
+   },
+   {
+    "t": "Listagem de Pedidos em Produção",
+    "sub": []
+   },
+   {
+    "t": "Listagem de Produtos em Poder de Terceiros",
+    "sub": []
+   },
+   {
+    "t": "Materiais em Produção",
+    "sub": []
+   },
+   {
+    "t": "Itens em Quarentena",
+    "sub": [
+     "PCP"
+    ]
+   },
+   {
+    "t": "Visualização das OSs por status para controle de entrega",
+    "sub": []
+   },
+   {
+    "t": "Visualização dos setores abertos, em produção e finalizados com seus devidos apontamentos realizados",
+    "sub": []
+   },
+   {
+    "t": "Visualização do tempo previsto e do realizado para estimativa de término ou análise final da produção",
+    "sub": []
+   },
+   {
+    "t": "Possibilidade da geração de RNC – Relatório de não conformidade",
+    "sub": []
+   },
+   {
+    "t": "Autenticação (Apontamento de Funcionários)",
+    "sub": []
+   },
+   {
+    "t": "Via Desktop (Possibilidade de leitura por código de barras)",
+    "sub": []
+   },
+   {
+    "t": "Via Celular / Tablet (Possibilidade de leitura por QRCode)",
+    "sub": []
+   },
+   {
+    "t": "Reconhecimento automático de Setor/ Processo/ OP",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Manutenção",
+  "items": [
+   {
+    "t": "Patrimônios / Preventiva – Bens Imobilizados",
+    "sub": []
+   },
+   {
+    "t": "Definição de parâmetros para aplicação do aviso (mensal, anual, semestral, nº de dias…)",
+    "sub": []
+   },
+   {
+    "t": "Agendamento",
+    "sub": []
+   },
+   {
+    "t": "Histórico de manutenções realizadas",
+    "sub": []
+   },
+   {
+    "t": "Avisos visuais e sonoros da necessidade de manutenção",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Qualidade",
+  "items": [
+   {
+    "t": "Controle de Rastreabilidade do material",
+    "sub": []
+   },
+   {
+    "t": "Certificado de qualidade dos materiais",
+    "sub": []
+   },
+   {
+    "t": "Controle das RNC’s, Ações Corretivas e Ações Preventivas",
+    "sub": []
+   },
+   {
+    "t": "Geração de Indicadores",
+    "sub": []
+   },
+   {
+    "t": "Programação e realização de auditorias via tarefas",
+    "sub": []
+   },
+   {
+    "t": "Históricos e Indicadores",
+    "sub": []
+   },
+   {
+    "t": "Inspeção através de apontamento em processos",
+    "sub": []
+   },
+   {
+    "t": "Rastreabilidade de lotes comprados, produzidos e vendidos",
+    "sub": []
+   },
+   {
+    "t": "Controle de Documentação de Clientes / Fornecedores",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Recursos Humanos Gerencial",
+  "items": [
+   {
+    "t": "Descrição de cargos",
+    "sub": []
+   },
+   {
+    "t": "Apuração de Impostos",
+    "sub": []
+   },
+   {
+    "t": "Salários",
+    "sub": []
+   },
+   {
+    "t": "Avaliação de Desempenho",
+    "sub": []
+   },
+   {
+    "t": "Necessidade e Planejamento de Treinamento via tarefa",
+    "sub": []
+   },
+   {
+    "t": "Históricos e Indicadores",
+    "sub": []
+   },
+   {
+    "t": "Banco de Horas: (Por funcionário de Departamento)",
+    "sub": []
+   },
+   {
+    "t": "Exame Médico Periódicos via tarefa",
+    "sub": []
+   },
+   {
+    "t": "Dados do Funcionário",
+    "sub": []
+   },
+   {
+    "t": "Férias (abertas e fechadas)",
+    "sub": []
+   },
+   {
+    "t": "Ponto de Funcionários",
+    "sub": [
+     "Geração manual",
+     "Importação de máquinas de ponto"
+    ]
+   },
+   {
+    "t": "Integração com contas a pagar",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Visitantes",
+  "items": [
+   {
+    "t": "Controle de entrada e saída de Visitante",
+    "sub": [
+     "Uso de Foto em tempo real"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "Logística",
+  "items": [
+   {
+    "t": "Montagem de transporte a partir de pedidos liberados para faturamento",
+    "sub": []
+   },
+   {
+    "t": "Geração por demanda da montagem realizada dos faturamentos (NF-e / Boletos)",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Expedição",
+  "items": [
+   {
+    "t": "Controle de Quantidades / Volumes",
+    "sub": []
+   },
+   {
+    "t": "Controle de Embalagens",
+    "sub": []
+   },
+   {
+    "t": "Emissão de Etiquetas",
+    "sub": []
+   },
+   {
+    "t": "Direcionamento de Localização no estoque",
+    "sub": []
+   },
+   {
+    "t": "Liberação para Faturamento",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Faturamento / Financeiro",
+  "items": [
+   {
+    "t": "Faturamento",
+    "sub": []
+   },
+   {
+    "t": "Nota Fiscal Eletrônica Estadual (NF-e)",
+    "sub": []
+   },
+   {
+    "t": "Nota Fiscal Eletrônica Municipal (NFS-e)",
+    "sub": []
+   },
+   {
+    "t": "Geração de Notas Fiscais estaduais e municipais conjugadas",
+    "sub": []
+   },
+   {
+    "t": "Geração de Manifesto Eletrônico (MDF-e)",
+    "sub": []
+   },
+   {
+    "t": "Envio automático por e-mail dos documentos fiscais / boletos",
+    "sub": []
+   },
+   {
+    "t": "Contas a Receber",
+    "sub": [
+     "Controle de Antecipação de títulos",
+     "Integração CNAB"
+    ]
+   },
+   {
+    "t": "Despesas (Centro de Custo)",
+    "sub": [
+     "Integração com a NF-e (Importação por XML)",
+     "Integração com CT-e (Importação por XML)",
+     "Integração com o SEFAZ para download de NFe"
+    ]
+   },
+   {
+    "t": "Controle de Comissões",
+    "sub": []
+   },
+   {
+    "t": "Contas a Pagar",
+    "sub": [
+     "Direito de acesso a despesas privadas",
+     "Integração CNAB (Pagamento a Fornecedores)"
+    ]
+   },
+   {
+    "t": "Controle de Despesas / Receitas fixas e variáveis",
+    "sub": []
+   },
+   {
+    "t": "Fluxo de Caixa",
+    "sub": []
+   },
+   {
+    "t": "Plano de Contas",
+    "sub": []
+   },
+   {
+    "t": "Centro de Custo",
+    "sub": []
+   },
+   {
+    "t": "DRE",
+    "sub": []
+   },
+   {
+    "t": "Consolidado Geral",
+    "sub": []
+   },
+   {
+    "t": "Consolidação Bancária",
+    "sub": []
+   },
+   {
+    "t": "Transferência entre Contas",
+    "sub": []
+   },
+   {
+    "t": "Envio por e-mail ou WhatsApp das Notas Fiscais e Boletos (PDF)",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Tarefas",
+  "items": [
+   {
+    "t": "Geração de tarefas especificas",
+    "sub": []
+   },
+   {
+    "t": "Geração de Tarefas automáticas a serem desempenhadas pelos colaboradores através de definição diária, semanal, mensal, trimestral, semestral e anual",
+    "sub": []
+   },
+   {
+    "t": "Geração de tarefas automáticas mediante a ações do software",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Controle de Usuários",
+  "items": [
+   {
+    "t": "Cadastro de Usuários",
+    "sub": []
+   },
+   {
+    "t": "Cadastro de Direitos de Acesso por usuário detalhado (Inserção, Edição, Deleção, Impressão)",
+    "sub": []
+   },
+   {
+    "t": "Uso de direitos pré definidos para a criação de novos usuários",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Log",
+  "items": [
+   {
+    "t": "Log de Registros",
+    "sub": [
+     "Controle de Ações de usuários em todos os módulos do sistema (inserção, edição e deleção de registros)",
+     "Registro da ação do funcionário com data e hora e o que foi feito",
+     "Ferramenta de recuperação de informações deletada"
+    ]
+   },
+   {
+    "t": "Log de Acessos",
+    "sub": [
+     "Controle e armazenamento de acessos ao sistema",
+     "Possibilidade de controle de trava de usuários por acessos errados"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "Integração",
+  "items": [
+   {
+    "t": "Exportação e Importação de arquivos dos bancos (Cobrança Eletrônica – CNAB)",
+    "sub": []
+   },
+   {
+    "t": "Exportação de dados para o Excel",
+    "sub": []
+   },
+   {
+    "t": "Exportação de arquivos para Contabilidade / Fiscal",
+    "sub": []
+   },
+   {
+    "t": "Exportação de arquivos para Compra Legal",
+    "sub": []
+   },
+   {
+    "t": "Exportação de arquivos para SPED",
+    "sub": []
+   },
+   {
+    "t": "Geração do Bloco K",
+    "sub": []
+   },
+   {
+    "t": "Geração do Bloco H",
+    "sub": []
+   },
+   {
+    "t": "Importação de Tabela TIPI",
+    "sub": []
+   },
+   {
+    "t": "Importação de dados de WooCommerce (WordPress)",
+    "sub": []
+   },
+   {
+    "t": "Importação de dados do e-commerce da UOL",
+    "sub": []
+   },
+   {
+    "t": "Importação de dados do software gratuito de emissão de NF-e (Clientes, Transportadoras e itens)",
+    "sub": []
+   },
+   {
+    "t": "Importação do Excel para bloco K e H",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Relatórios / Gráficos",
+  "items": [
+   {
+    "t": "Estoque",
+    "sub": [
+     "Movimentação de Entrada NF",
+     "Movimentação de Saída NF",
+     "Entrada / Saída NF Terc.",
+     "Estoque por Período",
+     "Estoque Diário",
+     "Estoque Diário Saldo",
+     "Estoque Físico / Lógico",
+     "Estoque Detalhado",
+     "Estoque por Lote / Local",
+     "Estoque por Nº Item / Local (R)",
+     "Estoque por KG",
+     "Estoque Auditoria",
+     "Itens por Fabricante",
+     "Fabricantes por Item",
+     "Consumo de Itens",
+     "Listagem de Itens",
+     "Itens de FCI",
+     "Necessidade por Material / Espessura / Cor"
+    ]
+   },
+   {
+    "t": "Vendas",
+    "sub": [
+     "Meta de Venda",
+     "Orçamento / Pedido",
+     "Orçamento / Pedido por Estado",
+     "Orçamento / Pedido por Cidade",
+     "Vendas por Período",
+     "Vendas por Tipo de Item",
+     "Venda Semanal",
+     "Vendas por Item (KG)",
+     "Venda Rápida por Item",
+     "Vendas Não Realizadas",
+     "Vendas / Faturamento por Região",
+     "Venda / Mídia",
+     "Cliente / Dias sem Comprar",
+     "Clientes / Dias sem Faturar",
+     "Produtos / Cliente",
+     "Itens Vendidos / Faturados",
+     "Item Cadastrado para o Cliente",
+     "Itens / Dias sem Vender",
+     "Recebimento Total Diário / Cliente",
+     "Lucro por Cliente",
+     "Estatística",
+     "Ranking Vendas",
+     "Ranking Faturamento",
+     "Ranking de Clientes",
+     "Ranking de Vendas / Tipo de Item",
+     "Faturamento Diário",
+     "Faturamento Diário por Pedido",
+     "Faturamento por Cliente",
+     "Faturamento por Quantidade de Item",
+     "Margem de Contribuição Sobre Faturamento / Vendas",
+     "Representativo Faturamento X Grupo",
+     "Logística",
+     "Frete / Peso / Volume",
+     "Comissão",
+     "Comissão Sobre Venda",
+     "Comissão Sobre Faturamento",
+     "Comissão Sobre Item",
+     "Comissão Sobre Recebimento",
+     "Comissão Sobre Recebimento Agrupado",
+     "Comissão Sobre Recebimento (Vendedor Externo)"
+    ]
+   },
+   {
+    "t": "Compras",
+    "sub": [
+     "Itens Comprados",
+     "Histórico de Entrada"
+    ]
+   },
+   {
+    "t": "Produção",
+    "sub": [
+     "Posição de OS",
+     "Produção por Período",
+     "Horas Trabalhadas",
+     "Horas Trabalhadas por Setor",
+     "Horas Previstas X Horas Trabalhadas",
+     "Tempo Ocioso entre Apontamento",
+     "Aproveitamento do Tempo Estimado",
+     "Tempo Médio",
+     "Peças por Hora Previstas x Trabalhadas",
+     "Itens Fora do Previsto",
+     "Itens Composição",
+     "Itens Produzidos",
+     "Quantidade Produzida",
+     "Peso Item",
+     "Expedição",
+     "IBGE"
+    ]
+   },
+   {
+    "t": "Financeiro",
+    "sub": [
+     "Contas a Receber / Cliente",
+     "Contas Recebidas / Pagas",
+     "Contas em Aberto no Período",
+     "Despesas",
+     "Rastreabilidade de Cheques",
+     "Terceiros",
+     "Inadimplência",
+     "Consolidado",
+     "Faturamento / Despesa Conforme Entrada Mensal",
+     "Recebimento X Pagamento Efetivo",
+     "Recebimento por Forma de Pagamento",
+     "Fechamento",
+     "Plano de Contas",
+     "Extrato – Plano de Contas",
+     "Extrato – Plano de Contas com Saldo",
+     "Fluxo de Caixa ( Plano de Contas )",
+     "DRE – Plano de Contas",
+     "Centro de Custo",
+     "DRE – Centro Custo",
+     "Despesa / Receita por Centro de Custo",
+     "Ponto de Equilíbrio",
+     "Fluxo de Caixa (Geral)",
+     "Itens / Cliente"
+    ]
+   },
+   {
+    "t": "Fiscal",
+    "sub": [
+     "Nota Fiscal por Item",
+     "Nota Fiscal (Impostos)",
+     "Carta de Correção",
+     "Faturamento / NCM",
+     "Faturamento Detalhado",
+     "Entrada Detalhada de Itens",
+     "Impostos",
+     "SAT’S Emitidos",
+     "Impostos Simples Nacional",
+     "Difal",
+     "SPED",
+     "Ressarcimento do ICMS Retido por ST",
+     "Itens"
+    ]
+   },
+   {
+    "t": "Qualidade",
+    "sub": [
+     "Itens Faturados",
+     "OS Conferidas",
+     "Listagem de RNC",
+     "Índice de Rejeição"
+    ]
+   },
+   {
+    "t": "BI",
+    "sub": [
+     "Vendas",
+     "Vendas Região",
+     "Financeiro"
+    ]
+   },
+   {
+    "t": "RH",
+    "sub": [
+     "Folha – Relatório",
+     "Relação de Funcionários",
+     "Rotatividade",
+     "Afastamento",
+     "Hora Extra"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "BI – Business Intelligence",
+  "items": [
+   {
+    "t": "Vendas",
+    "sub": []
+   },
+   {
+    "t": "Financeiro",
+    "sub": []
+   }
+  ]
+ },
+ {
+  "name": "Mobile",
+  "items": [
+   {
+    "t": "Itens e seus Estoques",
+    "sub": []
+   },
+   {
+    "t": "Movimentação de Estoque",
+    "sub": []
+   },
+   {
+    "t": "Separação de Itens",
+    "sub": []
+   },
+   {
+    "t": "Inventário",
+    "sub": []
+   },
+   {
+    "t": "Metas / Indicadores",
+    "sub": []
+   },
+   {
+    "t": "Tarefas",
+    "sub": []
+   },
+   {
+    "t": "Requisição de Compras",
+    "sub": []
+   },
+   {
+    "t": "Venda Rápida",
+    "sub": []
+   }
+  ]
+ }
+]

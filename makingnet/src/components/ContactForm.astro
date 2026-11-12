@@ -1,0 +1,63 @@
+---
+// Formulário de contato e orçamento. O envio depende de um endpoint definido em PUBLIC_FORM_ENDPOINT
+// (ex.: Formspree, Web3Forms ou API própria). Sem endpoint, o formulário abre o WhatsApp com os dados preenchidos.
+import { site } from '../data/site';
+import { areas, sistemas } from '../data/servicos';
+interface Props { kind: 'contato' | 'orcamento'; servico?: string }
+const { kind, servico } = Astro.props;
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+const opcoes = [...areas.flatMap((a) => a.servicos.map((s) => s.name)), sistemas.name + ' (Velosys)'];
+---
+<form class="form" data-lead-form data-kind={kind} data-wa={site.whatsapp} action={endpoint || undefined} method="post">
+  <div class="row">
+    <label>Nome <input name="nome" autocomplete="name" required /></label>
+    <label>Empresa <input name="empresa" autocomplete="organization" /></label>
+  </div>
+  <div class="row">
+    <label>E-mail <input name="email" type="email" autocomplete="email" required /></label>
+    <label>Telefone / WhatsApp <input name="telefone" type="tel" autocomplete="tel" inputmode="tel" required /></label>
+  </div>
+  {kind === 'orcamento' && (
+    <label>Serviço de interesse
+      <select name="servico" required>
+        <option value="">Selecione</option>
+        {opcoes.map((o) => <option selected={o === servico}>{o}</option>)}
+        <option>Outro</option>
+      </select>
+    </label>
+  )}
+  <label>{kind === 'orcamento' ? 'Conte um pouco sobre o projeto' : 'Mensagem'} <textarea name="mensagem" required></textarea></label>
+  <label class="hp" aria-hidden="true">Não preencha <input name="website" tabindex="-1" autocomplete="off" /></label>
+  <label class="consent">
+    <input type="checkbox" name="consentimento" required />
+    <span>Concordo em informar meus dados para contato, conforme a <a href="/politica-de-privacidade/">Política de Privacidade</a>.</span>
+  </label>
+  <button class="btn btn--dark" type="submit">{kind === 'orcamento' ? 'Enviar pedido de orçamento' : 'Enviar mensagem'}</button>
+  <p role="status" aria-live="polite" data-status style="margin:0;font-size:.92rem"></p>
+</form>
+
+<script is:inline>
+  document.querySelectorAll('[data-lead-form]').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      var d = new FormData(form);
+      if (d.get('website')) { e.preventDefault(); return; }
+      var status = form.querySelector('[data-status]');
+      var endpoint = form.getAttribute('action');
+      e.preventDefault();
+      if (!endpoint) {
+        var linhas = ['Olá! Vim pelo site da Making.', 'Nome: ' + d.get('nome')];
+        if (d.get('empresa')) linhas.push('Empresa: ' + d.get('empresa'));
+        linhas.push('E-mail: ' + d.get('email'), 'Telefone: ' + d.get('telefone'));
+        if (d.get('servico')) linhas.push('Serviço: ' + d.get('servico'));
+        linhas.push('Mensagem: ' + d.get('mensagem'));
+        window.open('https://wa.me/' + form.dataset.wa + '?text=' + encodeURIComponent(linhas.join('\n')), '_blank', 'noopener');
+        status.textContent = 'Abrimos o WhatsApp com a sua mensagem pronta. É só enviar.';
+        return;
+      }
+      status.textContent = 'Enviando...';
+      fetch(endpoint, { method: 'POST', body: d, headers: { Accept: 'application/json' } })
+        .then(function (r) { if (!r.ok) throw new Error(); window.location.href = '/obrigado/'; })
+        .catch(function () { status.textContent = 'Não foi possível enviar agora. Tente de novo ou fale com a gente pelo WhatsApp.'; });
+    });
+  });
+</script>

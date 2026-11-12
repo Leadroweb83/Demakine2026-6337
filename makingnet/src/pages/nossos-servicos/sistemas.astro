@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Cta from '../../components/Cta.astro';
+import Faq from '../../components/Faq.astro';
+import { sistemas } from '../../data/servicos';
+import { site } from '../../data/site';
+import modulos from '../../data/velosys-modulos.json';
+const path = '/nossos-servicos/sistemas/';
+const crumbs = [{ name: 'Serviços', href: '/nossos-servicos/' }, { name: sistemas.name, href: path }];
+const schema = [
+  {
+    '@type': 'SoftwareApplication',
+    '@id': `${site.url}${path}#velosys`,
+    name: 'Velosys',
+    applicationCategory: 'BusinessApplication',
+    applicationSubCategory: 'ERP',
+    operatingSystem: 'Windows, macOS, Android, iOS',
+    description: sistemas.seoDescription,
+    url: `${site.url}${path}`,
+    publisher: { '@id': `${site.url}/#organization` },
+    featureList: modulos.map((m) => m.name),
+  },
+  { '@type': 'FAQPage', mainEntity: sistemas.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<Base title={sistemas.seoTitle} description={sistemas.seoDescription} path={path} crumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Sistema de gestão Velosys" title={sistemas.h1} crumbs={crumbs} lead={sistemas.intro}>
+    <div class="actions"><a class="btn btn--primary" href="/orcamento/">Quero conhecer o Velosys</a></div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <h2>Ideal para diversos segmentos</h2>
+        <ul class="checks">{sistemas.segmentos.map((s) => <li>{s}</li>)}</ul>
+        <h2 style="margin-top:1.6em">Gestão empresarial com o DNA Making</h2>
+        <ul class="checks">{sistemas.diferenciais.map((s) => <li>{s}</li>)}</ul>
+      </div>
+      <img src={sistemas.telas[0].img} alt={sistemas.telas[0].alt} width="1000" height="1000" style="border-radius:var(--radius);border:1px solid var(--mk-line)" />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <h2>Módulos do sistema de gestão</h2>
+      <p class="lead">{modulos.length} módulos integrados. Toque em um módulo para ver os recursos.</p>
+      <div class="faq" style="margin-top:20px">
+        {modulos.map((m) => (
+          <details>
+            <summary>{m.name}</summary>
+            <ul>
+              {m.items.map((i) => (
+                <li>{i.t}{i.sub.length > 0 && <ul>{i.sub.map((s) => <li>{s}</li>)}</ul>}</li>
+              ))}
+            </ul>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="wrap">
+      <h2>Ferramentas e integrações</h2>
+      <ul class="grid grid--4" style="margin-top:28px">
+        {sistemas.ferramentas.map((f) => <li><div class="card card--dark" style="padding:18px 20px"><strong>{f}</strong></div></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Na nuvem ou instalado na sua empresa</h2>
+      <ul class="grid grid--2" style="margin-top:28px">
+        {sistemas.hospedagem.map((h) => <li><div class="card"><h3>{h.title}</h3><ul class="checks">{h.items.map((i) => <li>{i}</li>)}</ul></div></li>)}
+      </ul>
+      <h2 style="margin-top:2em">Telas do Velosys</h2>
+      <ul class="grid grid--3" style="margin-top:24px">
+        {sistemas.telas.slice(1).map((t) => <li><img src={t.img} alt={t.alt} width="1000" height="1000" loading="lazy" decoding="async" style="border-radius:var(--radius);border:1px solid var(--mk-line)" /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <Faq items={sistemas.faq} title="Perguntas frequentes sobre o Velosys" />
+  <Cta title="Quer ver o Velosys funcionando?" text="Fale com a nossa equipe e veja como o sistema se adapta à operação da sua empresa." button="Quero conhecer o Velosys" message="Olá! Vim pelo site e quero conhecer o sistema Velosys." />
+</Base>
