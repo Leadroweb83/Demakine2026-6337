@@ -61,6 +61,8 @@ type NavItem = {
 const NAV: NavItem[] = [
   { id: "overview", label: "Dashboard", Icon: BarChart3, area: "livre" },
   { id: "visitas", label: "Visitas do site", Icon: Activity, area: "config" },
+  { id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" },
+  { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config" },
   { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
   { id: "home", label: "Home", Icon: House, area: "conteudo" },
   { id: "secoes", label: "Ordem das seções", Icon: ListOrdered, area: "conteudo" },
@@ -72,8 +74,6 @@ const NAV: NavItem[] = [
   { id: "vagas", label: "Vagas", Icon: Briefcase, area: "vagas" },
   { id: "midia", label: "Mídia", Icon: Images, area: "conteudo" },
   { id: "site", label: "Dados do site", Icon: Sliders, area: "config" },
-  { id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" },
-  { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config" },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
   { id: "avisos", label: "Avisos por e-mail", Icon: Bell, area: "usuarios" },
   { id: "atividades", label: "Atividades", Icon: History, area: "livre" },

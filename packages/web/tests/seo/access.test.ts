@@ -70,6 +70,13 @@ describe("menu do painel", () => {
     expect(s).not.toContain("AdminSeo");
   });
 
+  test("SEO e GEO e Redirecionamentos ficam logo abaixo de Visitas do site", async () => {
+    const s = await src();
+    const ids = [...s.matchAll(/^\s*\{ id: "([a-z-]+)", label:/gm)].map((m) => m[1]);
+    const i = ids.indexOf("visitas");
+    expect(ids.slice(i, i + 4)).toEqual(["visitas", "seo-geo", "redirecionamentos", "leads"]);
+  });
+
   test("admin.tsx usa o allowed de access.ts e não guarda uma cópia", async () => {
     const s = await src();
     expect(s).toContain('import { allowed, type Area } from "../admin/access"');
