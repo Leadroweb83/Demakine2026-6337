@@ -1,6 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
+  "installCommand": "npm install --no-audit --no-fund",
+  "buildCommand": "npx astro build",
+  "outputDirectory": "dist",
   "regions": [
     "gru1"
   ],
