@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { site } from "@/lib/site";
 import { editedDoc } from "@/lib/runtime-content";
 import { seoKey } from "@/lib/seo-pages";
+import { applyOverrides, readOverrides } from "@/lib/seo-overrides";
 import { ssrHead } from "@/lib/ssr-head";
 import { shareImage } from "@/lib/images";
 import { LOCALES, isTranslatedPath, locale, localeInfo, localePath, tr, trDeep } from "@/lib/i18n";
@@ -13,7 +14,7 @@ type SeoProps = {
   image?: string;
   type?: "website" | "article" | "product";
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
-  /** página que não deve ir para o Google (404, loja ainda não lançada) */
+  /** página que não deve ir para o Google (404, loja ainda não lançada); o painel pode acrescentar, nunca tirar */
   noindex?: boolean;
   /** versões em outros idiomas (hreflang), com endereço completo */
   alternates?: { hreflang: string; href: string }[];
@@ -93,7 +94,7 @@ export function Seo({
   image,
   type = "website",
   jsonLd: baseJsonLd,
-  noindex = false,
+  noindex: baseNoindex = false,
   alternates: givenAlternates,
   lang: givenLang,
   parents,
@@ -101,13 +102,19 @@ export function Seo({
   preloadImage,
 }: SeoProps) {
   const here = locale();
-  // título e descrição editados no painel (SEO das páginas fixas) valem sobre o padrão da página;
-  // o painel edita o português, então nos outros idiomas vale a tradução do texto padrão
-  const edited = here === "pt" ? editedDoc<{ title?: string; description?: string }>("seo", seoKey(path)) : undefined;
-  const title = edited?.title?.trim() || tr(baseTitle);
-  const description = edited?.description?.trim() || tr(baseDescription);
-  const url = `${site.url}${localePath(path)}`;
+  // regras da página editadas no painel (SEO e GEO): cada idioma tem a sua chave (/en/x -> "en-x"), e a do português
+  // é a mesma de sempre. Título e descrição do painel valem sobre o padrão; noindex só se acrescenta
+  const own = readOverrides(editedDoc("seo", seoKey(localePath(path))));
+  const title = own.title || tr(baseTitle);
+  const description = own.description || tr(baseDescription);
+  const defaultUrl = `${site.url}${localePath(path)}`;
   const lang = givenLang ?? (here === "pt" ? undefined : localeInfo().hreflang);
+  // compartilhamento usa o JPG/PNG original: LinkedIn e outros não mostram WebP
+  const shareUrl = (src: string) => (/^https?:\/\//.test(src) ? src : `${site.url}${shareImage(src)}`);
+  const { noindex, canonical: url, ogImage } = applyOverrides(
+    { noindex: baseNoindex, canonical: defaultUrl, ogImage: shareUrl(image ?? "/og-image.jpg") },
+    { ...own, ogImage: own.ogImage ? shareUrl(own.ogImage) : undefined },
+  );
   // cada página aponta para ela mesma nos três idiomas (o Google exige a volta de cada lado)
   const alternates =
     givenAlternates ??
@@ -118,8 +125,6 @@ export function Seo({
           { hreflang: "x-default", href: `${site.url}${path}` },
         ]);
   const jsonLd = baseJsonLd && here !== "pt" ? trDeep(baseJsonLd) : baseJsonLd;
-  // compartilhamento usa o JPG/PNG original: LinkedIn e outros não mostram WebP
-  const ogImage = /^https?:\/\//.test(image ?? "") ? image! : `${site.url}${shareImage(image ?? "/og-image.jpg")}`;
   const meta: Meta[] = [
     ["name", "description", description],
     ["property", "og:title", title],

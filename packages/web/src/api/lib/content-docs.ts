@@ -35,3 +35,29 @@ export function publishedInCode(collection: string, key: string) {
   if (collection === "case") return DEFAULT_CASES.some((c) => c.slug === key);
   return false;
 }
+
+/**
+ * Campos do documento de SEO de uma página que só o painel "SEO e GEO" (super admin) muda: esconder do Google,
+ * tirar do sitemap, endereço canônico, imagem de compartilhamento e os dados de GEO. A tela antiga "SEO das páginas"
+ * só edita título e descrição.
+ */
+export const SEO_PROTECTED_FIELDS = ["noindex", "noSitemap", "canonical", "ogImage", "shortAnswer", "author", "reviewedAt"] as const;
+const PROTECTED = new Set<string>(SEO_PROTECTED_FIELDS);
+
+/** Só os campos protegidos de um documento de SEO (vazio se não houver nenhum). */
+export function protectedOnly(doc: Record<string, unknown> | undefined): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  if (doc) for (const k of SEO_PROTECTED_FIELDS) if (k in doc) out[k] = doc[k];
+  return out;
+}
+
+/**
+ * Salvamento pelo endpoint genérico de conteúdo: o que veio vale, menos os campos protegidos, que continuam os de
+ * antes. Sem isso, a tela antiga (que só manda título e descrição) apagaria um noindex colocado pelo super admin, e
+ * qualquer admin poderia esconder uma página do Google mexendo direto na API.
+ */
+export function mergeSeoDoc(prev: Record<string, unknown> | undefined, next: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(next)) if (!PROTECTED.has(k)) out[k] = v;
+  return { ...out, ...protectedOnly(prev) };
+}
