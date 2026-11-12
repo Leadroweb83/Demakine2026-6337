@@ -887,3 +887,199 @@ a.card:hover {
     transform: none;
   }
 }
+
+/* Hero das páginas internas com fotografia */
+.hero--page {
+  position: relative;
+  isolation: isolate;
+  margin-top: -72px;
+  padding-top: calc(72px + clamp(56px, 9vw, 128px));
+  padding-bottom: clamp(56px, 8vw, 112px);
+  background: var(--mk-white);
+  border-bottom: 1px solid var(--mk-line);
+}
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: center / cover no-repeat;
+  opacity: 0.55;
+  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.55) 55%, transparent 100%);
+  animation: photo-in 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.hero--page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(5, 7, 10, 0.92) 0%, rgba(5, 7, 10, 0.6) 60%, rgba(5, 7, 10, 0.2) 100%);
+}
+.hero--page .lead {
+  max-width: 56ch;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+}
+.rise {
+  animation: rise 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: calc(var(--d, 0) * 90ms + 80ms);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+}
+@keyframes photo-in {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+/* Texto de abertura grande */
+.intro {
+  max-width: 30ch;
+  margin: 0;
+  font-size: clamp(1.5rem, 3.2vw, 2.7rem);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+.intro + .intro-more {
+  margin-top: clamp(28px, 4vw, 48px);
+}
+.intro-more p {
+  color: var(--mk-gray);
+  max-width: 62ch;
+}
+
+/* Linhas numeradas */
+.rows {
+  list-style: none;
+  margin: clamp(32px, 5vw, 64px) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--mk-line);
+}
+.row {
+  display: grid;
+  gap: 10px 32px;
+  padding: clamp(24px, 3.4vw, 44px) 0;
+  border-bottom: 1px solid var(--mk-line);
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+}
+.row__n {
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--mk-cyan);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.5em;
+}
+.rows .row__t {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.9vw, 2.5rem);
+}
+.row__b p {
+  margin: 0;
+  color: var(--mk-gray);
+  max-width: 58ch;
+}
+.row__b p + .checks {
+  margin-top: 1em;
+}
+.row__b .checks {
+  color: var(--mk-ink);
+  margin: 0;
+}
+.row__go {
+  position: absolute;
+  right: 0;
+  top: clamp(24px, 3.4vw, 44px);
+  font-size: 1.5rem;
+  color: var(--mk-gray);
+  transition: transform 0.35s, color 0.2s;
+}
+.row--link {
+  transition: padding 0.35s cubic-bezier(0.22, 0.61, 0.36, 1), background 0.35s;
+}
+.row--link:hover {
+  padding-inline: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.row--link:hover .row__go {
+  transform: translateX(-12px);
+  color: var(--mk-cyan);
+}
+.row--link:hover .row__t {
+  color: var(--mk-cyan);
+}
+@media (min-width: 860px) {
+  .row {
+    grid-template-columns: 64px minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+  .row--link {
+    padding-right: 56px;
+  }
+}
+
+/* Faixa de trabalhos em movimento */
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 70s linear infinite;
+}
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+.marquee ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0 10px;
+}
+.marquee li {
+  width: min(72vw, 420px);
+  flex: none;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* FAQ e seções alternadas mais discretas */
+.section--surface {
+  border-block: 1px solid var(--mk-line);
+}
+.faq summary {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 500;
+  padding-block: 6px;
+}
+.photo-frame {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--mk-line);
+}
+.photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .hero__photo,
+  .marquee__track {
+    animation: none;
+  }
+  .marquee {
+    overflow-x: auto;
+  }
+}

@@ -24,7 +24,6 @@ npm run build    # gera dist/
 
 ## Pendências
 
-- Levar o padrão visual da home (movimento e fotos) para as páginas internas
 - Blog (cerca de 50 artigos), materiais ricos e contador de caracteres SEO: segunda entrega
 - Formulários: definir `PUBLIC_FORM_ENDPOINT`; sem ele, o envio abre o WhatsApp com a mensagem pronta
 - Logo em vetor (SVG): o arquivo atual tem só 210 px de largura

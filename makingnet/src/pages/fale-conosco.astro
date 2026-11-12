@@ -8,10 +8,10 @@ const schema = [{ '@type': 'ContactPage', '@id': `${site.url}/fale-conosco/#cont
 const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.name}, ${site.address.street}, ${site.address.city} ${site.address.state}`)}`;
 ---
 <Base title="Fale Conosco | Making TI e Marketing Digital" description="Fale com a Making: telefone, WhatsApp, e-mail e endereço em Santa Bárbara d'Oeste/SP. Envie sua dúvida, sugestão ou pedido pelo formulário." path="/fale-conosco/" crumbs={crumbs} schema={schema}>
-  <PageHero eyebrow="Contato" title="Fale conosco" crumbs={crumbs} lead="Quer tirar dúvidas, enviar sugestões ou críticas? Veja nossas formas de contato ou envie uma mensagem pelo formulário." />
+  <PageHero eyebrow="Contato" title="Fale conosco" crumbs={crumbs} image="/img/tema/foguete-arco.webp" lead="Quer tirar dúvidas, enviar sugestões ou críticas? Veja nossas formas de contato ou envie uma mensagem pelo formulário." />
   <section class="section">
     <div class="wrap split">
-      <div>
+      <div data-reveal>
         <h2>Informações e contato</h2>
         <address style="font-style:normal;margin-bottom:1em">
           {site.address.street}<br />{site.address.district}, {site.address.city}/{site.address.state}<br />CEP {site.address.zip}

@@ -2,14 +2,16 @@
 import Base from '../../../layouts/Base.astro';
 import PageHero from '../../../components/PageHero.astro';
 import Cta from '../../../components/Cta.astro';
+import Rows from '../../../components/Rows.astro';
+import Marquee from '../../../components/Marquee.astro';
 import { areas } from '../../../data/servicos';
 import { site } from '../../../data/site';
-import portfolio from '../../../data/portfolio.json';
 export function getStaticPaths() {
   return areas.map((area) => ({ params: { area: area.slug }, props: { area } }));
 }
 const { area } = Astro.props;
 const path = `/nossos-servicos/${area.slug}/`;
+const isMarketing = area.slug === 'marketing-digital';
 const crumbs = [{ name: 'Serviços', href: '/nossos-servicos/' }, { name: area.name, href: path }];
 const schema = [{
   '@type': 'ItemList',
@@ -18,31 +20,25 @@ const schema = [{
 }];
 ---
 <Base title={area.seoTitle} description={area.seoDescription} path={path} crumbs={crumbs} schema={schema}>
-  <PageHero eyebrow={area.name} title={area.h1} crumbs={crumbs} lead={area.intro[0]}>
+  <PageHero eyebrow={area.name} title={area.h1} crumbs={crumbs} image={isMarketing ? '/img/tema/terra-noite.webp' : '/img/tema/servidores.webp'}>
     <div class="actions"><a class="btn btn--primary" href="/orcamento/">Pedir orçamento</a></div>
   </PageHero>
   <section class="section">
     <div class="wrap">
-      {area.intro.slice(1).map((p) => <p class="lead">{p}</p>)}
-      <h2>Conheça nossos serviços de {area.name.toLowerCase()}</h2>
-      <ul class="grid grid--3" style="margin-top:28px">
-        {area.servicos.map((s) => (
-          <li><a class="card" href={`${path}${s.slug}/`}><h3>{s.name}</h3><p>{s.resumo}</p><span class="more">{s.cta} →</span></a></li>
-        ))}
-      </ul>
+      <p class="intro" data-reveal>{area.intro[0]}</p>
+      {area.intro.length > 1 && <div class="intro-more" data-reveal>{area.intro.slice(1).map((p) => <p>{p}</p>)}</div>}
+      <h2 data-reveal style="margin-top:clamp(56px,8vw,112px)">Serviços de {area.name.toLowerCase()}</h2>
+      <Rows as="h3" items={area.servicos.map((s) => ({ title: s.name, text: s.resumo, href: `${path}${s.slug}/` }))} />
     </div>
   </section>
-  {area.slug === 'marketing-digital' && (
-    <section class="section section--dark">
-      <div class="wrap">
-        <h2>Trabalhos recentes</h2>
-        <ul class="grid grid--3" style="margin-top:28px">
-          {portfolio.slice(0, 3).map((p) => (
-            <li><figure class="work"><img src={p.img} alt={`${p.kind} ${p.name}, desenvolvido pela Making`} width={p.w} height={p.h} loading="lazy" decoding="async" /><figcaption>{p.name} <span>{p.kind}</span></figcaption></figure></li>
-          ))}
-        </ul>
-        <div class="actions"><a class="btn btn--primary" href="/nossos-servicos/marketing-digital/portfolio/">Ver portfólio completo</a></div>
+  {isMarketing && (
+    <section class="section" style="padding-top:0">
+      <div class="wrap" style="margin-bottom:28px">
+        <span class="eyebrow" data-reveal>Portfólio</span>
+        <h2 data-reveal>Trabalhos recentes</h2>
       </div>
+      <Marquee />
+      <div class="wrap"><div class="actions" data-reveal><a class="btn btn--ghost" href="/nossos-servicos/marketing-digital/portfolio/">Ver portfólio completo</a></div></div>
     </section>
   )}
   <Cta />

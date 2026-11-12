@@ -2,52 +2,55 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
+import Rows from '../components/Rows.astro';
 import { site, cultura, yearsInBusiness } from '../data/site';
 import clientes from '../data/clientes.json';
 const crumbs = [{ name: 'Sobre', href: '/sobre/' }];
 const schema = [{ '@type': 'AboutPage', '@id': `${site.url}/sobre/#about`, mainEntity: { '@id': `${site.url}/#organization` } }];
 ---
 <Base title="Sobre a Making TI e Marketing Digital | Desde 2003" description={`Conheça a Making: ${yearsInBusiness} anos fazendo da internet a grande fonte de aquisição de clientes para os negócios que atendemos. Agência Google Partner.`} path="/sobre/" crumbs={crumbs} schema={schema}>
-  <PageHero eyebrow="Sobre" title="Sobre a Making TI e Marketing Digital" crumbs={crumbs} lead="Uma empresa que nasceu com a missão de transformar negócios com soluções personalizadas em marketing digital e tecnologia da informação." />
+  <PageHero eyebrow={`Desde ${site.foundingYear}`} title="Sobre a Making TI e Marketing Digital" crumbs={crumbs} lead="Uma empresa que nasceu com a missão de transformar negócios com soluções personalizadas em marketing digital e tecnologia da informação." />
 
   <section class="section">
     <div class="wrap split">
       <div>
-        <h2>Nossa história</h2>
-        <p>Em julho de {site.foundingYear}, {site.founders[0]}, {site.founders[1]} e {site.founders[2]} deram vida à Making TI e Marketing Digital.</p>
-        <p>Com sede em {site.address.city}/{site.address.state}, nossa equipe apaixonada e experiente atende clientes de todos os portes e segmentos, em todo o Brasil. Do pequeno empreendedor à grande corporação, criamos estratégias inovadoras e eficazes que impulsionam o crescimento de cada cliente.</p>
-        <h2 style="margin-top:1.6em">Missão</h2>
-        <p>Impulsionar o crescimento e a eficiência de nossos clientes, transformando seus negócios por meio de soluções que utilizam a internet como principal fonte de aquisição de clientes.</p>
-      </div>
-      <div class="card">
-        <h3>Parcerias e certificações</h3>
-        <p>Ao longo dos anos fomos reconhecidos por nossa excelência, conquistando certificações no setor.</p>
-        <ul class="checks">
-          <li>Agência certificada Google Partner</li>
-          <li>Parceira Tray Commerce</li>
-        </ul>
-        <div class="partners" style="margin-top:22px">
-          {site.partners.map((p) => <a href={p.url} target="_blank" rel="noopener"><img src={p.img} alt={p.name} width="72" height="72" loading="lazy" style="height:72px;border:1px solid var(--mk-line)" /></a>)}
+        <span class="eyebrow" data-reveal>Nossa história</span>
+        <p class="intro" data-reveal>Em julho de {site.foundingYear}, {site.founders[0]}, {site.founders[1]} e {site.founders[2]} deram vida à Making.</p>
+        <div class="intro-more" data-reveal>
+          <p>Com sede em {site.address.city}/{site.address.state}, nossa equipe apaixonada e experiente atende clientes de todos os portes e segmentos, em todo o Brasil. Do pequeno empreendedor à grande corporação, criamos estratégias inovadoras e eficazes que impulsionam o crescimento de cada cliente.</p>
+          <p>Ao longo dos anos fomos reconhecidos por nossa excelência, conquistando certificações no setor: agência certificada Google Partner e parceira Tray Commerce.</p>
+        </div>
+        <div class="partners" data-reveal style="margin-top:28px">
+          {site.partners.map((p) => <a href={p.url} target="_blank" rel="noopener"><img src={p.img} alt={p.name} width="72" height="72" loading="lazy" style="height:72px" /></a>)}
         </div>
       </div>
+      <div class="photo-frame" data-reveal style="aspect-ratio:4/5">
+        <img src="/img/tema/astronauta-lua.webp" alt="Astronauta caminhando na superfície da Lua" width="1100" height="1528" loading="lazy" decoding="async" />
+      </div>
     </div>
   </section>
 
-  <section class="section section--dark">
+  <section class="section manifesto section--surface">
     <div class="wrap">
-      <span class="eyebrow">Cultura Making</span>
-      <h2>O que guia o nosso trabalho</h2>
-      <ul class="grid grid--3" style="margin-top:32px">
-        {cultura.map((c) => <li><div class="card card--dark"><h3>{c.title}</h3><p>{c.text}</p></div></li>)}
-      </ul>
+      <span class="eyebrow" data-reveal>Missão</span>
+      <p class="statement" data-reveal>Impulsionar o crescimento e a eficiência de nossos clientes, com soluções que usam a internet como <em>principal fonte de aquisição de clientes</em>.</p>
     </div>
   </section>
 
-  <section class="section section--surface">
+  <section class="section">
     <div class="wrap">
-      <h2>Empresas que confiam no nosso trabalho</h2>
-      <ul class="logos">
-        {clientes.map((c) => <li><img src={c.img} alt={`Logo ${c.name}, cliente da Making`} width={c.w} height={c.h} loading="lazy" decoding="async" /></li>)}
+      <span class="eyebrow" data-reveal>Cultura Making</span>
+      <h2 data-reveal>O que guia o nosso trabalho</h2>
+      <Rows as="h3" items={cultura.map((c) => ({ title: c.title, text: c.text }))} />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <span class="eyebrow" data-reveal>Clientes</span>
+      <h2 data-reveal>Empresas que confiam no nosso trabalho</h2>
+      <ul class="logos logos--mono">
+        {clientes.map((c) => <li data-reveal><img src={c.img} alt={`Logo ${c.name}, cliente da Making`} width={c.w} height={c.h} loading="lazy" decoding="async" /></li>)}
       </ul>
     </div>
   </section>

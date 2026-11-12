@@ -3,6 +3,8 @@ import Base from '../../../layouts/Base.astro';
 import PageHero from '../../../components/PageHero.astro';
 import Cta from '../../../components/Cta.astro';
 import Faq from '../../../components/Faq.astro';
+import Rows from '../../../components/Rows.astro';
+import Marquee from '../../../components/Marquee.astro';
 import { areas } from '../../../data/servicos';
 import { site } from '../../../data/site';
 export function getStaticPaths() {
@@ -11,6 +13,7 @@ export function getStaticPaths() {
 const { area, servico } = Astro.props;
 const areaPath = `/nossos-servicos/${area.slug}/`;
 const path = `${areaPath}${servico.slug}/`;
+const isMarketing = area.slug === 'marketing-digital';
 const crumbs = [
   { name: 'Serviços', href: '/nossos-servicos/' },
   { name: area.name, href: areaPath },
@@ -34,37 +37,39 @@ const schema = [
   },
 ];
 const outros = area.servicos.filter((s) => s.slug !== servico.slug);
+const [abertura, ...resto] = servico.intro;
 ---
 <Base title={servico.seoTitle} description={servico.seoDescription} path={path} crumbs={crumbs} schema={schema}>
-  <PageHero eyebrow={area.name} title={servico.h1} crumbs={crumbs} lead={servico.intro[0]}>
+  <PageHero eyebrow={area.name} title={servico.h1} crumbs={crumbs} image={isMarketing ? '/img/tema/terra-noite.webp' : '/img/tema/servidores.webp'}>
     <div class="actions"><a class="btn btn--primary" href="/orcamento/">{servico.cta}</a></div>
   </PageHero>
 
   <section class="section">
     <div class="wrap">
-      {servico.intro.slice(1).map((p) => <p class="lead">{p}</p>)}
-      <ul class={`grid ${servico.blocos.length > 1 ? 'grid--2' : ''}`} style="margin-top:28px">
-        {servico.blocos.map((b) => (
-          <li>
-            <div class="card">
-              <h2 style="font-size:1.3rem">{b.title}</h2>
-              {b.text && <p>{b.text}</p>}
-              {b.items && <ul class="checks">{b.items.map((i) => <li>{i}</li>)}</ul>}
-            </div>
-          </li>
-        ))}
-      </ul>
+      <p class="intro" data-reveal>{abertura}</p>
+      {resto.length > 0 && <div class="intro-more" data-reveal>{resto.map((p) => <p>{p}</p>)}</div>}
+      <Rows items={servico.blocos} />
     </div>
   </section>
+
+  {isMarketing && (
+    <section class="section" style="padding-top:0">
+      <div class="wrap" style="margin-bottom:28px">
+        <span class="eyebrow" data-reveal>Portfólio</span>
+        <h2 data-reveal>Trabalhos da Making</h2>
+      </div>
+      <Marquee />
+      <div class="wrap"><div class="actions" data-reveal><a class="btn btn--ghost" href="/nossos-servicos/marketing-digital/portfolio/">Ver portfólio completo</a></div></div>
+    </section>
+  )}
 
   <Faq items={servico.faq} title={`Perguntas frequentes sobre ${servico.name.toLowerCase()}`} />
 
   <section class="section">
     <div class="wrap">
-      <h2>Outros serviços de {area.name.toLowerCase()}</h2>
-      <ul class="grid grid--4" style="margin-top:24px">
-        {outros.map((s) => <li><a class="card" href={`${areaPath}${s.slug}/`}><h3>{s.name}</h3><span class="more">Saiba mais →</span></a></li>)}
-      </ul>
+      <span class="eyebrow" data-reveal>Continue explorando</span>
+      <h2 data-reveal>Outros serviços de {area.name.toLowerCase()}</h2>
+      <Rows as="h3" items={outros.map((s) => ({ title: s.name, text: s.resumo, href: `${areaPath}${s.slug}/` }))} />
     </div>
   </section>
   <Cta button={servico.cta} message={`Olá! Vim pelo site e quero saber mais sobre ${servico.name}.`} />

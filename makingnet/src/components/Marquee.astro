@@ -1,0 +1,23 @@
+---
+// Faixa de trabalhos em movimento contínuo. A segunda cópia é só visual (aria-hidden).
+import portfolio from '../data/portfolio.json';
+interface Props { from?: number; count?: number }
+const { from = 0, count = 10 } = Astro.props;
+const items = portfolio.slice(from, from + count);
+---
+<div class="marquee" data-reveal>
+  <div class="marquee__track">
+    {[0, 1].map((copy) => (
+      <ul aria-hidden={copy === 1 ? 'true' : undefined}>
+        {items.map((p) => (
+          <li>
+            <figure class="work">
+              <img src={p.img} alt={copy === 0 ? `${p.kind} ${p.name}, desenvolvido pela Making` : ''} width={p.w} height={p.h} loading="lazy" decoding="async" />
+              <figcaption>{p.name} <span>{p.kind}</span></figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>

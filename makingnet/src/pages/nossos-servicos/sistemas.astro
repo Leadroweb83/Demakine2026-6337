@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Cta from '../../components/Cta.astro';
 import Faq from '../../components/Faq.astro';
+import Rows from '../../components/Rows.astro';
 import { sistemas } from '../../data/servicos';
 import { site } from '../../data/site';
 import modulos from '../../data/velosys-modulos.json';
@@ -32,19 +33,22 @@ const schema = [
   <section class="section">
     <div class="wrap split">
       <div>
-        <h2>Ideal para diversos segmentos</h2>
-        <ul class="checks">{sistemas.segmentos.map((s) => <li>{s}</li>)}</ul>
-        <h2 style="margin-top:1.6em">Gestão empresarial com o DNA Making</h2>
-        <ul class="checks">{sistemas.diferenciais.map((s) => <li>{s}</li>)}</ul>
+        <span class="eyebrow" data-reveal>Sistema de gestão próprio</span>
+        <p class="intro" data-reveal>Vendas, estoque, produção, financeiro e fiscal em um só lugar, no computador e no celular.</p>
+        <div class="intro-more" data-reveal>
+          <p>Ideal para {sistemas.segmentos.slice(0, -1).join(', ').toLowerCase()} e {sistemas.segmentos.at(-1)?.toLowerCase()}.</p>
+        </div>
+        <ul class="checks" data-reveal style="margin-top:24px">{sistemas.diferenciais.map((s) => <li>{s}</li>)}</ul>
       </div>
-      <img src={sistemas.telas[0].img} alt={sistemas.telas[0].alt} width="1000" height="1000" style="border-radius:var(--radius);border:1px solid var(--mk-line)" />
+      <div class="photo-frame" data-reveal><img src={sistemas.telas[0].img} alt={sistemas.telas[0].alt} width="1000" height="1000" /></div>
     </div>
   </section>
 
   <section class="section section--surface">
     <div class="wrap">
-      <h2>Módulos do sistema de gestão</h2>
-      <p class="lead">{modulos.length} módulos integrados. Toque em um módulo para ver os recursos.</p>
+      <span class="eyebrow" data-reveal>Módulos</span>
+      <h2 data-reveal>Módulos do sistema de gestão</h2>
+      <p class="lead" data-reveal>{modulos.length} módulos integrados. Toque em um módulo para ver os recursos.</p>
       <div class="faq" style="margin-top:20px">
         {modulos.map((m) => (
           <details>
@@ -60,24 +64,24 @@ const schema = [
     </div>
   </section>
 
-  <section class="section section--dark">
+  <section class="section">
     <div class="wrap">
-      <h2>Ferramentas e integrações</h2>
+      <span class="eyebrow" data-reveal>Integrações</span>
+      <h2 data-reveal>Ferramentas e integrações</h2>
       <ul class="grid grid--4" style="margin-top:28px">
-        {sistemas.ferramentas.map((f) => <li><div class="card card--dark" style="padding:18px 20px"><strong>{f}</strong></div></li>)}
+        {sistemas.ferramentas.map((f) => <li data-reveal><div class="card" style="padding:18px 20px"><strong>{f}</strong></div></li>)}
       </ul>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap">
-      <h2>Na nuvem ou instalado na sua empresa</h2>
-      <ul class="grid grid--2" style="margin-top:28px">
-        {sistemas.hospedagem.map((h) => <li><div class="card"><h3>{h.title}</h3><ul class="checks">{h.items.map((i) => <li>{i}</li>)}</ul></div></li>)}
-      </ul>
-      <h2 style="margin-top:2em">Telas do Velosys</h2>
+      <span class="eyebrow" data-reveal>Hospedagem</span>
+      <h2 data-reveal>Na nuvem ou instalado na sua empresa</h2>
+      <Rows as="h3" items={sistemas.hospedagem.map((h) => ({ title: h.title, items: h.items }))} />
+      <h2 data-reveal style="margin-top:clamp(56px,8vw,112px)">Telas do Velosys</h2>
       <ul class="grid grid--3" style="margin-top:24px">
-        {sistemas.telas.slice(1).map((t) => <li><img src={t.img} alt={t.alt} width="1000" height="1000" loading="lazy" decoding="async" style="border-radius:var(--radius);border:1px solid var(--mk-line)" /></li>)}
+        {sistemas.telas.slice(1).map((t) => <li data-reveal class="photo-frame"><img src={t.img} alt={t.alt} width="1000" height="1000" loading="lazy" decoding="async" /></li>)}
       </ul>
     </div>
   </section>
