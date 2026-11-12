@@ -33,7 +33,7 @@ const MIN_INTERVAL_MS = 60_000;
 type State = { requestedAt?: string; triggeredAt?: string };
 
 /** Rotas do painel cujo resultado aparece nas páginas pré-renderizadas. */
-const AFFECTS_SITE = [/^\/api\/admin\/conteudo\//, /^\/api\/admin\/vagas(\/|$)/, /^\/api\/admin\/lixeira\/vaga\//];
+const AFFECTS_SITE = [/^\/api\/admin\/conteudo\//, /^\/api\/admin\/seo\/(pagina|imagem-alt)$/, /^\/api\/admin\/vagas(\/|$)/, /^\/api\/admin\/lixeira\/vaga\//];
 
 export const affectsSite = (path: string) => AFFECTS_SITE.some((re) => re.test(path));
 

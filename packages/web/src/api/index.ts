@@ -61,8 +61,10 @@ import {
   sendMonthlyReport,
   type NotifySettings,
 } from "./lib/notify";
-import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection, publishedInCode } from "./lib/content-docs";
+import { CONTENT_COLLECTIONS, CONTENT_KEY_RE, CONTENT_MAX_BYTES, canEditCollection, mergeSeoDoc, protectedOnly, publishedInCode } from "./lib/content-docs";
 import { CONTENT_CACHE_TAG } from "./lib/publish";
+import { createSeoRoutes } from "./seo-routes";
+import { dbSeoData } from "./lib/seo/data";
 
 type Env = {
   Variables: {
@@ -828,6 +830,8 @@ const app = new Hono<Env>()
     const oldLimits = await purgeRateLimits();
     return c.json({ ok: true, followUps, report, purged, oldVisits, oldLimits }, 200);
   })
+  // ---------------------------------------------- SEO e GEO (super admin) e auditoria diária
+  .route('/', createSeoRoutes({ data: dbSeoData }))
   // ---------------------------------------------- avisos por e-mail (super admin)
   .get('/admin/avisos', requireRole(), async (c) => {
     return c.json({ settings: await getNotifySettings(), configured: emailConfigured() }, 200);
@@ -889,8 +893,16 @@ const app = new Hono<Env>()
       }
       if (!canEditCollection(me.role, collection)) return c.json({ error: 'Sem permissão' }, 403);
       const body = c.req.valid('json');
-      const data = (body.data ?? {}) as Record<string, unknown>;
+      let data = (body.data ?? {}) as Record<string, unknown>;
       if (typeof data !== 'object' || Array.isArray(data)) return c.json({ error: 'Formato inválido' }, 400);
+      // SEO de página: esconder do Google, canonical e afins só mudam pelo painel SEO e GEO (rota própria)
+      if (collection === 'seo') {
+        const [current] = await db
+          .select({ data: schema.contentDocs.data })
+          .from(schema.contentDocs)
+          .where(and(eq(schema.contentDocs.collection, 'seo'), eq(schema.contentDocs.key, key)));
+        data = mergeSeoDoc(current?.data as Record<string, unknown> | undefined, data);
+      }
       // editor cria post/case como rascunho; quem publica é admin (edição de publicado segue publicada)
       if (me.role === 'editor' && (collection === 'post' || collection === 'case')) {
         const [current] = await db
@@ -930,6 +942,21 @@ const app = new Hono<Env>()
   .delete('/admin/conteudo/:collection/:key', requireAuth, async (c) => {
     const collection = c.req.param('collection');
     if (!canEditCollection(c.get('user')!.role, collection)) return c.json({ error: 'Sem permissão' }, 403);
+    // "usar o padrão" no SEO das páginas volta título e descrição; o que o painel SEO e GEO definiu fica
+    if (collection === 'seo') {
+      const [current] = await db
+        .select({ data: schema.contentDocs.data })
+        .from(schema.contentDocs)
+        .where(and(eq(schema.contentDocs.collection, 'seo'), eq(schema.contentDocs.key, c.req.param('key'))));
+      const keep = protectedOnly(current?.data as Record<string, unknown> | undefined);
+      if (Object.keys(keep).length > 0) {
+        await db
+          .update(schema.contentDocs)
+          .set({ data: keep, updatedBy: c.get('user')!.id, updatedAt: new Date() })
+          .where(and(eq(schema.contentDocs.collection, 'seo'), eq(schema.contentDocs.key, c.req.param('key'))));
+        return c.json({ ok: true }, 200);
+      }
+    }
     await db
       .delete(schema.contentDocs)
       .where(and(eq(schema.contentDocs.collection, collection), eq(schema.contentDocs.key, c.req.param('key'))));

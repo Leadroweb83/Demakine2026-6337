@@ -84,6 +84,13 @@ export function describe(method: string, path: string, body: Record<string, unkn
   if ((m = p.match(/^\/admin\/lixeira\/([^/]+)\/(\d+)(\/restaurar)?$/))) {
     return m[3] ? `Restaurou da lixeira: ${m[1]} #${m[2]}` : `Apagou de vez da lixeira: ${m[1]} #${m[2]}`;
   }
+  if (p === "/admin/seo/pagina") return typeof body.path === "string" && body.path ? `Editou o SEO da página ${body.path.slice(0, 100)}` : "Editou o SEO de uma página";
+  if (p === "/admin/seo/imagem-alt") return "Editou a descrição de uma foto de produto";
+  if (p === "/admin/seo/links/verificar") return "Verificou os links do site";
+  if (p === "/admin/seo/importar/testar") return "Testou uma lista de endereços antigos";
+  if (p === "/admin/seo/importar/criar") return `Criou ${Array.isArray(body.items) ? body.items.length : 0} redirecionamentos pelo importador de endereços antigos`;
+  if (p === "/admin/seo/regras") return method === "DELETE" ? "Voltou as regras da nota de SEO ao padrão" : "Alterou as regras da nota de SEO";
+  if (p === "/admin/seo/auditar") return typeof body.path === "string" && body.path ? `Rodou a auditoria de SEO da página ${body.path.slice(0, 100)}` : "Rodou a auditoria de SEO";
   return `${method} ${p}`;
 }
 

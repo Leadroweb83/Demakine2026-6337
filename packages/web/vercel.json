@@ -373,10 +373,19 @@
       "destination": "/_app"
     }
   ],
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 60
+    }
+  },
   "crons": [
     {
       "path": "/api/cron/diario",
       "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/cron/seo",
+      "schedule": "0 10 * * *"
     }
   ],
   "headers": [

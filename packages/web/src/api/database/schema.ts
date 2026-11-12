@@ -1,4 +1,5 @@
-import { boolean, date, index, integer, jsonb, pgTable, primaryKey, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { boolean, date, index, integer, jsonb, pgTable, primaryKey, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const leads = pgTable("leads", {
   id: serial("id").primaryKey(),
@@ -251,4 +252,67 @@ export const pageViews = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("page_views_created_idx").on(t.createdAt)],
+);
+
+/**
+ * Execução do auditor de SEO (painel "SEO e GEO"). Uma por dia (cron) ou sob demanda (botão). Se a função
+ * estoura o tempo, a execução fica "em-andamento" e a próxima chamada continua de `cursor`; as notas do site
+ * só são gravadas quando ela fecha.
+ */
+export const seoRuns = pgTable("seo_runs", {
+  id: serial("id").primaryKey(),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull().defaultNow(),
+  finishedAt: timestamp("finished_at", { withTimezone: true }),
+  /** diaria | manual */
+  kind: text("kind").notNull().default("diaria"),
+  /** em-andamento | completa | parcial */
+  status: text("status").notNull().default("em-andamento"),
+  pagesTotal: integer("pages_total").notNull().default(0),
+  pagesAudited: integer("pages_audited").notNull().default(0),
+  /** posição da próxima página a auditar, para retomar uma execução interrompida */
+  cursor: integer("cursor").notNull().default(0),
+  siteSeoScore: integer("site_seo_score"),
+  sectorScores: jsonb("sector_scores").notNull().default({}),
+  areaScores: jsonb("area_scores").notNull().default({}),
+  /** textos de alerta da execução (queda de nota, problema novo), mostrados só no painel */
+  alerts: jsonb("alerts").notNull().default([]),
+});
+
+/** Nota e fatos de cada página em cada execução (histórico por página). */
+export const seoPageScores = pgTable(
+  "seo_page_scores",
+  {
+    runId: integer("run_id").notNull(),
+    path: text("path").notNull(),
+    /** pt | en | es */
+    lang: text("lang").notNull().default("pt"),
+    area: text("area").notNull(),
+    seoScore: integer("seo_score").notNull(),
+    checks: jsonb("checks").notNull().default([]),
+    facts: jsonb("facts"),
+    statusCode: integer("status_code").notNull(),
+    indexable: boolean("indexable").notNull().default(true),
+    inlinks: integer("inlinks").notNull().default(0),
+  },
+  (t) => [
+    primaryKey({ columns: [t.runId, t.path] }),
+    index("seo_page_scores_path_run_idx").on(t.path, t.runId),
+  ],
+);
+
+/** Problemas de SEO abertos e resolvidos. Só um aberto por página e código (índice único parcial). */
+export const seoIssues = pgTable(
+  "seo_issues",
+  {
+    id: serial("id").primaryKey(),
+    path: text("path").notNull(),
+    code: text("code").notNull(),
+    /** critico | atencao | info */
+    severity: text("severity").notNull(),
+    message: text("message").notNull(),
+    firstSeen: timestamp("first_seen", { withTimezone: true }).notNull().defaultNow(),
+    lastSeen: timestamp("last_seen", { withTimezone: true }).notNull().defaultNow(),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("seo_issues_open_uniq").on(t.path, t.code).where(sql`${t.resolvedAt} is null`)],
 );

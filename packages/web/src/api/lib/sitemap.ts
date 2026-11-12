@@ -4,6 +4,8 @@ import { segmentLps } from "../../web/lib/segmentos-lp";
 import { WA } from "../../web/lib/landing-links";
 import { toWebp } from "../../web/lib/images";
 import landing from "../../web/data/landing.json";
+import { seoKey } from "../../web/lib/seo-pages";
+import { seoDocsFrom, type PageOverrides } from "../../web/lib/seo-overrides";
 
 const ORIGIN = "https://www.demakine.com.br";
 
@@ -54,6 +56,8 @@ const STATIC_PAGES = [
 
 type Doc = { collection: string; key: string; data: unknown; deleted: boolean; updatedAt: Date };
 type Entry = { path: string; lastmod?: string; priority: string; /** fotos da página, para o sitemap de imagens do Google */ images?: string[] };
+/** Entrada já expandida por idioma, com as versões que ela declara (hreflang) e que o sitemap lista junto. */
+export type SitemapEntry = Entry & { alternates: { hreflang: string; path: string }[] };
 
 /** Itens do código + edições do painel: tira oculto e rascunho, soma os novos que estão completos. */
 function merged(docs: Doc[], collection: string, base: string[], isComplete: (d: Record<string, unknown>) => boolean) {
@@ -96,7 +100,8 @@ function caseImage(slug: string, docs: Doc[]): string {
   return edited?.image ?? DEFAULT_CASES.find((x) => x.slug === slug)?.image ?? "";
 }
 
-export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: Date }[]) {
+/** Todas as páginas do sitemap, uma entrada por endereço (versões de idioma expandidas), antes de qualquer ocultação. */
+export function buildAllEntries(docs: Doc[], openJobs: { slug: string; updatedAt: Date }[]): SitemapEntry[] {
   const c = content as { products: { slug: string }[]; posts: { slug: string; date: string }[] };
   const postDate = new Map(c.posts.map((p) => [p.slug, p.date]));
   const entries: Entry[] = [
@@ -123,25 +128,44 @@ export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: D
     })),
     ...openJobs.map((j) => ({ path: `/vagas/${j.slug}`, lastmod: day(j.updatedAt), priority: "0.5" })),
   ];
-  const row = (e: Entry, loc: string, links = "") =>
-    `  <url><loc>${esc(ORIGIN + loc)}</loc>${links}${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}<priority>${e.priority}</priority>${imageTags(e.images)}</url>`;
-  const urls = entries
-    .flatMap((e) => {
-      if (PT_ONLY.test(e.path)) return [row(e, e.path)];
+  return entries
+    .flatMap((e): SitemapEntry[] => {
+      if (PT_ONLY.test(e.path)) return [{ ...e, alternates: [] }];
       // uma linha por idioma, cada uma listando as três versões (hreflang no sitemap)
-      const links = [...LANGS.map((l) => [l.hreflang, inLang(e.path, l.prefix)] as const), ["x-default", e.path] as const]
-        .map(([lang, p]) => `<xhtml:link rel="alternate" hreflang="${lang}" href="${esc(ORIGIN + p)}"/>`)
-        .join("");
-      return LANGS.map((l) => row(e, inLang(e.path, l.prefix), links));
+      const alternates = [...LANGS.map((l) => ({ hreflang: l.hreflang, path: inLang(e.path, l.prefix) })), { hreflang: "x-default", path: e.path }];
+      return LANGS.map((l) => ({ ...e, path: inLang(e.path, l.prefix), alternates }));
     })
     .concat(
-      EXPORT_PAGES.map((e) => {
-        const links = [...EXPORT_PAGES.map((x) => [x.hreflang, x.path] as const), ["x-default", "/en/export"] as const]
-          .map(([lang, p]) => `<xhtml:link rel="alternate" hreflang="${lang}" href="${esc(ORIGIN + p)}"/>`)
-          .join("");
-        return row({ path: e.path, lastmod: EXPORT_LASTMOD, priority: "0.6" }, e.path, links);
-      }),
-    )
-    .join("\n");
+      EXPORT_PAGES.map((e) => ({
+        path: e.path,
+        lastmod: EXPORT_LASTMOD,
+        priority: "0.6",
+        alternates: [...EXPORT_PAGES.map((x) => ({ hreflang: x.hreflang, path: x.path })), { hreflang: "x-default", path: "/en/export" }],
+      })),
+    );
+}
+
+/** A página está escondida do sitemap pelas regras do painel (noindex ou "fora do sitemap")? */
+const hiddenFromSitemap = (path: string, seoDocs: Record<string, PageOverrides>) => {
+  const o = seoDocs[seoKey(path)];
+  return o?.noindex === true || o?.noSitemap === true;
+};
+
+/**
+ * O que vai para o sitemap: tudo de buildAllEntries menos as páginas que as regras do painel escondem. As versões
+ * que sobram deixam de apontar (hreflang) para a que saiu.
+ */
+export function buildEntries(docs: Doc[], openJobs: { slug: string; updatedAt: Date }[], seoDocs: Record<string, PageOverrides> = seoDocsFrom(docs)): SitemapEntry[] {
+  return buildAllEntries(docs, openJobs)
+    .filter((e) => !hiddenFromSitemap(e.path, seoDocs))
+    .map((e) => ({ ...e, alternates: e.alternates.filter((a) => !hiddenFromSitemap(a.path, seoDocs)) }));
+}
+
+export function buildSitemap(docs: Doc[], openJobs: { slug: string; updatedAt: Date }[], seoDocs: Record<string, PageOverrides> = seoDocsFrom(docs)) {
+  const row = (e: SitemapEntry) => {
+    const links = e.alternates.map((a) => `<xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${esc(ORIGIN + a.path)}"/>`).join("");
+    return `  <url><loc>${esc(ORIGIN + e.path)}</loc>${links}${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}<priority>${e.priority}</priority>${imageTags(e.images)}</url>`;
+  };
+  const urls = buildEntries(docs, openJobs, seoDocs).map(row).join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;
 }

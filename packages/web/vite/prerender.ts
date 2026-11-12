@@ -39,31 +39,28 @@ async function loadData() {
     const { db } = await import("../src/api/database");
     const schema = await import("../src/api/database/schema");
     const { isJobOpen, publicJob } = await import("../src/api/lib/jobs");
-    const { buildSitemap } = await import("../src/api/lib/sitemap");
+    const { prerenderPaths } = await import("../src/api/lib/seo/pages");
     const snapshot = await getContentSnapshot();
     const docs = await db.select().from(schema.contentDocs);
     const allJobs = await db.select().from(schema.jobs).where(isNull(schema.jobs.deletedAt));
     const open = allJobs.filter(isJobOpen);
-    const sitemap = buildSitemap(docs, open);
+    // todas as páginas, inclusive as que o painel escondeu do sitemap (saem com noindex no HTML)
+    const pages = prerenderPaths(docs, open);
     // mesmo formato que a API entrega ao navegador (datas viram texto)
     const jobs = JSON.parse(JSON.stringify(open.map(publicJob))) as { slug: string }[];
-    return { snapshot, sitemap, jobs, started, fromDb: true };
+    return { snapshot, pages, jobs, started, fromDb: true };
   } catch (err) {
     // sem banco no build: gera com o conteúdo do código; o navegador busca o do painel e redesenha
     console.warn("[prerender] banco indisponível, usando o conteúdo padrão do código:", err instanceof Error ? err.message : err);
-    const { buildSitemap } = await import("../src/api/lib/sitemap");
+    const { prerenderPaths } = await import("../src/api/lib/seo/pages");
     return {
       snapshot: { docs: {}, deleted: {}, version: "padrao" } as Snapshot,
-      sitemap: buildSitemap([], []),
+      pages: prerenderPaths([], []),
       jobs: [] as { slug: string }[],
       started,
       fromDb: false,
     };
   }
-}
-
-function pageUrls(sitemap: string) {
-  return [...sitemap.matchAll(/<loc>https?:\/\/[^/<]+([^<]*)<\/loc>/g)].map((m) => m[1]!.replace(/&amp;/g, "&") || "/");
 }
 
 /** Arquivo servido para o endereço (vercel.json cleanUrls: /produtos/x -> produtos/x.html). */
@@ -119,7 +116,7 @@ async function main() {
   // casca do app sem pré-renderização: painel e loja (vercel.json reescreve para /_app)
   await writeFile(path.join(DIST, "_app.html"), template);
 
-  const { snapshot, sitemap, jobs, started, fromDb } = await loadData();
+  const { snapshot, pages, jobs, started, fromDb } = await loadData();
   (globalThis as { __DM_CONTENT__?: Snapshot }).__DM_CONTENT__ = snapshot;
   // cópia estática do conteúdo usado no build: reserva se /api/conteudo falhar no navegador
   await writeFile(path.join(DIST, `conteudo-${snapshot.version}.json`), JSON.stringify(snapshot));
@@ -138,7 +135,7 @@ async function main() {
   const missing: Record<string, Set<string>> = { en: new Set(), es: new Set() };
 
   // página de obrigado: fora do sitemap (noindex), mas pronta para quem recarregar depois de enviar
-  const urls = [...pageUrls(sitemap), "/obrigado", "/en/obrigado", "/es/obrigado", NOT_FOUND_PATH];
+  const urls = [...pages, "/obrigado", "/en/obrigado", "/es/obrigado", NOT_FOUND_PATH];
   const jobPrefill: [unknown[], unknown] = [["vagas"], jobs];
   let count = 0;
   for (const url of urls) {

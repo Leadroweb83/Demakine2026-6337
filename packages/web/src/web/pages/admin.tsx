@@ -23,6 +23,7 @@ import {
   House,
   ListOrdered,
   Trash2,
+  Radar,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { authClient, can, clearAuthToken, ROLE_LABEL, type PanelUser } from "../lib/auth";
@@ -46,10 +47,10 @@ import { AdminHome } from "../admin/home";
 import { AdminSections } from "../admin/sections";
 import { AdminVisits } from "../admin/visits";
 import { AdminTrash } from "../admin/trash";
+import { SeoGeo } from "../admin/seo-geo";
+import { allowed, type Area } from "../admin/access";
 import { Card, PageTitle } from "../admin/ui";
 import { UserAvatar } from "../admin/avatar";
-
-type Area = "leads" | "conteudo" | "loja" | "config" | "usuarios" | "vagas" | "livre";
 
 type NavItem = {
   id: string;
@@ -74,6 +75,7 @@ const NAV: NavItem[] = [
   { id: "midia", label: "Mídia", Icon: Images, area: "conteudo" },
   { id: "site", label: "Dados do site", Icon: Sliders, area: "config" },
   { id: "seo", label: "SEO das páginas", Icon: SearchCheck, area: "config" },
+  { id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" },
   { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config" },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
   { id: "avisos", label: "Avisos por e-mail", Icon: Bell, area: "usuarios" },
@@ -81,16 +83,6 @@ const NAV: NavItem[] = [
   { id: "lixeira", label: "Lixeira", Icon: Trash2, area: "config" },
   { id: "conta", label: "Minha conta", Icon: UserCircle2, area: "livre" },
 ];
-
-function allowed(role: string, area: Area) {
-  if (area === "livre") return true;
-  if (role === "super_admin") return true;
-  if (role === "admin") return area !== "usuarios";
-  if (role === "vendedor") return area === "leads";
-  if (role === "editor") return area === "conteudo" || area === "vagas";
-  if (role === "rh") return area === "vagas";
-  return false;
-}
 
 function Soon({ label }: { label: string }) {
   return (
@@ -289,6 +281,7 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "redirecionamentos" && <AdminRedirects />}
           {current === "listas" && <AdminLists />}
           {current === "seo" && <AdminSeo />}
+          {current === "seo-geo" && <SeoGeo />}
           {current === "home" && <AdminHome />}
           {current === "secoes" && <AdminSections />}
           {current === "visitas" && <AdminVisits />}
