@@ -12,4 +12,27 @@
   --color-foreground: #e9eef1;
   --color-muted-foreground: #9fb0ba;
   --color-brand: #20c4f4;
+  --color-card: #0c1217;
+  --color-card-foreground: #e9eef1;
+  --color-border: rgba(255, 255, 255, 0.12);
+
+}
+
+/* Mural de depoimentos. A animação fica na própria classe (e não em uma variável do tema)
+   porque depende de --duration, definida em cada coluna. */
+@utility animate-marquee {
+  animation: mq-x var(--duration) linear infinite;
+}
+@utility animate-marquee-vertical {
+  animation: mq-y var(--duration) linear infinite;
+}
+@keyframes mq-x {
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+@keyframes mq-y {
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
 }
