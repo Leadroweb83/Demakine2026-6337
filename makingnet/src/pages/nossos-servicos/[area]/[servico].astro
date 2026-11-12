@@ -5,6 +5,7 @@ import Cta from '../../../components/Cta.astro';
 import Faq from '../../../components/Faq.astro';
 import Rows from '../../../components/Rows.astro';
 import Marquee from '../../../components/Marquee.astro';
+import Testimonials from '../../../components/Testimonials.astro';
 import { areas } from '../../../data/servicos';
 import { site } from '../../../data/site';
 export function getStaticPaths() {
@@ -62,6 +63,8 @@ const [abertura, ...resto] = servico.intro;
       <div class="wrap"><div class="actions" data-reveal><a class="btn btn--ghost" href="/nossos-servicos/marketing-digital/portfolio/">Ver portfólio completo</a></div></div>
     </section>
   )}
+
+  <Testimonials temas={isMarketing ? (servico.slug === 'criacao-de-sites' ? ['software'] : ['consultoria']) : (servico.slug === 'servidores' || servico.slug === 'virtualizacao' ? ['legado'] : servico.slug === 'redes' || servico.slug === 'venda' ? ['publico'] : ['consultoria'])} />
 
   <Faq items={servico.faq} title={`Perguntas frequentes sobre ${servico.name.toLowerCase()}`} />
 

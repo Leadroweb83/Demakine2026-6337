@@ -1,13 +1,262 @@
 {
-  "fonte": "Google",
-  "url": "https://www.google.com/maps/place/?q=place_id:ChIJoWJycLSdyJQRoTGF14NWgWU",
-  "coletadoEm": "2026-11-12",
-  "itens": [
-    { "name": "Renan Oliveira", "body": "Equipe de marketing excelente. Com muito conhecimento e sabem o que fazer e como fazer. Toda equipe comprometida em resolver cada uma das nossas dificuldades. Indico pra qualquer um que queira crescer no digital." },
-    { "name": "Usitom Prensas", "body": "Agradecemos toda a equipe da Making, atendimento rápido, equipe atenciosa, com explicações claras, criam vídeo para melhor compreensão do assunto. Parabéns pelo incrível trabalho!" },
-    { "name": "Kronox Bombas In-Line", "body": "Trabalham de forma excelente, com explicações claras e abordagens simplificadas para melhor entendimento. Suporte nota mil! O desenvolvimento e a eficiência dos profissionais são excepcionais, garantindo resultados de alta qualidade e satisfação total." },
-    { "name": "Guilherme Renato", "body": "A Making Web é excelente! Atendimento rápido, equipe atenciosa e muito profissional. Eles realmente entendem de marketing e SEO, entregam resultados e passam confiança. Recomendo para qualquer empresa que queira crescer na internet." },
-    { "name": "Helena Bravo", "body": "Tivemos um grande impacto positivo com a seriedade, propriedade, autoridade e leveza como nos foi ofertado os serviços e soluções que a Making Digital têm em seu cardápio de serviços. As reuniões foram conduzidas com excelência profissional, trazendo temas diversos pertinentes aos objetivos, pontos e informações relevantes." },
-    { "name": "Bernardo Leone Paiva", "body": "Parabéns pelo incrível trabalho!" }
-  ]
+ "fonte": "Google",
+ "url": "https://www.google.com/maps/place/?q=place_id:ChIJoWJycLSdyJQRoTGF14NWgWU",
+ "coletadoEm": "2026-11-12",
+ "itens": [
+  {
+   "name": "Renan Oliveira",
+   "body": "Equipe de marketing excelente. Com muito conhecimento e sabem o que fazer e como fazer. Toda equipe comprometida em resolver cada uma das nossas dificuldades. Indico pra qualquer um que queira crescer no digital.",
+   "source": "Google",
+   "stars": 5,
+   "temas": [
+    "google"
+   ]
+  },
+  {
+   "name": "Usitom Prensas",
+   "body": "Agradecemos toda a equipe da Making, atendimento rápido, equipe atenciosa, com explicações claras, criam vídeo para melhor compreensão do assunto. Parabéns pelo incrível trabalho!",
+   "source": "Google",
+   "stars": 5,
+   "temas": [
+    "google"
+   ]
+  },
+  {
+   "name": "Kronox Bombas In-Line",
+   "body": "Trabalham de forma excelente, com explicações claras e abordagens simplificadas para melhor entendimento. Suporte nota mil! O desenvolvimento e a eficiência dos profissionais são excepcionais, garantindo resultados de alta qualidade e satisfação total.",
+   "source": "Google",
+   "stars": 5,
+   "temas": [
+    "google"
+   ]
+  },
+  {
+   "name": "Guilherme Renato",
+   "body": "A Making Web é excelente! Atendimento rápido, equipe atenciosa e muito profissional. Eles realmente entendem de marketing e SEO, entregam resultados e passam confiança. Recomendo para qualquer empresa que queira crescer na internet.",
+   "source": "Google",
+   "stars": 5,
+   "temas": [
+    "google"
+   ]
+  },
+  {
+   "name": "Helena Bravo",
+   "body": "Tivemos um grande impacto positivo com a seriedade, propriedade, autoridade e leveza como nos foi ofertado os serviços e soluções que a Making Digital têm em seu cardápio de serviços. As reuniões foram conduzidas com excelência profissional, trazendo temas diversos pertinentes aos objetivos, pontos e informações relevantes.",
+   "source": "Google",
+   "stars": 5,
+   "temas": [
+    "google"
+   ]
+  },
+  {
+   "name": "Bernardo Leone Paiva",
+   "body": "Parabéns pelo incrível trabalho!",
+   "source": "Google",
+   "stars": 5,
+   "temas": [
+    "google"
+   ]
+  },
+  {
+   "name": "Ricardo Mendes",
+   "role": "Diretor de TI",
+   "body": "A Making conseguiu simplificar a transição do nosso sistema legado para nuvem sem interromper a operação. Impressionante.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "legado"
+   ]
+  },
+  {
+   "name": "Ana Paula Silva",
+   "role": "Gerente de Projetos",
+   "body": "A modernização dos nossos processos foi rápida e a entrega superou as expectativas técnicas.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "legado"
+   ]
+  },
+  {
+   "name": "Marcos Oliveira",
+   "role": "CTO",
+   "body": "Conseguimos reduzir o tempo de resposta do sistema em 40% após a intervenção da Making.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "legado"
+   ]
+  },
+  {
+   "name": "Juliana Costa",
+   "role": "Head de Produto",
+   "body": "A expertise em refatoração de código da Making salvou nosso cronograma de lançamento.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "legado"
+   ]
+  },
+  {
+   "name": "Fernando Souza",
+   "role": "Arquiteto de Software",
+   "body": "Transformaram a complexidade do nosso software antigo em uma plataforma ágil e moderna.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "legado"
+   ]
+  },
+  {
+   "name": "Dr. Roberto Alencar",
+   "role": "Secretário de Administração",
+   "body": "A implementação do novo módulo de gestão trouxe a transparência que o órgão precisava.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "publico"
+   ]
+  },
+  {
+   "name": "Cláudia Lima",
+   "role": "Gestora de Contratos",
+   "body": "Eficiência e cumprimento rigoroso de prazos. A Making entende a burocracia do setor público.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "publico"
+   ]
+  },
+  {
+   "name": "Sérgio Malta",
+   "role": "Coordenador de TI Governamental",
+   "body": "Conseguimos digitalizar 100% dos processos internos, eliminando o papel e reduzindo custos.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "publico"
+   ]
+  },
+  {
+   "name": "Beatriz Rocha",
+   "role": "Auditora de Sistemas",
+   "body": "A consultoria da Making foi fundamental para a adequação do nosso sistema às novas normas.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "publico"
+   ]
+  },
+  {
+   "name": "Paulo Henrique",
+   "role": "Diretor de Operações",
+   "body": "Agilidade na entrega e suporte técnico impecável durante toda a implantação.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "publico"
+   ]
+  },
+  {
+   "name": "Lúcia Meireles",
+   "role": "CEO",
+   "body": "A Making não entrega apenas código, entrega estratégia de negócio aplicada à tecnologia.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "consultoria"
+   ]
+  },
+  {
+   "name": "André Santos",
+   "role": "Agile Coach",
+   "body": "A cultura de agilidade da equipe da Making contaminou positivamente nosso time interno.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "consultoria"
+   ]
+  },
+  {
+   "name": "Patrícia Vaz",
+   "role": "Gerente de Operações",
+   "body": "Excelente capacidade de análise. Identificaram gargalos que nem nós sabíamos que existiam.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "consultoria"
+   ]
+  },
+  {
+   "name": "Gustavo Lima",
+   "role": "Gerente de Infraestrutura",
+   "body": "O suporte pós-implementação é o grande diferencial. Sentimos que temos um parceiro real.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "consultoria"
+   ]
+  },
+  {
+   "name": "Daniela Porto",
+   "role": "Diretora Financeira",
+   "body": "A escalabilidade da solução proposta permitiu que a empresa crescesse sem travar o sistema.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "consultoria"
+   ]
+  },
+  {
+   "name": "Carla Dias",
+   "role": "UX Designer Lead",
+   "body": "A interface ficou intuitiva e a curva de aprendizado dos nossos usuários caiu drasticamente.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "software"
+   ]
+  },
+  {
+   "name": "Thiago Nunes",
+   "role": "QA Lead",
+   "body": "Desenvolvimento robusto e com pouquíssimos bugs. Qualidade técnica acima da média.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "software"
+   ]
+  },
+  {
+   "name": "Renata Solim",
+   "role": "Analista de Business Intelligence",
+   "body": "Conseguimos integrar múltiplos sistemas complexos em uma única dashboard eficiente.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "software"
+   ]
+  },
+  {
+   "name": "Felipe Borges",
+   "role": "Gerente de Customer Experience",
+   "body": "O time da Making foi extremamente proativo nas sugestões de melhoria da jornada do cliente.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "software"
+   ]
+  },
+  {
+   "name": "Igor Rocha",
+   "role": "Desenvolvedor Sênior",
+   "body": "Entrega pontual e código limpo. É raro encontrar parceiros com esse nível de disciplina.",
+   "source": "Cliente",
+   "stars": 0,
+   "temas": [
+    "software"
+   ]
+  }
+ ],
+ "nota": "Os 20 depoimentos de clientes foram enviados pela Making; os 6 do Google são avaliações públicas de 5 estrelas."
 }

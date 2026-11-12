@@ -4,6 +4,7 @@ import PageHero from '../../components/PageHero.astro';
 import Cta from '../../components/Cta.astro';
 import Faq from '../../components/Faq.astro';
 import Rows from '../../components/Rows.astro';
+import Testimonials from '../../components/Testimonials.astro';
 import { sistemas } from '../../data/servicos';
 import { site } from '../../data/site';
 import modulos from '../../data/velosys-modulos.json';
@@ -85,6 +86,8 @@ const schema = [
       </ul>
     </div>
   </section>
+
+  <Testimonials temas={['legado', 'publico']} count={3} title="Quem já modernizou a gestão com a Making" />
 
   <Faq items={sistemas.faq} title="Perguntas frequentes sobre o Velosys" />
   <Cta title="Quer ver o Velosys funcionando?" text="Fale com a nossa equipe e veja como o sistema se adapta à operação da sua empresa." button="Quero conhecer o Velosys" message="Olá! Vim pelo site e quero conhecer o sistema Velosys." />

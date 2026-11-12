@@ -1,0 +1,25 @@
+---
+// Depoimentos por tema, em grade estática (leve). Os temas: legado, publico, consultoria, software, google.
+import depoimentos from '../data/depoimentos.json';
+interface Props { temas: string[]; title?: string; eyebrow?: string; count?: number }
+const { temas, title = 'O que dizem os clientes', eyebrow = 'Depoimentos', count = 3 } = Astro.props;
+const lista = depoimentos.itens.filter((d) => d.temas.some((t) => temas.includes(t))).slice(0, count);
+---
+{lista.length > 0 && (
+  <section class="section section--surface">
+    <div class="wrap">
+      <span class="eyebrow" data-reveal>{eyebrow}</span>
+      <h2 data-reveal>{title}</h2>
+      <ul class="quotes">
+        {lista.map((d) => (
+          <li data-reveal>
+            <figure class="quote">
+              <blockquote><p>“{d.body}”</p></blockquote>
+              <figcaption><strong>{d.name}</strong>{d.role ? <span>{d.role}</span> : <span>Avaliação no Google</span>}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

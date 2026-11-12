@@ -4,6 +4,7 @@ import PageHero from '../../../components/PageHero.astro';
 import Cta from '../../../components/Cta.astro';
 import Rows from '../../../components/Rows.astro';
 import Marquee from '../../../components/Marquee.astro';
+import Testimonials from '../../../components/Testimonials.astro';
 import { areas } from '../../../data/servicos';
 import { site } from '../../../data/site';
 export function getStaticPaths() {
@@ -41,5 +42,6 @@ const schema = [{
       <div class="wrap"><div class="actions" data-reveal><a class="btn btn--ghost" href="/nossos-servicos/marketing-digital/portfolio/">Ver portfólio completo</a></div></div>
     </section>
   )}
+  <Testimonials temas={isMarketing ? ['consultoria'] : ['legado', 'publico']} />
   <Cta />
 </Base>

@@ -153,9 +153,9 @@ const tunnel = portfolio.slice(0, 10).map((p) => ({ src: p.img, title: p.name, k
     <div class="wrap">
       <span class="eyebrow" data-reveal>Depoimentos</span>
       <h2 data-reveal>O que dizem os clientes</h2>
-      <p class="lead" data-reveal>Avaliações de 5 estrelas publicadas por clientes no perfil da Making no Google.</p>
+      <p class="lead" data-reveal>Empresas e profissionais que trabalham com a Making, incluindo avaliações de 5 estrelas no Google.</p>
       <div data-reveal style="margin-top:clamp(24px,4vw,40px)">
-        <VerticalMarquee reviews={depoimentos.itens} source={depoimentos.fonte} />
+        <VerticalMarquee reviews={depoimentos.itens} />
       </div>
       <div class="actions" data-reveal><a class="btn btn--ghost" href={depoimentos.url} target="_blank" rel="noopener">Ver avaliações no Google</a></div>
     </div>

@@ -9,6 +9,10 @@ import { Marquee } from "@/components/ui/marquee-03-utils/marquee";
 export type Review = {
   name: string;
   body: string;
+  /** Cargo, para depoimentos de clientes. */
+  role?: string;
+  /** "Google" mostra as estrelas e a origem; outros valores mostram só o cargo. */
+  source?: string;
 };
 
 const Stars = () => (
@@ -21,7 +25,7 @@ const Stars = () => (
   </span>
 );
 
-const ReviewCard = ({ name, body, source }: Review & { source: string }) => (
+const ReviewCard = ({ name, body, role, source }: Review) => (
   <Card className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-none">
     <CardContent className="flex flex-col gap-3 p-0">
       <div className="flex flex-row items-center gap-3">
@@ -33,18 +37,18 @@ const ReviewCard = ({ name, body, source }: Review & { source: string }) => (
         </span>
         <div className="flex flex-col">
           <p className="m-0 text-sm font-medium text-foreground">{name}</p>
-          <p className="m-0 text-xs font-medium text-muted-foreground">Avaliação no {source}</p>
+          <p className="m-0 text-xs font-medium text-muted-foreground">{source === "Google" ? "Avaliação no Google" : role}</p>
         </div>
       </div>
-      <Stars />
+      {source === "Google" && <Stars />}
       <p className="m-0 text-sm leading-relaxed text-foreground">“{body}”</p>
     </CardContent>
   </Card>
 );
 
-export default function VerticalMarquee({ reviews, source = "Google" }: { reviews: Review[]; source?: string }) {
+export default function VerticalMarquee({ reviews }: { reviews: Review[] }) {
   const column = (n: number) => reviews.filter((_, i) => i % 3 === n);
-  const cards = (list: Review[]) => list.map((r) => <ReviewCard key={r.name} {...r} source={source} />);
+  const cards = (list: Review[]) => list.map((r) => <ReviewCard key={r.name} {...r} />);
 
   return (
     <div className="relative flex h-125 w-full flex-row items-center justify-center overflow-hidden">

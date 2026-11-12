@@ -1376,3 +1376,47 @@ a.card:hover {
 .article__cta strong {
   color: #fff;
 }
+
+/* Depoimentos em grade */
+.quotes {
+  display: grid;
+  gap: 20px;
+  list-style: none;
+  margin: clamp(28px, 4vw, 48px) 0 0;
+  padding: 0;
+}
+@media (min-width: 860px) {
+  .quotes {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.quote {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  padding: 28px;
+  border: 1px solid var(--mk-line);
+  border-radius: var(--radius);
+  background: var(--mk-card);
+}
+.quote blockquote {
+  margin: 0 0 22px;
+}
+.quote p {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: #e3eaee;
+}
+.quote figcaption {
+  margin-top: auto;
+  display: grid;
+  gap: 2px;
+  font-size: 0.88rem;
+  color: var(--mk-gray);
+}
+.quote figcaption strong {
+  color: #fff;
+  font-size: 0.95rem;
+}

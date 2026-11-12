@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import Rows from '../components/Rows.astro';
+import Testimonials from '../components/Testimonials.astro';
 import { site, cultura, yearsInBusiness } from '../data/site';
 import clientes from '../data/clientes.json';
 const crumbs = [{ name: 'Sobre', href: '/sobre/' }];
@@ -54,5 +55,6 @@ const schema = [{ '@type': 'AboutPage', '@id': `${site.url}/sobre/#about`, mainE
       </ul>
     </div>
   </section>
+  <Testimonials temas={['consultoria']} count={3} />
   <Cta title="Vamos juntos?" />
 </Base>
