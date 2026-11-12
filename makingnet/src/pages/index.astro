@@ -6,6 +6,8 @@ import ServiceShowcaseHero from '@/components/ui/service-showcase-hero';
 import EarthHero from '@/components/ui/earth-hero';
 import IntroVideo from '../components/IntroVideo.astro';
 import PartnerSection from '../components/PartnerSection.astro';
+import ProcessSection from '../components/ProcessSection.astro';
+import DiagnosticoSection from '../components/DiagnosticoSection.astro';
 import { chamadasHero } from '../data/chamadas';
 import PerspectiveTunnelHero from '@/components/ui/perspective-tunnel-hero';
 import { site, yearsInBusiness, whatsappLink } from '../data/site';
@@ -130,6 +132,8 @@ const tunnel = portfolio.slice(0, 10).map((p) => ({ src: p.img, title: p.name, k
 
   <PartnerSection />
 
+  <ProcessSection />
+
   <PerspectiveTunnelHero
     client:visible
     items={tunnel}
@@ -161,6 +165,8 @@ const tunnel = portfolio.slice(0, 10).map((p) => ({ src: p.img, title: p.name, k
       <div class="actions" data-reveal><a class="btn btn--ghost" href={depoimentos.url} target="_blank" rel="noopener">Ver avaliações no Google</a></div>
     </div>
   </section>
+
+  <DiagnosticoSection />
 
   <section class="section" style="padding-top:0">
     <div class="wrap">

@@ -36,28 +36,6 @@ const opcoes = [...areas.flatMap((a) => a.servicos.map((s) => s.name)), sistemas
   <p role="status" aria-live="polite" data-status style="margin:0;font-size:.92rem"></p>
 </form>
 
-<script is:inline>
-  document.querySelectorAll('[data-lead-form]').forEach(function (form) {
-    form.addEventListener('submit', function (e) {
-      var d = new FormData(form);
-      if (d.get('website')) { e.preventDefault(); return; }
-      var status = form.querySelector('[data-status]');
-      var endpoint = form.getAttribute('action');
-      e.preventDefault();
-      if (!endpoint) {
-        var linhas = ['Olá! Vim pelo site da Making.', 'Nome: ' + d.get('nome')];
-        if (d.get('empresa')) linhas.push('Empresa: ' + d.get('empresa'));
-        linhas.push('E-mail: ' + d.get('email'), 'Telefone: ' + d.get('telefone'));
-        if (d.get('servico')) linhas.push('Serviço: ' + d.get('servico'));
-        linhas.push('Mensagem: ' + d.get('mensagem'));
-        window.open('https://wa.me/' + form.dataset.wa + '?text=' + encodeURIComponent(linhas.join('\n')), '_blank', 'noopener');
-        status.textContent = 'Abrimos o WhatsApp com a sua mensagem pronta. É só enviar.';
-        return;
-      }
-      status.textContent = 'Enviando...';
-      fetch(endpoint, { method: 'POST', body: d, headers: { Accept: 'application/json' } })
-        .then(function (r) { if (!r.ok) throw new Error(); window.location.href = '/obrigado/'; })
-        .catch(function () { status.textContent = 'Não foi possível enviar agora. Tente de novo ou fale com a gente pelo WhatsApp.'; });
-    });
-  });
+<script>
+  import '../scripts/lead-form';
 </script>

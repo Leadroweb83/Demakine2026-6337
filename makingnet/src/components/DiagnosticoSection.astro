@@ -1,0 +1,61 @@
+---
+// Isca de contato da home: análise gratuita do site. Mesmo destino dos demais formulários.
+import { site } from '../data/site';
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+---
+<section class="section diag" id="diagnostico">
+  <div class="wrap diag__in">
+    <div class="diag__copy">
+      <span class="eyebrow" data-reveal>Análise gratuita</span>
+      <h2 data-reveal>Como o seu site aparece hoje?</h2>
+      <p class="lead" data-reveal>
+        Receba uma análise do seu site com os pontos que mais seguram o seu resultado: busca no Google (SEO), velocidade, experiência no celular e presença nas respostas de inteligência artificial (GEO).
+      </p>
+      <ul class="checks" data-reveal>
+        <li>Sem compromisso e sem custo</li>
+        <li>Feita pela equipe da Making, agência Google Partner</li>
+        <li>Você recebe o retorno pelo WhatsApp</li>
+      </ul>
+      <p class="diag__alt" data-reveal>
+        Prefere começar lendo? <a href="https://conteudo.makingnet.com.br/ebk-checklist-seo" target="_blank" rel="noopener">Baixe o Checklist definitivo de SEO</a>.
+      </p>
+    </div>
+    <form class="form diag__form" data-lead-form data-kind="diagnostico" data-wa={site.whatsapp} action={endpoint || undefined} method="post" data-reveal>
+      <label>Seu nome <input name="nome" autocomplete="name" required /></label>
+      <label>WhatsApp <input name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(19) 90000-0000" required /></label>
+      <label>Site da sua empresa <input name="site" type="url" inputmode="url" placeholder="https://www.suaempresa.com.br" /></label>
+      <label class="hp" aria-hidden="true">Não preencha <input name="website" tabindex="-1" autocomplete="off" /></label>
+      <label class="consent">
+        <input type="checkbox" name="consentimento" required />
+        <span>Concordo em informar meus dados para receber a análise, conforme a <a href="/politica-de-privacidade/">Política de Privacidade</a>.</span>
+      </label>
+      <button class="btn btn--primary" type="submit">Quero a análise gratuita</button>
+      <p role="status" aria-live="polite" data-status style="margin:0;font-size:.92rem"></p>
+    </form>
+  </div>
+</section>
+<script>
+  import '../scripts/lead-form';
+</script>
+<style>
+  .diag {
+    position: relative;
+    background: radial-gradient(900px 420px at 85% 0%, rgba(32, 196, 244, 0.14), transparent 70%), var(--mk-surface);
+    border-block: 1px solid var(--mk-line);
+  }
+  .diag__in {
+    display: grid;
+    gap: clamp(28px, 5vw, 72px);
+    align-items: center;
+  }
+  .diag__alt {
+    margin-top: 22px;
+    font-size: 0.95rem;
+    color: var(--mk-gray);
+  }
+  @media (min-width: 940px) {
+    .diag__in {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+// "Como funciona": quatro passos. O relatório periódico é uma promessa que a Making já faz nos serviços.
+const passos = [
+  { t: 'Diagnóstico', x: 'Analisamos seu site, seus anúncios, a concorrência e como os clientes procuram por você.' },
+  { t: 'Estratégia', x: 'Definimos canais, orçamento e metas em um plano claro, sem jargão e sem letra miúda.' },
+  { t: 'Execução', x: 'Site, SEO, Google Ads e redes sociais no ar, com a equipe da Making cuidando de cada detalhe.' },
+  { t: 'Relatório', x: 'Você recebe os principais indicadores periodicamente e sabe onde está cada real investido.' },
+];
+---
+<section class="section process">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>Como funciona</span>
+    <h2 data-reveal>Do primeiro contato ao resultado, em quatro passos</h2>
+    <ol class="steps">
+      {passos.map((p, i) => (
+        <li data-reveal style={`--i:${i}`}>
+          <span class="steps__n">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{p.t}</h3>
+          <p>{p.x}</p>
+        </li>
+      ))}
+    </ol>
+    <div class="actions" data-reveal>
+      <a class="btn btn--primary" href="#diagnostico">Começar pelo diagnóstico gratuito</a>
+      <a class="btn btn--ghost" href="/orcamento/">Pedir orçamento</a>
+    </div>
+  </div>
+</section>
+<style>
+  .steps {
+    list-style: none;
+    margin: clamp(32px, 5vw, 64px) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    counter-reset: s;
+  }
+  .steps li {
+    position: relative;
+    padding: 0 0 36px 72px;
+  }
+  .steps li::before {
+    content: '';
+    position: absolute;
+    left: 25px;
+    top: 52px;
+    bottom: 4px;
+    width: 1px;
+    background: linear-gradient(var(--mk-cyan), rgba(32, 196, 244, 0.08));
+  }
+  .steps li:last-child::before {
+    display: none;
+  }
+  .steps__n {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--mk-cyan);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--mk-cyan);
+    background: var(--mk-white);
+  }
+  .steps h3 {
+    margin: 4px 0 8px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  .steps p {
+    margin: 0;
+    color: var(--mk-gray);
+    max-width: 38ch;
+  }
+  @media (min-width: 900px) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+    .steps li {
+      padding: 76px 0 0;
+    }
+    .steps li::before {
+      left: 52px;
+      right: -28px;
+      top: 25px;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+      background: linear-gradient(90deg, var(--mk-cyan), rgba(32, 196, 244, 0.12));
+    }
+  }
+</style>

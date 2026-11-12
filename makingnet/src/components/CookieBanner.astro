@@ -1,0 +1,93 @@
+---
+// Aviso de cookies (LGPD). Por padrão só os essenciais; a medição (Google Analytics) só liga com aceite.
+// A escolha fica guardada por 12 meses. O rodapé tem o link "Preferências de cookies" para mudar de ideia.
+---
+<div class="ck" id="ck" role="region" aria-label="Aviso de cookies" hidden>
+  <p class="ck__t">
+    Usamos cookies essenciais para o site funcionar e, com a sua permissão, cookies de medição para entender o que melhorar na sua experiência.
+    Saiba mais na <a href="/politica-de-privacidade/">Política de Privacidade</a>.
+  </p>
+  <div class="ck__b">
+    <button type="button" class="btn btn--primary" data-ck="all">Aceitar tudo</button>
+    <button type="button" class="btn btn--ghost" data-ck="essential">Só os essenciais</button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = 'mk-consent', YEAR = 365 * 864e5;
+    var box = document.getElementById('ck');
+    if (!box) return;
+    function read() {
+      try { var v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v && Date.now() - v.t < YEAR) return v.c; } catch (e) {}
+      return null;
+    }
+    function apply(c) {
+      window.mkConsent = c;
+      window.dispatchEvent(new CustomEvent('mk:consent', { detail: c }));
+    }
+    function open() { box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-in'); }); }
+    function close() { box.classList.remove('is-in'); setTimeout(function () { box.hidden = true; }, 350); }
+    var saved = read();
+    if (saved) apply(saved);
+    else {
+      var show = function () { setTimeout(open, 600); };
+      if (document.documentElement.classList.contains('intro-on')) window.addEventListener('mk:intro-end', show, { once: true });
+      else show();
+    }
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ck]');
+      if (!b) return;
+      var c = b.getAttribute('data-ck');
+      try { localStorage.setItem(KEY, JSON.stringify({ c: c, t: Date.now() })); } catch (err) {}
+      apply(c); close();
+    });
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-ck-open]')) { e.preventDefault(); open(); }
+    });
+  })();
+</script>
+
+<style is:global>
+  .ck {
+    position: fixed;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 900;
+    width: min(440px, calc(100vw - 32px));
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    background: rgba(12, 18, 23, 0.96);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .ck.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  .ck__t {
+    margin: 0 0 14px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #d5dfe4;
+  }
+  .ck__b {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ck__b .btn {
+    min-height: 42px;
+    padding: 0.5em 1.1em;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 860px) {
+    .ck {
+      bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+  }
+</style>

@@ -7,7 +7,8 @@ const { effect = 'flap' } = Astro.props;
 ---
 <section class="partner" aria-label="Google Partner">
   <video class="partner__video" muted loop playsinline preload="none" poster="/video/google-partner-poster.webp" aria-hidden="true" tabindex="-1" data-lazy-video>
-    <source data-src="/video/google-partner-1440.mp4" media="(min-width: 1000px)" type="video/mp4" />
+    <source data-src="/video/google-partner-1440.mp4" media="(min-width: 1700px)" type="video/mp4" />
+    <source data-src="/video/google-partner-1080.mp4" media="(min-width: 1000px)" type="video/mp4" />
     <source data-src="/video/google-partner-720.mp4" type="video/mp4" />
   </video>
   <span class="partner__shade" aria-hidden="true"></span>
@@ -24,10 +25,14 @@ const { effect = 'flap' } = Astro.props;
     var vids = document.querySelectorAll('[data-lazy-video]');
     if (!vids.length) return;
     var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var net = navigator.connection;
+    // Conexão lenta ou economia de dados: mantém só a imagem de capa.
+    if (net && (net.saveData || /(^|slow-)2g|3g/.test(net.effectiveType || ''))) still = true, vids.forEach(function (v) { v.dataset.loaded = 'skip'; });
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         var v = en.target;
         if (en.isIntersecting) {
+          if (v.dataset.loaded === 'skip') return;
           if (!v.dataset.loaded) {
             v.querySelectorAll('source[data-src]').forEach(function (s) { s.src = s.dataset.src; });
             v.load();

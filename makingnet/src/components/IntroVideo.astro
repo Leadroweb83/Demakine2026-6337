@@ -9,6 +9,9 @@
     var skip = false;
     try { skip = sessionStorage.getItem('mk-intro') === '1'; } catch (e) {}
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) skip = true;
+    // Conexão lenta ou economia de dados: vai direto ao site, sem baixar o vídeo.
+    var net = navigator.connection;
+    if (net && (net.saveData || /(^|slow-)2g|3g/.test(net.effectiveType || ''))) skip = true;
     if (/[?&]intro=0/.test(location.search)) skip = true;
     if (/[?&]intro=1/.test(location.search)) skip = false;
     document.documentElement.classList.add(skip ? 'intro-off' : 'intro-on');
@@ -17,7 +20,8 @@
 
 <div class="mkintro" id="intro" role="dialog" aria-label="Introdução" aria-modal="true">
   <video class="mkintro__video" muted playsinline preload="auto" poster="/video/intro-poster.webp" aria-hidden="true" tabindex="-1">
-    <source src="/video/intro.mp4" type="video/mp4" />
+    <source src="/video/intro-480.mp4" media="(max-width: 700px)" type="video/mp4" />
+    <source src="/video/intro-720.mp4" type="video/mp4" />
   </video>
   <span class="mkintro__dark" aria-hidden="true"></span>
   <span class="mkintro__count" aria-hidden="true"></span>
