@@ -11,7 +11,7 @@
  */
 
 import * as React from "react";
-import RotatingCta, { type CtaEffect, type CtaItem } from "@/components/ui/rotating-cta";
+import RotatingCta, { type CtaItem } from "@/components/ui/rotating-cta";
 
 export interface EarthHeroProps {
   /** Título principal da página (h1), discreto, acima das chamadas. */
@@ -24,23 +24,9 @@ export interface EarthHeroProps {
 
 export default function EarthHero({ heading, items, astronaut, planet, space }: EarthHeroProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const [effect, setEffect] = React.useState<CtaEffect>("roll");
   const parallaxRef = React.useRef<HTMLDivElement>(null);
   const planetRef = React.useRef<HTMLDivElement>(null);
   const spaceRef = React.useRef<HTMLDivElement>(null);
-
-  // Pré-visualização de opções pelo link: ?terra=a|b|c  ?orbita=rapida|lenta  ?efeito=flap|roll|fade|blur|type
-  React.useLayoutEffect(() => {
-    const q = new URLSearchParams(window.location.search);
-    const root = rootRef.current;
-    if (!root) return;
-    const size = q.get("terra");
-    const orbit = q.get("orbita");
-    const fx = q.get("efeito") as CtaEffect | null;
-    if (size && "abc".includes(size)) root.dataset.size = size;
-    if (orbit === "rapida" || orbit === "lenta") root.dataset.orbit = orbit;
-    if (fx && ["flap", "roll", "fade", "blur", "type"].includes(fx)) setEffect(fx);
-  }, []);
 
   React.useEffect(() => {
     const root = rootRef.current;
@@ -121,7 +107,7 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
       <style>{`
 .eh-root{position:relative;margin-top:-72px;height:100svh;min-height:640px;max-height:1100px;background:#04060c;overflow:hidden}
 .eh-space{position:absolute;inset:-4%;background:center/cover no-repeat;will-change:transform}
-.eh-planet{--g:min(86svh,56vw);--sx:11.7%;--sy:17.9%;position:absolute;width:var(--g);height:var(--g);left:calc(66% - var(--g) / 2);top:calc(79% - var(--g) / 2);will-change:transform}
+.eh-planet{--g:min(125svh,81vw);--sx:11.7%;--sy:17.9%;position:absolute;width:var(--g);height:var(--g);left:calc(66% - var(--g) / 2);top:calc(79% - var(--g) / 2);will-change:transform}
 .eh-planet>img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;animation:eh-drift 42s ease-in-out infinite alternate;filter:drop-shadow(0 0 60px rgba(60,130,255,.4))}
 .eh-air{position:absolute;inset:-5%;z-index:0;border-radius:50%;background:radial-gradient(closest-side,transparent 86%,rgba(90,160,255,.4) 93%,rgba(50,110,230,.12) 98%,transparent 100%);animation:eh-breathe 9s ease-in-out infinite alternate}
 .eh-sun{position:absolute;z-index:0;left:var(--sx);top:var(--sy);width:min(calc(var(--g) * 1.25),1700px);height:min(calc(var(--g) * 1.25),1700px);translate:-50% -50%;pointer-events:none;
@@ -129,14 +115,6 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
   mix-blend-mode:screen;animation:eh-sun 7s ease-in-out infinite alternate}
 .eh-sun::after{content:"";position:absolute;left:0;right:30%;top:50%;height:4px;translate:0 -50%;border-radius:50%;
   background:linear-gradient(90deg,transparent,rgba(255,235,205,.85) 50%,transparent);filter:blur(2px)}
-@media (min-width:861px){
-  .eh-root[data-size="b"] .eh-planet{--g:min(125svh,81vw)}
-  .eh-root[data-size="c"] .eh-planet{--g:334svh;--sx:14.6%;--sy:14.6%;left:calc(104% - var(--g) / 2);top:calc(166% - var(--g) / 2)}
-}
-.eh-root[data-orbit="rapida"] .eh-orbit{animation-duration:13s}
-.eh-root[data-orbit="rapida"] .eh-spin{animation-duration:9s}
-.eh-root[data-orbit="lenta"] .eh-orbit{animation-duration:48s}
-.eh-root[data-orbit="lenta"] .eh-spin{animation-duration:30s}
 @keyframes eh-sun{from{opacity:.82;scale:.96}to{opacity:1;scale:1.05}}
 @keyframes eh-breathe{from{opacity:.65}to{opacity:1}}
 @keyframes eh-drift{from{transform:rotate(-2.5deg) scale(1)}to{transform:rotate(2.5deg) scale(1.02)}}
@@ -198,7 +176,7 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
         <div className="eh-wrap">
           <div className="eh-copy">
             <h1 className="eh-h1">{heading}</h1>
-            <RotatingCta items={items} effect={effect} as="p" interval={5600} />
+            <RotatingCta items={items} effect="flap" as="p" interval={6200} />
           </div>
         </div>
       </div>
