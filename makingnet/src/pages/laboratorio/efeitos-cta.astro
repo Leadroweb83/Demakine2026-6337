@@ -1,0 +1,26 @@
+---
+// Página de apoio (fora do Google): os cinco efeitos de troca das chamadas, lado a lado, para escolher.
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import RotatingCta, { type CtaEffect } from '@/components/ui/rotating-cta';
+import { chamadasGooglePartner } from '../../data/chamadas';
+const efeitos: { id: CtaEffect; nome: string; texto: string }[] = [
+  { id: 'flap', nome: '1. Letreiro de aeroporto', texto: 'Cada letra gira até parar na certa. É o mais chamativo e o que mais prende o olhar.' },
+  { id: 'roll', nome: '2. Rolo', texto: 'A frase antiga rola para cima e a nova sobe de baixo, como um cilindro.' },
+  { id: 'fade', nome: '3. Dissolver', texto: 'Troca suave com leve deslocamento. O mais discreto e elegante.' },
+  { id: 'blur', nome: '4. Foco', texto: 'A frase desfoca, troca e volta ao foco, como lente de câmera.' },
+  { id: 'type', nome: '5. Máquina de escrever', texto: 'Apaga e redigita letra por letra, com cursor piscando.' },
+];
+---
+<Base title="Efeitos das chamadas | Making" description="Demonstração dos efeitos de troca das chamadas da home." path="/laboratorio/efeitos-cta/" noindex>
+  <PageHero eyebrow="Laboratório" title="Efeitos das chamadas" lead="As mesmas seis chamadas do Google Partner em cinco efeitos de troca. Escolha um e eu aplico na seção da home." />
+  {efeitos.map((e, i) => (
+    <section class={`section ${i % 2 ? 'section--surface' : ''}`}>
+      <div class="wrap">
+        <span class="eyebrow">{e.nome}</span>
+        <p class="lead" style="margin-bottom:36px">{e.texto}</p>
+        <RotatingCta client:visible items={chamadasGooglePartner} effect={e.id} columns={15} interval={4200} />
+      </div>
+    </section>
+  ))}
+</Base>

@@ -11,7 +11,7 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      filter: (page) => !page.includes('/obrigado/'),
+      filter: (page) => !page.includes('/obrigado/') && !page.includes('/laboratorio/'),
     }),
   ],
   vite: { plugins: [tailwindcss()] },

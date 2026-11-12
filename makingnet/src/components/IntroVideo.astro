@@ -1,0 +1,189 @@
+---
+// Pré-site da home: contagem 3, 2, 1 em letras gigantes, vídeo do lançamento começando no "2",
+// ganhando nitidez, sem som, e escurecendo nos últimos 5 segundos até revelar o site.
+// "Pular introdução" fica visível desde o primeiro instante. Aparece uma vez por sessão do navegador.
+---
+<script is:inline>
+  // Antes de pintar: decide se a introdução roda (primeira visita da sessão e sem "reduzir movimento").
+  (function () {
+    var skip = false;
+    try { skip = sessionStorage.getItem('mk-intro') === '1'; } catch (e) {}
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) skip = true;
+    if (/[?&]intro=0/.test(location.search)) skip = true;
+    if (/[?&]intro=1/.test(location.search)) skip = false;
+    document.documentElement.classList.add(skip ? 'intro-off' : 'intro-on');
+  })();
+</script>
+
+<div class="mkintro" id="intro" role="dialog" aria-label="Introdução" aria-modal="true">
+  <video class="mkintro__video" muted playsinline preload="auto" poster="/video/intro-poster.webp" aria-hidden="true" tabindex="-1">
+    <source src="/video/intro.mp4" type="video/mp4" />
+  </video>
+  <span class="mkintro__dark" aria-hidden="true"></span>
+  <span class="mkintro__count" aria-hidden="true"></span>
+  <button class="mkintro__skip" type="button">Pular introdução <span aria-hidden="true">→</span></button>
+</div>
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    var el = document.getElementById('intro');
+    if (!el) return;
+    if (!root.classList.contains('intro-on')) { el.remove(); return; }
+    var video = el.querySelector('video');
+    var count = el.querySelector('.mkintro__count');
+    var dark = el.querySelector('.mkintro__dark');
+    var timers = [];
+    var done = false;
+    var FADE = 5; // segundos finais em que o vídeo escurece
+
+    function finish() {
+      if (done) return;
+      done = true;
+      timers.forEach(clearTimeout);
+      try { sessionStorage.setItem('mk-intro', '1'); } catch (e) {}
+      try { video.pause(); } catch (e) {}
+      el.classList.add('is-leaving');
+      root.classList.remove('intro-on');
+      root.classList.add('intro-off');
+      window.dispatchEvent(new Event('mk:intro-end'));
+      setTimeout(function () { el.remove(); }, 900);
+    }
+    function show(n) {
+      count.textContent = n;
+      count.classList.remove('is-pop');
+      void count.offsetWidth;
+      count.classList.add('is-pop');
+    }
+
+    el.querySelector('.mkintro__skip').addEventListener('click', finish);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') finish(); });
+
+    show('3');
+    timers.push(setTimeout(function () {
+      show('2');
+      el.classList.add('is-playing'); // o vídeo entra desfocado e vai ganhando nitidez
+      var p = video.play();
+      if (p && p.catch) p.catch(function () { finish(); });
+    }, 1000));
+    timers.push(setTimeout(function () { show('1'); }, 2000));
+    timers.push(setTimeout(function () { count.classList.remove('is-pop'); count.classList.add('is-gone'); }, 3000));
+
+    video.addEventListener('timeupdate', function () {
+      var d = video.duration;
+      if (!d || !isFinite(d)) return;
+      var left = d - video.currentTime;
+      dark.style.opacity = left < FADE ? String(Math.min(1, 1 - left / FADE)) : '0';
+    });
+    video.addEventListener('ended', finish);
+    video.addEventListener('error', finish);
+    // Rede lenta: se o vídeo não começar em 8 segundos, segue para o site.
+    timers.push(setTimeout(function () { if (video.currentTime < 0.1) finish(); }, 9000));
+  })();
+</script>
+
+<style is:global>
+  .intro-off .mkintro {
+    display: none;
+  }
+  .intro-on,
+  .intro-on body {
+    overflow: hidden;
+  }
+  .mkintro {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #000;
+    display: grid;
+    place-items: center;
+    transition: opacity 0.9s ease;
+  }
+  .mkintro.is-leaving {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .mkintro__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    filter: blur(28px) brightness(0.6);
+    transform: scale(1.08);
+    transition: opacity 1.4s ease, filter 2.6s cubic-bezier(0.22, 0.61, 0.36, 1), transform 2.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .mkintro.is-playing .mkintro__video {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+    transform: none;
+  }
+  .mkintro__dark {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    transition: opacity 0.3s linear;
+  }
+  .mkintro__count {
+    position: relative;
+    font-family: 'Anton', 'Arial Narrow', Impact, sans-serif;
+    font-size: min(78vw, 92vh);
+    line-height: 0.8;
+    color: #fff;
+    text-shadow: 0 0 80px rgba(0, 0, 0, 0.55);
+    user-select: none;
+    transition: opacity 0.6s ease;
+  }
+  .mkintro__count.is-pop {
+    animation: intro-pop 1s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .mkintro__count.is-gone {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  @keyframes intro-pop {
+    0% {
+      opacity: 0;
+      transform: scale(1.5);
+      filter: blur(14px);
+    }
+    22% {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+    80% {
+      opacity: 1;
+      transform: scale(0.97);
+    }
+    100% {
+      opacity: 0.85;
+      transform: scale(0.94);
+    }
+  }
+  .mkintro__skip {
+    position: absolute;
+    top: max(18px, env(safe-area-inset-top));
+    right: max(18px, env(safe-area-inset-right));
+    z-index: 2;
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .mkintro__skip:hover {
+    background: #fff;
+    color: #000;
+  }
+</style>

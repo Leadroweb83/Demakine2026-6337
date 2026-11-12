@@ -1,0 +1,89 @@
+---
+// Quarta seção da home: vídeo de fundo em laço (alta definição no computador) e chamadas do Google Partner à esquerda.
+import RotatingCta, { type CtaEffect } from '@/components/ui/rotating-cta';
+import { chamadasGooglePartner } from '../data/chamadas';
+interface Props { effect?: CtaEffect }
+const { effect = 'flap' } = Astro.props;
+---
+<section class="partner" aria-label="Google Partner">
+  <video class="partner__video" muted loop playsinline preload="none" poster="/video/google-partner-poster.webp" aria-hidden="true" tabindex="-1" data-lazy-video>
+    <source data-src="/video/google-partner-1440.mp4" media="(min-width: 1000px)" type="video/mp4" />
+    <source data-src="/video/google-partner-720.mp4" type="video/mp4" />
+  </video>
+  <span class="partner__shade" aria-hidden="true"></span>
+  <div class="wrap partner__in">
+    <div class="partner__copy">
+      <span class="eyebrow">Agência Google Partner</span>
+      <RotatingCta client:visible items={chamadasGooglePartner} effect={effect} columns={15} interval={6000} />
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var vids = document.querySelectorAll('[data-lazy-video]');
+    if (!vids.length) return;
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var v = en.target;
+        if (en.isIntersecting) {
+          if (!v.dataset.loaded) {
+            v.querySelectorAll('source[data-src]').forEach(function (s) { s.src = s.dataset.src; });
+            v.load();
+            v.dataset.loaded = '1';
+          }
+          if (!still) v.play().catch(function () {});
+        } else v.pause();
+      });
+    }, { rootMargin: '300px 0px' });
+    vids.forEach(function (v) { io.observe(v); });
+  })();
+</script>
+
+<style>
+  .partner {
+    position: relative;
+    isolation: isolate;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: #000;
+  }
+  .partner__video {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 72% 50%;
+  }
+  .partner__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(3, 6, 10, 0.9) 0%, rgba(3, 6, 10, 0.72) 34%, rgba(3, 6, 10, 0.1) 62%, transparent 100%);
+  }
+  .partner__in {
+    padding-block: clamp(72px, 10vw, 128px);
+  }
+  .partner__copy {
+    max-width: min(760px, 60%);
+  }
+  @media (max-width: 860px) {
+    .partner {
+      align-items: flex-end;
+    }
+    .partner__video {
+      object-position: 78% 50%;
+    }
+    .partner__shade {
+      background: linear-gradient(0deg, rgba(3, 6, 10, 0.94) 0%, rgba(3, 6, 10, 0.78) 46%, rgba(3, 6, 10, 0.05) 78%);
+    }
+    .partner__copy {
+      max-width: none;
+    }
+  }
+</style>

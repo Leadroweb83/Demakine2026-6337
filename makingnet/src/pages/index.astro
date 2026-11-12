@@ -3,6 +3,10 @@ import Base from '../layouts/Base.astro';
 import Cta from '../components/Cta.astro';
 import Faq from '../components/Faq.astro';
 import ServiceShowcaseHero from '@/components/ui/service-showcase-hero';
+import EarthHero from '@/components/ui/earth-hero';
+import IntroVideo from '../components/IntroVideo.astro';
+import PartnerSection from '../components/PartnerSection.astro';
+import { chamadasHero } from '../data/chamadas';
 import PerspectiveTunnelHero from '@/components/ui/perspective-tunnel-hero';
 import { site, yearsInBusiness, whatsappLink } from '../data/site';
 import { areas, sistemas } from '../data/servicos';
@@ -78,14 +82,25 @@ const tunnel = portfolio.slice(0, 10).map((p) => ({ src: p.img, title: p.name, k
 ---
 
 <Base title={title} description={description} path="/" schema={schema}>
-  <ServiceShowcaseHero
+  <IntroVideo />
+
+  <EarthHero
     client:load
+    heading={`Making · Marketing digital, TI e sistemas desde ${site.foundingYear}`}
+    items={chamadasHero}
+    astronaut="/img/tema/astronauta.webp"
+    textureUrl="/img/tema/terra-textura.jpg"
+  />
+
+  <ServiceShowcaseHero
+    client:visible
+    as="h2"
+    first={false}
     variants={variants}
-    eyebrow={`Marketing digital · TI · Sistemas · desde ${site.foundingYear}`}
+    eyebrow="Três frentes, um parceiro"
     description="A Making usa a internet como principal fonte de aquisição de clientes para o seu negócio e cuida da tecnologia que mantém sua empresa funcionando."
     primary={{ label: 'Pedir orçamento', href: '/orcamento/' }}
     secondary={{ label: 'Falar no WhatsApp', href: whatsappLink() }}
-    backdrop="/img/tema/astronauta-terra.webp"
   >
     <Fragment slot="title">Ideias em <em>resultados extraordinários</em></Fragment>
   </ServiceShowcaseHero>
@@ -111,6 +126,8 @@ const tunnel = portfolio.slice(0, 10).map((p) => ({ src: p.img, title: p.name, k
       </div>
     </div>
   </section>
+
+  <PartnerSection />
 
   <PerspectiveTunnelHero
     client:visible

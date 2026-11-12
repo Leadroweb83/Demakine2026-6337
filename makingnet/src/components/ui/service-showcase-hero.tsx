@@ -42,6 +42,10 @@ export type ServiceShowcaseHeroProps = {
   backdrop?: string;
   /** Troca automática em milissegundos; 0 desliga. Pausa quando o visitante interage. */
   autoplay?: number;
+  /** Use "h2" quando a seção não é a primeira da página. */
+  as?: "h1" | "h2";
+  /** Primeira seção da página: sobe por baixo do cabeçalho fixo. */
+  first?: boolean;
 };
 
 const prefersReduced = () =>
@@ -56,6 +60,8 @@ export default function ServiceShowcaseHero({
   secondary,
   backdrop,
   autoplay = 6000,
+  as: Heading = "h1",
+  first = true,
 }: ServiceShowcaseHeroProps) {
   const [active, setActive] = React.useState(0);
   const shown = React.useRef(0);
@@ -202,12 +208,14 @@ export default function ServiceShowcaseHero({
     <section
       ref={rootRef}
       className="ssh-root"
+      data-first={first}
       onPointerDown={() => (touched.current = true)}
       onFocusCapture={() => (touched.current = true)}
     >
       <style>{`
 .ssh-root{position:relative;isolation:isolate;overflow:hidden;min-height:100svh;display:flex;align-items:center;
-  background:var(--color-background);color:var(--color-foreground);container-type:inline-size;margin-top:-72px;padding-top:72px}
+  background:var(--color-background);color:var(--color-foreground);container-type:inline-size}
+.ssh-root[data-first="true"]{margin-top:-72px;padding-top:72px}
 .ssh-backdrop{position:absolute;inset:0;z-index:-3;background-size:cover;background-position:50% 22%;opacity:.85}
 .ssh-shade{position:absolute;inset:0;z-index:-2;
   background:linear-gradient(180deg,rgba(5,7,10,.5) 0%,rgba(5,7,10,.42) 50%,var(--color-background) 100%)}
@@ -279,9 +287,9 @@ export default function ServiceShowcaseHero({
               {eyebrow}
             </p>
           )}
-          <h1 className="ssh-title" data-in>
+          <Heading className="ssh-title" data-in>
             {title}
-          </h1>
+          </Heading>
           {description && (
             <p className="ssh-desc" data-in>
               {description}
