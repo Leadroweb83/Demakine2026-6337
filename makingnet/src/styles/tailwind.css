@@ -1,0 +1,15 @@
+/* Tailwind v4 sem o preflight: o reset e os estilos base do site ficam em global.css (camada base),
+   para que as classes utilitárias dos componentes React tenham prioridade. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import './global.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@theme {
+  --font-display: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --color-background: #05070a;
+  --color-foreground: #e9eef1;
+  --color-muted-foreground: #9fb0ba;
+  --color-brand: #20c4f4;
+}

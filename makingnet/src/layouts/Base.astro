@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css';
+import '../styles/tailwind.css';
 import { site, whatsappLink } from '../data/site';
 import { areas, sistemas } from '../data/servicos';
 
@@ -133,9 +133,10 @@ const here = (href: string) => (path === href ? 'page' : undefined);
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
     <a class="skip" href="#conteudo">Ir para o conteúdo</a>
@@ -228,6 +229,21 @@ const here = (href: string) => (path === href ? 'page' : undefined);
     </a>
 
     <script is:inline>
+      (function () {
+        var els = document.querySelectorAll('[data-reveal]');
+        if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('is-in'); }); }
+        else {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en, i) {
+              if (!en.isIntersecting) return;
+              en.target.style.setProperty('--i', i);
+              en.target.classList.add('is-in');
+              io.unobserve(en.target);
+            });
+          }, { rootMargin: '0px 0px -8% 0px' });
+          els.forEach(function (e) { io.observe(e); });
+        }
+      })();
       (function () {
         var t = document.querySelector('.nav__toggle');
         var n = document.getElementById('menu');

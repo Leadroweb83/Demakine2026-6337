@@ -2,21 +2,20 @@
 import { whatsappLink } from '../data/site';
 interface Props { title?: string; text?: string; button?: string; message?: string }
 const {
-  title = 'Vamos conversar sobre o seu projeto?',
+  title = 'Pronto para decolar?',
   text = 'Conte o que a sua empresa precisa. Nossa equipe analisa o cenário e retorna com uma proposta sob medida.',
   button = 'Pedir orçamento',
   message,
 } = Astro.props;
 ---
-<section class="section">
+<section class="section section--photo cta" style="background-image:url('/img/tema/foguete-arco.webp')">
   <div class="wrap">
-    <div class="cta">
-      <h2>{title}</h2>
-      <p>{text}</p>
-      <div class="actions">
-        <a class="btn btn--primary" href="/orcamento/">{button}</a>
-        <a class="btn btn--ghost" href={whatsappLink(message)} target="_blank" rel="noopener">Falar no WhatsApp</a>
-      </div>
+    <span class="eyebrow" data-reveal>Próximo passo</span>
+    <h2 data-reveal>{title}</h2>
+    <p class="lead" data-reveal>{text}</p>
+    <div class="actions" data-reveal>
+      <a class="btn btn--primary" href="/orcamento/">{button}</a>
+      <a class="btn btn--ghost" href={whatsappLink(message)} target="_blank" rel="noopener">Falar no WhatsApp</a>
     </div>
   </div>
 </section>
