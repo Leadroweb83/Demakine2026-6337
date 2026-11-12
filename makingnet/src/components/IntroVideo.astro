@@ -71,7 +71,12 @@
       if (p && p.catch) p.catch(function () { finish(); });
     }, 1000));
     timers.push(setTimeout(function () { show('1'); }, 2000));
-    timers.push(setTimeout(function () { count.classList.remove('is-pop'); count.classList.add('is-gone'); }, 3000));
+    function hideCount() { count.classList.remove('is-pop'); count.classList.add('is-gone'); }
+    // Em rede lenta, o número 1 fica na tela até o vídeo começar a tocar (sem tela preta no meio).
+    timers.push(setTimeout(function () {
+      if (!video.paused && video.currentTime > 0.1) hideCount();
+      else video.addEventListener('playing', hideCount, { once: true });
+    }, 3000));
 
     video.addEventListener('timeupdate', function () {
       var d = video.duration;

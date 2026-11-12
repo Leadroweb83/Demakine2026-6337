@@ -18,11 +18,13 @@ export interface EarthHeroProps {
   heading: string;
   items: CtaItem[];
   astronaut: string;
+  astronautSmall?: string;
   planet: string;
+  planetSizes?: { small: string; medium: string };
   space: string;
 }
 
-export default function EarthHero({ heading, items, astronaut, planet, space }: EarthHeroProps) {
+export default function EarthHero({ heading, items, astronaut, astronautSmall, planet, planetSizes, space }: EarthHeroProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const parallaxRef = React.useRef<HTMLDivElement>(null);
   const planetRef = React.useRef<HTMLDivElement>(null);
@@ -162,13 +164,23 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
       <div className="eh-planet" ref={planetRef} aria-hidden="true">
         <span className="eh-sun" />
         <span className="eh-air" />
-        <img src={planet} alt="" width={2000} height={2001} fetchPriority="high" decoding="async" draggable={false} />
+        <img
+          src={planet}
+          srcSet={planetSizes ? `${planetSizes.small} 900w, ${planetSizes.medium} 1500w, ${planet} 2000w` : undefined}
+          sizes="(max-width: 860px) 112vw, min(125vh, 81vw)"
+          alt=""
+          width={2000}
+          height={2001}
+          fetchPriority="high"
+          decoding="async"
+          draggable={false}
+        />
       </div>
       <div className="eh-shade" aria-hidden="true" />
       <div className="eh-astro" ref={parallaxRef} aria-hidden="true">
         <div className="eh-orbit">
           <div className="eh-spin">
-            <img src={astronaut} alt="" width={900} height={1393} fetchPriority="high" decoding="async" draggable={false} />
+            <img src={astronaut} srcSet={astronautSmall ? `${astronautSmall} 560w, ${astronaut} 900w` : undefined} sizes="(max-width: 860px) 60vw, min(35vw, 52vh)" alt="" width={900} height={1393} fetchPriority="high" decoding="async" draggable={false} />
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ interface Props { effect?: CtaEffect }
 const { effect = 'flap' } = Astro.props;
 ---
 <section class="partner" aria-label="Google Partner">
-  <video class="partner__video" muted loop playsinline preload="none" poster="/video/google-partner-poster.webp" aria-hidden="true" tabindex="-1" data-lazy-video>
+  <video class="partner__video" muted loop playsinline preload="none" data-poster="/video/google-partner-poster.webp" aria-hidden="true" tabindex="-1" data-lazy-video>
     <source data-src="/video/google-partner-1440.mp4" media="(min-width: 1700px)" type="video/mp4" />
     <source data-src="/video/google-partner-1080.mp4" media="(min-width: 1000px)" type="video/mp4" />
     <source data-src="/video/google-partner-720.mp4" type="video/mp4" />
@@ -31,6 +31,7 @@ const { effect = 'flap' } = Astro.props;
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         var v = en.target;
+        if (en.isIntersecting && v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
         if (en.isIntersecting) {
           if (v.dataset.loaded === 'skip') return;
           if (!v.dataset.loaded) {
@@ -41,7 +42,7 @@ const { effect = 'flap' } = Astro.props;
           if (!still) v.play().catch(function () {});
         } else v.pause();
       });
-    }, { rootMargin: '300px 0px' });
+    }, { rootMargin: '600px 0px' });
     vids.forEach(function (v) { io.observe(v); });
   })();
 </script>
