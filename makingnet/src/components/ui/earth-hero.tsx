@@ -76,12 +76,18 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
       <style>{`
 .eh-root{position:relative;margin-top:-72px;height:100svh;min-height:640px;max-height:1100px;background:#04060c;overflow:hidden}
 .eh-space{position:absolute;inset:-4%;background:center/cover no-repeat;will-change:transform}
-.eh-planet{--g:min(86svh,56vw);position:absolute;right:calc(var(--g) * -.08);top:50%;width:var(--g);height:var(--g);margin-top:calc(var(--g) * -.47);will-change:transform}
-.eh-planet::before{content:"";position:absolute;inset:-9%;border-radius:50%;background:radial-gradient(closest-side,rgba(70,150,255,.42),rgba(40,100,220,.14) 62%,transparent 100%);animation:eh-breathe 9s ease-in-out infinite alternate}
-.eh-planet img{position:relative;display:block;width:100%;height:100%;object-fit:contain;animation:eh-drift 42s ease-in-out infinite alternate;filter:drop-shadow(0 0 40px rgba(60,130,255,.35))}
-@keyframes eh-breathe{from{opacity:.7;transform:scale(.97)}to{opacity:1;transform:scale(1.03)}}
-@keyframes eh-drift{from{transform:rotate(-2.5deg) scale(1)}to{transform:rotate(2.5deg) scale(1.025)}}
-.eh-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,4,9,.55) 0%,rgba(2,4,9,.2) 42%,transparent 62%),
+.eh-planet{--g:min(172svh,112vw);--sx:17.5%;--sy:12%;position:absolute;width:var(--g);height:var(--g);left:calc(66% - var(--g) / 2);top:calc(79% - var(--g) / 2);will-change:transform}
+.eh-planet>img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;animation:eh-drift 42s ease-in-out infinite alternate;filter:drop-shadow(0 0 60px rgba(60,130,255,.4))}
+.eh-air{position:absolute;inset:-5%;z-index:0;border-radius:50%;background:radial-gradient(closest-side,transparent 86%,rgba(90,160,255,.4) 93%,rgba(50,110,230,.12) 98%,transparent 100%);animation:eh-breathe 9s ease-in-out infinite alternate}
+.eh-sun{position:absolute;z-index:0;left:var(--sx);top:var(--sy);width:calc(var(--g) * 1.25);height:calc(var(--g) * 1.25);translate:-50% -50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,248,230,1) 0%,rgba(255,214,160,.92) 6%,rgba(255,160,105,.62) 15%,rgba(226,92,96,.38) 30%,rgba(130,70,200,.2) 52%,rgba(60,50,160,.08) 76%,transparent 100%);
+  mix-blend-mode:screen;animation:eh-sun 7s ease-in-out infinite alternate}
+.eh-sun::after{content:"";position:absolute;left:0;right:30%;top:50%;height:4px;translate:0 -50%;border-radius:50%;
+  background:linear-gradient(90deg,transparent,rgba(255,235,205,.85) 50%,transparent);filter:blur(2px)}
+@keyframes eh-sun{from{opacity:.82;scale:.96}to{opacity:1;scale:1.05}}
+@keyframes eh-breathe{from{opacity:.65}to{opacity:1}}
+@keyframes eh-drift{from{transform:rotate(-2.5deg) scale(1)}to{transform:rotate(2.5deg) scale(1.02)}}
+.eh-shade{position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 20% 54%,rgba(2,4,9,.68) 0%,rgba(2,4,9,.38) 52%,transparent 100%),
   linear-gradient(0deg,var(--color-background) 0%,transparent 10%)}
 .eh-copy{text-shadow:0 2px 24px rgba(0,0,0,.55)}
 .eh-body{position:absolute;inset:0;display:flex;align-items:center}
@@ -114,16 +120,18 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
   .eh-wrap{padding-bottom:84px}
   .eh-copy{max-width:none}
   .eh-astro{--w:min(58vw,300px);right:-4%;top:10%;margin-top:0;width:var(--w)}
-  .eh-planet{--g:112vw;right:-34vw;top:12%;margin-top:0}
-  .eh-shade{background:linear-gradient(0deg,rgba(2,4,9,.78) 0%,rgba(2,4,9,.4) 46%,transparent 74%)}
+  .eh-planet{--g:224vw;--sx:24%;--sy:9%;left:calc(60% - var(--g) / 2);top:calc(30% + 4px)}
+  .eh-shade{background:linear-gradient(0deg,rgba(2,4,9,.88) 0%,rgba(2,4,9,.62) 40%,rgba(2,4,9,.12) 66%,transparent 80%)}
   .eh-scroll{display:none}
 }
-@media (prefers-reduced-motion:reduce){.eh-orbit,.eh-spin,.eh-planet img,.eh-planet::before{animation:none}}
+@media (prefers-reduced-motion:reduce){.eh-orbit,.eh-spin,.eh-planet>img,.eh-air,.eh-sun{animation:none}}
 `}</style>
 
       <div className="eh-space" ref={spaceRef} style={{ backgroundImage: `url("${space}")` }} aria-hidden="true" />
       <div className="eh-planet" ref={planetRef} aria-hidden="true">
-        <img src={planet} alt="" width={1500} height={1501} fetchPriority="high" decoding="async" draggable={false} />
+        <span className="eh-sun" />
+        <span className="eh-air" />
+        <img src={planet} alt="" width={2000} height={2001} fetchPriority="high" decoding="async" draggable={false} />
       </div>
       <div className="eh-shade" aria-hidden="true" />
       <div className="eh-astro" ref={parallaxRef} aria-hidden="true">
