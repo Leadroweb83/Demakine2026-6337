@@ -11,7 +11,7 @@
  */
 
 import * as React from "react";
-import RotatingCta, { type CtaItem } from "@/components/ui/rotating-cta";
+import RotatingCta, { type CtaEffect, type CtaItem } from "@/components/ui/rotating-cta";
 
 export interface EarthHeroProps {
   /** Título principal da página (h1), discreto, acima das chamadas. */
@@ -24,9 +24,23 @@ export interface EarthHeroProps {
 
 export default function EarthHero({ heading, items, astronaut, planet, space }: EarthHeroProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const [effect, setEffect] = React.useState<CtaEffect>("roll");
   const parallaxRef = React.useRef<HTMLDivElement>(null);
   const planetRef = React.useRef<HTMLDivElement>(null);
   const spaceRef = React.useRef<HTMLDivElement>(null);
+
+  // Pré-visualização de opções pelo link: ?terra=a|b|c  ?orbita=rapida|lenta  ?efeito=flap|roll|fade|blur|type
+  React.useLayoutEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const root = rootRef.current;
+    if (!root) return;
+    const size = q.get("terra");
+    const orbit = q.get("orbita");
+    const fx = q.get("efeito") as CtaEffect | null;
+    if (size && "abc".includes(size)) root.dataset.size = size;
+    if (orbit === "rapida" || orbit === "lenta") root.dataset.orbit = orbit;
+    if (fx && ["flap", "roll", "fade", "blur", "type"].includes(fx)) setEffect(fx);
+  }, []);
 
   React.useEffect(() => {
     const root = rootRef.current;
@@ -42,7 +56,7 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
       cur.x += (goal.x - cur.x) * 0.06;
       cur.y += (goal.y - cur.y) * 0.06;
       cur.s += (goal.s - cur.s) * 0.1;
-      cur.a += (goal.a - cur.a) * 0.09;
+      cur.a += Math.atan2(Math.sin(goal.a - cur.a), Math.cos(goal.a - cur.a)) * 0.09;
       // O foco de luz fica sempre na borda do planeta, na direção do ponteiro.
       globe.style.setProperty("--sx", (50 + 50 * Math.cos(cur.a)).toFixed(2) + "%");
       globe.style.setProperty("--sy", (50 + 50 * Math.sin(cur.a)).toFixed(2) + "%");
@@ -55,15 +69,37 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
     const kick = () => {
       if (!frame) frame = requestAnimationFrame(tick);
     };
+    // Trecho da borda do planeta que está de fato na tela: a luz só anda por ele.
+    const nearestVisible = (want: number) => {
+      const box = globe.getBoundingClientRect();
+      const r = root.getBoundingClientRect();
+      const cx = box.left + box.width / 2;
+      const cy = box.top + box.height / 2;
+      const R = box.width / 2;
+      let best = cur.a;
+      let bestD = Infinity;
+      for (let i = 0; i < 144; i++) {
+        const a = -Math.PI + (i / 144) * Math.PI * 2;
+        const x = cx + R * Math.cos(a);
+        const y = cy + R * Math.sin(a);
+        if (x < r.left + 40 || x > r.right - 40 || y < r.top + 110 || y > r.bottom - 70) continue;
+        const d = Math.abs(Math.atan2(Math.sin(a - want), Math.cos(a - want)));
+        if (d < bestD) {
+          bestD = d;
+          best = a;
+        }
+      }
+      return best;
+    };
+    goal.a = cur.a = nearestVisible((-140 * Math.PI) / 180);
+    kick();
     const onMove = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
       goal.x = (e.clientX / window.innerWidth - 0.5) * 2;
       goal.y = (e.clientY / window.innerHeight - 0.5) * 2;
       const box = globe.getBoundingClientRect();
-      let ang = Math.atan2(e.clientY - (box.top + box.height / 2), e.clientX - (box.left + box.width / 2));
-      // Só o arco superior da borda aparece na tela: ponteiro abaixo do centro vai para a ponta mais próxima.
-      if (ang > 0) ang = ang > Math.PI / 2 ? -Math.PI + 0.08 : -0.08;
-      goal.a = Math.max(-Math.PI + 0.08, Math.min(-0.08, ang));
+      const ang = Math.atan2(e.clientY - (box.top + box.height / 2), e.clientX - (box.left + box.width / 2));
+      goal.a = nearestVisible(ang);
       kick();
     };
     const onScroll = () => {
@@ -88,11 +124,19 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
 .eh-planet{--g:min(86svh,56vw);--sx:11.7%;--sy:17.9%;position:absolute;width:var(--g);height:var(--g);left:calc(66% - var(--g) / 2);top:calc(79% - var(--g) / 2);will-change:transform}
 .eh-planet>img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;animation:eh-drift 42s ease-in-out infinite alternate;filter:drop-shadow(0 0 60px rgba(60,130,255,.4))}
 .eh-air{position:absolute;inset:-5%;z-index:0;border-radius:50%;background:radial-gradient(closest-side,transparent 86%,rgba(90,160,255,.4) 93%,rgba(50,110,230,.12) 98%,transparent 100%);animation:eh-breathe 9s ease-in-out infinite alternate}
-.eh-sun{position:absolute;z-index:0;left:var(--sx);top:var(--sy);width:calc(var(--g) * 1.25);height:calc(var(--g) * 1.25);translate:-50% -50%;pointer-events:none;
+.eh-sun{position:absolute;z-index:0;left:var(--sx);top:var(--sy);width:min(calc(var(--g) * 1.25),1700px);height:min(calc(var(--g) * 1.25),1700px);translate:-50% -50%;pointer-events:none;
   background:radial-gradient(closest-side,rgba(255,248,230,1) 0%,rgba(255,214,160,.92) 6%,rgba(255,160,105,.62) 15%,rgba(226,92,96,.38) 30%,rgba(130,70,200,.2) 52%,rgba(60,50,160,.08) 76%,transparent 100%);
   mix-blend-mode:screen;animation:eh-sun 7s ease-in-out infinite alternate}
 .eh-sun::after{content:"";position:absolute;left:0;right:30%;top:50%;height:4px;translate:0 -50%;border-radius:50%;
   background:linear-gradient(90deg,transparent,rgba(255,235,205,.85) 50%,transparent);filter:blur(2px)}
+@media (min-width:861px){
+  .eh-root[data-size="b"] .eh-planet{--g:min(125svh,81vw)}
+  .eh-root[data-size="c"] .eh-planet{--g:334svh;--sx:14.6%;--sy:14.6%;left:calc(104% - var(--g) / 2);top:calc(166% - var(--g) / 2)}
+}
+.eh-root[data-orbit="rapida"] .eh-orbit{animation-duration:13s}
+.eh-root[data-orbit="rapida"] .eh-spin{animation-duration:9s}
+.eh-root[data-orbit="lenta"] .eh-orbit{animation-duration:48s}
+.eh-root[data-orbit="lenta"] .eh-spin{animation-duration:30s}
 @keyframes eh-sun{from{opacity:.82;scale:.96}to{opacity:1;scale:1.05}}
 @keyframes eh-breathe{from{opacity:.65}to{opacity:1}}
 @keyframes eh-drift{from{transform:rotate(-2.5deg) scale(1)}to{transform:rotate(2.5deg) scale(1.02)}}
@@ -154,7 +198,7 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
         <div className="eh-wrap">
           <div className="eh-copy">
             <h1 className="eh-h1">{heading}</h1>
-            <RotatingCta items={items} effect="roll" as="p" interval={5600} />
+            <RotatingCta items={items} effect={effect} as="p" interval={5600} />
           </div>
         </div>
       </div>
