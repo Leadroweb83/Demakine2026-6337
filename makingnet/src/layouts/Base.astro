@@ -17,9 +17,10 @@ interface Props {
   schema?: Record<string, unknown>[];
   ogImage?: string;
   noindex?: boolean;
+  ogType?: 'website' | 'article';
 }
 
-const { title, description, path, crumbs = [], schema = [], ogImage = '/img/og-making.jpg', noindex = false } = Astro.props;
+const { title, description, path, crumbs = [], schema = [], ogImage = '/img/og-making.jpg', noindex = false, ogType = 'website' } = Astro.props;
 const canonical = new URL(path, site.url).href;
 const ogUrl = new URL(ogImage, site.url).href;
 
@@ -115,7 +116,7 @@ const here = (href: string) => (path === href ? 'page' : undefined);
     <meta name="geo.region" content="BR-SP" />
     <meta name="geo.placename" content={site.address.city} />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
@@ -166,6 +167,7 @@ const here = (href: string) => (path === href ? 'page' : undefined);
               ))
             }
             <li><a href="/nossos-servicos/sistemas/" aria-current={here('/nossos-servicos/sistemas/')}>{sistemas.name}</a></li>
+            <li><a href="/blog/" aria-current={path.startsWith('/blog/') || path.startsWith('/categoria/') ? 'page' : undefined}>Blog</a></li>
             <li><a href="/fale-conosco/" aria-current={here('/fale-conosco/')}>Contato</a></li>
           </ul>
         </nav>
@@ -219,7 +221,7 @@ const here = (href: string) => (path === href ? 'page' : undefined);
         </div>
         <div class="footer__bottom">
           <span>{site.name} · CNPJ {site.cnpj} · © {new Date().getFullYear()}</span>
-          <span><a href="/sobre/">Sobre</a> · <a href="/trabalhe-conosco/">Trabalhe conosco</a> · <a href="/politica-de-privacidade/">Política de Privacidade</a></span>
+          <span><a href="/sobre/">Sobre</a> · <a href="/blog/">Blog</a> · <a href="/trabalhe-conosco/">Trabalhe conosco</a> · <a href="/politica-de-privacidade/">Política de Privacidade</a></span>
         </div>
       </div>
     </footer>

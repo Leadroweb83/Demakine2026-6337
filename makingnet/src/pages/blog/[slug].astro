@@ -1,0 +1,81 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import Cta from '../../components/Cta.astro';
+import { posts, related, formatDate, categoryName, mainCategory, type Post } from '../../lib/blog';
+import { site } from '../../data/site';
+export function getStaticPaths() {
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+const { post } = Astro.props as { post: Post };
+const path = `/blog/${post.slug}/`;
+const cat = mainCategory(post);
+const crumbs = [
+  { name: 'Blog', href: '/blog/' },
+  ...(cat ? [{ name: categoryName(cat).replace(/\s*\(.*\)/, ''), href: `/categoria/${cat}/` }] : []),
+  { name: post.title, href: path },
+];
+const isOrg = post.author === site.name;
+const iso = (d: string) => `${d}-03:00`;
+const schema = [
+  {
+    '@type': 'BlogPosting',
+    '@id': `${site.url}${path}#article`,
+    headline: post.title,
+    description: post.description,
+    datePublished: iso(post.date),
+    dateModified: iso(post.modified),
+    inLanguage: 'pt-BR',
+    wordCount: post.words,
+    mainEntityOfPage: { '@id': `${site.url}${path}#webpage` },
+    image: post.cover ? [`${site.url}${post.cover.src}`] : undefined,
+    articleSection: post.categories.map(categoryName),
+    author: isOrg ? { '@id': `${site.url}/#organization` } : { '@type': 'Person', name: post.author, worksFor: { '@id': `${site.url}/#organization` } },
+    publisher: { '@id': `${site.url}/#organization` },
+  },
+  ...post.schema,
+];
+const veja = related(post);
+const updated = post.modified.slice(0, 10) !== post.date.slice(0, 10);
+---
+<Base title={post.seoTitle} description={post.description} path={path} crumbs={crumbs} schema={schema} ogImage={post.cover?.src} ogType="article">
+  <article class="article">
+    <header class="article__head wrap">
+      <nav class="crumbs rise" aria-label="Você está aqui">
+        <ol>
+          <li><a href="/">Início</a></li>
+          {crumbs.slice(0, -1).map((c) => <li><a href={c.href}>{c.name}</a></li>)}
+        </ol>
+      </nav>
+      <h1 class="rise" style="--d:1">{post.title}</h1>
+      <p class="article__meta rise" style="--d:2">
+        <span>Por {post.author}</span>
+        <time datetime={iso(post.date)}>{formatDate(post.date)}</time>
+        {updated && <span>Atualizado em <time datetime={iso(post.modified)}>{formatDate(post.modified)}</time></span>}
+        <span>{post.minutes} min de leitura</span>
+      </p>
+    </header>
+    {post.cover && (
+      <div class="article__cover wrap rise" style="--d:3">
+        <img src={post.cover.src} alt={post.cover.alt} width={post.cover.w} height={post.cover.h} fetchpriority="high" decoding="async" />
+      </div>
+    )}
+    <div class="article__body prose" set:html={post.html} />
+    <footer class="article__foot">
+      <p class="chips">{post.categories.map((c) => <a href={`/categoria/${c}/`}>{categoryName(c).replace(/\s*\(.*\)/, '')}</a>)}</p>
+      <div class="article__cta">
+        <p><strong>Quer aplicar isso na sua empresa?</strong> A Making cuida do seu marketing digital do planejamento ao resultado.</p>
+        <a class="btn btn--primary" href="/orcamento/">Pedir orçamento</a>
+      </div>
+    </footer>
+  </article>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <span class="eyebrow" data-reveal>Continue lendo</span>
+      <h2 data-reveal>Artigos relacionados</h2>
+      <div class="post-grid">{veja.map((p) => <PostCard post={p} as="h3" />)}</div>
+    </div>
+  </section>
+  <Cta />
+</Base>

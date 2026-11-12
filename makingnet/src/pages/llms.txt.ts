@@ -2,6 +2,7 @@
 import type { APIRoute } from 'astro';
 import { site, yearsInBusiness } from '../data/site';
 import { areas, sistemas } from '../data/servicos';
+import { posts, categories } from '../lib/blog';
 
 export const GET: APIRoute = () => {
   const linhas = [
@@ -23,6 +24,15 @@ export const GET: APIRoute = () => {
     `## ${sistemas.name}`,
     '',
     `- [Velosys](${site.url}/nossos-servicos/sistemas/): ${sistemas.resumo}`,
+    '',
+    '## Blog',
+    '',
+    `- [Todos os artigos](${site.url}/blog/): ${posts.length} artigos sobre marketing digital, SEO, GEO, tráfego pago e TI`,
+    ...categories.slice(0, 12).map((c) => `- [${c.name}](${site.url}/categoria/${c.slug}/): ${c.count} artigos`),
+    '',
+    '### Artigos mais recentes',
+    '',
+    ...posts.slice(0, 20).map((p) => `- [${p.title}](${site.url}/blog/${p.slug}/): ${p.description}`),
     '',
     '## Institucional',
     '',

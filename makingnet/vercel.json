@@ -1,26 +1,1472 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
-  "regions": ["gru1"],
+  "regions": [
+    "gru1"
+  ],
   "trailingSlash": true,
   "redirects": [
-    { "source": "/portifolio/", "destination": "/nossos-servicos/marketing-digital/portfolio/", "permanent": true },
-    { "source": "/servicos-2/:path*", "destination": "/nossos-servicos/:path*", "permanent": true },
-    { "source": "/contato/", "destination": "/fale-conosco/", "permanent": true }
+    {
+      "source": "/portifolio/",
+      "destination": "/nossos-servicos/marketing-digital/portfolio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos-2/:path*",
+      "destination": "/nossos-servicos/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/contato/",
+      "destination": "/fale-conosco/",
+      "permanent": true
+    },
+    {
+      "source": "/15-dicas-para-campanhas-de-links-patrocinados-de-sucesso/",
+      "destination": "/blog/15-dicas-para-campanhas-de-links-patrocinados-de-sucesso/",
+      "permanent": true
+    },
+    {
+      "source": "/5-motivos-produzir-conteudo/",
+      "destination": "/blog/5-motivos-produzir-conteudo/",
+      "permanent": true
+    },
+    {
+      "source": "/9-etapas-da-producao-de-conteudo/",
+      "destination": "/blog/9-etapas-da-producao-de-conteudo/",
+      "permanent": true
+    },
+    {
+      "source": "/analise-de-metricas-para-sites/",
+      "destination": "/blog/analise-de-metricas-para-sites/",
+      "permanent": true
+    },
+    {
+      "source": "/aptacao-de-leads-como-gerar-oportunidades-de-vendas-e-aumentar-a-receita/",
+      "destination": "/blog/captacao-de-leads-como-gerar-oportunidades-de-vendas-e-aumentar-a-receita/",
+      "permanent": true
+    },
+    {
+      "source": "/arquitetura-de-sites/",
+      "destination": "/blog/arquitetura-de-sites/",
+      "permanent": true
+    },
+    {
+      "source": "/atendimento-via-whatsapp-saiba-como-fazer-dele-sua-principal-ferramenta-de-vendas/",
+      "destination": "/blog/atendimento-via-whatsapp-saiba-como-fazer-dele-sua-principal-ferramenta-de-vendas/",
+      "permanent": true
+    },
+    {
+      "source": "/atualizacao-de-site-por-que-e-quando-fazer/",
+      "destination": "/blog/atualizacao-de-site-por-que-e-quando-fazer/",
+      "permanent": true
+    },
+    {
+      "source": "/atualizar-o-site-da-sua-empresa/",
+      "destination": "/blog/atualizar-o-site-da-sua-empresa/",
+      "permanent": true
+    },
+    {
+      "source": "/automacao-de-marketing-para-e-commerce-dicas-valiosas-e-6-fluxos-prontos-para-relacionamento-e-aumento-das-vendas/",
+      "destination": "/blog/automacao-de-marketing-para-e-commerce-dicas-valiosas-e-6-fluxos-prontos-para-relacionamento-e-aumento-das-vendas/",
+      "permanent": true
+    },
+    {
+      "source": "/automacao-de-whatsapp-agilize-seu-atendimento-e-venda-mais/",
+      "destination": "/blog/automacao-de-whatsapp-agilize-seu-atendimento-e-venda-mais/",
+      "permanent": true
+    },
+    {
+      "source": "/black-friday-dicas-para-vender-online-e-offline/",
+      "destination": "/blog/black-friday-dicas-para-vender-online-e-offline/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/como-melhorar-o-desempenho-do-seo-local/",
+      "destination": "/blog/seo-local-para-atrair-clientes-da-regiao/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/criacao-de-sites/marketing-de-busca/",
+      "destination": "/nossos-servicos/marketing-digital/marketing-de-busca/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/domine-o-seo-para-mobile-otimizacoes-avancadas-para-posicionar-seu-site-no-topo-das-buscas-mobile/",
+      "destination": "/blog/dicas-avancadas-de-seo-para-mobile/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/facebook-ads-ou-google-ads/",
+      "destination": "/blog/meta-ads-ou-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/google-ai-mode-brasil-pme/",
+      "destination": "/blog/google-ai-mode-no-brasil/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/por-que-voce-deve-anunciar-em-links-patrocinados/",
+      "destination": "/blog/porque-anunciar-em-links-patrocinados/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/saiba-como-preparar-sua-loja-virtual-para-o-natal-2023-e-vender-muito/",
+      "destination": "/blog/preparar-loja-virtual-para-o-natal/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/seo-para-lojas-virtuais-como-otimizar-sua-loja-virtual-para-mecanismos-de-busca/",
+      "destination": "/blog/seo-para-lojas-virtuais/",
+      "permanent": true
+    },
+    {
+      "source": "/briefing-o-que-e-por-que-e-crucial-e-como-criar-o-seu/",
+      "destination": "/blog/briefing-o-que-e-por-que-e-crucial-e-como-criar-o-seu/",
+      "permanent": true
+    },
+    {
+      "source": "/captacao-de-leads-como-gerar-oportunidades-de-vendas-e-aumentar-a-receita/",
+      "destination": "/blog/captacao-de-leads-como-gerar-oportunidades-de-vendas-e-aumentar-a-receita/",
+      "permanent": true
+    },
+    {
+      "source": "/como-fazer-otimizacao-de-sites-com-seo-em-11-passos/",
+      "destination": "/blog/como-fazer-otimizacao-de-sites-com-seo-em-11-passos/",
+      "permanent": true
+    },
+    {
+      "source": "/como-usar-metricas-de-seo-para-entender-como-seu-site-esta-se-saindo/",
+      "destination": "/blog/como-usar-metricas-de-seo-para-entender-como-seu-site-esta-se-saindo/",
+      "permanent": true
+    },
+    {
+      "source": "/como-usar-palavras-chave-em-seo-de-maneira-eficaz/",
+      "destination": "/blog/como-usar-palavras-chave-em-seo-de-maneira-eficaz/",
+      "permanent": true
+    },
+    {
+      "source": "/como-vender-mais-integrando-a-equipe-de-marketing-e-vendas/",
+      "destination": "/blog/como-vender-mais-integrando-a-equipe-de-marketing-e-vendas/",
+      "permanent": true
+    },
+    {
+      "source": "/como-vender-mais-no-natal-8-dicas-praticas-para-voce-lucrar-mais-com-sua-loja-virtual/",
+      "destination": "/blog/como-vender-mais-no-natal-8-dicas-praticas-para-voce-lucrar-mais-com-sua-loja-virtual/",
+      "permanent": true
+    },
+    {
+      "source": "/como-vender-pelo-whatsapp-12-taticas-para-pequenos-e-medios-negocios/",
+      "destination": "/blog/como-vender-pelo-whatsapp-12-taticas-para-pequenos-e-medios-negocios/",
+      "permanent": true
+    },
+    {
+      "source": "/conteudo-evergreen/",
+      "destination": "/blog/conteudo-evergreen/",
+      "permanent": true
+    },
+    {
+      "source": "/conteudo-para-seo-dicas-de-como-escrever-um-texto-de-sucesso-para-os-buscadores/",
+      "destination": "/blog/conteudo-para-seo-dicas-de-como-escrever-um-texto-de-sucesso-para-os-buscadores/",
+      "permanent": true
+    },
+    {
+      "source": "/contratar-uma-equipe-de-marketing/",
+      "destination": "/blog/contratar-uma-equipe-de-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/criacao-de-site-proprio-9-beneficios-que-todo-dono-de-negocio-precisa-saber/",
+      "destination": "/blog/criacao-de-site-proprio-9-beneficios-que-todo-dono-de-negocio-precisa-saber/",
+      "permanent": true
+    },
+    {
+      "source": "/criacao-de-sites/links-patrocinados/",
+      "destination": "/nossos-servicos/marketing-digital/gestao-de-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/criador-de-site/",
+      "destination": "/blog/criador-de-site/",
+      "permanent": true
+    },
+    {
+      "source": "/crm-6-formas-como-ele-pode-impactar-o-seu-negocio/",
+      "destination": "/blog/crm-6-formas-como-ele-pode-impactar-o-seu-negocio/",
+      "permanent": true
+    },
+    {
+      "source": "/crm-no-inbound-marketing-potencializando-a-gestao-de-leads-e-relacionamento/",
+      "destination": "/blog/crm-no-inbound-marketing-potencializando-a-gestao-de-leads-e-relacionamento/",
+      "permanent": true
+    },
+    {
+      "source": "/descricao-de-produtos-para-e-commerce/",
+      "destination": "/blog/descricao-de-produtos-para-e-commerce/",
+      "permanent": true
+    },
+    {
+      "source": "/desvendando-as-landing-pages-um-guia-pratico-para-criar-paginas-de-destino-irresistiveis/",
+      "destination": "/blog/desvendando-as-landing-pages-um-guia-pratico-para-criar-paginas-de-destino-irresistiveis/",
+      "permanent": true
+    },
+    {
+      "source": "/desvende-o-poder-do-whatsapp-no-marketing-digital-estrategias-e-dicas-essenciais/",
+      "destination": "/blog/desvende-o-poder-do-whatsapp-no-marketing-digital-estrategias-e-dicas-essenciais/",
+      "permanent": true
+    },
+    {
+      "source": "/dicas-avancadas-de-seo-para-mobile/",
+      "destination": "/blog/dicas-avancadas-de-seo-para-mobile/",
+      "permanent": true
+    },
+    {
+      "source": "/domine-o-seo-para-mobile-otimizacoes-avancadas-para-posicionar-seu-site-no-topo-das-buscas-mobile/",
+      "destination": "/blog/dicas-avancadas-de-seo-para-mobile/",
+      "permanent": true
+    },
+    {
+      "source": "/entendendo-cpc-cpa-e-cpm-metricas-de-trafego-pago-essenciais/",
+      "destination": "/blog/entendendo-cpc-cpa-e-cpm-metricas-de-trafego-pago-essenciais/",
+      "permanent": true
+    },
+    {
+      "source": "/estrategias-de-marketing-digital-para-escritorios-de-contabilidade/",
+      "destination": "/blog/estrategias-de-marketing-digital-para-escritorios-de-contabilidade/",
+      "permanent": true
+    },
+    {
+      "source": "/estrutura-de-site/",
+      "destination": "/blog/estrutura-de-site/",
+      "permanent": true
+    },
+    {
+      "source": "/fale-com-a-making/",
+      "destination": "/fale-conosco/",
+      "permanent": true
+    },
+    {
+      "source": "/gestao-de-leads-transforme-leads-frios-em-potenciais-clientes/",
+      "destination": "/blog/gestao-de-leads-transforme-leads-frios-em-potenciais-clientes/",
+      "permanent": true
+    },
+    {
+      "source": "/google-ads-para-concessionaria-saiba-como-atrair-leads-e-vender-mais/",
+      "destination": "/blog/google-ads-para-concessionaria-saiba-como-atrair-leads-e-vender-mais/",
+      "permanent": true
+    },
+    {
+      "source": "/guest-post-significado-e-acoes-na-pratica/",
+      "destination": "/blog/guest-post-significado-e-acoes-na-pratica/",
+      "permanent": true
+    },
+    {
+      "source": "/guia-completo-seo-tecnico/",
+      "destination": "/blog/guia-completo-seo-tecnico/",
+      "permanent": true
+    },
+    {
+      "source": "/guia-completo-seo-tecnico/",
+      "destination": "/blog/guia-completo-seo-tecnico/",
+      "permanent": true
+    },
+    {
+      "source": "/inbound-marketing/",
+      "destination": "/blog/o-que-e-inbound-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/landing-page/",
+      "destination": "/blog/landing-page/",
+      "permanent": true
+    },
+    {
+      "source": "/lead-qualificado-o-que-e-e-como-definir-de-maneira-correta/",
+      "destination": "/blog/lead-qualificado-o-que-e-e-como-definir-de-maneira-correta/",
+      "permanent": true
+    },
+    {
+      "source": "/link-building-conquistando-backlinks-de-qualidade-para-seu-site/",
+      "destination": "/blog/link-building-conquistando-backlinks-de-qualidade-para-seu-site/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-de-conteudo-para-e-commerce/",
+      "destination": "/blog/marketing-de-conteudo-para-e-commerce/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-de-conteudo-por-que-ele-e-importante-para-o-seu-negocio/",
+      "destination": "/blog/marketing-de-conteudo-por-que-ele-e-importante-para-o-seu-negocio/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-para-concessionarias-de-veiculos-estrategias-para-captacao-e-retencao-de-clientes/",
+      "destination": "/blog/marketing-digital-para-concessionarias-de-veiculos-estrategias-para-captacao-e-retencao-de-clientes/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-para-pequenas-empresas/",
+      "destination": "/blog/marketing-digital-para-pequenas-empresas/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-para-transportadoras-estrategias-para-alavancar-empresas-de-transporte/",
+      "destination": "/blog/marketing-digital-para-transportadoras-estrategias-para-alavancar-empresas-de-transporte/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital/",
+      "destination": "/nossos-servicos/marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-para-arquitetos-alcance-mais-clientes-para-o-seu-escritorio/",
+      "destination": "/blog/marketing-para-arquitetos-alcance-mais-clientes-para-o-seu-escritorio/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-para-profissionais-da-saude/",
+      "destination": "/blog/marketing-para-profissionais-da-saude/",
+      "permanent": true
+    },
+    {
+      "source": "/migracao-de-sites-e-seo/",
+      "destination": "/blog/migracao-de-sites-e-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/nutricao-de-leads-como-cultivar-relacionamentos-e-converte-los-em-clientes/",
+      "destination": "/blog/nutricao-de-leads-como-cultivar-relacionamentos-e-converte-los-em-clientes/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-automacao-de-marketing-6-motivos-para-investir-na-tecnologia-e-obter-melhores-resultados/",
+      "destination": "/blog/o-que-e-automacao-de-marketing-6-motivos-para-investir-na-tecnologia-e-obter-melhores-resultados/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-copywriting/",
+      "destination": "/blog/o-que-e-copywriting/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-crm/",
+      "destination": "/blog/o-que-e-crm/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-e-mail-marketing-entendendo-as-vantagens-e-os-tipos-de-emails-para-o-sucesso-da-sua-estrategia/",
+      "destination": "/blog/o-que-e-e-mail-marketing-entendendo-as-vantagens-e-os-tipos-de-emails-para-o-sucesso-da-sua-estrategia/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-e-para-que-serve-o-seo/",
+      "destination": "/blog/o-que-e-e-para-que-serve-o-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-funil-de-vendas-e-como-suas-etapas-funcionam/",
+      "destination": "/blog/o-que-e-funil-de-vendas-e-como-suas-etapas-funcionam/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-google-ads/",
+      "destination": "/blog/o-que-e-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-inbound-marketing/",
+      "destination": "/blog/o-que-e-inbound-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-jornada-de-compra/",
+      "destination": "/blog/o-que-e-jornada-de-compra/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-lead/",
+      "destination": "/blog/o-que-e-lead/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-lgpd/",
+      "destination": "/blog/o-que-e-lgpd/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-o-rd-station-conversas-e-como-ele-pode-impactar-o-seu-negocio/",
+      "destination": "/blog/o-que-e-o-rd-station-conversas-e-como-ele-pode-impactar-o-seu-negocio/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-persona/",
+      "destination": "/blog/o-que-e-persona/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-trafego-organico/",
+      "destination": "/blog/o-que-e-trafego-organico/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-trafego-pago/",
+      "destination": "/blog/o-que-e-trafego-pago/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-sao-links-patrocinados/",
+      "destination": "/blog/o-que-sao-links-patrocinados/",
+      "permanent": true
+    },
+    {
+      "source": "/otimize-seu-conteudo-para-buscas-por-voz/",
+      "destination": "/blog/otimize-seu-conteudo-para-buscas-por-voz/",
+      "permanent": true
+    },
+    {
+      "source": "/pagina-de-obrigado-o-que-e-para-que-serve-e-como-criar-uma-eficaz/",
+      "destination": "/blog/pagina-de-obrigado-o-que-e-para-que-serve-e-como-criar-uma-eficaz/",
+      "permanent": true
+    },
+    {
+      "source": "/planejamento-estrategico-para-sites/",
+      "destination": "/blog/planejamento-estrategico-para-sites/",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio/",
+      "destination": "/nossos-servicos/marketing-digital/portfolio/",
+      "permanent": true
+    },
+    {
+      "source": "/qualificacao-de-leads-saiba-como-ela-pode-ajudar-a-vender-mais/",
+      "destination": "/blog/qualificacao-de-leads-saiba-como-ela-pode-ajudar-a-vender-mais/",
+      "permanent": true
+    },
+    {
+      "source": "/quer-transformar-seus-chats-em-negocios-nao-perca-este-guia-completo-a-integracao-entre-crm-e-whatsapp/",
+      "destination": "/blog/quer-transformar-seus-chats-em-negocios-nao-perca-este-guia-completo-a-integracao-entre-crm-e-whatsapp/",
+      "permanent": true
+    },
+    {
+      "source": "/remarketing-e-retargeting-estrategias-poderosas-para-aumentar-suas-conversoes/",
+      "destination": "/blog/remarketing-e-retargeting-estrategias-poderosas-para-aumentar-suas-conversoes/",
+      "permanent": true
+    },
+    {
+      "source": "/resultados-com-marketing-de-busca/",
+      "destination": "/blog/resultados-com-marketing-de-busca/",
+      "permanent": true
+    },
+    {
+      "source": "/saiba-como-usar-url-canonica/",
+      "destination": "/blog/saiba-como-usar-url-canonica/",
+      "permanent": true
+    },
+    {
+      "source": "/segmentacao-de-leads-o-que-e-para-que-serve-sua-importancia-e-como-fazer/",
+      "destination": "/blog/segmentacao-de-leads-o-que-e-para-que-serve-sua-importancia-e-como-fazer/",
+      "permanent": true
+    },
+    {
+      "source": "/sem-resposta-no-whatsapp-descubra-novas-estrategias-para-aumentar-o-engajamento-com-seus-clientes/",
+      "destination": "/blog/sem-resposta-no-whatsapp-descubra-novas-estrategias-para-aumentar-o-engajamento-com-seus-clientes/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-local-para-atrair-clientes-da-regiao/",
+      "destination": "/blog/seo-local-para-atrair-clientes-da-regiao/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-on-page-e-seo-off-page-por-onde-devo-comecar/",
+      "destination": "/blog/seo-on-page-e-seo-off-page-por-onde-devo-comecar/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-on-page-guia-de-otimizacao-de-sites-para-melhores-posicionamentos-no-google/",
+      "destination": "/blog/seo-on-page-guia-de-otimizacao-de-sites-para-melhores-posicionamentos-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-para-imagens-como-usar-nomes-de-arquivo-atributos-e-tecnicas-para-ranquear-imagens-no-google/",
+      "destination": "/blog/seo-para-imagens-como-usar-nomes-de-arquivo-atributos-e-tecnicas-para-ranquear-imagens-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-para-landing-pages-melhores-praticas-para-alcancar-o-topo/",
+      "destination": "/blog/seo-para-landing-pages-melhores-praticas-para-alcancar-o-topo/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-para-lojas-virtuais-como-otimizar-sua-loja-virtual-para-mecanismos-de-busca/",
+      "destination": "/blog/seo-para-lojas-virtuais/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-para-lojas-virtuais/",
+      "destination": "/blog/seo-para-lojas-virtuais/",
+      "permanent": true
+    },
+    {
+      "source": "/serp-o-que-e-e-como-usa-la-para-aumentar-seu-trafego/",
+      "destination": "/blog/serp-o-que-e-e-como-usa-la-para-aumentar-seu-trafego/",
+      "permanent": true
+    },
+    {
+      "source": "/terceirizar-a-equipe-de-marketing-digital/",
+      "destination": "/blog/terceirizar-a-equipe-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/teste-a-b-o-que-e-e-quais-os-beneficios/",
+      "destination": "/blog/teste-a-b-o-que-e-e-quais-os-beneficios/",
+      "permanent": true
+    },
+    {
+      "source": "/material-rico/",
+      "destination": "/categoria/materiais-educativos/",
+      "permanent": true
+    },
+    {
+      "source": "/10-licoes-como-fazer-anuncios-no-google/",
+      "destination": "/blog/10-licoes-como-fazer-anuncios-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/11-dicas-anunciar-no-google-ads/",
+      "destination": "/blog/11-dicas-anunciar-no-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/14-razoes-para-ter-um-blog/",
+      "destination": "/blog/14-razoes-para-ter-um-blog/",
+      "permanent": true
+    },
+    {
+      "source": "/16-vantagens-em-anunciar-nos-links-patrocinados/",
+      "destination": "/blog/16-vantagens-em-anunciar-nos-links-patrocinados/",
+      "permanent": true
+    },
+    {
+      "source": "/20-anos-da-making-ti-e-web-celebrando-uma-trajetoria-de-sucesso/",
+      "destination": "/blog/20-anos-da-making-ti-e-web-celebrando-uma-trajetoria-de-sucesso/",
+      "permanent": true
+    },
+    {
+      "source": "/23-anos-making/",
+      "destination": "/blog/23-anos-making/",
+      "permanent": true
+    },
+    {
+      "source": "/3-duvidas-frequentes-sobre-google-ads/",
+      "destination": "/blog/3-duvidas-frequentes-sobre-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/4-dicas-simples-para-sua-loja-virtual-vender-mais-no-natal/",
+      "destination": "/blog/4-dicas-simples-para-sua-loja-virtual-vender-mais-no-natal/",
+      "permanent": true
+    },
+    {
+      "source": "/4-motivos-para-associar-a-estrategia-de-crm-a-de-inbound-marketing/",
+      "destination": "/blog/4-motivos-para-associar-a-estrategia-de-crm-a-de-inbound-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/4-motivos-para-criar-sua-loja-virtual-e-site-com-uma-agencia-de-marketing-digital/",
+      "destination": "/blog/4-motivos-para-criar-sua-loja-virtual-e-site-com-uma-agencia-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/4-vantagens-especialista-em-google-ads/",
+      "destination": "/blog/4-vantagens-especialista-em-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/6-beneficios-no-uso-de-blogs-em-suas-estrategias-de-marketing-digital/",
+      "destination": "/blog/6-beneficios-no-uso-de-blogs-em-suas-estrategias-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/6-bons-motivos-para-voce-conseguir-mais-trafego-organico-para-suas-estrategias-de-marketing-digital/",
+      "destination": "/blog/6-bons-motivos-para-voce-conseguir-mais-trafego-organico-para-suas-estrategias-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/6-dicas-de-como-anunciar-no-facebook-ads-meta-ads/",
+      "destination": "/blog/6-dicas-de-como-anunciar-no-facebook-ads-meta-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/6-motivos-para-utilizar-o-google-ads/",
+      "destination": "/blog/6-motivos-para-utilizar-o-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/6-sinais-agencia-de-marketing-digital/",
+      "destination": "/blog/6-sinais-agencia-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/7-vantagens-de-anunciar-uma-loja-de-veiculos-no-google/",
+      "destination": "/blog/7-vantagens-de-anunciar-uma-loja-de-veiculos-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/7-vantagens-do-crm-para-aumentar-as-vendas-da-sua-empresa/",
+      "destination": "/blog/7-vantagens-do-crm-para-aumentar-as-vendas-da-sua-empresa/",
+      "permanent": true
+    },
+    {
+      "source": "/8-dicas-agencia-de-google-ads/",
+      "destination": "/blog/8-dicas-agencia-de-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/8-dicas-divulgar-no-google/",
+      "destination": "/blog/8-dicas-divulgar-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/9-dicas-de-como-divulgar-uma-loja-de-moveis-no-google-ads/",
+      "destination": "/blog/9-dicas-de-como-divulgar-uma-loja-de-moveis-no-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/9-dicas-de-como-vender-mais-na-black-friday-2023/",
+      "destination": "/blog/9-dicas-de-como-vender-mais-na-black-friday-2023/",
+      "permanent": true
+    },
+    {
+      "source": "/9-livros-sobre-marketing-digital/",
+      "destination": "/blog/9-livros-sobre-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/a-importancia-do-lead/",
+      "destination": "/blog/a-importancia-do-lead/",
+      "permanent": true
+    },
+    {
+      "source": "/a-importancia-do-seo-na-estrategia-de-inbound-marketing/",
+      "destination": "/blog/a-importancia-do-seo-na-estrategia-de-inbound-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/a-importancia-do-sitemap-para-seu-site/",
+      "destination": "/blog/a-importancia-do-sitemap-para-seu-site/",
+      "permanent": true
+    },
+    {
+      "source": "/a-making-e-uma-das-finalistas-do-premio-rd-station/",
+      "destination": "/blog/a-making-e-uma-das-finalistas-do-premio-rd-station/",
+      "permanent": true
+    },
+    {
+      "source": "/acoes-digitais-para-o-site-gerar-resultados/",
+      "destination": "/blog/acoes-digitais-para-o-site-gerar-resultados/",
+      "permanent": true
+    },
+    {
+      "source": "/agencia-de-marketing-digital-ideal/",
+      "destination": "/blog/agencia-de-marketing-digital-ideal/",
+      "permanent": true
+    },
+    {
+      "source": "/agencia-google-partner/",
+      "destination": "/blog/agencia-google-partner/",
+      "permanent": true
+    },
+    {
+      "source": "/ai-e-impacto-na-busca-das-pmes/",
+      "destination": "/blog/ai-e-impacto-na-busca-das-pmes/",
+      "permanent": true
+    },
+    {
+      "source": "/ai-overview-e-seo/",
+      "destination": "/blog/ai-overview-e-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/alavancar-negocios-na-internet/",
+      "destination": "/blog/alavancar-negocios-na-internet/",
+      "permanent": true
+    },
+    {
+      "source": "/anuncios-no-google/",
+      "destination": "/blog/anuncios-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/aparecer-no-google-sem-depender-de-anuncios/",
+      "destination": "/blog/aparecer-no-google-sem-depender-de-anuncios/",
+      "permanent": true
+    },
+    {
+      "source": "/as-principais-tendencias-tecnologicas-para-2019/",
+      "destination": "/blog/as-principais-tendencias-tecnologicas-para-2019/",
+      "permanent": true
+    },
+    {
+      "source": "/aumento-do-imposto-no-meta-ads/",
+      "destination": "/blog/aumento-do-imposto-no-meta-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/automacao-de-marketing-para-ganhar-escala/",
+      "destination": "/blog/automacao-de-marketing-para-ganhar-escala/",
+      "permanent": true
+    },
+    {
+      "source": "/black-friday-ia-vendas-online/",
+      "destination": "/blog/black-friday-ia-vendas-online/",
+      "permanent": true
+    },
+    {
+      "source": "/blog-chatbots-ia-b2b-mais-vendas/",
+      "destination": "/blog/blog-chatbots-ia-b2b-mais-vendas/",
+      "permanent": true
+    },
+    {
+      "source": "/brand-growth/",
+      "destination": "/blog/brand-growth/",
+      "permanent": true
+    },
+    {
+      "source": "/busca-por-ia-e-o-futuro-do-seo/",
+      "destination": "/blog/busca-por-ia-e-o-futuro-do-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/campanha-dia-dos-pais-8-passos-para-voce-criar-uma-na-internet/",
+      "destination": "/blog/campanha-dia-dos-pais-8-passos-para-voce-criar-uma-na-internet/",
+      "permanent": true
+    },
+    {
+      "source": "/campanhas-de-google-ads/",
+      "destination": "/blog/campanhas-de-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/checklist-definitivo-de-seo/",
+      "destination": "/blog/checklist-definitivo-de-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/como-a-automacao-de-marketing-pode-melhorar-a-eficiencia-das-campanhas-de-midia-paga/",
+      "destination": "/blog/como-a-automacao-de-marketing-pode-melhorar-a-eficiencia-das-campanhas-de-midia-paga/",
+      "permanent": true
+    },
+    {
+      "source": "/como-a-midia-paga-pode-impulsionar-seus-conteudos/",
+      "destination": "/blog/como-a-midia-paga-pode-impulsionar-seus-conteudos/",
+      "permanent": true
+    },
+    {
+      "source": "/como-anunciar-no-google-ads/",
+      "destination": "/blog/como-anunciar-no-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/como-aparecer-no-google/",
+      "destination": "/blog/como-aparecer-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/como-aparecer-no-topo-das-pesquisas-do-google/",
+      "destination": "/blog/como-aparecer-no-topo-das-pesquisas-do-google/",
+      "permanent": true
+    },
+    {
+      "source": "/como-deve-ser-um-site-para-gerar-resultados/",
+      "destination": "/blog/como-deve-ser-um-site-para-gerar-resultados/",
+      "permanent": true
+    },
+    {
+      "source": "/como-divulgar-seu-negocio-sem-ter-anuncios-proibidos-no-google/",
+      "destination": "/blog/como-divulgar-seu-negocio-sem-ter-anuncios-proibidos-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/como-o-inbound-marketing-ajuda-a-vender-mais/",
+      "destination": "/blog/como-o-inbound-marketing-ajuda-a-vender-mais/",
+      "permanent": true
+    },
+    {
+      "source": "/como-potencializar-a-visibilidade-da-sua-loja-de-pesca-online/",
+      "destination": "/blog/como-potencializar-a-visibilidade-da-sua-loja-de-pesca-online/",
+      "permanent": true
+    },
+    {
+      "source": "/como-ser-encontrado-no-google/",
+      "destination": "/blog/como-ser-encontrado-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/como-vender-equipamentos-medico-hospitalares-com-estrategias-de-marketing-digital/",
+      "destination": "/blog/como-vender-equipamentos-medico-hospitalares-com-estrategias-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/como-vender-nas-redes-sociais-10-dicas-infaliveis/",
+      "destination": "/blog/como-vender-nas-redes-sociais-10-dicas-infaliveis/",
+      "permanent": true
+    },
+    {
+      "source": "/compra-errada-de-palavras-chave/",
+      "destination": "/blog/compra-errada-de-palavras-chave/",
+      "permanent": true
+    },
+    {
+      "source": "/conheca-os-principais-kpis-de-e-commerce-para-mensurar-os-resultados-da-sua-loja-virtual/",
+      "destination": "/blog/conheca-os-principais-kpis-de-e-commerce-para-mensurar-os-resultados-da-sua-loja-virtual/",
+      "permanent": true
+    },
+    {
+      "source": "/conseguir-mais-leads-com-inbound-marketing/",
+      "destination": "/blog/conseguir-mais-leads-com-inbound-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/consent-mode-v2-mudanca-google-custar-caro/",
+      "destination": "/blog/consent-mode-v2-mudanca-google-custar-caro/",
+      "permanent": true
+    },
+    {
+      "source": "/contratar-agencia-de-marketing-digital/",
+      "destination": "/blog/contratar-agencia-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/copa-do-mundo-dicas-de-marketing-para-voce-aproveitar-a-data/",
+      "destination": "/blog/copa-do-mundo-dicas-de-marketing-para-voce-aproveitar-a-data/",
+      "permanent": true
+    },
+    {
+      "source": "/coronavirus-e-marketing-digital/",
+      "destination": "/blog/coronavirus-e-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/custo-de-ignorar-o-seo/",
+      "destination": "/blog/custo-de-ignorar-o-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/de-seo-para-geo/",
+      "destination": "/blog/de-seo-para-geo/",
+      "permanent": true
+    },
+    {
+      "source": "/diagnostico-sera-que-esta-na-hora-de-contratar-uma-agencia-de-marketing/",
+      "destination": "/blog/diagnostico-sera-que-esta-na-hora-de-contratar-uma-agencia-de-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/dicas-recomendacoes-e-orientacoes-sobre-marketing-digital/",
+      "destination": "/blog/dicas-recomendacoes-e-orientacoes-sobre-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/diferenca-entre-palavra-chave-e-termo-de-pesquisa/",
+      "destination": "/blog/diferenca-entre-palavra-chave-e-termo-de-pesquisa/",
+      "permanent": true
+    },
+    {
+      "source": "/diferencas-entre-universal-analytics-e-o-ga4/",
+      "destination": "/blog/diferencas-entre-universal-analytics-e-o-ga4/",
+      "permanent": true
+    },
+    {
+      "source": "/diferencas-seo-aeo-geo-impactos/",
+      "destination": "/blog/diferencas-seo-aeo-geo-impactos/",
+      "permanent": true
+    },
+    {
+      "source": "/divulgar-empresa-no-google/",
+      "destination": "/blog/divulgar-empresa-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/divulgar-sua-empresa-no-google/",
+      "destination": "/blog/divulgar-sua-empresa-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-66-dicas-rapidas-de-marketing-digital/",
+      "destination": "/blog/e-book-66-dicas-rapidas-de-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-automacao-de-marketing-saiba-tudo-da-teoria-a-pratica/",
+      "destination": "/blog/e-book-automacao-de-marketing-saiba-tudo-da-teoria-a-pratica/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-como-gerar-mais-leads-no-google-ads/",
+      "destination": "/blog/e-book-como-gerar-mais-leads-no-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-facebook-ads-o-guia-definitivo/",
+      "destination": "/blog/e-book-facebook-ads-o-guia-definitivo/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-gere-leads-sem-dor-de-cabeca/",
+      "destination": "/blog/e-book-gere-leads-sem-dor-de-cabeca/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-guia-completo-como-utilizar-o-whatsapp-business-para-empresas/",
+      "destination": "/blog/e-book-guia-completo-como-utilizar-o-whatsapp-business-para-empresas/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-o-guia-definitivo-do-marketing-de-conteudo/",
+      "destination": "/blog/e-book-o-guia-definitivo-do-marketing-de-conteudo/",
+      "permanent": true
+    },
+    {
+      "source": "/e-book-palavras-chave-um-guia-completo-para-criar-sua-estrategia-de-sucesso/",
+      "destination": "/blog/e-book-palavras-chave-um-guia-completo-para-criar-sua-estrategia-de-sucesso/",
+      "permanent": true
+    },
+    {
+      "source": "/empresa-na-internet/",
+      "destination": "/blog/empresa-na-internet/",
+      "permanent": true
+    },
+    {
+      "source": "/empresa-nao-aparece-no-chatgpt/",
+      "destination": "/blog/empresa-nao-aparece-no-chatgpt/",
+      "permanent": true
+    },
+    {
+      "source": "/entenda-e-e-a-t-para-seo-e-credibilidade/",
+      "destination": "/blog/entenda-e-e-a-t-para-seo-e-credibilidade/",
+      "permanent": true
+    },
+    {
+      "source": "/erros-no-google-ads/",
+      "destination": "/blog/erros-no-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/estrategias-de-marketing-para-empresas-de-medicina-e-seguranca-do-trabalho-potencialize-a-visibilidade-e-atraia-clientes/",
+      "destination": "/blog/estrategias-de-marketing-para-empresas-de-medicina-e-seguranca-do-trabalho-potencialize-a-visibilidade-e-atraia-clientes/",
+      "permanent": true
+    },
+    {
+      "source": "/estrategias-de-marketing-para-o-natal-9-dicas-para-aumentar-as-vendas-com-a-data/",
+      "destination": "/blog/estrategias-de-marketing-para-o-natal-9-dicas-para-aumentar-as-vendas-com-a-data/",
+      "permanent": true
+    },
+    {
+      "source": "/etapas-do-inbound-marketing/",
+      "destination": "/blog/etapas-do-inbound-marketing/",
+      "permanent": true
+    },
+    {
+      "source": "/excesso-de-gastos-com-marketing-digital/",
+      "destination": "/blog/excesso-de-gastos-com-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/fontes-de-trafego/",
+      "destination": "/blog/fontes-de-trafego/",
+      "permanent": true
+    },
+    {
+      "source": "/ganchos-e-gatilhos-mentais-para-engajamento/",
+      "destination": "/blog/ganchos-e-gatilhos-mentais-para-engajamento/",
+      "permanent": true
+    },
+    {
+      "source": "/geo-na-pratica/",
+      "destination": "/blog/geo-na-pratica/",
+      "permanent": true
+    },
+    {
+      "source": "/geo-pme-marketing-digital-ia/",
+      "destination": "/blog/geo-pme-marketing-digital-ia/",
+      "permanent": true
+    },
+    {
+      "source": "/gerar-negocios-pela-internet/",
+      "destination": "/blog/gerar-negocios-pela-internet/",
+      "permanent": true
+    },
+    {
+      "source": "/google-ads-com-a-making/",
+      "destination": "/blog/google-ads-com-a-making/",
+      "permanent": true
+    },
+    {
+      "source": "/google-ads-para-industrias-alcance-novos-clientes/",
+      "destination": "/blog/google-ads-para-industrias-alcance-novos-clientes/",
+      "permanent": true
+    },
+    {
+      "source": "/google-ads-para-oficinas-mecanicas-como-anunciar-o-seu-negocio/",
+      "destination": "/blog/google-ads-para-oficinas-mecanicas-como-anunciar-o-seu-negocio/",
+      "permanent": true
+    },
+    {
+      "source": "/google-ads-para-pequenas-empresas/",
+      "destination": "/blog/google-ads-para-pequenas-empresas/",
+      "permanent": true
+    },
+    {
+      "source": "/google-ads-transicoes-que-acompanham-a-evolucao/",
+      "destination": "/blog/google-ads-transicoes-que-acompanham-a-evolucao/",
+      "permanent": true
+    },
+    {
+      "source": "/google-ai-mode-no-brasil/",
+      "destination": "/blog/google-ai-mode-no-brasil/",
+      "permanent": true
+    },
+    {
+      "source": "/google-mudou-nao-precisava-panico/",
+      "destination": "/blog/google-mudou-nao-precisava-panico/",
+      "permanent": true
+    },
+    {
+      "source": "/google-performance-max/",
+      "destination": "/blog/google-performance-max/",
+      "permanent": true
+    },
+    {
+      "source": "/governanca-futuro-seo-geo/",
+      "destination": "/blog/governanca-futuro-seo-geo/",
+      "permanent": true
+    },
+    {
+      "source": "/guia-pme-como-atrair-clientes-pela-internet/",
+      "destination": "/blog/guia-pme-como-atrair-clientes-pela-internet/",
+      "permanent": true
+    },
+    {
+      "source": "/guia-schema-markup/",
+      "destination": "/blog/guia-schema-markup/",
+      "permanent": true
+    },
+    {
+      "source": "/humanizar-conteudos-gerados-por-inteligencia-artificial/",
+      "destination": "/blog/humanizar-conteudos-gerados-por-inteligencia-artificial/",
+      "permanent": true
+    },
+    {
+      "source": "/inbound-marketing-na-making/",
+      "destination": "/blog/inbound-marketing-na-making/",
+      "permanent": true
+    },
+    {
+      "source": "/indice-de-qualidade-no-google-ads/",
+      "destination": "/blog/indice-de-qualidade-no-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/infografico-como-criar-uma-persona/",
+      "destination": "/blog/infografico-como-criar-uma-persona/",
+      "permanent": true
+    },
+    {
+      "source": "/inside-sales-o-que-e-e-para-que-serve/",
+      "destination": "/blog/inside-sales-o-que-e-e-para-que-serve/",
+      "permanent": true
+    },
+    {
+      "source": "/instagram-em-tempos-de-ia/",
+      "destination": "/blog/instagram-em-tempos-de-ia/",
+      "permanent": true
+    },
+    {
+      "source": "/instagram-no-google-seo/",
+      "destination": "/blog/instagram-no-google-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/investir-em-marketing-digital/",
+      "destination": "/blog/investir-em-marketing-digital/",
+      "permanent": true
+    },
+    {
+      "source": "/investir-em-midias-pagas/",
+      "destination": "/blog/investir-em-midias-pagas/",
+      "permanent": true
+    },
+    {
+      "source": "/jornada-de-compra-na-automacao-de-marketing-5-dicas-para-ter-sucesso-nas-suas-campanhas/",
+      "destination": "/blog/jornada-de-compra-na-automacao-de-marketing-5-dicas-para-ter-sucesso-nas-suas-campanhas/",
+      "permanent": true
+    },
+    {
+      "source": "/last-click-brandgrowth/",
+      "destination": "/blog/last-click-brandgrowth/",
+      "permanent": true
+    },
+    {
+      "source": "/loja-virtual-propria-vs-marketplace/",
+      "destination": "/blog/loja-virtual-propria-vs-marketplace/",
+      "permanent": true
+    },
+    {
+      "source": "/mais-trafego-organico/",
+      "destination": "/blog/mais-trafego-organico/",
+      "permanent": true
+    },
+    {
+      "source": "/making-e-google-partner/",
+      "destination": "/blog/making-e-google-partner/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-2026-estrategias/",
+      "destination": "/blog/marketing-2026-estrategias/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-construir-marca-ia/",
+      "destination": "/blog/marketing-digital-construir-marca-ia/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-e-lei-geral-de-protecao-de-dados/",
+      "destination": "/blog/marketing-digital-e-lei-geral-de-protecao-de-dados/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-na-making/",
+      "destination": "/blog/marketing-digital-na-making/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-para-funerarias-mais-vendas-de-planos-funerarios/",
+      "destination": "/blog/marketing-digital-para-funerarias-mais-vendas-de-planos-funerarios/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-para-vender-mais/",
+      "destination": "/blog/marketing-digital-para-vender-mais/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-digital-sem-magica-manifesto-making/",
+      "destination": "/blog/marketing-digital-sem-magica-manifesto-making/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-para-advogados-como-fazer-publicidade-digital-de-forma-etica/",
+      "destination": "/blog/marketing-para-advogados-como-fazer-publicidade-digital-de-forma-etica/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-para-imobiliarias-10-estrategias/",
+      "destination": "/blog/marketing-para-imobiliarias-10-estrategias/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-para-psicologos-tecnicas-avancadas-para-maximizar-sua-presenca-online-e-atrair-clientes/",
+      "destination": "/blog/marketing-para-psicologos-tecnicas-avancadas-para-maximizar-sua-presenca-online-e-atrair-clientes/",
+      "permanent": true
+    },
+    {
+      "source": "/meta-ads-ou-google-ads/",
+      "destination": "/blog/meta-ads-ou-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/mudanca-de-habitos-do-consumidor-na-quarentena-impacta-nas-buscas-do-google/",
+      "destination": "/blog/mudanca-de-habitos-do-consumidor-na-quarentena-impacta-nas-buscas-do-google/",
+      "permanent": true
+    },
+    {
+      "source": "/neuromarketing-engajando-para-viabilizar-as-conversoes/",
+      "destination": "/blog/neuromarketing-engajando-para-viabilizar-as-conversoes/",
+      "permanent": true
+    },
+    {
+      "source": "/neuromarketing-na-pratica/",
+      "destination": "/blog/neuromarketing-na-pratica/",
+      "permanent": true
+    },
+    {
+      "source": "/o-impacto-da-crise-dos-caminhoneiros-nas-buscas-do-google/",
+      "destination": "/blog/o-impacto-da-crise-dos-caminhoneiros-nas-buscas-do-google/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-cta-call-to-action-como-usar/",
+      "destination": "/blog/o-que-e-cta-call-to-action-como-usar/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-instagram-shopping/",
+      "destination": "/blog/o-que-e-instagram-shopping/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-e-o-google-analytics-4-ga4/",
+      "destination": "/blog/o-que-e-o-google-analytics-4-ga4/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-sao-doorway-pages/",
+      "destination": "/blog/o-que-sao-doorway-pages/",
+      "permanent": true
+    },
+    {
+      "source": "/o-que-sao-llms/",
+      "destination": "/blog/o-que-sao-llms/",
+      "permanent": true
+    },
+    {
+      "source": "/os-fatores-de-ranqueamento-mais-importantes-do-google/",
+      "destination": "/blog/os-fatores-de-ranqueamento-mais-importantes-do-google/",
+      "permanent": true
+    },
+    {
+      "source": "/otimizar-conteudo-geo/",
+      "destination": "/blog/otimizar-conteudo-geo/",
+      "permanent": true
+    },
+    {
+      "source": "/otimizar-orcamento-de-midia/",
+      "destination": "/blog/otimizar-orcamento-de-midia/",
+      "permanent": true
+    },
+    {
+      "source": "/perfil-do-consumidor-digital-2026/",
+      "destination": "/blog/perfil-do-consumidor-digital-2026/",
+      "permanent": true
+    },
+    {
+      "source": "/pesquisa-palavras-chave-ia-respondendo/",
+      "destination": "/blog/pesquisa-palavras-chave-ia-respondendo/",
+      "permanent": true
+    },
+    {
+      "source": "/pipeline-de-vendas-e-crm/",
+      "destination": "/blog/pipeline-de-vendas-e-crm/",
+      "permanent": true
+    },
+    {
+      "source": "/planejamento-de-marketing-8-passos-para-fazer-o-seu/",
+      "destination": "/blog/planejamento-de-marketing-8-passos-para-fazer-o-seu/",
+      "permanent": true
+    },
+    {
+      "source": "/planejamento-de-marketing-de-2023-7-dicas-de-como-montar-um-plano-de-sucesso/",
+      "destination": "/blog/planejamento-de-marketing-de-2023-7-dicas-de-como-montar-um-plano-de-sucesso/",
+      "permanent": true
+    },
+    {
+      "source": "/plano-de-marketing-para-2025/",
+      "destination": "/blog/plano-de-marketing-para-2025/",
+      "permanent": true
+    },
+    {
+      "source": "/pmax-beneficios/",
+      "destination": "/blog/pmax-beneficios/",
+      "permanent": true
+    },
+    {
+      "source": "/por-que-anunciar-no-google-ads/",
+      "destination": "/blog/por-que-anunciar-no-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/por-que-o-facebook-remarketing-e-essencial-para-a-sua-estrategia/",
+      "destination": "/blog/por-que-o-facebook-remarketing-e-essencial-para-a-sua-estrategia/",
+      "permanent": true
+    },
+    {
+      "source": "/porque-anunciar-em-links-patrocinados/",
+      "destination": "/blog/porque-anunciar-em-links-patrocinados/",
+      "permanent": true
+    },
+    {
+      "source": "/poucos-acessos-no-site/",
+      "destination": "/blog/poucos-acessos-no-site/",
+      "permanent": true
+    },
+    {
+      "source": "/premio-rd-station-2020/",
+      "destination": "/blog/premio-rd-station-2020/",
+      "permanent": true
+    },
+    {
+      "source": "/preparar-loja-virtual-para-o-natal/",
+      "destination": "/blog/preparar-loja-virtual-para-o-natal/",
+      "permanent": true
+    },
+    {
+      "source": "/principais-cuidados-google-pmax/",
+      "destination": "/blog/principais-cuidados-google-pmax/",
+      "permanent": true
+    },
+    {
+      "source": "/protocolo-de-seguranca-https/",
+      "destination": "/blog/protocolo-de-seguranca-https/",
+      "permanent": true
+    },
+    {
+      "source": "/queda-nas-visitas-seo/",
+      "destination": "/blog/queda-nas-visitas-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/sac-2-0/",
+      "destination": "/blog/sac-2-0/",
+      "permanent": true
+    },
+    {
+      "source": "/saiba-6-motivos-para-investir-em-seo/",
+      "destination": "/blog/saiba-6-motivos-para-investir-em-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/saiba-como-aumentar-a-taxa-de-conversao-da-loja-virtual/",
+      "destination": "/blog/saiba-como-aumentar-a-taxa-de-conversao-da-loja-virtual/",
+      "permanent": true
+    },
+    {
+      "source": "/saiba-como-divulgar-pet-shops-no-google-e-outras-estrategias-para-voce-vender-mais/",
+      "destination": "/blog/saiba-como-divulgar-pet-shops-no-google-e-outras-estrategias-para-voce-vender-mais/",
+      "permanent": true
+    },
+    {
+      "source": "/saiba-como-unir-inbound-marketing-e-seo-em-5-passos/",
+      "destination": "/blog/saiba-como-unir-inbound-marketing-e-seo-em-5-passos/",
+      "permanent": true
+    },
+    {
+      "source": "/saiba-se-e-hora-de-implementar-um-crm-na-empresa/",
+      "destination": "/blog/saiba-se-e-hora-de-implementar-um-crm-na-empresa/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-com-geo-o-que-muda-e-novas-regras/",
+      "destination": "/blog/seo-com-geo-o-que-muda-e-novas-regras/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-e-ux-para-melhorar-ranqueamento/",
+      "destination": "/blog/seo-e-ux-para-melhorar-ranqueamento/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-e-valor-de-mercado/",
+      "destination": "/blog/seo-e-valor-de-mercado/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-entenda-como-tudo-funciona-para-colocar-seu-site-no-google/",
+      "destination": "/blog/seo-entenda-como-tudo-funciona-para-colocar-seu-site-no-google/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-geo-diferencas/",
+      "destination": "/blog/seo-geo-diferencas/",
+      "permanent": true
+    },
+    {
+      "source": "/seo-para-franquias/",
+      "destination": "/blog/seo-para-franquias/",
+      "permanent": true
+    },
+    {
+      "source": "/sera-que-realmente-meu-comercio-precisa-de-um-site/",
+      "destination": "/blog/sera-que-realmente-meu-comercio-precisa-de-um-site/",
+      "permanent": true
+    },
+    {
+      "source": "/share-of-search/",
+      "destination": "/blog/share-of-search/",
+      "permanent": true
+    },
+    {
+      "source": "/site-maior-ativo-ia/",
+      "destination": "/blog/site-maior-ativo-ia/",
+      "permanent": true
+    },
+    {
+      "source": "/sites-na-era-da-ia/",
+      "destination": "/blog/sites-na-era-da-ia/",
+      "permanent": true
+    },
+    {
+      "source": "/social-ads-como-usar-a-publicidade-nas-redes-sociais-para-impulsionar-seu-negocio/",
+      "destination": "/blog/social-ads-como-usar-a-publicidade-nas-redes-sociais-para-impulsionar-seu-negocio/",
+      "permanent": true
+    },
+    {
+      "source": "/sucesso-inbound-marketing-3-passos/",
+      "destination": "/blog/sucesso-inbound-marketing-3-passos/",
+      "permanent": true
+    },
+    {
+      "source": "/templates-para-relacionamento-com-os-leads/",
+      "destination": "/blog/templates-para-relacionamento-com-os-leads/",
+      "permanent": true
+    },
+    {
+      "source": "/threads-conheca-a-rede-social-da-meta-que-ja-nasceu-grande/",
+      "destination": "/blog/threads-conheca-a-rede-social-da-meta-que-ja-nasceu-grande/",
+      "permanent": true
+    },
+    {
+      "source": "/tipos-de-anuncios-do-google-ads/",
+      "destination": "/blog/tipos-de-anuncios-do-google-ads/",
+      "permanent": true
+    },
+    {
+      "source": "/vale-a-pena-investir-em-trafego-pago-saiba-como-usar-essa-estrategia-em-seu-negocio/",
+      "destination": "/blog/vale-a-pena-investir-em-trafego-pago-saiba-como-usar-essa-estrategia-em-seu-negocio/",
+      "permanent": true
+    },
+    {
+      "source": "/vale-mesmo-a-pena-ter-uma-loja-virtual-propria-em-2023/",
+      "destination": "/blog/vale-mesmo-a-pena-ter-uma-loja-virtual-propria-em-2023/",
+      "permanent": true
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        }
       ]
     },
     {
       "source": "/(img|_astro)/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }

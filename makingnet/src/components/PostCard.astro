@@ -1,0 +1,14 @@
+---
+import { formatDate, mainCategory, categoryName, type Post } from '../lib/blog';
+interface Props { post: Post; eager?: boolean; as?: 'h2' | 'h3' }
+const { post, eager = false, as: Tag = 'h2' } = Astro.props;
+const cat = mainCategory(post);
+---
+<article class="post-card" data-reveal>
+  <a href={`/blog/${post.slug}/`} class="post-card__img" tabindex="-1" aria-hidden="true">
+    {post.cover && <img src={post.cover.src} alt="" width={post.cover.w} height={post.cover.h} loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+  </a>
+  <p class="post-card__meta">{cat && <span>{categoryName(cat)}</span>}<time datetime={post.date}>{formatDate(post.date)}</time></p>
+  <Tag class="post-card__t"><a href={`/blog/${post.slug}/`}>{post.title}</a></Tag>
+  <p class="post-card__x">{post.description}</p>
+</article>

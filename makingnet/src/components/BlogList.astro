@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import PostCard from './PostCard.astro';
+import Cta from './Cta.astro';
+import { posts, categories, PER_PAGE, totalPages } from '../lib/blog';
+import { site } from '../data/site';
+interface Props { page: number }
+const { page } = Astro.props;
+const path = page === 1 ? '/blog/' : `/blog/page/${page}/`;
+const list = posts.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+const crumbs = [{ name: 'Blog', href: '/blog/' }];
+const url = (n: number) => (n === 1 ? '/blog/' : `/blog/page/${n}/`);
+const schema = [{
+  '@type': 'Blog',
+  '@id': `${site.url}/blog/#blog`,
+  name: 'Blog da Making sobre marketing digital e TI',
+  publisher: { '@id': `${site.url}/#organization` },
+  blogPost: list.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${site.url}/blog/${p.slug}/`, datePublished: p.date })),
+}];
+const destaque = ['seo', 'geo', 'google-ads', 'inteligencia-artificial', 'inbound-marketing', 'marketing-de-conteudo', 'website', 'materiais-educativos'];
+---
+<Base title={page === 1 ? 'Blog de Marketing Digital, SEO, GEO e TI | Making' : `Blog de Marketing Digital e TI: página ${page} | Making`} description={`Artigos da Making sobre SEO, GEO, Google Ads, inteligência artificial, sites e estratégias de marketing digital. ${posts.length} conteúdos para sua empresa vender mais.`} path={path} crumbs={crumbs} schema={schema}>
+  <PageHero eyebrow={`${posts.length} artigos`} title="Blog sobre marketing digital e TI" crumbs={crumbs} lead={page === 1 ? 'SEO, GEO, tráfego pago, inteligência artificial e estratégias para sua empresa ser encontrada e vender mais.' : `Página ${page} de ${totalPages}`} />
+  <section class="section">
+    <div class="wrap">
+      <nav class="chips" aria-label="Categorias" data-reveal>
+        {categories.filter((c) => destaque.includes(c.slug)).map((c) => <a href={`/categoria/${c.slug}/`}>{c.name.replace(/\s*\(.*\)/, '')} <span>{c.count}</span></a>)}
+      </nav>
+      <div class="post-grid">
+        {list.map((p, i) => <PostCard post={p} eager={i < 3} />)}
+      </div>
+      <nav class="pager" aria-label="Paginação">
+        {page > 1 ? <a class="btn btn--ghost" rel="prev" href={url(page - 1)}>← Mais recentes</a> : <span></span>}
+        <ol>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => <li><a href={url(n)} aria-current={n === page ? 'page' : undefined}>{n}</a></li>)}
+        </ol>
+        {page < totalPages ? <a class="btn btn--ghost" rel="next" href={url(page + 1)}>Mais antigos →</a> : <span></span>}
+      </nav>
+    </div>
+  </section>
+  <Cta />
+</Base>

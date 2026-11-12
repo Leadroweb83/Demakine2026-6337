@@ -1,0 +1,9 @@
+---
+import BlogList from '../../../components/BlogList.astro';
+import { totalPages } from '../../../lib/blog';
+export function getStaticPaths() {
+  return Array.from({ length: totalPages - 1 }, (_, i) => ({ params: { n: String(i + 2) } }));
+}
+const page = Number(Astro.params.n);
+---
+<BlogList page={page} />

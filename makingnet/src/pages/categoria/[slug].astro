@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import PostCard from '../../components/PostCard.astro';
+import Cta from '../../components/Cta.astro';
+import { posts, categories, formatDate } from '../../lib/blog';
+import { site } from '../../data/site';
+export function getStaticPaths() {
+  return categories.map((cat) => ({ params: { slug: cat.slug }, props: { cat } }));
+}
+const { cat } = Astro.props;
+const path = `/categoria/${cat.slug}/`;
+const list = posts.filter((p) => p.categories.includes(cat.slug));
+const crumbs = [{ name: 'Blog', href: '/blog/' }, { name: cat.name, href: path }];
+const schema = [{
+  '@type': 'CollectionPage',
+  name: `Artigos sobre ${cat.name}`,
+  hasPart: list.slice(0, 30).map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${site.url}/blog/${p.slug}/` })),
+}];
+const topo = list.slice(0, 6);
+const resto = list.slice(6);
+---
+<Base title={`${cat.name}: artigos e guias | Blog Making`} description={cat.description || `${list.length} artigos da Making sobre ${cat.name}: guias práticos, tendências e estratégias para sua empresa.`} path={path} crumbs={crumbs} schema={schema}>
+  <PageHero eyebrow={`${list.length} ${list.length === 1 ? 'artigo' : 'artigos'}`} title={cat.name} crumbs={crumbs} lead={cat.description || undefined} />
+  <section class="section">
+    <div class="wrap">
+      <div class="post-grid">{topo.map((p, i) => <PostCard post={p} eager={i < 3} />)}</div>
+      {resto.length > 0 && (
+        <Fragment>
+          <h2 data-reveal style="margin-top:clamp(56px,8vw,112px)">Mais sobre {cat.name.replace(/\s*\(.*\)/, '')}</h2>
+          <ul class="post-list">
+            {resto.map((p) => <li><a href={`/blog/${p.slug}/`}><span>{p.title}</span><time datetime={p.date}>{formatDate(p.date)}</time></a></li>)}
+          </ul>
+        </Fragment>
+      )}
+    </div>
+  </section>
+  <Cta />
+</Base>
