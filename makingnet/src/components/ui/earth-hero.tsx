@@ -69,8 +69,9 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
       <style>{`
 .eh-root{position:relative;margin-top:-72px;height:100svh;min-height:640px;max-height:1100px;background:#000;overflow:hidden}
 .eh-root [data-earth-blaze]{position:absolute!important;inset:0;height:100%}
-.eh-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.28) 46%,transparent 70%),
-  linear-gradient(0deg,var(--color-background) 0%,transparent 16%)}
+.eh-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.36) 0%,rgba(0,0,0,.12) 44%,transparent 66%),
+  linear-gradient(0deg,var(--color-background) 0%,transparent 10%)}
+.eh-copy{text-shadow:0 2px 24px rgba(0,0,0,.55)}
 .eh-body{position:absolute;inset:0;display:flex;align-items:center}
 .eh-wrap{width:100%;max-width:1440px;margin:0 auto;padding:96px clamp(20px,4vw,64px) 40px}
 .eh-copy{max-width:min(720px,58%)}
@@ -101,7 +102,7 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
   .eh-wrap{padding-bottom:84px}
   .eh-copy{max-width:none}
   .eh-astro{--w:min(58vw,300px);right:-4%;top:10%;margin-top:0;width:var(--w)}
-  .eh-shade{background:linear-gradient(0deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.5) 46%,transparent 74%)}
+  .eh-shade{background:linear-gradient(0deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.28) 46%,transparent 74%)}
   .eh-scroll{display:none}
 }
 @media (prefers-reduced-motion:reduce){.eh-orbit,.eh-spin{animation:none}}
@@ -112,6 +113,7 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
         starCount={2200}
         illumination={1.15}
         surfaceBrightness={1.25}
+        ambient={1.7}
         auroraColor="#20c4f4"
         style={{ aspectRatio: "auto" }}
       >

@@ -21,6 +21,8 @@ export interface EarthBlazeProps {
   backgroundColor?: string;
   /** Sun glow, atmospheric rim and Earth illumination, 0–3. Default 1. */
   illumination?: number;
+  /** Even light over the whole globe so the planet is not black beyond the sunlit rim, 0–3. Default 0 keeps the original artwork. */
+  ambient?: number;
   /** Keep auroral curtains visible while composing a scene. Default false. */
   auroraPreview?: boolean;
   auroraEnabled?: boolean;
@@ -31,7 +33,7 @@ export interface EarthBlazeProps {
   reducedMotion?: boolean;
 }
 
-type Options = Required<Pick<EarthBlazeProps, "starCount" | "galaxyBrightness" | "surfaceBrightness" | "illumination" | "auroraPreview" | "auroraEnabled" | "interactive" | "textureUrl">> & Pick<EarthBlazeProps, "reducedMotion"> & { auroraColor: Color; backgroundColor: Color };
+type Options = Required<Pick<EarthBlazeProps, "starCount" | "galaxyBrightness" | "surfaceBrightness" | "illumination" | "ambient" | "auroraPreview" | "auroraEnabled" | "interactive" | "textureUrl">> & Pick<EarthBlazeProps, "reducedMotion"> & { auroraColor: Color; backgroundColor: Color };
 type Color = [number, number, number, number];
 type Uniforms = Record<string, WebGLUniformLocation | null>;
 type Geometry = { center: [number, number]; radius: number; low: number; high: number; rest: number };
@@ -47,7 +49,7 @@ function color(value?: string): Color {
 /** A cloud-free Earth horizon. Give the container a height, or use its 16:10 ratio. */
 export function EarthBlaze({
   className, style, children, starCount = 1800, galaxyBrightness = 1,
-  surfaceBrightness = 1, auroraColor, backgroundColor, illumination = 1, auroraPreview = false, auroraEnabled = true, interactive = true,
+  surfaceBrightness = 1, auroraColor, backgroundColor, illumination = 1, ambient = 0, auroraPreview = false, auroraEnabled = true, interactive = true,
   textureUrl = EARTH_TEXTURE, reducedMotion,
 }: EarthBlazeProps) {
   const canvas = React.useRef<HTMLCanvasElement>(null);
@@ -56,7 +58,7 @@ export function EarthBlaze({
   const instructions = React.useId();
   const options = { starCount: Math.round(finite(starCount, 1800, 5400)),
     galaxyBrightness: finite(galaxyBrightness, 1, 3), surfaceBrightness: finite(surfaceBrightness, 1, 3),
-    illumination: finite(illumination, 1, 3), auroraColor: color(auroraColor), backgroundColor: color(backgroundColor),
+    illumination: finite(illumination, 1, 3), ambient: finite(ambient, 0, 3), auroraColor: color(auroraColor), backgroundColor: color(backgroundColor),
     auroraPreview, auroraEnabled, interactive, textureUrl, reducedMotion };
   const latest = React.useRef(options);
   latest.current = options;
@@ -67,7 +69,7 @@ export function EarthBlaze({
     return () => { instance.dispose(); renderer.current = null; };
   }, []);
   React.useEffect(() => { renderer.current?.update(options); },
-    [starCount, galaxyBrightness, surfaceBrightness, auroraColor, backgroundColor, illumination, auroraPreview, auroraEnabled, interactive, textureUrl, reducedMotion]);
+    [starCount, galaxyBrightness, surfaceBrightness, auroraColor, backgroundColor, illumination, ambient, auroraPreview, auroraEnabled, interactive, textureUrl, reducedMotion]);
 
   return (
     <div data-earth-blaze="" className={className} style={{ position: "relative", isolation: "isolate", overflow: "hidden", width: "100%", aspectRatio: "16 / 10", background: "#000", ...style }}>
@@ -104,6 +106,7 @@ export function EarthBlaze({
     uniform vec4 auroraColor;
     uniform vec4 backgroundColor;
     uniform float illumination;
+    uniform float ambient;
     uniform float auroraPreview;
     uniform float viewAngle;
     uniform float clock;
@@ -207,6 +210,11 @@ export function EarthBlaze({
         surface *= vec3(.61, .74, 1.);
         color += surface * pool * (.045 + reveal * .24 + bloom * .20 + charge * .045) * inside * surfaceBrightness * illumination;
         color += vec3(.010, .018, .032) * pool * (reveal + bloom) * inside * surfaceBrightness * illumination;
+        // Even light over the whole disc, strongest toward the sun, with a soft falloff at the limb.
+        float toward = .42 + .58 * gauss(angleDistance, .95);
+        float limb = smoothstep(0., .05, depth);
+        vec3 lit = mix(tex, vec3(dot(tex, vec3(.2126, .7152, .0722))), .15) * vec3(.74, .88, 1.);
+        color += lit * ambient * toward * limb * inside * surfaceBrightness;
       }
 
       // One static sub-byte dither prevents bands without making black space noisy.
@@ -390,7 +398,7 @@ function createRenderer(canvas: HTMLCanvasElement, fallback: HTMLDivElement, ini
     clearResources(); state.ready = false;
     program = link(vertex, fragment);
     position = gl.getAttribLocation(program, "position");
-    uniforms = locations(program, ["resolution", "center", "radius", "angle", "reveal", "viewAngle", "earth", "cosmos", "clock", "charge", "pulse", "pulseAngle", "still", "drift", "galaxyBrightness", "surfaceBrightness", "auroraColor", "backgroundColor", "illumination", "auroraPreview"]);
+    uniforms = locations(program, ["resolution", "center", "radius", "angle", "reveal", "viewAngle", "earth", "cosmos", "clock", "charge", "pulse", "pulseAngle", "still", "drift", "galaxyBrightness", "surfaceBrightness", "auroraColor", "backgroundColor", "illumination", "ambient", "auroraPreview"]);
     buffer = makeBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
@@ -509,6 +517,7 @@ function createRenderer(canvas: HTMLCanvasElement, fallback: HTMLDivElement, ini
     gl.uniform1f(uniforms.galaxyBrightness, options.galaxyBrightness); gl.uniform1f(uniforms.surfaceBrightness, options.surfaceBrightness);
     gl.uniform4f(uniforms.auroraColor, ...options.auroraColor); gl.uniform4f(uniforms.backgroundColor, ...options.backgroundColor);
     gl.uniform1f(uniforms.illumination, options.illumination);
+    gl.uniform1f(uniforms.ambient, options.ambient);
     gl.uniform1f(uniforms.auroraPreview, options.auroraPreview && options.auroraEnabled ? 1 : 0);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texture); gl.uniform1i(uniforms.earth, 0);
     gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, cosmos); gl.uniform1i(uniforms.cosmos, 1);
