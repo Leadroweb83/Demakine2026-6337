@@ -9,6 +9,7 @@ import { OldUrls } from "./old-urls";
 import { Images } from "./images";
 import { Structured } from "./structured";
 import { Tips } from "./tips";
+import { Duel } from "./duel";
 import { SEO_GEO_TABS, type SeoGeoTab } from "./tabs";
 
 /** O que cada aba recebe: ir para outra aba (opcionalmente já numa página) e a página aberta, se houver. */
@@ -24,6 +25,7 @@ const PANELS: Record<SeoGeoTab, (p: PanelProps) => ReactNode> = {
   imagens: (p) => <Images {...p} />,
   "dados-estruturados": (p) => <Structured {...p} />,
   dicas: (p) => <Tips {...p} />,
+  guerra: (p) => <Duel {...p} />,
 };
 
 /** Área "SEO e GEO" do painel (só super admin): abas com a visão geral, as páginas, as regras e as ferramentas. */
