@@ -33,7 +33,10 @@ export interface RotatingCtaProps {
   className?: string;
 }
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const CHARS = " ABCDEFGHIJKLMNOPQRSTUVWXYZÇÁÃÉÍÓÚ0123456789,.!?-";
+const STEP = 125; // ms de cada virada de plaquinha
+const STAGGER = 42; // ms entre uma letra e a seguinte
+const esc = (c: string) => (c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : c);
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function wrap(text: string, cols: number): string[] {
@@ -49,7 +52,12 @@ function wrap(text: string, cols: number): string[] {
   return lines;
 }
 
-/** Letreiro de aeroporto: grade fixa de células; cada uma gira letras até parar na letra certa. */
+/**
+ * Letreiro de aeroporto de verdade: cada letra é uma plaquinha de duas metades.
+ * A metade de cima cai, mostrando a letra seguinte, e a de baixo sobe para fechar a virada.
+ * As plaquinhas viram uma a uma, da esquerda para a direita, passando pelas letras do
+ * alfabeto em ordem até parar na certa.
+ */
 function FlapBoard({ text, columns, rows }: { text: string; columns: number; rows: number }) {
   const ref = React.useRef<HTMLSpanElement>(null);
   const first = React.useRef(true);
@@ -58,56 +66,110 @@ function FlapBoard({ text, columns, rows }: { text: string; columns: number; row
     while (l.length < rows) l.push("");
     return l.map((s) => s.padEnd(columns, " "));
   }, [text, columns, rows]);
+  // O React desenha as plaquinhas uma única vez; depois só o letreiro mexe nelas.
+  const initial = React.useRef(lines);
 
   React.useEffect(() => {
     const root = ref.current;
     if (!root) return;
     const cells = Array.from(root.querySelectorAll<HTMLElement>("[data-c]"));
     const target = lines.join("");
-    const put = (c: HTMLElement, ch: string) => {
-      c.textContent = ch === " " ? "\u00a0" : ch;
-      c.dataset.e = ch === " " ? "1" : "0";
-    };
-    if (first.current || reduced()) {
-      first.current = false;
-      cells.forEach((c, k) => put(c, target[k]));
-      return;
-    }
     const timers: number[] = [];
-    cells.forEach((cell, i) => {
-      const goal = target[i] === " " ? " " : target[i];
-      if (cell.textContent === goal) return;
-      const col = i % columns;
-      const row = Math.floor(i / columns);
-      const spins = 5 + col + row * 3;
+    let alive = true;
+
+    const paint = (cell: HTMLElement, ch: string) => {
+      cell.querySelectorAll<HTMLElement>(".rc-g").forEach((g) => (g.textContent = ch === " " ? "\u00a0" : ch));
+      cell.dataset.v = ch;
+      cell.dataset.e = ch === " " ? "1" : "0";
+    };
+    const flip = (cell: HTMLElement, next: string, done: () => void) => {
+      const cur = cell.dataset.v ?? " ";
+      const g = (sel: string) => cell.querySelector<HTMLElement>(sel + " .rc-g")!;
+      const show = (c: string) => (c === " " ? "\u00a0" : c);
+      g(".rc-top").textContent = show(next); // por baixo da aba que cai
+      g(".rc-ft").textContent = show(cur); // a aba que cai ainda mostra a letra antiga
+      g(".rc-fb").textContent = show(next); // a aba que sobe já mostra a nova
+      cell.classList.add("rc-go");
+      timers.push(
+        window.setTimeout(() => {
+          if (!alive) return;
+          paint(cell, next);
+          cell.classList.remove("rc-go");
+          done();
+        }, STEP),
+      );
+    };
+    const settle = (cell: HTMLElement, goal: string, delay: number) => {
+      const from = CHARS.indexOf(cell.dataset.v ?? " ");
+      const to = CHARS.indexOf(goal);
+      if (to < 0) return paint(cell, goal);
+      if (from === to) return;
+      const L = CHARS.length;
+      const count = Math.min(7, (to - from + L) % L || L);
+      const seq = Array.from({ length: count }, (_, j) => CHARS[(to - (count - 1 - j) + L) % L]);
+      let k = 0;
+      const next = () => {
+        if (!alive || k >= seq.length) return;
+        flip(cell, seq[k++], next);
+      };
+      timers.push(window.setTimeout(next, delay));
+    };
+
+    const run = (fromBlank: boolean) => {
+      if (!alive) return;
+      if (fromBlank) cells.forEach((c) => paint(c, " "));
       let n = 0;
-      const id = window.setInterval(() => {
-        n++;
-        if (n >= spins) {
-          put(cell, target[i]);
-          window.clearInterval(id);
-        } else {
-          cell.textContent = CHARS[(Math.random() * CHARS.length) | 0];
-          cell.dataset.e = "0";
-        }
-        cell.classList.remove("rc-tick");
-        void cell.offsetWidth;
-        cell.classList.add("rc-tick");
-      }, 45);
-      timers.push(id);
-    });
-    return () => timers.forEach((t) => window.clearInterval(t));
-  }, [lines, columns]);
+      cells.forEach((c, i) => {
+        const goal = target[i] ?? " ";
+        if ((c.dataset.v ?? " ") !== goal) settle(c, goal, n++ * STAGGER);
+      });
+    };
+
+    if (reduced()) {
+      first.current = false;
+      cells.forEach((c, i) => paint(c, target[i] ?? " "));
+    } else if (first.current) {
+      first.current = false;
+      cells.forEach((c) => paint(c, " "));
+      // Na abertura da home o letreiro só começa quando a introdução em vídeo termina.
+      if (document.documentElement.classList.contains("intro-on")) {
+        const go = () => window.setTimeout(() => run(false), 350);
+        window.addEventListener("mk:intro-end", go, { once: true });
+        return () => {
+          alive = false;
+          window.removeEventListener("mk:intro-end", go);
+          timers.forEach((t) => window.clearTimeout(t));
+        };
+      }
+      timers.push(window.setTimeout(() => run(false), 250));
+    } else run(false);
+
+    return () => {
+      alive = false;
+      timers.forEach((t) => window.clearTimeout(t));
+    };
+  }, [lines]);
 
   return (
     <span ref={ref} className="rc-board" aria-hidden="true" style={{ ["--cols" as string]: columns }}>
-      {lines.map((line, r) => (
+      {initial.current.map((line, r) => (
         <span key={r} className="rc-row">
-          {Array.from(line).map((ch, c) => (
-            <span key={c} data-c data-e={ch === " " ? "1" : "0"} className="rc-cell">
-              {ch === " " ? " " : ch}
-            </span>
-          ))}
+          {Array.from(line).map((ch, c) => {
+            const t = ch === " " ? "\u00a0" : esc(ch);
+            const half = (cls: string) => (
+              <span className={"rc-h " + cls}>
+                <span className="rc-g" dangerouslySetInnerHTML={{ __html: t }} />
+              </span>
+            );
+            return (
+              <span key={c} data-c data-v={ch} data-e={ch === " " ? "1" : "0"} className="rc-cell">
+                {half("rc-top rc-s")}
+                {half("rc-bot rc-s")}
+                {half("rc-top rc-ft")}
+                {half("rc-bot rc-fb")}
+              </span>
+            );
+          })}
         </span>
       ))}
     </span>
@@ -208,12 +270,21 @@ export default function RotatingCta({
 @keyframes rc-out{to{opacity:0;transform:translateY(calc(var(--rc-y) * -1)) rotateX(calc(var(--rc-rx) * -1));filter:blur(var(--rc-blur))}}
 .rc-board{display:grid;gap:.12em;font-size:min(clamp(1.5rem,3.4vw,3.1rem),calc((100vw - 48px) / (var(--cols) * .98)))}
 .rc-row{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:.1em;width:fit-content}
-.rc-cell{display:grid;place-items:center;width:.86em;height:1.34em;border-radius:.1em;background:linear-gradient(#141c22 49%,#05080b 50%,#0f161b 51%);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);color:#fff;font-family:var(--font-display);line-height:1;backface-visibility:hidden}
-.rc-cell{transition:opacity .4s}
-.rc-cell[data-e="1"]{opacity:.26}
-.rc-tick{animation:rc-flip .09s linear}
-@keyframes rc-flip{from{transform:rotateX(-62deg);filter:brightness(1.7)}}
+.rc-cell{position:relative;display:block;width:.86em;height:1.34em;perspective:1.1em;font-family:var(--font-display);line-height:1;transition:opacity .4s}
+.rc-cell[data-e="1"]{opacity:.3}
+.rc-cell::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:#000;z-index:5}
+.rc-h{position:absolute;left:0;right:0;height:50%;overflow:hidden;color:#fff;backface-visibility:hidden}
+.rc-top{top:0;border-radius:.1em .1em 0 0;background:linear-gradient(#1b252d,#0e1419);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 1px 0 0 rgba(255,255,255,.05),inset -1px 0 0 rgba(255,255,255,.05)}
+.rc-bot{bottom:0;border-radius:0 0 .1em .1em;background:linear-gradient(#090d11,#141c22);box-shadow:inset 0 -1px 0 rgba(255,255,255,.06),inset 1px 0 0 rgba(255,255,255,.05),inset -1px 0 0 rgba(255,255,255,.05)}
+.rc-g{position:absolute;left:0;right:0;height:200%;display:grid;place-items:center;font-size:inherit}
+.rc-top .rc-g{top:0}
+.rc-bot .rc-g{top:-100%}
+.rc-ft{z-index:3;transform-origin:50% 100%}
+.rc-fb{z-index:2;transform-origin:50% 0;transform:rotateX(90deg)}
+.rc-go .rc-ft{animation:rc-ft calc(var(--rc-step,125ms) / 2) ease-in forwards}
+.rc-go .rc-fb{animation:rc-fb calc(var(--rc-step,125ms) / 2) ease-out calc(var(--rc-step,125ms) / 2) forwards}
+@keyframes rc-ft{to{transform:rotateX(-90deg);filter:brightness(.55)}}
+@keyframes rc-fb{from{transform:rotateX(90deg);filter:brightness(.55)}to{transform:rotateX(0);filter:brightness(1)}}
 .rc-caret{display:inline-block;width:.06em;height:.82em;margin-left:.06em;background:var(--color-brand);vertical-align:-.04em;animation:rc-blink 1s steps(2) infinite}
 @keyframes rc-blink{50%{opacity:0}}
 .rc-body{margin-top:22px;animation:rc-body .7s var(--rc-ease) both}
@@ -224,7 +295,7 @@ export default function RotatingCta({
 .rc-dot::after{content:"";width:100%;height:3px;border-radius:2px;background:rgba(255,255,255,.28);transition:background .3s}
 .rc-dot[aria-current="true"]::after{background:var(--color-brand)}
 .rc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-@media (prefers-reduced-motion:reduce){.rc-swap,.rc-body,.rc-tick,.rc-caret{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.rc-swap,.rc-body,.rc-go .rc-ft,.rc-go .rc-fb,.rc-caret{animation:none!important}}
 `}</style>
 
       <Tag className="rc-title">
