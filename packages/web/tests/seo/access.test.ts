@@ -63,13 +63,11 @@ describe("abas da área SEO e GEO", () => {
 describe("menu do painel", () => {
   const src = () => Bun.file(new URL("../../src/web/pages/admin.tsx", import.meta.url)).text();
 
-  test("o item SEO e GEO vem logo abaixo de SEO das páginas", async () => {
+  test("SEO das páginas deixou o menu: título e descrição se editam em SEO e GEO > Páginas", async () => {
     const s = await src();
-    const seo = s.indexOf('{ id: "seo", label: "SEO das páginas"');
-    const geo = s.indexOf('{ id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" }');
-    expect(seo).toBeGreaterThan(0);
-    expect(geo).toBeGreaterThan(seo);
-    expect(s.slice(seo, geo).split("\n").length).toBeLessThanOrEqual(2); // a linha seguinte
+    expect(s).toContain('{ id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" }');
+    expect(s).not.toContain("SEO das páginas");
+    expect(s).not.toContain("AdminSeo");
   });
 
   test("admin.tsx usa o allowed de access.ts e não guarda uma cópia", async () => {

@@ -38,7 +38,7 @@ export function OldUrls(_: PanelProps) {
         <>
           <p className="text-[13px] text-dm-ink/65" aria-live="polite">
             {r.results.length} testados, {r.results.filter((x) => x.needsRedirect).length} precisam de redirecionamento
-            {r.rejected.length > 0 && `, ${r.rejected.length} linhas recusadas`}
+            {r.rejected.length > 0 && `, ${r.rejected.length} ${r.rejected.length === 1 ? "linha recusada" : "linhas recusadas"}`}
             {r.truncated && ". A lista passou de 500: teste o resto em outra rodada"}.
           </p>
           {r.rejected.length > 0 && (

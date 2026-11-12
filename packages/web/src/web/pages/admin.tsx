@@ -19,7 +19,6 @@ import {
   History,
   Signpost,
   Quote,
-  SearchCheck,
   House,
   ListOrdered,
   Trash2,
@@ -42,7 +41,6 @@ import { AdminNotifications } from "../admin/notifications";
 import { AdminActivity } from "../admin/activity";
 import { AdminRedirects } from "../admin/redirects";
 import { AdminLists } from "../admin/lists";
-import { AdminSeo } from "../admin/seo";
 import { AdminHome } from "../admin/home";
 import { AdminSections } from "../admin/sections";
 import { AdminVisits } from "../admin/visits";
@@ -74,7 +72,6 @@ const NAV: NavItem[] = [
   { id: "vagas", label: "Vagas", Icon: Briefcase, area: "vagas" },
   { id: "midia", label: "Mídia", Icon: Images, area: "conteudo" },
   { id: "site", label: "Dados do site", Icon: Sliders, area: "config" },
-  { id: "seo", label: "SEO das páginas", Icon: SearchCheck, area: "config" },
   { id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" },
   { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config" },
   { id: "usuarios", label: "Usuários", Icon: Users, area: "usuarios" },
@@ -280,7 +277,6 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           {current === "atividades" && <AdminActivity user={user} />}
           {current === "redirecionamentos" && <AdminRedirects />}
           {current === "listas" && <AdminLists />}
-          {current === "seo" && <AdminSeo />}
           {current === "seo-geo" && <SeoGeo />}
           {current === "home" && <AdminHome />}
           {current === "secoes" && <AdminSections />}
