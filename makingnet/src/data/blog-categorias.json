@@ -1,0 +1,158 @@
+[
+ {
+  "slug": "marketing-digital",
+  "name": "Marketing Digital",
+  "description": "",
+  "count": 242
+ },
+ {
+  "slug": "estrategias",
+  "name": "Estratégias",
+  "description": "",
+  "count": 162
+ },
+ {
+  "slug": "ferramentas-marketing-digital",
+  "name": "Ferramentas de Marketing Digital",
+  "description": "",
+  "count": 141
+ },
+ {
+  "slug": "blog",
+  "name": "Blog",
+  "description": "",
+  "count": 63
+ },
+ {
+  "slug": "seo",
+  "name": "SEO (Search Engine Optimization)",
+  "description": "",
+  "count": 55
+ },
+ {
+  "slug": "google-ads",
+  "name": "Google Ads",
+  "description": "",
+  "count": 40
+ },
+ {
+  "slug": "inteligencia-artificial",
+  "name": "Inteligência Artificial",
+  "description": "",
+  "count": 23
+ },
+ {
+  "slug": "geo",
+  "name": "GEO (Generative Engine Optimization)",
+  "description": "",
+  "count": 20
+ },
+ {
+  "slug": "buscas-e-buscadores",
+  "name": "Buscas e buscadores",
+  "description": "",
+  "count": 19
+ },
+ {
+  "slug": "marketing-de-conteudo",
+  "name": "Marketing de conteúdo",
+  "description": "",
+  "count": 19
+ },
+ {
+  "slug": "conteudo",
+  "name": "Conteúdo",
+  "description": "",
+  "count": 17
+ },
+ {
+  "slug": "inbound-marketing",
+  "name": "Inbound Marketing",
+  "description": "",
+  "count": 17
+ },
+ {
+  "slug": "website",
+  "name": "Website",
+  "description": "",
+  "count": 16
+ },
+ {
+  "slug": "materiais-educativos",
+  "name": "Materiais Educativos",
+  "description": "",
+  "count": 12
+ },
+ {
+  "slug": "links-patrocinados",
+  "name": "Links Patrocinados",
+  "description": "",
+  "count": 9
+ },
+ {
+  "slug": "datas-especiais",
+  "name": "Datas especiais",
+  "description": "",
+  "count": 6
+ },
+ {
+  "slug": "jornada-de-compras",
+  "name": "Jornada de compras",
+  "description": "",
+  "count": 5
+ },
+ {
+  "slug": "palavras-chave",
+  "name": "Palavras-chave",
+  "description": "",
+  "count": 4
+ },
+ {
+  "slug": "presenca-online",
+  "name": "Presença Online",
+  "description": "",
+  "count": 4
+ },
+ {
+  "slug": "e-commerce",
+  "name": "E-commerce",
+  "description": "",
+  "count": 3
+ },
+ {
+  "slug": "lgpd",
+  "name": "LGPD",
+  "description": "",
+  "count": 3
+ },
+ {
+  "slug": "big-data",
+  "name": "Big Data",
+  "description": "",
+  "count": 2
+ },
+ {
+  "slug": "anuncios",
+  "name": "Anúncios",
+  "description": "",
+  "count": 1
+ },
+ {
+  "slug": "google-meu-negocio",
+  "name": "Google Meu Negócio",
+  "description": "",
+  "count": 1
+ },
+ {
+  "slug": "lojas-virtuais",
+  "name": "Lojas Virtuais",
+  "description": "",
+  "count": 1
+ },
+ {
+  "slug": "trafego-pago",
+  "name": "Tráfego Pago",
+  "description": "",
+  "count": 1
+ }
+]
