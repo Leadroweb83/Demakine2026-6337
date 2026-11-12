@@ -56,13 +56,15 @@ type NavItem = {
   Icon: typeof BarChart3;
   area: Area;
   soon?: boolean;
+  /** item de SEO: fica num bloco verde à parte no menu */
+  seo?: boolean;
 };
 
 const NAV: NavItem[] = [
   { id: "overview", label: "Dashboard", Icon: BarChart3, area: "livre" },
-  { id: "visitas", label: "Visitas do site", Icon: Activity, area: "config" },
-  { id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" },
-  { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config" },
+  { id: "visitas", label: "Visitas do site", Icon: Activity, area: "config", seo: true },
+  { id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo", seo: true },
+  { id: "redirecionamentos", label: "Redirecionamentos", Icon: Signpost, area: "config", seo: true },
   { id: "leads", label: "Leads", Icon: ClipboardList, area: "leads" },
   { id: "home", label: "Home", Icon: House, area: "conteudo" },
   { id: "secoes", label: "Ordem das seções", Icon: ListOrdered, area: "conteudo" },
@@ -80,6 +82,17 @@ const NAV: NavItem[] = [
   { id: "lixeira", label: "Lixeira", Icon: Trash2, area: "config" },
   { id: "conta", label: "Minha conta", Icon: UserCircle2, area: "livre" },
 ];
+
+/** Agrupa itens seguidos de SEO num bloco só; os demais ficam soltos. */
+function navGroups(items: NavItem[]): NavItem[][] {
+  const out: NavItem[][] = [];
+  for (const n of items) {
+    const last = out[out.length - 1];
+    if (last && Boolean(last[0]!.seo) === Boolean(n.seo) && n.seo) last.push(n);
+    else out.push([n]);
+  }
+  return out;
+}
 
 function Soon({ label }: { label: string }) {
   return (
@@ -126,6 +139,48 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
 
   const item = nav.find((n) => n.id === current);
 
+  const renderNavItem = (n: NavItem) => {
+    const active = n.id === current;
+    return (
+      <button
+        key={n.id}
+        onClick={() => go(n.id)}
+        title={n.label}
+        className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13.5px] font-semibold transition-colors ${
+          active
+            ? "bg-white text-dm-blue-deep"
+            : n.seo
+              ? "text-[#cfeee0] hover:bg-white/10 hover:text-white"
+              : "text-white/70 hover:bg-white/10 hover:text-white"
+        }`}
+      >
+        <n.Icon size={18} className={`shrink-0 ${n.seo && !active ? "text-[#5fe0a5]" : ""}`} />
+        {!collapsed && (
+          <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+            <span className="truncate">{n.label}</span>
+            {!n.soon && (badges[n.id] ?? 0) > 0 && (
+              <span
+                className="rounded-full bg-dm-red px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white"
+                title={`${badges[n.id]} candidatura(s) nova(s)`}
+              >
+                {badges[n.id]}
+              </span>
+            )}
+            {n.soon && (
+              <span
+                className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
+                  active ? "bg-dm-blue/10 text-dm-blue" : "bg-white/15 text-white/70"
+                }`}
+              >
+                em breve
+              </span>
+            )}
+          </span>
+        )}
+      </button>
+                );
+  };
+
   return (
     <div className="flex min-h-screen bg-dm-surface">
       {mobileOpen && (
@@ -167,45 +222,15 @@ function Panel({ user, onSignOut }: { user: PanelUser; onSignOut: () => void }) 
           </div>
 
           <nav className="mt-2 space-y-1 px-2.5">
-            {nav.map((n) => {
-              const active = n.id === current;
-              return (
-                <button
-                  key={n.id}
-                  onClick={() => go(n.id)}
-                  title={n.label}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13.5px] font-semibold transition-colors ${
-                    active
-                      ? "bg-white text-dm-blue-deep"
-                      : "text-white/70 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <n.Icon size={18} className="shrink-0" />
-                  {!collapsed && (
-                    <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
-                      <span className="truncate">{n.label}</span>
-                      {!n.soon && (badges[n.id] ?? 0) > 0 && (
-                        <span
-                          className="rounded-full bg-dm-red px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white"
-                          title={`${badges[n.id]} candidatura(s) nova(s)`}
-                        >
-                          {badges[n.id]}
-                        </span>
-                      )}
-                      {n.soon && (
-                        <span
-                          className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
-                            active ? "bg-dm-blue/10 text-dm-blue" : "bg-white/15 text-white/70"
-                          }`}
-                        >
-                          em breve
-                        </span>
-                      )}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+            {navGroups(nav).map((group) =>
+              group[0]!.seo ? (
+                <div key={group[0]!.id} className="my-1.5 space-y-1 rounded-2xl bg-[#0f3a3a] p-1">
+                  {group.map(renderNavItem)}
+                </div>
+              ) : (
+                group.map(renderNavItem)
+              ),
+            )}
           </nav>
         </div>
 

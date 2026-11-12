@@ -65,7 +65,7 @@ describe("menu do painel", () => {
 
   test("SEO das páginas deixou o menu: título e descrição se editam em SEO e GEO > Páginas", async () => {
     const s = await src();
-    expect(s).toContain('{ id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo" }');
+    expect(s).toMatch(/\{ id: "seo-geo", label: "SEO e GEO", Icon: Radar, area: "seo-geo"/);
     expect(s).not.toContain("SEO das páginas");
     expect(s).not.toContain("AdminSeo");
   });
@@ -75,6 +75,7 @@ describe("menu do painel", () => {
     const ids = [...s.matchAll(/^\s*\{ id: "([a-z-]+)", label:/gm)].map((m) => m[1]);
     const i = ids.indexOf("visitas");
     expect(ids.slice(i, i + 4)).toEqual(["visitas", "seo-geo", "redirecionamentos", "leads"]);
+    for (const id of ["visitas", "seo-geo", "redirecionamentos"]) expect(s).toMatch(new RegExp(`id: "${id}",[^}]*seo: true`));
   });
 
   test("admin.tsx usa o allowed de access.ts e não guarda uma cópia", async () => {
