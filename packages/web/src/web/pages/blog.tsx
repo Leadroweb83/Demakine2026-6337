@@ -23,7 +23,7 @@ export default function Blog() {
     <>
       <Seo
         title="Blog Demakine | Guias técnicos sobre transporte industrial"
-        description="Guias completos sobre esteiras e roscas transportadoras, manutenção preventiva, escolha de equipamento e presença da Demakine nas maiores feiras do agronegócio."
+        description="Guias completos sobre esteiras e roscas transportadoras, manutenção preventiva, escolha de equipamento e a Demakine nas maiores feiras do agronegócio."
         path="/blog"
         jsonLd={blogJsonLd(posts)}
       />

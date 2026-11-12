@@ -51,7 +51,7 @@ export default function Vagas() {
     <>
       <Seo
         title="Vagas | Trabalhe na Demakine"
-        description="Vagas abertas na fábrica da Demakine em Limeira/SP: produção, solda, montagem e comercial. Candidate-se online ou cadastre seu currículo no banco de talentos."
+        description="Vagas abertas na fábrica da Demakine em Limeira/SP: produção, solda, montagem e comercial. Candidate-se online ou envie o currículo ao banco de talentos."
         path="/vagas"
       />
 
