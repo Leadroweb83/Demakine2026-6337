@@ -76,7 +76,7 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
 .eh-copy{max-width:min(720px,58%)}
 .eh-h1{margin:0 0 26px!important;font-family:var(--font-sans)!important;font-size:11px!important;font-weight:500!important;line-height:1.5!important;
   letter-spacing:.4em!important;text-transform:uppercase;color:var(--color-brand)}
-.eh-astro{position:absolute;right:clamp(-40px,4vw,110px);top:50%;width:clamp(250px,36vw,620px);margin-top:calc(clamp(250px,36vw,620px) * -.56);
+.eh-astro{--w:clamp(230px,min(35vw,52svh),580px);position:absolute;right:clamp(-20px,5vw,130px);top:50%;width:var(--w);margin-top:calc(var(--w) * -0.774 + 44px);
   pointer-events:none;will-change:transform}
 .eh-orbit{animation:eh-orbit 26s linear infinite}
 .eh-spin{animation:eh-spin 18s ease-in-out infinite alternate}
@@ -100,7 +100,7 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
   .eh-body{align-items:flex-end}
   .eh-wrap{padding-bottom:84px}
   .eh-copy{max-width:none}
-  .eh-astro{right:-6%;top:12%;margin-top:0;width:min(74vw,400px)}
+  .eh-astro{--w:min(58vw,300px);right:-4%;top:10%;margin-top:0;width:var(--w)}
   .eh-shade{background:linear-gradient(0deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.5) 46%,transparent 74%)}
   .eh-scroll{display:none}
 }
@@ -119,7 +119,7 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
         <div className="eh-astro" ref={parallaxRef} aria-hidden="true">
           <div className="eh-orbit">
             <div className="eh-spin">
-              <img src={astronaut} alt="" width={576} height={655} fetchPriority="high" decoding="async" draggable={false} />
+              <img src={astronaut} alt="" width={900} height={1393} fetchPriority="high" decoding="async" draggable={false} />
             </div>
           </div>
         </div>
