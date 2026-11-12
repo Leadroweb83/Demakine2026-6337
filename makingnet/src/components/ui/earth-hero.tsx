@@ -34,19 +34,23 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
     const globe = planetRef.current;
     const sky = spaceRef.current;
     if (!root || !layer || !globe || !sky || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const cur = { x: 0, y: 0, s: 0 };
-    const goal = { x: 0, y: 0, s: 0 };
+    const cur = { x: 0, y: 0, s: 0, a: (-140 * Math.PI) / 180 };
+    const goal = { x: 0, y: 0, s: 0, a: (-140 * Math.PI) / 180 };
     let frame = 0;
     const tick = () => {
       frame = 0;
       cur.x += (goal.x - cur.x) * 0.06;
       cur.y += (goal.y - cur.y) * 0.06;
       cur.s += (goal.s - cur.s) * 0.1;
+      cur.a += (goal.a - cur.a) * 0.09;
+      // O foco de luz fica sempre na borda do planeta, na direção do ponteiro.
+      globe.style.setProperty("--sx", (50 + 50 * Math.cos(cur.a)).toFixed(2) + "%");
+      globe.style.setProperty("--sy", (50 + 50 * Math.sin(cur.a)).toFixed(2) + "%");
       layer.style.transform = `translate3d(${(cur.x * -46).toFixed(1)}px, ${(cur.y * -30 + cur.s * -0.28).toFixed(1)}px, 0) rotate(${(cur.x * 4).toFixed(2)}deg)`;
       // Camadas mais distantes andam menos e no sentido oposto: dá profundidade.
       globe.style.transform = `translate3d(${(cur.x * 18).toFixed(1)}px, ${(cur.y * 12 + cur.s * -0.1).toFixed(1)}px, 0)`;
       sky.style.transform = `translate3d(${(cur.x * 7).toFixed(1)}px, ${(cur.y * 5 + cur.s * -0.04).toFixed(1)}px, 0) scale(1.06)`;
-      if (Math.abs(goal.x - cur.x) + Math.abs(goal.y - cur.y) + Math.abs(goal.s - cur.s) > 0.002) frame = requestAnimationFrame(tick);
+      if (Math.abs(goal.x - cur.x) + Math.abs(goal.y - cur.y) + Math.abs(goal.s - cur.s) + Math.abs(goal.a - cur.a) > 0.002) frame = requestAnimationFrame(tick);
     };
     const kick = () => {
       if (!frame) frame = requestAnimationFrame(tick);
@@ -55,6 +59,11 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
       if (e.pointerType === "touch") return;
       goal.x = (e.clientX / window.innerWidth - 0.5) * 2;
       goal.y = (e.clientY / window.innerHeight - 0.5) * 2;
+      const box = globe.getBoundingClientRect();
+      let ang = Math.atan2(e.clientY - (box.top + box.height / 2), e.clientX - (box.left + box.width / 2));
+      // Só o arco superior da borda aparece na tela: ponteiro abaixo do centro vai para a ponta mais próxima.
+      if (ang > 0) ang = ang > Math.PI / 2 ? -Math.PI + 0.08 : -0.08;
+      goal.a = Math.max(-Math.PI + 0.08, Math.min(-0.08, ang));
       kick();
     };
     const onScroll = () => {
@@ -76,7 +85,7 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
       <style>{`
 .eh-root{position:relative;margin-top:-72px;height:100svh;min-height:640px;max-height:1100px;background:#04060c;overflow:hidden}
 .eh-space{position:absolute;inset:-4%;background:center/cover no-repeat;will-change:transform}
-.eh-planet{--g:min(172svh,112vw);--sx:17.5%;--sy:12%;position:absolute;width:var(--g);height:var(--g);left:calc(66% - var(--g) / 2);top:calc(79% - var(--g) / 2);will-change:transform}
+.eh-planet{--g:min(86svh,56vw);--sx:11.7%;--sy:17.9%;position:absolute;width:var(--g);height:var(--g);left:calc(66% - var(--g) / 2);top:calc(79% - var(--g) / 2);will-change:transform}
 .eh-planet>img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;animation:eh-drift 42s ease-in-out infinite alternate;filter:drop-shadow(0 0 60px rgba(60,130,255,.4))}
 .eh-air{position:absolute;inset:-5%;z-index:0;border-radius:50%;background:radial-gradient(closest-side,transparent 86%,rgba(90,160,255,.4) 93%,rgba(50,110,230,.12) 98%,transparent 100%);animation:eh-breathe 9s ease-in-out infinite alternate}
 .eh-sun{position:absolute;z-index:0;left:var(--sx);top:var(--sy);width:calc(var(--g) * 1.25);height:calc(var(--g) * 1.25);translate:-50% -50%;pointer-events:none;
@@ -120,7 +129,7 @@ export default function EarthHero({ heading, items, astronaut, planet, space }: 
   .eh-wrap{padding-bottom:84px}
   .eh-copy{max-width:none}
   .eh-astro{--w:min(58vw,300px);right:-4%;top:10%;margin-top:0;width:var(--w)}
-  .eh-planet{--g:224vw;--sx:24%;--sy:9%;left:calc(60% - var(--g) / 2);top:calc(30% + 4px)}
+  .eh-planet{--g:112vw;--sx:21.3%;--sy:9%;left:calc(60% - var(--g) / 2);top:calc(30% - var(--g) / 2 + 40px)}
   .eh-shade{background:linear-gradient(0deg,rgba(2,4,9,.88) 0%,rgba(2,4,9,.62) 40%,rgba(2,4,9,.12) 66%,transparent 80%)}
   .eh-scroll{display:none}
 }
