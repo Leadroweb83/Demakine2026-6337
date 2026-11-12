@@ -11,7 +11,6 @@
  */
 
 import * as React from "react";
-import { EarthBlaze } from "@/components/ui/earth-blaze";
 import RotatingCta, { type CtaItem } from "@/components/ui/rotating-cta";
 
 export interface EarthHeroProps {
@@ -19,17 +18,22 @@ export interface EarthHeroProps {
   heading: string;
   items: CtaItem[];
   astronaut: string;
-  textureUrl: string;
+  planet: string;
+  space: string;
 }
 
-export default function EarthHero({ heading, items, astronaut, textureUrl }: EarthHeroProps) {
+export default function EarthHero({ heading, items, astronaut, planet, space }: EarthHeroProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const parallaxRef = React.useRef<HTMLDivElement>(null);
+  const planetRef = React.useRef<HTMLDivElement>(null);
+  const spaceRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const root = rootRef.current;
     const layer = parallaxRef.current;
-    if (!root || !layer || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const globe = planetRef.current;
+    const sky = spaceRef.current;
+    if (!root || !layer || !globe || !sky || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const cur = { x: 0, y: 0, s: 0 };
     const goal = { x: 0, y: 0, s: 0 };
     let frame = 0;
@@ -39,6 +43,9 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
       cur.y += (goal.y - cur.y) * 0.06;
       cur.s += (goal.s - cur.s) * 0.1;
       layer.style.transform = `translate3d(${(cur.x * -46).toFixed(1)}px, ${(cur.y * -30 + cur.s * -0.28).toFixed(1)}px, 0) rotate(${(cur.x * 4).toFixed(2)}deg)`;
+      // Camadas mais distantes andam menos e no sentido oposto: dá profundidade.
+      globe.style.transform = `translate3d(${(cur.x * 18).toFixed(1)}px, ${(cur.y * 12 + cur.s * -0.1).toFixed(1)}px, 0)`;
+      sky.style.transform = `translate3d(${(cur.x * 7).toFixed(1)}px, ${(cur.y * 5 + cur.s * -0.04).toFixed(1)}px, 0) scale(1.06)`;
       if (Math.abs(goal.x - cur.x) + Math.abs(goal.y - cur.y) + Math.abs(goal.s - cur.s) > 0.002) frame = requestAnimationFrame(tick);
     };
     const kick = () => {
@@ -67,9 +74,14 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
   return (
     <section ref={rootRef} className="eh-root">
       <style>{`
-.eh-root{position:relative;margin-top:-72px;height:100svh;min-height:640px;max-height:1100px;background:#000;overflow:hidden}
-.eh-root [data-earth-blaze]{position:absolute!important;inset:0;height:100%}
-.eh-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.36) 0%,rgba(0,0,0,.12) 44%,transparent 66%),
+.eh-root{position:relative;margin-top:-72px;height:100svh;min-height:640px;max-height:1100px;background:#04060c;overflow:hidden}
+.eh-space{position:absolute;inset:-4%;background:center/cover no-repeat;will-change:transform}
+.eh-planet{--g:min(86svh,56vw);position:absolute;right:calc(var(--g) * -.08);top:50%;width:var(--g);height:var(--g);margin-top:calc(var(--g) * -.47);will-change:transform}
+.eh-planet::before{content:"";position:absolute;inset:-9%;border-radius:50%;background:radial-gradient(closest-side,rgba(70,150,255,.42),rgba(40,100,220,.14) 62%,transparent 100%);animation:eh-breathe 9s ease-in-out infinite alternate}
+.eh-planet img{position:relative;display:block;width:100%;height:100%;object-fit:contain;animation:eh-drift 42s ease-in-out infinite alternate;filter:drop-shadow(0 0 40px rgba(60,130,255,.35))}
+@keyframes eh-breathe{from{opacity:.7;transform:scale(.97)}to{opacity:1;transform:scale(1.03)}}
+@keyframes eh-drift{from{transform:rotate(-2.5deg) scale(1)}to{transform:rotate(2.5deg) scale(1.025)}}
+.eh-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,4,9,.55) 0%,rgba(2,4,9,.2) 42%,transparent 62%),
   linear-gradient(0deg,var(--color-background) 0%,transparent 10%)}
 .eh-copy{text-shadow:0 2px 24px rgba(0,0,0,.55)}
 .eh-body{position:absolute;inset:0;display:flex;align-items:center}
@@ -102,42 +114,38 @@ export default function EarthHero({ heading, items, astronaut, textureUrl }: Ear
   .eh-wrap{padding-bottom:84px}
   .eh-copy{max-width:none}
   .eh-astro{--w:min(58vw,300px);right:-4%;top:10%;margin-top:0;width:var(--w)}
-  .eh-shade{background:linear-gradient(0deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.28) 46%,transparent 74%)}
+  .eh-planet{--g:112vw;right:-34vw;top:12%;margin-top:0}
+  .eh-shade{background:linear-gradient(0deg,rgba(2,4,9,.78) 0%,rgba(2,4,9,.4) 46%,transparent 74%)}
   .eh-scroll{display:none}
 }
-@media (prefers-reduced-motion:reduce){.eh-orbit,.eh-spin{animation:none}}
+@media (prefers-reduced-motion:reduce){.eh-orbit,.eh-spin,.eh-planet img,.eh-planet::before{animation:none}}
 `}</style>
 
-      <EarthBlaze
-        textureUrl={textureUrl}
-        starCount={2200}
-        illumination={1.15}
-        surfaceBrightness={1.25}
-        ambient={1.7}
-        auroraColor="#20c4f4"
-        style={{ aspectRatio: "auto" }}
-      >
-        <div className="eh-shade" aria-hidden="true" />
-        <div className="eh-astro" ref={parallaxRef} aria-hidden="true">
-          <div className="eh-orbit">
-            <div className="eh-spin">
-              <img src={astronaut} alt="" width={900} height={1393} fetchPriority="high" decoding="async" draggable={false} />
-            </div>
+      <div className="eh-space" ref={spaceRef} style={{ backgroundImage: `url("${space}")` }} aria-hidden="true" />
+      <div className="eh-planet" ref={planetRef} aria-hidden="true">
+        <img src={planet} alt="" width={1500} height={1501} fetchPriority="high" decoding="async" draggable={false} />
+      </div>
+      <div className="eh-shade" aria-hidden="true" />
+      <div className="eh-astro" ref={parallaxRef} aria-hidden="true">
+        <div className="eh-orbit">
+          <div className="eh-spin">
+            <img src={astronaut} alt="" width={900} height={1393} fetchPriority="high" decoding="async" draggable={false} />
           </div>
         </div>
-        <div className="eh-body">
-          <div className="eh-wrap">
-            <div className="eh-copy">
-              <h1 className="eh-h1">{heading}</h1>
-              <RotatingCta items={items} effect="roll" as="p" interval={5600} />
-            </div>
+      </div>
+      <div className="eh-body">
+        <div className="eh-wrap">
+          <div className="eh-copy">
+            <h1 className="eh-h1">{heading}</h1>
+            <RotatingCta items={items} effect="roll" as="p" interval={5600} />
           </div>
         </div>
-        <div className="eh-scroll" aria-hidden="true">
-          <span>Role para explorar</span>
-          <i />
-        </div>
-      </EarthBlaze>
+      </div>
+      <div className="eh-scroll" aria-hidden="true">
+        <span>Role para explorar</span>
+        <i />
+      </div>
+
     </section>
   );
 }
