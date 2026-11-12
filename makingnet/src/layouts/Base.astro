@@ -23,7 +23,18 @@ interface Props {
   ogType?: 'website' | 'article';
 }
 
-const { title, description, path, crumbs = [], schema = [], ogImage = '/img/og-making.jpg', noindex = false, ogType = 'website' } = Astro.props;
+const { title: rawTitle, description: rawDescription, path, crumbs = [], schema = [], ogImage = '/img/og-making.jpg', noindex = false, ogType = 'website' } = Astro.props;
+// Título e descrição no tamanho que o Google exibe inteiro (corte em palavra inteira).
+const cortar = (t: string, max: number) => {
+  if (t.length <= max) return t;
+  const c = t.slice(0, max - 1);
+  return c.slice(0, c.lastIndexOf(' ') > max * 0.6 ? c.lastIndexOf(' ') : c.length).replace(/[\s,:;.\-–]+$/, '') + '…';
+};
+const sufixo = ' | Making';
+const title = rawTitle.endsWith(sufixo)
+  ? cortar(rawTitle.slice(0, -sufixo.length), 60 - sufixo.length) + sufixo
+  : cortar(rawTitle, 60);
+const description = cortar(rawDescription, 158);
 const canonical = new URL(path, site.url).href;
 const ogUrl = new URL(ogImage, site.url).href;
 

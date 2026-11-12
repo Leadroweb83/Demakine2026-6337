@@ -20,7 +20,7 @@ const schema = [{
 }];
 const destaque = ['seo', 'geo', 'google-ads', 'inteligencia-artificial', 'inbound-marketing', 'marketing-de-conteudo', 'website', 'materiais-educativos'];
 ---
-<Base title={page === 1 ? 'Blog de Marketing Digital, SEO, GEO e TI | Making' : `Blog de Marketing Digital e TI: página ${page} | Making`} description={`Artigos da Making sobre SEO, GEO, Google Ads, inteligência artificial, sites e estratégias de marketing digital. ${posts.length} conteúdos para sua empresa vender mais.`} path={path} crumbs={crumbs} schema={schema}>
+<Base title={page === 1 ? 'Blog de Marketing Digital, SEO, GEO e TI | Making' : `Blog de Marketing Digital e TI: página ${page} | Making`} description={page === 1 ? `Artigos da Making sobre SEO, GEO, Google Ads, inteligência artificial, sites e estratégias de marketing digital. ${posts.length} conteúdos para sua empresa vender mais.` : `Página ${page} do blog da Making: artigos sobre SEO, GEO, Google Ads, inteligência artificial, sites e marketing digital para sua empresa vender mais.`} path={path} crumbs={crumbs} schema={schema}>
   <PageHero eyebrow={`${posts.length} artigos`} title="Blog sobre marketing digital e TI" crumbs={crumbs} lead={page === 1 ? 'SEO, GEO, tráfego pago, inteligência artificial e estratégias para sua empresa ser encontrada e vender mais.' : `Página ${page} de ${totalPages}`} />
   <section class="section">
     <div class="wrap">
