@@ -72,14 +72,14 @@ export function Marquee() {
     <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
       {marquee.map((w, i) => (
         <li key={w} className="flex items-center">
-          <span className={`display px-8 text-[clamp(3rem,8vw,7rem)] uppercase ${i % 2 ? "outline-text" : "text-bone"}`}>{w}</span>
+          <span className={`display px-8 text-[clamp(3rem,8vw,7rem)] uppercase ${i % 2 ? "outline-text" : "text-ink"}`}>{w}</span>
           <Monogram className="h-8 w-8 text-copper lg:h-12 lg:w-12" />
         </li>
       ))}
     </ul>
   );
   return (
-    <div data-marquee className="overflow-hidden border-y hairline bg-ink py-8 lg:py-12">
+    <div data-marquee className="overflow-hidden border-y hairline bg-paper text-ink py-8 lg:py-12">
       <div className="marquee-track">{row(false)}{row(true)}</div>
     </div>
   );
@@ -87,16 +87,16 @@ export function Marquee() {
 
 export function Areas() {
   return (
-    <section id="areas" className="bg-ink py-24 lg:py-36">
+    <section id="areas" className="bg-paper text-ink py-24 lg:py-36">
       <div className="wrap">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-end">
           <div>
-            <p className="eyebrow" data-reveal>Áreas de atuação</p>
+            <p className="eyebrow !text-copper-lo" data-reveal>Áreas de atuação</p>
             <h2 className="display mt-5 text-[clamp(2.4rem,5.5vw,4.75rem)]" data-split>
-              Mais que advocacia, soluções para o seu <span className="text-copper-hi">amanhã.</span>
+              Mais que advocacia, soluções para o seu <span className="text-copper-lo">amanhã.</span>
             </h2>
           </div>
-          <p className="max-w-lg text-bone/75 lg:justify-self-end" data-reveal>
+          <p className="max-w-lg text-ink/70 lg:justify-self-end" data-reveal>
             Experiência, estratégia e compromisso para proteger o que importa e impulsionar novos caminhos.
           </p>
         </div>
@@ -107,17 +107,17 @@ export function Areas() {
               <Link
                 href={`/areas/${a.slug}`}
                 data-cursor-label="Ver área"
-                className="group grid gap-x-10 gap-y-4 py-9 transition-colors duration-500 hover:bg-navy lg:grid-cols-[5rem_1fr_1.2fr_auto] lg:items-baseline lg:px-6 lg:py-12"
+                className="group grid gap-x-10 gap-y-4 py-9 transition-colors duration-500 hover:bg-bone lg:grid-cols-[5rem_1fr_1.2fr_auto] lg:items-baseline lg:px-6 lg:py-12"
               >
-                <span className="font-display text-xl text-copper/70">0{i + 1}</span>
-                <h3 className="display text-[clamp(2rem,4.4vw,3.6rem)] transition-transform duration-700 ease-out-expo group-hover:translate-x-3 group-hover:text-copper-hi">
+                <span className="font-display text-xl text-copper-lo">0{i + 1}</span>
+                <h3 className="display text-[clamp(2rem,4.4vw,3.6rem)] transition-transform duration-700 ease-out-expo group-hover:translate-x-3 group-hover:text-copper-lo">
                   {a.name}
                 </h3>
                 <div>
-                  <p className="text-bone/85">{a.summary}</p>
-                  <p className="mt-3 text-sm text-mist">{a.topics.join(" · ")}</p>
+                  <p className="text-ink/85">{a.summary}</p>
+                  <p className="mt-3 text-sm text-ink/55">{a.topics.join(" · ")}</p>
                 </div>
-                <span className="flex h-12 w-12 items-center justify-center self-center rounded-full border border-copper/40 text-copper transition-all duration-500 group-hover:border-copper-hi group-hover:bg-copper-hi group-hover:text-ink max-lg:hidden">
+                <span className="flex h-12 w-12 items-center justify-center self-center rounded-full border border-copper-lo/50 text-copper-lo transition-all duration-500 group-hover:border-ink group-hover:bg-ink group-hover:text-bone max-lg:hidden">
                   <Arrow />
                 </span>
               </Link>
@@ -274,10 +274,10 @@ export function Approach() {
 
 export function Faq() {
   return (
-    <section id="duvidas" className="bg-ink py-24 lg:py-36">
+    <section id="duvidas" className="bg-paper text-ink py-24 lg:py-36">
       <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
         <div>
-          <p className="eyebrow" data-reveal>Dúvidas frequentes</p>
+          <p className="eyebrow !text-copper-lo" data-reveal>Dúvidas frequentes</p>
           <h2 className="display mt-5 text-[clamp(2.4rem,5vw,4.4rem)]" data-split>
             Antes de falar com a gente.
           </h2>
@@ -287,9 +287,9 @@ export function Faq() {
             <details key={f.q} className="group border-b hairline" data-reveal>
               <summary className="flex items-center justify-between gap-6 py-6">
                 <h3 className="font-display text-2xl leading-snug lg:text-[1.75rem]">{f.q}</h3>
-                <span className="faq-plus text-2xl font-light text-copper transition-transform duration-300" aria-hidden="true">+</span>
+                <span className="faq-plus text-2xl font-light text-copper-lo transition-transform duration-300" aria-hidden="true">+</span>
               </summary>
-              <p className="max-w-2xl pb-7 text-bone/75">{f.a}</p>
+              <p className="max-w-2xl pb-7 text-ink/70">{f.a}</p>
             </details>
           ))}
         </div>

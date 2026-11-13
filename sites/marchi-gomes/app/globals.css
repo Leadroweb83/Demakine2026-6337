@@ -2,21 +2,22 @@
 @import "@fontsource-variable/cormorant-garamond";
 
 @theme {
-  --color-ink: #070b14;
-  --color-navy: #0c1422;
-  --color-navy-2: #121c2f;
+  --color-ink: #0a1322;
+  --color-navy: #0f1b2e;
+  --color-navy-2: #16243b;
   --color-copper: #c9a078;
   --color-copper-hi: #e8c8a0;
-  --color-copper-lo: #8f6b47;
+  --color-copper-lo: #7d5a38;
+  --color-paper: #fbf9f5;
   --color-bone: #f3eee5;
   --color-mist: #a8b0c0;
   --font-display: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, serif;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   /* Tokens shadcn mapeados para a marca */
-  --color-background: #070b14;
+  --color-background: #0a1322;
   --color-foreground: #f3eee5;
   --color-primary: #c9a078;
-  --color-primary-foreground: #070b14;
+  --color-primary-foreground: #0a1322;
   --color-secondary: #121c2f;
   --color-secondary-foreground: #f3eee5;
   --color-accent: #1b2740;
@@ -90,7 +91,7 @@ html.lenis { scroll-behavior: auto; }
 .has-cursor [data-cursor] { display: flex; }
 
 .marquee-track { display: flex; width: max-content; will-change: transform; }
-.outline-text { color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--color-copper) 45%, transparent); }
+.outline-text { color: transparent; -webkit-text-stroke: 1px var(--color-copper-lo); }
 
 /* Equipe: cards que abrem ao passar o mouse ou focar */
 .team-card { flex: 1 1 0; min-width: 0; transition: flex-grow 0.8s var(--ease-out-expo); }

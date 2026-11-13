@@ -60,10 +60,10 @@ export default async function AreaPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-ink py-24 lg:py-32">
+      <section className="bg-paper text-ink py-24 lg:py-32">
         <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
           <div>
-            <p className="eyebrow" data-reveal>Como podemos ajudar</p>
+            <p className="eyebrow !text-copper-lo" data-reveal>Como podemos ajudar</p>
             <h2 className="display mt-5 text-[clamp(2.2rem,4.6vw,4rem)]" data-split>
               Temas em que atuamos em {area.title}.
             </h2>
@@ -71,7 +71,7 @@ export default async function AreaPage({ params }: Props) {
           <ol className="border-t hairline">
             {area.topics.map((t, i) => (
               <li key={t} className="flex items-baseline gap-8 border-b hairline py-7" data-reveal>
-                <span className="font-display text-lg text-copper/70">0{i + 1}</span>
+                <span className="font-display text-lg text-copper-lo">0{i + 1}</span>
                 <h3 className="font-display text-[clamp(1.5rem,2.6vw,2.1rem)] leading-snug">{t}</h3>
               </li>
             ))}
