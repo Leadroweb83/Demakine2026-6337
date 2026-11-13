@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 import { leadSchema } from "@/lib/lead";
 import { site } from "@/content/site";
+
+export const runtime = "nodejs";
+
+/** Uma linha so: evita quebra de cabecalho em e-mail. */
+const oneLine = (v: string) => v.replace(/[\r\n]+/g, " ").trim();
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -29,15 +35,40 @@ export async function POST(req: Request) {
   };
 
   const webhook = process.env.LEAD_WEBHOOK_URL;
-  const { RESEND_API_KEY: resendKey, LEAD_FROM_EMAIL: from, LEAD_NOTIFY_EMAIL: notify } = process.env;
-  const canEmail = Boolean(resendKey && from);
+  const env = process.env;
+  // Destino dos contatos: por padrao o e-mail geral do escritorio.
+  const notify = env.LEAD_NOTIFY_EMAIL || site.contact.email;
 
-  const send = (to: string, subject: string, text: string) =>
-    fetch("https://api.resend.com/emails", {
+  /**
+   * Envio de e-mail, em ordem de preferencia:
+   * 1) SMTP da propria hospedagem (SMTP_HOST, SMTP_USER, SMTP_PASS), sem servico externo;
+   * 2) Resend (RESEND_API_KEY + LEAD_FROM_EMAIL).
+   */
+  const smtp = env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS
+    ? nodemailer.createTransport({
+        host: env.SMTP_HOST,
+        port: Number(env.SMTP_PORT || 465),
+        secure: (env.SMTP_SECURE ?? "true") !== "false",
+        auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+        connectionTimeout: 10_000,
+        socketTimeout: 15_000,
+      })
+    : null;
+  const resend = env.RESEND_API_KEY && env.LEAD_FROM_EMAIL ? { key: env.RESEND_API_KEY, from: env.LEAD_FROM_EMAIL } : null;
+  const canEmail = Boolean(smtp || resend);
+
+  const send = async (to: string, subject: string, text: string, replyTo?: string): Promise<boolean> => {
+    if (smtp) {
+      const from = `"${site.name}" <${env.SMTP_FROM || env.SMTP_USER}>`;
+      return smtp.sendMail({ from, to, subject: oneLine(subject), text, ...(replyTo ? { replyTo } : {}) })
+        .then(() => true).catch((e) => { console.error("[lead:smtp]", e?.message ?? e); return false; });
+    }
+    return fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { authorization: `Bearer ${resendKey}`, "content-type": "application/json" },
-      body: JSON.stringify({ from, to, subject, text }),
+      headers: { authorization: `Bearer ${resend!.key}`, "content-type": "application/json" },
+      body: JSON.stringify({ from: resend!.from, to, subject: oneLine(subject), text, ...(replyTo ? { reply_to: replyTo } : {}) }),
     }).then((r) => r.ok).catch(() => false);
+  };
 
   // O lead precisa chegar a pelo menos um destino: webhook (CRM) ou e-mail do escritorio.
   const deliveries: Promise<boolean>[] = [];
@@ -47,10 +78,11 @@ export async function POST(req: Request) {
         .then((r) => r.ok).catch(() => false),
     );
   }
-  if (canEmail && notify) {
+  if (canEmail) {
     const origin = Object.entries(lead.attribution ?? {}).map(([k, v]) => `${k}: ${v}`).join("\n");
     deliveries.push(send(notify, `Novo contato pelo site: ${lead.name}`,
-      `Nome: ${lead.name}\nTelefone: ${lead.phone}\nE-mail: ${lead.email || "-"}\nAssunto: ${lead.area}\nDia preferido: ${lead.preferredDate || "-"}\n\nMensagem:\n${lead.message || "-"}\n\nOrigem:\n${origin || "-"}`));
+      `Nome: ${lead.name}\nTelefone: ${lead.phone}\nE-mail: ${lead.email || "-"}\nAssunto: ${lead.area}\nDia preferido: ${lead.preferredDate || "-"}\n\nMensagem:\n${lead.message || "-"}\n\nOrigem:\n${origin || "-"}\n\nPara responder, use o botao Responder (vai para ${lead.email || "o telefone informado"}).`,
+      lead.email || undefined));
   }
 
   if (deliveries.length === 0) {
