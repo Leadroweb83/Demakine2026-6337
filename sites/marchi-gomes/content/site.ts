@@ -44,6 +44,10 @@ export const images = {
   detail: "/img/primeiro-atendimento.webp",
   /** Imagem ao lado dos servicos, na home. */
   services: "/img/servicos-assinatura.webp",
+  /** Fundo da secao O futuro (foto 3:2, de preferencia 2400 px). Vazio = fundo azul com luz dourada. */
+  future: "",
+  /** Imagem ao lado das duvidas frequentes, na home. */
+  faq: "/img/primeiro-atendimento.webp",
   /** Imagem da pagina Para empresas. */
   business: "/img/area-empresarial.webp",
   /** Video do hero (mp4 sem som). Vazio = o hero usa a foto. */

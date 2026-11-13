@@ -25,6 +25,7 @@ const sections: { h: string; p: string[] }[] = [
   { h: "Com quem compartilhamos", p: [
     "Com fornecedores de tecnologia que operam o site, o recebimento das mensagens e, se você consentir, as ferramentas de medição. Não vendemos dados pessoais.",
     "Ao clicar nos botões de WhatsApp, a conversa acontece naquele aplicativo, sujeito às regras de privacidade do próprio serviço.",
+    "O mapa da seção de contato é carregado do Google Maps. Ao exibi-lo, o Google pode registrar o acesso (como o endereço IP) conforme a sua própria política de privacidade.",
   ] },
   { h: "Cookies e medição", p: ["O site só ativa cookies de medição depois do seu aceite, e você pode recusar sem prejuízo da navegação. Para rever a escolha, apague os dados do site no seu navegador e o aviso será exibido novamente."] },
   { h: "Por quanto tempo guardamos", p: ["Pelo tempo necessário para atender ao seu contato e cumprir obrigações legais e profissionais aplicáveis."] },

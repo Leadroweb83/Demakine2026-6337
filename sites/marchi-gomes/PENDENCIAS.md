@@ -95,6 +95,12 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 - [ ] Os telefones e e-mails individuais dos cartões NÃO estão publicados no site; o número
       do site é o da Gisele, (19) 98184-3010
 
+## Imagens que aguardam arquivo
+- [ ] Foto da estátua com a advogada desfocada (vertical): trocar a imagem da seção "O escritório"
+      (`images.firm`). Reenviar como arquivo anexado, o print na conversa não vira arquivo
+- [ ] Foto da estátua com livros e bokeh (3:2): fundo da seção "O futuro" (`images.future`, já preparado,
+      com degradê escuro à esquerda). Melhorar (2x, nitidez) ao receber o arquivo
+
 ## Arquivos de marca
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório
 - [x] Hero: `public/img/hero-escritorio.webp` (imagem enviada pelo Leandro)

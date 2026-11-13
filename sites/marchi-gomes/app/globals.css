@@ -147,6 +147,16 @@ html.lenis { scroll-behavior: auto; }
 .menu-overlay.is-open .menu-item { opacity: 1; transform: none; transition: opacity 0.7s var(--ease-out-expo), transform 0.9s var(--ease-out-expo); transition-delay: calc(0.12s + var(--i) * 0.035s); }
 @media (prefers-reduced-motion: reduce) { .menu-overlay .menu-item { transition: none !important; transform: none; } }
 
+/* Moldura padrao das imagens: canto arredondado e sombra leve.
+   isolation evita que o arredondamento "vaze" nos filhos com parallax (Safari). */
+.tone, [data-clip], .frame, .team-card {
+  border-radius: 1.25rem;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 20px 38px -22px rgb(0 0 0 / 0.42);
+}
+.frame-sm { border-radius: 0.9rem; }
+
 /* Fotos claras de banco de imagens: veu azul-noite para combinar com o resto do site */
 .tone::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgb(10 19 34 / 0.12), rgb(10 19 34 / 0.5)); }
 

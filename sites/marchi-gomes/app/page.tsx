@@ -16,7 +16,7 @@ export default function Home() {
       <Pillars />
       <Future />
       <Articles />
-      <Faq />
+      <Faq image={images.faq} imageAlt="Uma pessoa entrega uma caneta a outra, sobre uma mesa com um documento para assinar" />
       <Contact />
       <JsonLd data={legalServiceLd()} />
       <JsonLd data={faqLd()} />

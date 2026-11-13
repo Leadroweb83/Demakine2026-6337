@@ -87,7 +87,7 @@ export function MotionRoot({ children }: { children: ReactNode }) {
           // Imagens que se revelam por recorte, de baixo para cima
           q("[data-clip]").forEach((el) => {
             gsap.fromTo(el, { clipPath: "inset(100% 0% 0% 0%)" }, {
-              clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.out",
+              clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.out", onComplete: () => gsap.set(el, { clearProps: "clipPath" }),
               scrollTrigger: { trigger: el.parentElement, start: "top 80%", once: true },
             });
           });

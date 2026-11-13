@@ -242,7 +242,7 @@ export function Areas() {
         </ol>
 
         {/* Painel que acompanha o cursor sobre as linhas (so em desktop com mouse) */}
-        <div data-preview aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-40 hidden h-[16rem] w-[12rem] overflow-hidden bg-navy shadow-2xl shadow-ink/40">
+        <div data-preview aria-hidden="true" className="frame frame-sm pointer-events-none fixed left-0 top-0 z-40 hidden h-[16rem] w-[12rem] overflow-hidden bg-navy shadow-2xl shadow-ink/40">
           {featuredAreas.map((a, i) => (
             <div key={a.slug} data-preview-item className="absolute inset-0">
               {a.image ? (
@@ -444,8 +444,21 @@ export function Timeline() {
 
 export function Future({ full = false }: { full?: boolean }) {
   return (
-    <section id="futuro" className="hero-light py-28 lg:py-44">
-      <div className="wrap">
+    <section id="futuro" className={`hero-light relative isolate overflow-hidden py-28 lg:py-44 ${images.future ? "lg:flex lg:min-h-[92svh] lg:items-center" : ""}`}>
+      {images.future && (
+        /* Foto de fundo grande, escurecida pela esquerda para o texto ler bem; a estatua fica a direita */
+        <div className="absolute inset-0 -z-10" aria-hidden="true">
+          <div className="absolute inset-[-7%]" data-parallax="0.12">
+            <div className="absolute inset-0" data-kenburns>
+              <Image src={images.future} alt="" fill sizes="100vw" quality={85} className="object-cover object-[78%_center] max-md:object-[70%_center]" />
+            </div>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-ink from-15% via-ink/80 via-48% to-ink/10 max-lg:via-ink/85 max-lg:to-ink/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-ink via-transparent to-ink" />
+          <div className="absolute inset-0 bg-[radial-gradient(60%_70%_at_82%_45%,rgb(201_160_120/0.16),transparent)] mix-blend-screen" />
+        </div>
+      )}
+      <div className="wrap w-full">
         <p className="eyebrow" data-reveal>O futuro</p>
         <p className="display mt-8 max-w-[22ch] text-[clamp(2.2rem,5.4vw,5rem)] text-copper-hi" data-fill>
           {future.statement}
@@ -531,7 +544,7 @@ export function Approach() {
   );
 }
 
-export function Faq({ items = faqs, heading = "Antes de falar com a gente." }: { items?: { q: string; a: string }[]; heading?: string }) {
+export function Faq({ items = faqs, heading = "Antes de falar com a gente.", image, imageAlt = "" }: { items?: { q: string; a: string }[]; heading?: string; image?: string; imageAlt?: string }) {
   return (
     <section id="duvidas" className="bg-paper text-ink py-24 lg:py-36">
       <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
@@ -540,6 +553,13 @@ export function Faq({ items = faqs, heading = "Antes de falar com a gente." }: {
           <h2 className="display mt-5 text-[clamp(2.4rem,5vw,4.4rem)]" data-split>
             {heading}
           </h2>
+          {image && (
+            <div className="tone relative mt-10 aspect-[16/10] max-w-md overflow-hidden lg:aspect-square lg:max-w-sm" data-clip>
+              <div className="absolute inset-x-0 bottom-[-12%] top-[-4%]" data-parallax="0.14">
+                <Image src={image} alt={imageAlt} fill sizes="(min-width: 1024px) 24rem, 90vw" className="object-cover object-[50%_40%]" />
+              </div>
+            </div>
+          )}
         </div>
         <div className="border-t hairline">
           {items.map((f) => (
