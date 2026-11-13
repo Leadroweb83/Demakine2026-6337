@@ -19,36 +19,23 @@
  * (AW-969480580)", as conversões 210/211 ou o "Listener - WhatsApp flutuante (Mailbiz)", apague o item
  * correspondente daqui.
  *
- * Consentimento (Consent Mode v2): tudo nasce negado e vira concedido no aceite do banner. Dados
- * pessoais (conversões otimizadas) só são enviados com aceite. O /admin não é medido.
+ * Consentimento (Consent Mode v2, regra em lib/consent.ts): sem escolha salva, liberado no Brasil e negado na
+ * Europa; "Só os essenciais" nega em qualquer país; "Aceitar todos" libera. Dados de contato (conversões
+ * otimizadas) vão sempre que o consentimento estiver liberado. O /admin não é medido.
  */
+import { DENIED, GRANTED, adsDataAllowed, consentDefaults, looksLikeEurope, readChoice } from "./consent";
+
 const GTM_ID = "GTM-W4686GTS";
 const GA4_ID = "G-4E4C8CCSVE";
 const ADS_ID = "AW-969480580";
 const ADS_LABEL_FORM = "gpVZCPen--gYEISzpM4D";
 const ADS_LABEL_WHATSAPP = "Er2mCPKx--gYEISzpM4D";
 
-/** Mesma chave do banner (components/cookie-consent.tsx). */
-const CONSENT_KEY = "demakine_cookie_consent";
-
 type Dict = Record<string, unknown>;
 type GtmWindow = Window & { dataLayer?: unknown[] };
 
-const DENIED = {
-  ad_storage: "denied",
-  ad_user_data: "denied",
-  ad_personalization: "denied",
-  analytics_storage: "denied",
-} as const;
-
-const GRANTED = {
-  ad_storage: "granted",
-  ad_user_data: "granted",
-  ad_personalization: "granted",
-  analytics_storage: "granted",
-} as const;
-
 let loaded = false;
+/** Os dados de contato podem ir às conversões do Google Ads? (ver adsDataAllowed em lib/consent.ts) */
 let granted = false;
 
 const w = () => (typeof window === "undefined" ? null : (window as GtmWindow));
@@ -86,30 +73,24 @@ function loadTags() {
   bindClickTracking();
 }
 
-/** Na abertura do site: consentimento negado (ou concedido, se já aceitou antes) e tags carregadas. */
+/** Na abertura do site: consentimento padrão (por país e pela escolha salva) e tags carregadas. */
 export function initGtm() {
   const win = w();
   if (!win) return;
   win.dataLayer = win.dataLayer ?? [];
 
-  let stored: string | null = null;
-  try {
-    stored = win.localStorage.getItem(CONSENT_KEY);
-  } catch {
-    /* armazenamento bloqueado: segue negado */
-  }
-  granted = stored === "all";
-
-  gtag("consent", "default", granted ? GRANTED : { ...DENIED, wait_for_update: 500 });
+  const choice = readChoice();
+  for (const command of consentDefaults(choice)) gtag("consent", "default", command);
+  granted = adsDataAllowed(choice, looksLikeEurope());
   gtag("set", "ads_data_redaction", true);
   gtag("set", "url_passthrough", true);
   loadTags();
 }
 
-/** Escolha feita no banner de cookies ("all" = aceitar tudo). */
+/** Escolha feita no banner de cookies ("all" = aceitar tudo). Sempre avisa o Google: o padrão pode ter sido outro. */
 export function updateConsent(choice: string) {
   const next = choice === "all";
-  if (next !== granted) gtag("consent", "update", next ? GRANTED : DENIED);
+  gtag("consent", "update", next ? GRANTED : DENIED);
   granted = next;
   // quem abriu direto no /admin e depois foi para o site ainda não tem as tags
   loadTags();
@@ -127,7 +108,7 @@ export function newEventId(): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* Dados do contato para conversões otimizadas (só com aceite)         */
+/* Dados do contato para conversões otimizadas (com consentimento)     */
 /* ------------------------------------------------------------------ */
 
 type LeadForm = {
@@ -169,7 +150,7 @@ function buildUserData(f: LeadForm, country: string | undefined): UserData {
   };
 }
 
-/** Conversão do Google Ads. Dados pessoais só vão se o visitante aceitou os cookies. */
+/** Conversão do Google Ads. Dados de contato só vão com o consentimento liberado (quem recusou nunca é enviado). */
 function sendAdsConversion(label: string, eventId: string, userData?: UserData) {
   if (granted && userData) gtag("set", "user_data", userData);
   gtag("event", "conversion", { send_to: `${ADS_ID}/${label}`, transaction_id: eventId });

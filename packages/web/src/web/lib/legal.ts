@@ -12,7 +12,7 @@
  * - nome e e-mail do encarregado de dados (DPO) exigido pelo art. 41 da LGPD
  */
 
-export const legalUpdatedAt = "2 de setembro de 2026";
+export const legalUpdatedAt = "11 de novembro de 2026";
 
 /** E-mail usado para pedidos de titular enquanto não há DPO nomeado. */
 export const dpoEmail = "vendas@demakine.com.br";
@@ -85,7 +85,7 @@ export const privacySections: LegalSection[] = [
             "Dados de navegação e páginas vistas",
             "Durante a visita",
             "Medir audiência e entender quais produtos geram procura",
-            "Legítimo interesse, com consentimento para cookies não essenciais",
+            "Legítimo interesse. Você pode se opor desativando os cookies não essenciais",
           ],
         ],
       },
@@ -105,7 +105,7 @@ export const privacySections: LegalSection[] = [
       },
       {
         kind: "p",
-        text: "Os cookies de medição e anúncios são do Google (Google Tag Manager, Google Analytics e Google Ads). Servem para entender quais páginas e produtos são mais procurados e para medir o resultado das nossas campanhas, inclusive quando alguém pede orçamento pelo site ou pelo WhatsApp. O código do Google carrega quando o site abre, mas sem gravar cookies: eles só são ativados depois que você aceita no banner. Sem o aceite, o Google recebe apenas sinais anônimos, sem identificar o seu navegador. Você pode mudar de ideia a qualquer momento pelo link \"Preferências de cookies\", no rodapé, ou apagando os cookies do navegador.",
+        text: "Os cookies de medição e anúncios são do Google (Google Tag Manager, Google Analytics e Google Ads). Servem para entender quais páginas e produtos são mais procurados e para medir o resultado das nossas campanhas, inclusive quando alguém pede orçamento pelo site ou pelo WhatsApp. Para quem acessa do Brasil e dos demais países fora da Europa, eles ficam ligados por padrão. Para quem acessa da Europa, só são ativados depois que você aceita no banner. Em qualquer país você pode desativá-los a qualquer momento, escolhendo \"Só os essenciais\" no banner ou no link \"Preferências de cookies\", no rodapé, ou apagando os cookies do navegador. Quando você escolhe \"Só os essenciais\", o Google passa a receber apenas sinais anônimos, sem identificar o seu navegador. Fechar o banner no X não conta como escolha: vale a regra do seu país.",
       },
       {
         kind: "p",
@@ -126,7 +126,7 @@ export const privacySections: LegalSection[] = [
         items: [
           "Provedor de hospedagem e banco de dados, que armazena os registros do site",
           "Serviço de armazenamento de arquivos, quando você envia foto de peça",
-          "Google, para medição de audiência e de campanhas, só com o seu aceite nos cookies",
+          "Google, para medição de audiência e de campanhas, nos cookies de medição e anúncios, que você pode desativar a qualquer momento",
           "Transportadora, quando há entrega de equipamento ou peça",
           "Autoridades públicas, quando houver obrigação legal ou determinação judicial",
         ],
