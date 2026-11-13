@@ -95,20 +95,15 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 - [ ] Os telefones e e-mails individuais dos cartões NÃO estão publicados no site; o número
       do site é o da Gisele, (19) 98184-3010
 
-## Imagens que aguardam arquivo
-- [ ] Foto da estátua com a advogada desfocada (vertical): trocar a imagem da seção "O escritório"
-      (`images.firm`). Reenviar como arquivo anexado, o print na conversa não vira arquivo
-- [ ] Foto da mão apontando documentos, com pessoas desfocadas (vertical e escura): entra no túnel de
-      imagens da home (`tunnel.items` em `content/site.ts`)
-- [ ] Foto da estátua com livros e bokeh (3:2): fundo da seção "O futuro" (`images.future`, já preparado,
-      com degradê escuro à esquerda). Melhorar (2x, nitidez) ao receber o arquivo
-
-## Mapa
-- A linha dourada do mapa é ilustrativa (liga o "centro" ao escritório), não é uma rota real; a rota
-  real fica no botão Como chegar. Coordenadas do escritório em `office` (`content/site.ts`), lidas do
-  próprio Google Maps do endereço. O cálculo de distância pede a localização do visitante, roda no
-  aparelho dele e não envia nada. O tempo de carro é estimativa (linha reta + 30%, velocidade média
-  por faixa de distância)
+## Imagens geradas por IA
+- As fotos de "O escritório" (estátua com advogada desfocada), "O futuro" (estátua e livro aberto na
+  biblioteca) e "Documentos" no túnel (mão apontando papéis) foram **geradas por IA no Canva** a
+  pedido do Leandro, já que as fotos enviadas por print não viraram arquivo. São imagens ilustrativas
+  (as pessoas aparecem desfocadas e não são reais). Para um escritório de advocacia vale decidir se
+  mantém ilustrações assim ou troca por fotos reais dos sócios e do escritório. Conferir também os
+  termos de uso comercial do Canva para imagens geradas
+- Originais ficam na conta do Canva do Leandro (designs "Open Law Book and Lady Justice Statue",
+  "Minimalist Legal Office with Lady Justice Statue" e "Post para Instagram - Take Action")
 
 ## Arquivos de marca
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório

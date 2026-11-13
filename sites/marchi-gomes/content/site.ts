@@ -45,7 +45,7 @@ export const images = {
   /** Imagem ao lado dos servicos, na home. */
   services: "/img/servicos-assinatura.webp",
   /** Fundo da secao O futuro (foto 3:2, de preferencia 2400 px). Vazio = fundo azul com luz dourada. */
-  future: "",
+  future: "/img/futuro-biblioteca.webp",
   /** Imagem ao lado das duvidas frequentes, na home. */
   faq: "/img/primeiro-atendimento.webp",
   /** Imagem da pagina Para empresas. */
@@ -57,7 +57,7 @@ export const images = {
   /** Primeiro quadro do video: aparece enquanto ele carrega e e o LCP da pagina. */
   heroPoster: "/img/hero-video-poster.webp",
   heroPosterMobile: "/img/hero-video-poster-mobile.webp",
-  firm: "/img/justica.webp",
+  firm: "/img/escritorio-estatua.webp",
 };
 
 /** Palavras das lombadas dos livros nas pecas da marca. */
@@ -111,6 +111,7 @@ export const tunnel = {
     { src: "/img/primeiro-atendimento.webp", title: "Confiança", alt: "Uma pessoa entrega uma caneta a outra, sobre uma mesa com um documento" },
     { src: "/img/servicos-assinatura.webp", title: "Planejamento", alt: "Duas pessoas revisam e assinam um documento, com a estátua da Justiça ao fundo" },
     { src: "/img/area-livros.webp", title: "Patrimônio", alt: "Livros de Direito sobre a mesa do escritório" },
+    { src: "/img/tunel-documentos.webp", title: "Documentos", alt: "Mão com anéis dourados apontando para uma pilha de documentos, com advogados desfocados ao fundo" },
   ],
 };
 

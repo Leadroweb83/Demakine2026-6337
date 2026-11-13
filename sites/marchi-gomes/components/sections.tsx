@@ -388,7 +388,7 @@ export function Firm() {
           {/* Slot de foto real do escritorio/socios. Ate chegar, fica o monograma. */}
           {images.firm ? (
             <div className="absolute inset-x-0 bottom-[-30%] top-[-4%]" data-parallax="-0.3">
-              <Image src={images.firm} alt="Estátua da Justiça, de olhos vendados, segurando a balança" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-top" />
+              <Image src={images.firm} alt="Estátua de bronze da Justiça segurando a balança, com uma advogada lendo ao fundo" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-top" />
             </div>
           ) : (
             <>
@@ -506,7 +506,7 @@ export function Future({ full = false }: { full?: boolean }) {
         <div className="absolute inset-0 -z-10" aria-hidden="true">
           <div className="absolute inset-[-7%]" data-parallax="0.12">
             <div className="absolute inset-0" data-kenburns>
-              <Image src={images.future} alt="" fill sizes="100vw" quality={85} className="object-cover object-[78%_center] max-md:object-[70%_center]" />
+              <Image src={images.future} alt="" fill sizes="100vw" quality={85} className="origin-[0%_20%] scale-[1.38] object-cover object-left max-md:origin-center max-md:scale-100 max-md:object-center" />
             </div>
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-ink from-15% via-ink/80 via-48% to-ink/10 max-lg:via-ink/85 max-lg:to-ink/45" />
