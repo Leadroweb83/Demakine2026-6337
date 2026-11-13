@@ -1,20 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { integrations } from "@/content/site";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { areaOptions, leadSchema, type Lead } from "@/lib/lead";
 import { whatsappHref } from "@/lib/site";
 import { Arrow } from "./icons";
-import CalendarTwo from "./ui/calendar-02";
+import dynamic from "next/dynamic";
+
+// O calendario so e baixado quando o visitante abre o campo de data
+const CalendarTwo = dynamic(() => import("./ui/calendar-02"), { ssr: false, loading: () => <div className="h-[22rem] w-[19rem] border hairline" /> });
 
 const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 type Status = "idle" | "sent" | "error";
 
-export function LeadForm({ defaultArea }: { defaultArea?: string }) {
+export type FormLabels = { name: string; phone: string; email: string; subject: string; select: string; message: string; consent: string; submit: string; sending: string; sent: string; sentText: string; error: string; other: string; unsure: string };
+
+type TurnstileApi = { render: (el: HTMLElement, o: Record<string, unknown>) => string };
+
+export function LeadForm({ defaultArea, labels: L }: { defaultArea?: string; labels?: FormLabels }) {
   const [status, setStatus] = useState<Status>("idle");
   const [day, setDay] = useState<Date>();
+  const [calOpen, setCalOpen] = useState(false);
+  const captcha = useRef<HTMLDivElement>(null);
+  const token = useRef("");
+
+  // Turnstile: so carrega quando ha chave configurada; o desafio e invisivel na maioria das visitas
+  useEffect(() => {
+    const key = integrations.turnstileSiteKey;
+    if (!key || !captcha.current) return;
+    const el = captcha.current;
+    const render = () => (window as unknown as { turnstile?: TurnstileApi }).turnstile?.render(el, {
+      sitekey: key, appearance: "interaction-only", theme: "dark",
+      callback: (t: string) => { token.current = t; },
+    });
+    if ((window as unknown as { turnstile?: TurnstileApi }).turnstile) { render(); return; }
+    const sc = document.createElement("script");
+    sc.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    sc.async = true; sc.onload = render;
+    document.head.append(sc);
+  }, []);
   const {
     register,
     handleSubmit,
@@ -31,7 +58,7 @@ export function LeadForm({ defaultArea }: { defaultArea?: string }) {
   async function onSubmit(form: Lead) {
     let attribution: Record<string, string> = {};
     try { attribution = JSON.parse(sessionStorage.getItem("mg-attr") ?? "{}"); } catch {}
-    const data = { ...form, attribution };
+    const data = { ...form, attribution, turnstileToken: token.current || undefined };
     const res = await fetch("/api/lead", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -49,8 +76,8 @@ export function LeadForm({ defaultArea }: { defaultArea?: string }) {
   if (status === "sent") {
     return (
       <div role="status" className="border hairline p-8">
-        <p className="display text-4xl text-copper-hi">Mensagem recebida.</p>
-        <p className="mt-4 text-bone/80">Nossa equipe retorna o seu contato em horário comercial.</p>
+        <p className="display text-4xl text-copper-hi">{L?.sent ?? "Mensagem recebida."}</p>
+        <p className="mt-4 text-bone/80">{L?.sentText ?? "Nossa equipe retorna o seu contato em horário comercial."}</p>
       </div>
     );
   }
@@ -61,34 +88,35 @@ export function LeadForm({ defaultArea }: { defaultArea?: string }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid gap-6 sm:grid-cols-2">
       <label className="block">
-        <span className="eyebrow">Nome</span>
+        <span className="eyebrow">{L?.name ?? "Nome"}</span>
         <input className="field" autoComplete="name" aria-invalid={!!errors.name} {...register("name")} />
         {err("name")}
       </label>
       <label className="block">
-        <span className="eyebrow">WhatsApp</span>
+        <span className="eyebrow">{L?.phone ?? "WhatsApp"}</span>
         <input className="field" type="tel" inputMode="tel" autoComplete="tel" placeholder="(00) 00000-0000" aria-invalid={!!errors.phone} {...register("phone")} />
         {err("phone")}
       </label>
       <label className="block">
-        <span className="eyebrow">E-mail (opcional)</span>
+        <span className="eyebrow">{L?.email ?? "E-mail (opcional)"}</span>
         <input className="field" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register("email")} />
         {err("email")}
       </label>
       <label className="block">
-        <span className="eyebrow">Assunto</span>
+        <span className="eyebrow">{L?.subject ?? "Assunto"}</span>
         <select className="field" defaultValue="" aria-invalid={!!errors.area} {...register("area")}>
-          <option value="" disabled>Selecione</option>
-          {areaOptions.map((a) => <option key={a}>{a}</option>)}
+          <option value="" disabled>{L?.select ?? "Selecione"}</option>
+          {(L ? areaOptions.slice(-2) : areaOptions).map((a) => <option key={a} value={a}>{L ? (a === "Outra área" ? L.other : L.unsure) : a}</option>)}
         </select>
         {err("area")}
       </label>
       <label className="block sm:col-span-2">
-        <span className="eyebrow">Conte, em poucas linhas, o que você precisa</span>
+        <span className="eyebrow">{L?.message ?? "Conte, em poucas linhas, o que você precisa"}</span>
         <textarea className="field resize-none" rows={3} {...register("message")} />
         {err("message")}
       </label>
-      <details className="sm:col-span-2">
+      {!L && (
+      <details className="sm:col-span-2" onToggle={(e) => e.currentTarget.open && setCalOpen(true)}>
         <summary className="eyebrow flex items-center justify-between border-b hairline py-3">
           <span>
             Melhor dia para o retorno (opcional)
@@ -97,31 +125,33 @@ export function LeadForm({ defaultArea }: { defaultArea?: string }) {
           <span className="faq-plus text-xl text-copper transition-transform duration-300" aria-hidden="true">+</span>
         </summary>
         <div className="mt-5 flex flex-wrap items-start gap-6">
-          <CalendarTwo
+          {calOpen && <CalendarTwo
             value={day}
             onChange={(d) => { setDay(d); setValue("preferredDate", d ? iso(d) : ""); }}
-          />
+          />}
           <p className="max-w-[16rem] text-sm text-mist">
             Escolha um dia útil. O horário é confirmado pela equipe no primeiro contato.
           </p>
         </div>
       </details>
+      )}
+      <div ref={captcha} className="sm:col-span-2 empty:hidden" />
       <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" {...register("company")} />
       <label className="flex items-start gap-3 text-sm text-bone/70 sm:col-span-2">
         <input type="checkbox" className="mt-1 h-4 w-4 accent-[#c9a078]" {...register("consent")} />
         <span>
-          Autorizo o uso destes dados para que o escritório retorne o meu contato, conforme a{" "}
-          <a href="/politica-de-privacidade" className="underline hover:text-copper-hi">política de privacidade</a>.
+          {L ? L.consent : (<>Autorizo o uso destes dados para que o escritório retorne o meu contato, conforme a{" "}
+          <a href="/politica-de-privacidade" className="underline hover:text-copper-hi">política de privacidade</a>.</>)}
           {err("consent")}
         </span>
       </label>
       <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
         <button type="submit" disabled={isSubmitting} className="btn btn-primary disabled:opacity-60" data-magnetic>
-          {isSubmitting ? "Enviando" : "Enviar mensagem"} <Arrow />
+          {isSubmitting ? (L?.sending ?? "Enviando") : (L?.submit ?? "Enviar mensagem")} <Arrow />
         </button>
         {status === "error" && (
           <p role="alert" className="text-sm text-[#f0a48f]">
-            Não foi possível enviar agora. <a className="underline" href={whatsappHref()}>Fale pelo WhatsApp</a>.
+            {L ? L.error : (<>Não foi possível enviar agora. <a className="underline" href={whatsappHref()}>Fale pelo WhatsApp</a>.</>)}
           </p>
         )}
       </div>

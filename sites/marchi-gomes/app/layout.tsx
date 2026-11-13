@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import { MotionRoot } from "@/components/motion-root";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { Tracking } from "@/components/tracking";
 import "./globals.css";
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     template: `%s | ${site.name}`,
   },
   description: site.description,
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", languages: { "pt-BR": "/", en: "/en", es: "/es", "es-PY": "/es", "x-default": "/" } },
   robots: site.launchReady ? { index: true, follow: true } : { index: false, follow: false },
   openGraph: {
     type: "website",
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="conteudo">{children}</main>
           <Footer />
         </MotionRoot>
+        <WhatsAppFloat />
         <Tracking />
       </body>
     </html>

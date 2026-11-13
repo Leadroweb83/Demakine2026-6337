@@ -114,7 +114,7 @@ export function MotionRoot({ children }: { children: ReactNode }) {
 
           // Abertura: monograma e cortina, uma vez por sessao (menos de 1,5s)
           const intro = q("[data-intro]")[0];
-          if (intro && !html.classList.contains("intro-done")) {
+          if (intro && hover && !html.classList.contains("intro-done")) {
             gsap
               .timeline({
                 onComplete: () => {
@@ -183,6 +183,7 @@ export function MotionRoot({ children }: { children: ReactNode }) {
           // Numeros: contador mecanico, cada digito gira em sua coluna
           q("[data-count]").forEach((el) => {
             const text = el.textContent ?? "";
+            el.setAttribute("role", "img");
             el.setAttribute("aria-label", text);
             el.textContent = "";
             const cols: { col: HTMLElement; d: number }[] = [];
@@ -204,7 +205,15 @@ export function MotionRoot({ children }: { children: ReactNode }) {
                 scrollTrigger: { trigger: el, start: "top 88%", once: true },
               });
             });
-            ctx.add(() => () => { el.textContent = text; });
+            ctx.add(() => () => { el.textContent = text; el.removeAttribute("role"); });
+          });
+
+          // 404: o monograma se monta peca por peca
+          q("[data-assemble]").forEach((svg) => {
+            const from = [{ x: -90, y: 0 }, { x: 0, y: -90 }, { x: 60, y: -60, rotation: -25 }, { x: 90, y: 40 }];
+            gsap.utils.toArray<SVGElement>(svg.children).forEach((piece, i) => {
+              gsap.from(piece, { ...from[i % from.length], autoAlpha: 0, duration: 1.1, delay: 0.25 + i * 0.16, ease: "expo.out", transformOrigin: "50% 50%" });
+            });
           });
 
           // Linha que desce ligando os passos
@@ -237,8 +246,12 @@ export function MotionRoot({ children }: { children: ReactNode }) {
             });
           }
 
+          // No celular, a primeira dobra nao e animada (o conteudo ja esta na tela)
+          const above = (el: Element) => !hover && Boolean(el.closest("main section:first-of-type"));
+
           // Titulos: linha a linha, depois que a fonte carregou (evita requebra)
           q("[data-split]").forEach((el) => {
+            if (above(el)) return;
             SplitText.create(el, {
               type: "lines",
               mask: "lines",
@@ -260,6 +273,7 @@ export function MotionRoot({ children }: { children: ReactNode }) {
           q("[data-fill]").forEach((el) => {
             SplitText.create(el, {
               type: "words",
+              aria: "none",
               autoSplit: true,
               onSplit(self) {
                 return gsap.fromTo(self.words, { opacity: 0.16 }, {
@@ -271,7 +285,7 @@ export function MotionRoot({ children }: { children: ReactNode }) {
           });
 
           // Blocos
-          const reveals = q("[data-reveal]");
+          const reveals = q("[data-reveal]").filter((el) => !above(el));
           gsap.set(reveals, { y: 28 });
           ScrollTrigger.batch(reveals, {
             start: "top 90%",

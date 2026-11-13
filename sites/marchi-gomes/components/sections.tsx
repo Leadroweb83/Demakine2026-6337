@@ -474,7 +474,7 @@ export function Approach() {
           <ol data-story-steps className="self-center">
             {approach.map((s, i) => (
               <li key={s.title} data-story-step className="border-t hairline py-8 first:border-t-0 first:pt-0">
-                <span className="font-display text-[clamp(4rem,9vw,8rem)] leading-none text-copper/25">0{i + 1}</span>
+                <span aria-hidden="true" className="font-display text-[clamp(4rem,9vw,8rem)] leading-none text-copper/25">0{i + 1}</span>
                 <h3 className="display mt-2 text-[clamp(1.9rem,3.4vw,3rem)]">{s.title}</h3>
                 <p className="mt-4 max-w-lg text-lg text-bone/75">{s.text}</p>
               </li>

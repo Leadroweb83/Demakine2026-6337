@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { areas, business, site } from "@/content/site";
 import { whatsappHref } from "@/lib/site";
-import { Contact, Services } from "@/components/sections";
+import { Contact, Faq, Services } from "@/components/sections";
 import { Arrow, WhatsAppIcon } from "@/components/icons";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: `Assessoria jurídica para empresas em ${site.contact.city}`,
@@ -80,7 +81,10 @@ export default function BusinessPage() {
         </div>
       </section>
 
+      <Faq items={business.faqs} heading="Dúvidas de quem contrata para a empresa." />
+
       <Contact defaultArea="Empresarial e Societário" />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: business.faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }} />
     </>
   );
 }

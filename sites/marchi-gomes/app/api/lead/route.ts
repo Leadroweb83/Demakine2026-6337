@@ -8,7 +8,19 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ ok: false, error: "Dados inválidos." }, { status: 400 });
   }
-  const { company: _honeypot, ...lead } = parsed.data;
+  const { company: _honeypot, turnstileToken, ...lead } = parsed.data;
+
+  // Anti-spam: com a chave secreta configurada, o envio so passa com token valido
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (secret) {
+    const check = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body: new URLSearchParams({ secret, response: turnstileToken ?? "" }),
+    }).then((r) => r.json() as Promise<{ success?: boolean }>).catch(() => ({ success: false }));
+    if (!check.success) {
+      return NextResponse.json({ ok: false, error: "Verificação de segurança falhou." }, { status: 400 });
+    }
+  }
   const payload = {
     ...lead,
     source: "site",

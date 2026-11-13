@@ -42,8 +42,29 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
 - [ ] `RESEND_API_KEY`, `LEAD_FROM_EMAIL`, `LEAD_NOTIFY_EMAIL`: confirmação ao
       lead e aviso ao escritório por e-mail (exige domínio verificado no Resend)
 
+## Idiomas
+- [ ] `/en` e `/es` (`content/i18n.ts`): versões resumidas em inglês e espanhol,
+      traduzidas a partir do texto institucional. Revisar por falante nativo e
+      confirmar se o escritório atende nesses idiomas
+
+## Lançamento no domínio marchigomes.adv.br
+- [ ] Hoje o domínio mostra só uma listagem de diretório ("Index of /"), sem site
+      anterior: não há URLs antigas para redirecionar
+- [ ] Mover o projeto para um repositório próprio (o projeto Vercel está ligado ao
+      repositório da Demakine, cuja branch principal não contém este site)
+- [ ] Depois disso: adicionar o domínio na Vercel e apontar o DNS
+      (A @ 76.76.21.21 e CNAME www cname.vercel-dns.com, ou os valores que a Vercel indicar)
+- [ ] Antes de mexer no DNS: conferir se há e-mail no domínio e preservar os registros MX
+- [ ] `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` (anti-spam) e
+      `NEXT_PUBLIC_SENTRY_DSN` (erros)
+
+## Medição de velocidade (Lighthouse local, build de produção)
+- Celular: home 94, área 95, escritório 88 em desempenho; LCP 0,8 a 0,9 s; CLS perto de 0
+- Desktop: home 100
+- SEO aparece como 66 só por causa do `noindex` de pré-lançamento
+
 ## Artigos
-- [ ] Os 3 artigos em `content/articles.ts` são RASCUNHOS. Precisam de revisão e
+- [ ] Os 8 artigos em `content/articles.ts` são RASCUNHOS. Precisam de revisão e
       aprovação de um advogado. Enquanto `draft: true`, somem do site no lançamento
 
 ## Integrações (ligam ao preencher o `.env`)

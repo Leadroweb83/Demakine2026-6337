@@ -2,9 +2,9 @@
  * Monograma provisorio, redesenhado a partir das pecas enviadas.
  * Trocar pelo vetor oficial (SVG) assim que o cliente enviar.
  */
-export function Monogram({ className }: { className?: string }) {
+export function Monogram({ className, assemble }: { className?: string; assemble?: boolean }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} aria-hidden="true" fill="currentColor">
+    <svg viewBox="0 0 64 64" className={className} data-assemble={assemble || undefined} overflow="visible" aria-hidden="true" fill="currentColor">
       <rect x="4" y="9" width="3" height="46" />
       <rect x="9.5" y="9" width="7.5" height="46" />
       <polygon points="4,9 23,9 43,36 35,47 17,23 17,9" />

@@ -82,8 +82,12 @@ html.lenis { scroll-behavior: auto; }
 
 /* Abertura: so na primeira visita da sessao, com JS e movimento permitido */
 [data-intro] { display: none; }
-@media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
   .js:not(.intro-done) [data-intro] { display: flex; }
+}
+/* No celular a primeira dobra aparece de imediato: nada de esconder o que define o LCP */
+@media (hover: none) {
+  .js main section:first-of-type [data-reveal], .js main section:first-of-type [data-split] { visibility: visible; }
 }
 
 /* Cursor proprio: so aparece quando o GSAP liga (mouse de verdade) */
@@ -116,6 +120,15 @@ html.lenis { scroll-behavior: auto; }
 
 .toc-link { border-left: 1px solid color-mix(in srgb, var(--color-ink) 15%, transparent); transition: color 0.3s, border-color 0.3s, padding 0.5s var(--ease-out-expo); }
 .toc-link.is-active { border-left: 2px solid var(--color-copper-lo); color: var(--color-ink); padding-left: 1.5rem; }
+
+/* Sublinhado dourado que se desenha da esquerda para a direita */
+.ulink, footer nav a, footer address a, [data-header] nav a, .prose-links a {
+  background-image: linear-gradient(var(--color-copper), var(--color-copper));
+  background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 1px;
+  transition: background-size 0.5s var(--ease-out-expo), color 0.3s; text-decoration: none; padding-bottom: 2px;
+}
+.ulink:hover, footer nav a:hover, footer address a:hover, [data-header] nav a:hover, .prose-links a:hover,
+.ulink:focus-visible, footer nav a:focus-visible, [data-header] nav a:focus-visible { background-size: 100% 1px; }
 
 [data-count] { font-feature-settings: "lnum", "tnum"; }
 

@@ -12,7 +12,7 @@ export const site = {
   name: "Marchi Gomes Advogados",
   shortName: "Marchi Gomes",
   tagline: "Tradição que impulsiona novos caminhos.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.marchigomes.adv.br",
   description:
     "Escritório de advocacia em Limeira, SP, fundado em 1996. Assessoria jurídica consultiva, preventiva e contenciosa para pessoas, famílias e empresas.",
   founded: 1996,
@@ -73,6 +73,9 @@ export const integrations = {
   clarityId: process.env.NEXT_PUBLIC_CLARITY_ID ?? "",
   /** Link do Calendly ou da pagina de agendamento do Google Agenda. */
   schedulingUrl: process.env.NEXT_PUBLIC_SCHEDULING_URL ?? "",
+  /** Cloudflare Turnstile (anti-spam invisivel). Exige tambem TURNSTILE_SECRET_KEY no servidor. */
+  turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "",
+  sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN ?? "",
 };
 
 /**
@@ -298,6 +301,13 @@ export const business = {
     { title: "Comunicação periódica", text: "Informações regulares sobre cada demanda, com a seriedade e a transparência necessárias." },
   ],
   backoffice: ["Controle de prazos", "Revisão técnica", "Gestão documental", "Proteção de informações", "Critérios de prioridade conforme urgência e complexidade"],
+  /** Respostas a VALIDAR com os socios. */
+  faqs: [
+    { q: "A assessoria é contratada por demanda ou de forma contínua?", a: "Das duas formas. A consultoria pode ser pontual, para uma decisão específica, ou continuada, acompanhando a rotina da empresa. O escopo é definido em contrato, conforme a necessidade." },
+    { q: "Como a empresa acompanha as demandas?", a: "Cada assunto tem um responsável definido, com reuniões de acompanhamento e comunicação periódica sobre o andamento." },
+    { q: "Os sócios do escritório participam do atendimento?", a: "Sim. A participação dos sócios faz parte do modo de trabalho do escritório, em especial na definição da estratégia." },
+    { q: "Como as informações da empresa são protegidas?", a: "Além do sigilo profissional, a organização interna do escritório inclui gestão documental e proteção de informações." },
+  ],
   areaSlugs: ["empresarial-e-societario", "contratos", "direito-tributario", "trabalho-e-previdenciario", "bancario-e-financeiro"],
 };
 

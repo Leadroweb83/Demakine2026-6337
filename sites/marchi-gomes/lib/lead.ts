@@ -16,6 +16,7 @@ export const leadSchema = z.object({
   preferredDate: z.union([z.literal(""), z.iso.date()]).optional(),
   /** Origem do lead: utm_*, gclid, fbclid, referrer e pagina de entrada. */
   attribution: z.record(z.string(), z.string().max(500)).optional(),
+  turnstileToken: z.string().max(4096).optional(),
   consent: z.literal(true, "É preciso autorizar o contato."),
   /** Honeypot: humanos deixam vazio. */
   company: z.string().max(0).optional(),
