@@ -98,6 +98,10 @@ html.lenis { scroll-behavior: auto; }
   .js main section:first-of-type [data-reveal], .js main section:first-of-type [data-split] { visibility: visible; }
 }
 
+/* Cortina azul entre secoes: so existe quando o GSAP liga */
+[data-wipe] { display: none; }
+.wipe-ok [data-wipe] { display: block; }
+
 /* Cursor proprio: so aparece quando o GSAP liga (mouse de verdade) */
 [data-cursor] { display: none; }
 .has-cursor [data-cursor] { display: flex; }

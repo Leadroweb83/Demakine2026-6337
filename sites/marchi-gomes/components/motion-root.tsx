@@ -29,6 +29,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
  *   data-fill             frase que vai acendendo palavra a palavra com o scroll
  *   data-drag             elemento arrastavel que volta com mola ao soltar
  *   data-story            secao fixa com passos trocados pelo scroll
+ *   data-scales           balanca da justica que se traca e se equilibra no scroll
+ *   data-wipe             cortina azul que recolhe no topo da secao ao entrar
  * Nada roda com prefers-reduced-motion, e nada altera layout (sem CLS).
  */
 export function MotionRoot({ children }: { children: ReactNode }) {
@@ -150,17 +152,39 @@ export function MotionRoot({ children }: { children: ReactNode }) {
               cx(e.clientX); cy(e.clientY);
               if (!shown) { shown = true; gsap.set(cursor, { x: e.clientX, y: e.clientY }); gsap.to(cursor, { autoAlpha: 1, duration: 0.3 }); }
             };
-            const over = (e: PointerEvent) => {
-              const t = (e.target as Element).closest?.("[data-cursor-label], a, button, summary, [data-drag]");
-              const text = t?.closest<HTMLElement>("[data-cursor-label]")?.dataset.cursorLabel ?? "";
-              label.textContent = text;
-              gsap.to(cursor, { scale: text ? 1 : t ? 0.55 : 0.18, opacity: text || !t ? 1 : 0.28, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+            // Texto do cursor: o que a pagina pede (data-cursor-label) ou o padrao do tipo de elemento
+            const labelFor = (el: Element | null): { text: string; hit: boolean } => {
+              if (!el) return { text: "", hit: false };
+              const custom = el.closest<HTMLElement>("[data-cursor-label]");
+              if (custom) return { text: custom.dataset.cursorLabel ?? "", hit: true };
+              if (el.closest("[data-drag]")) return { text: "Arraste", hit: true };
+              const sum = el.closest("summary");
+              if (sum) return { text: sum.parentElement?.hasAttribute("open") ? "Fechar" : "Abrir", hit: true };
+              const a = el.closest<HTMLAnchorElement>("a[href]");
+              if (a) {
+                const href = a.getAttribute("href") ?? "";
+                if (href.includes("wa.me")) return { text: "WhatsApp", hit: true };
+                if (/^\/(en\/|es\/)?artigos\/.+/.test(href)) return { text: "Ler", hit: true };
+                return { text: "", hit: true };
+              }
+              return { text: "", hit: !!el.closest("button") };
             };
+            const over = (e: PointerEvent) => {
+              const { text, hit } = labelFor(e.target as Element);
+              label.textContent = text;
+              gsap.to(cursor, { scale: text ? 1 : hit ? 0.55 : 0.18, opacity: text || !hit ? 1 : 0.28, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+            };
+            const down = () => gsap.to(cursor, { scale: "*=0.82", duration: 0.2, ease: "power2.out", overwrite: "auto" });
+            const up = (e: PointerEvent) => over(e);
             window.addEventListener("pointermove", move);
             window.addEventListener("pointerover", over);
+            window.addEventListener("pointerdown", down);
+            window.addEventListener("pointerup", up);
             ctx.add(() => () => {
               window.removeEventListener("pointermove", move);
               window.removeEventListener("pointerover", over);
+              window.removeEventListener("pointerdown", down);
+              window.removeEventListener("pointerup", up);
               html.classList.remove("has-cursor");
             });
           }
@@ -362,6 +386,33 @@ export function MotionRoot({ children }: { children: ReactNode }) {
             once: true,
             onEnter: (batch) =>
               gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.08 }),
+          });
+
+          // Balanca da justica: tracado e travessao que se equilibra (com leve sobra no fim)
+          q("[data-scales]").forEach((el) => {
+            const draws = el.querySelectorAll("[data-scales-draw]");
+            const beam = el.querySelector("[data-scales-beam]");
+            const panL = el.querySelector("[data-scales-pan='l']");
+            const panR = el.querySelector("[data-scales-pan='r']");
+            const lines = el.querySelectorAll("[data-scales-line]");
+            gsap.set(draws, { strokeDasharray: 1, strokeDashoffset: 1 });
+            const tl = gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: el, start: "top 88%", end: "bottom 40%", scrub: 0.8 } });
+            tl.fromTo(lines, { scaleX: 0 }, { scaleX: 1, duration: 1 }, 0);
+            tl.to(draws, { strokeDashoffset: 0, duration: 0.9, stagger: 0.12 }, 0);
+            tl.fromTo(beam, { rotation: -11, svgOrigin: "120 40" }, { rotation: 0, svgOrigin: "120 40", duration: 1, ease: "back.out(2.2)" }, 0.6);
+            tl.fromTo(panL, { rotation: 11, svgOrigin: "36 40" }, { rotation: 0, svgOrigin: "36 40", duration: 1, ease: "back.out(2.2)" }, 0.6);
+            tl.fromTo(panR, { rotation: 11, svgOrigin: "204 40" }, { rotation: 0, svgOrigin: "204 40", duration: 1, ease: "back.out(2.2)" }, 0.6);
+          });
+
+          // Cortina azul: cobre o topo da secao e recolhe para cima enquanto ela entra
+          html.classList.add("wipe-ok");
+          ctx.add(() => () => html.classList.remove("wipe-ok"));
+          q("[data-wipe]").forEach((el) => {
+            gsap.fromTo(el, { scaleY: 1 }, {
+              scaleY: 0,
+              ease: "none",
+              scrollTrigger: { trigger: el.parentElement, start: "top 92%", end: "top 36%", scrub: 0.6 },
+            });
           });
 
           // Filetes

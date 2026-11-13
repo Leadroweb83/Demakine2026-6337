@@ -267,7 +267,8 @@ export function AreasMarquee() {
 
 export function Areas() {
   return (
-    <section id="areas" className="bg-paper text-ink pt-24 pb-16 lg:pt-36 lg:pb-20">
+    <section id="areas" className="relative bg-paper text-ink pt-24 pb-16 lg:pt-36 lg:pb-20">
+      <div data-wipe aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[34svh] origin-top bg-navy" />
       <div className="wrap">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-end">
           <div>
@@ -331,7 +332,8 @@ export function Areas() {
 
 export function Services({ heading = "O que o escritório faz por você.", image, imageAlt = "" }: { heading?: string; image?: string; imageAlt?: string }) {
   return (
-    <section id="servicos" className="bg-bone py-24 text-ink lg:py-36">
+    <section id="servicos" className="relative bg-bone py-24 text-ink lg:py-36">
+      <div data-wipe aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[34svh] origin-top bg-navy" />
       <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
         <div className="lg:sticky lg:top-32 lg:self-start">
           <p className="eyebrow !text-copper-lo" data-reveal>Serviços</p>
@@ -479,7 +481,7 @@ export function Legacy() {
 export function Timeline() {
   return (
     <section data-hscroll className="bg-ink">
-      <div data-hscroll-view className="py-24">
+      <div data-hscroll-view data-cursor-label="Role" className="py-24">
         <div className="wrap">
           <p className="eyebrow">Linha do tempo</p>
           <h2 className="display mt-5 text-[clamp(2.4rem,5vw,4.4rem)]">De uma tradição a um escritório.</h2>
@@ -602,7 +604,8 @@ export function Approach() {
 
 export function Faq({ items = faqs, heading = "Antes de falar com a gente.", image, imageAlt = "" }: { items?: { q: string; a: string }[]; heading?: string; image?: string; imageAlt?: string }) {
   return (
-    <section id="duvidas" className="bg-paper text-ink py-24 lg:py-36">
+    <section id="duvidas" className="relative bg-paper text-ink py-24 lg:py-36">
+      <div data-wipe aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[34svh] origin-top bg-navy" />
       <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
         <div>
           <p className="eyebrow !text-copper-lo" data-reveal>Dúvidas frequentes</p>
