@@ -34,6 +34,7 @@ export function Footer() {
                 <Link href={n.href} className="hover:text-copper-hi">{n.label}</Link>
               </li>
             ))}
+            <li><Link href="/para-empresas" className="hover:text-copper-hi">Para empresas</Link></li>
             <li><Link href="/primeiro-atendimento" className="hover:text-copper-hi">Primeiro atendimento</Link></li>
             <li><Link href="/glossario" className="hover:text-copper-hi">Glossário jurídico</Link></li>
             <li><Link href="/politica-de-privacidade" className="hover:text-copper-hi">Política de privacidade</Link></li>

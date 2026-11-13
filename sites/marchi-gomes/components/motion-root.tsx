@@ -207,6 +207,11 @@ export function MotionRoot({ children }: { children: ReactNode }) {
             ctx.add(() => () => { el.textContent = text; });
           });
 
+          // Linha que desce ligando os passos
+          q("[data-line]").forEach((el) => {
+            gsap.fromTo(el, { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top 65%", end: "bottom 65%", scrub: 0.4 } });
+          });
+
           // Rota do mapa: traco dourado que se desenha ate o endereco
           q("[data-route]").forEach((path) => {
             const pin = path.parentElement?.querySelector("[data-route-pin]");

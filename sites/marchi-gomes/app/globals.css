@@ -106,6 +106,17 @@ html.lenis { scroll-behavior: auto; }
 .team-card img { filter: grayscale(1) contrast(1.05); transition: filter 0.8s var(--ease-out-expo), transform 1.2s var(--ease-out-expo); }
 .team-card:hover img, .team-card:focus-within img { filter: none; transform: scale(1.03); }
 
+/* Socios lado a lado: o retrato sem foco escurece e a biografia desliza */
+@media (min-width: 900px) {
+  .team-card { transition: flex-grow 0.8s var(--ease-out-expo), filter 0.6s; }
+  .team-row:hover .team-card:not(:hover) { filter: brightness(0.45); }
+  .team-card .team-bio { transform: translateY(1.25rem); transition: opacity 0.4s, transform 0.7s var(--ease-out-expo); }
+  .team-card:hover .team-bio, .team-card:focus-within .team-bio { transform: none; }
+}
+
+.toc-link { border-left: 1px solid color-mix(in srgb, var(--color-ink) 15%, transparent); transition: color 0.3s, border-color 0.3s, padding 0.5s var(--ease-out-expo); }
+.toc-link.is-active { border-left: 2px solid var(--color-copper-lo); color: var(--color-ink); padding-left: 1.5rem; }
+
 [data-count] { font-feature-settings: "lnum", "tnum"; }
 
 /* Linha do tempo: lista vertical por padrao; o GSAP transforma em faixa horizontal em telas largas */

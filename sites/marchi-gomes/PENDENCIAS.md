@@ -30,6 +30,18 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
 - [ ] Hero usa "orientação rigorosa, atendimento próximo" e evita "resultados"
       (Provimento 205/2021 da OAB)
 
+## Perguntas por área
+- [ ] `content/area-faqs.ts`: 3 dúvidas por área (36 no total), respostas gerais
+      escritas para o site. Validar por um advogado
+
+## Recursos prontos, esperando dado
+- [ ] Vídeo do hero (`images.heroVideo`, mp4 curto e sem som) e foto de capa
+- [ ] Cidades vizinhas atendidas (`cities`): cada uma gera `/atuacao/<cidade>`
+- [ ] `NEXT_PUBLIC_GSC_VERIFICATION` e `NEXT_PUBLIC_BING_VERIFICATION`: códigos de
+      verificação; depois, enviar `/sitemap.xml` nos dois painéis
+- [ ] `RESEND_API_KEY`, `LEAD_FROM_EMAIL`, `LEAD_NOTIFY_EMAIL`: confirmação ao
+      lead e aviso ao escritório por e-mail (exige domínio verificado no Resend)
+
 ## Artigos
 - [ ] Os 3 artigos em `content/articles.ts` são RASCUNHOS. Precisam de revisão e
       aprovação de um advogado. Enquanto `draft: true`, somem do site no lançamento

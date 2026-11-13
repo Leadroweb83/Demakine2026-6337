@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { future, history, site } from "@/content/site";
+import { areas, future, history, site, team } from "@/content/site";
 import { Contact, Future, Legacy, Team, Timeline } from "@/components/sections";
 import { JsonLd } from "@/components/json-ld";
 
@@ -49,6 +49,23 @@ export default function FirmPage() {
           description: future.title,
         }}
       />
+      {team.map((m) => (
+        <JsonLd
+          key={m.name}
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: m.name,
+            jobTitle: m.role,
+            ...(m.bio ? { description: m.bio } : {}),
+            ...(m.oab ? { identifier: { "@type": "PropertyValue", propertyID: "OAB", value: m.oab } } : {}),
+            hasOccupation: { "@type": "Occupation", name: "Advogado" },
+            worksFor: { "@id": `${site.url}/#escritorio` },
+            workLocation: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: site.contact.city, addressRegion: site.contact.state, addressCountry: "BR" } },
+            knowsAbout: areas.map((a) => a.title),
+          }}
+        />
+      ))}
     </>
   );
 }

@@ -25,11 +25,13 @@ export default function FirstContactPage() {
         </div>
       </section>
       <section className="bg-paper py-24 text-ink lg:py-32">
-        <ol className="wrap max-w-5xl border-t border-ink/15">
+        <ol className="wrap relative max-w-4xl">
+          <span className="absolute bottom-0 left-[calc(1.25rem+1.75rem)] top-0 w-px bg-ink/10 md:left-[calc(2.5rem+1.75rem)]" aria-hidden="true" />
+          <span data-line className="absolute bottom-0 left-[calc(1.25rem+1.75rem)] top-0 w-px origin-top bg-copper-lo md:left-[calc(2.5rem+1.75rem)]" aria-hidden="true" />
           {firstContact.map((st, i) => (
-            <li key={st.title} className="grid gap-x-12 gap-y-3 border-b border-ink/15 py-10 sm:grid-cols-[6rem_1fr]" data-reveal>
-              <span className="display text-6xl text-copper-lo">0{i + 1}</span>
-              <div>
+            <li key={st.title} className="relative grid grid-cols-[3.5rem_1fr] gap-x-8 pb-16 last:pb-0 sm:gap-x-12" data-reveal>
+              <span className="z-10 flex h-14 w-14 items-center justify-center rounded-full border border-copper-lo bg-paper font-display text-xl text-copper-lo">0{i + 1}</span>
+              <div className="pt-2">
                 <h2 className="font-display text-[clamp(1.8rem,3vw,2.6rem)] leading-tight">{st.title}</h2>
                 <p className="mt-3 max-w-2xl text-lg text-ink/75">{st.text}</p>
               </div>

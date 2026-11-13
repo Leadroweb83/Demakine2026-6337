@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { areas, featuredAreas, site } from "@/content/site";
 import { whatsappHref } from "@/lib/site";
-import { Contact, Services } from "@/components/sections";
+import { areaFaqs } from "@/content/area-faqs";
+import { Contact, Faq, Services } from "@/components/sections";
 import { JsonLd } from "@/components/json-ld";
 import { Arrow, WhatsAppIcon } from "@/components/icons";
 
@@ -77,6 +78,8 @@ export default async function AreaPage({ params }: Props) {
         </div>
       </section>
 
+      {areaFaqs[area.slug] && <Faq items={areaFaqs[area.slug]} heading={`Dúvidas sobre ${area.name}.`} />}
+
       <Contact defaultArea={area.name} />
 
       <JsonLd
@@ -91,6 +94,9 @@ export default async function AreaPage({ params }: Props) {
               provider: { "@id": `${site.url}/#escritorio` },
               url: `${site.url}/areas/${area.slug}`,
             },
+            ...(areaFaqs[area.slug]
+              ? [{ "@type": "FAQPage", mainEntity: areaFaqs[area.slug].map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }]
+              : []),
             {
               "@type": "BreadcrumbList",
               itemListElement: [

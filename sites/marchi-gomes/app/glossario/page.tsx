@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { glossary } from "@/content/glossary";
+import { visibleArticles } from "@/content/articles";
 import { areas, site } from "@/content/site";
 import { Contact } from "@/components/sections";
 import { JsonLd } from "@/components/json-ld";
@@ -31,12 +32,14 @@ export default function GlossaryPage() {
           {glossary.map((g, i) => {
             const first = i === 0 || glossary[i - 1].term[0] !== g.term[0];
             const area = areas.find((a) => a.slug === g.area);
+            const article = visibleArticles().find((a) => a.slug === g.article);
             return (
               <div key={g.term} id={first ? `letra-${g.term[0].toUpperCase()}` : undefined} className="grid gap-x-10 gap-y-2 border-t border-ink/15 py-8 sm:grid-cols-[16rem_1fr]" data-reveal>
                 <dt className="font-display text-[1.75rem] leading-tight">{g.term}</dt>
                 <dd className="text-lg text-ink/80">
                   {g.def}
                   {area && <Link href={`/areas/${area.slug}`} className="mt-3 block text-xs font-semibold uppercase tracking-[0.18em] text-copper-lo hover:text-ink">{area.title} →</Link>}
+                  {article && <Link href={`/artigos/${article.slug}`} className="mt-2 block text-sm text-ink/60 underline underline-offset-4 hover:text-ink">Artigo: {article.title}</Link>}
                 </dd>
               </div>
             );

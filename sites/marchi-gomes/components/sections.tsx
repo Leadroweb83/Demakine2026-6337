@@ -15,6 +15,9 @@ export function Hero() {
         <div className="absolute inset-0 -z-10" aria-hidden="true">
           <div className="absolute inset-[-8%]" data-parallax="0.12">
             <Image src={images.hero} alt="" fill priority sizes="100vw" className="object-cover" />
+            {images.heroVideo && (
+              <video className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden" src={images.heroVideo} poster={images.hero} autoPlay muted loop playsInline preload="metadata" />
+            )}
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/25" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
@@ -103,6 +106,7 @@ export function Doors() {
       title: "Orientação jurídica que cabe na gestão do negócio.",
       text: "A análise considera a operação da empresa, seus compromissos comerciais e os efeitos econômicos das decisões, para que cada recomendação possa ser compreendida e aplicada.",
       cta: "Falar sobre a minha empresa",
+      more: "/para-empresas",
       msg: "Olá! Vim pelo site e gostaria de orientação jurídica para a minha empresa.",
       event: "whatsapp_door_empresas",
     },
@@ -118,6 +122,7 @@ export function Doors() {
             <a href={whatsappHref(d.msg)} data-event={d.event} className="mt-8 inline-flex items-center gap-3 border-b border-copper-lo pb-1 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition-colors hover:text-copper-lo">
               {d.cta} <Arrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-2" />
             </a>
+            {"more" in d && d.more && <Link href={d.more} className="ml-8 text-sm text-ink/60 underline underline-offset-4 hover:text-ink">Como funciona a assessoria</Link>}
           </article>
         ))}
       </div>
@@ -481,18 +486,18 @@ export function Approach() {
   );
 }
 
-export function Faq() {
+export function Faq({ items = faqs, heading = "Antes de falar com a gente." }: { items?: { q: string; a: string }[]; heading?: string }) {
   return (
     <section id="duvidas" className="bg-paper text-ink py-24 lg:py-36">
       <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
         <div>
           <p className="eyebrow !text-copper-lo" data-reveal>Dúvidas frequentes</p>
           <h2 className="display mt-5 text-[clamp(2.4rem,5vw,4.4rem)]" data-split>
-            Antes de falar com a gente.
+            {heading}
           </h2>
         </div>
         <div className="border-t hairline">
-          {faqs.map((f) => (
+          {items.map((f) => (
             <details key={f.q} className="group border-b hairline" data-reveal>
               <summary className="flex items-center justify-between gap-6 py-6">
                 <h3 className="font-display text-2xl leading-snug lg:text-[1.75rem]">{f.q}</h3>

@@ -35,7 +35,12 @@ export const site = {
 };
 
 /** Caminhos em /public. Vazio = o site usa o fundo de luz e o monograma. */
-export const images = { hero: "", firm: "" };
+export const images = {
+  hero: "",
+  /** Video curto e sem som para o hero (mp4 em /public, ideal ate 3 MB). Usa `hero` como capa. */
+  heroVideo: "",
+  firm: "",
+};
 
 /** Palavras das lombadas dos livros nas pecas da marca. */
 export const marquee = ["Direito", "Estratégia", "Ética", "Patrimônio", "Negócios", "Confiança"];
@@ -69,6 +74,12 @@ export const integrations = {
   /** Link do Calendly ou da pagina de agendamento do Google Agenda. */
   schedulingUrl: process.env.NEXT_PUBLIC_SCHEDULING_URL ?? "",
 };
+
+/**
+ * Cidades vizinhas atendidas. Vazio = nenhuma pagina gerada. Preencher so com
+ * cidades confirmadas pelo escritorio, ex.: { slug: "americana", name: "Americana" }.
+ */
+export const cities: { slug: string; name: string }[] = [];
 
 export const nav = [
   { href: "/#areas", label: "Áreas de atuação" },
@@ -276,6 +287,19 @@ export const firstContact = [
   { title: "Você conhece os caminhos", text: "O escritório apresenta as alternativas disponíveis e as consequências de cada uma, em linguagem clara, para que você tenha informação para decidir." },
   { title: "A estratégia é definida", text: "Com a sua decisão, define-se a estratégia e um responsável pela demanda. Os sócios participam e você recebe comunicações periódicas sobre o andamento." },
 ];
+
+export const business = {
+  title: "Orientação jurídica que cabe na gestão do negócio.",
+  lead: "Para o cliente empresarial, a orientação jurídica considera também a operação do negócio, seus compromissos comerciais e os efeitos econômicos das decisões. O objetivo é oferecer recomendações que possam ser compreendidas e aplicadas na gestão da empresa.",
+  routine: [
+    { title: "Participação dos sócios", text: "Os sócios do escritório acompanham as demandas e participam das definições de estratégia." },
+    { title: "Responsável por demanda", text: "Cada assunto tem um responsável definido, para que a empresa saiba a quem recorrer." },
+    { title: "Reuniões de acompanhamento", text: "Encontros periódicos para revisar o andamento e antecipar decisões." },
+    { title: "Comunicação periódica", text: "Informações regulares sobre cada demanda, com a seriedade e a transparência necessárias." },
+  ],
+  backoffice: ["Controle de prazos", "Revisão técnica", "Gestão documental", "Proteção de informações", "Critérios de prioridade conforme urgência e complexidade"],
+  areaSlugs: ["empresarial-e-societario", "contratos", "direito-tributario", "trabalho-e-previdenciario", "bancario-e-financeiro"],
+};
 
 export const firstContactChecklist = [
   "Documentos pessoais ou da empresa relacionados ao assunto",
