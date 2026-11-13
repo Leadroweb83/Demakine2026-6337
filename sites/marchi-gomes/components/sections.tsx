@@ -464,19 +464,19 @@ export function Team() {
   return (
     <section id="equipe" className="bg-ink py-24 lg:py-36">
       <div className="wrap">
-        <p className="eyebrow" data-reveal>Os sócios</p>
+        <p className="eyebrow" data-reveal>A equipe</p>
         <h2 className="display mt-5 max-w-[14ch] text-[clamp(2.4rem,5vw,4.4rem)]" data-split>
-          Quem responde pelo seu caso.
+          Quem conduz o escritório.
         </h2>
-        <ul className={`team-row mt-14 flex flex-col gap-4 min-[900px]:flex-row ${team.some((m) => m.photo) ? "min-[900px]:h-[30rem]" : "min-[900px]:h-56"}`}>
+        <ul className={`team-row mt-14 flex flex-col gap-4 min-[900px]:flex-row ${team.some((m) => m.bio) ? "has-bios" : ""} ${team.some((m) => m.photo) ? "min-[900px]:h-[30rem]" : "min-[900px]:h-60"}`}>
           {team.map((m) => (
-            <li key={m.name} className={`team-card relative overflow-hidden bg-navy-2 ${m.photo ? "max-[899px]:h-80" : "max-[899px]:h-40"}`} tabIndex={0}>
+            <li key={m.name} className={`team-card relative overflow-hidden bg-navy-2 ${m.photo ? "max-[899px]:h-80" : "max-[899px]:min-h-36"}`} tabIndex={0}>
               {!m.photo && <Monogram className="absolute right-6 top-6 h-12 w-12 text-copper/50" />}
               {m.photo && <Image src={m.photo} alt={m.name} fill sizes="(min-width: 900px) 50vw, 100vw" className="object-cover" />}
               <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
-                <h3 className="display whitespace-nowrap text-3xl">{m.name}</h3>
-                <p className="mt-1 whitespace-nowrap text-xs uppercase tracking-[0.2em] text-copper">{m.role}{m.oab ? ` · ${m.oab}` : ""}</p>
+                <h3 className="display text-[clamp(1.5rem,2vw,1.9rem)] leading-tight">{m.name}</h3>
+                <p className="mt-2 text-[0.7rem] uppercase leading-relaxed tracking-[0.16em] text-copper">{m.role}</p>{m.oab && <p className="mt-1 text-[0.7rem] uppercase tracking-[0.16em] text-bone/70">{m.oab}</p>}
                 {m.bio && <p className="team-bio mt-4 max-w-md text-sm text-bone/80 min-[900px]:w-[26rem]">{m.bio}</p>}
               </div>
             </li>

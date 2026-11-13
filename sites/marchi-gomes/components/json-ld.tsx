@@ -31,7 +31,8 @@ export function legalServiceLd() {
       : "",
     areaServed: c.city || "BR",
     foundingDate: String(site.founded),
-    founder: team.map((m) => ({ "@type": "Person", name: m.name, jobTitle: m.role })),
+    founder: team.filter((m) => m.founder).map((m) => ({ "@type": "Person", name: m.name, jobTitle: m.role })),
+    employee: team.filter((m) => !m.founder).map((m) => ({ "@type": "Person", name: m.name, jobTitle: m.role })),
     knowsAbout: areas.map((a) => a.title),
     hasOfferCatalog: {
       "@type": "OfferCatalog",

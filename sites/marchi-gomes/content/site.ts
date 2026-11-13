@@ -63,9 +63,17 @@ export const stats: { value: number; suffix?: string; label: string }[] = [
 ];
 
 /** Socios e advogados. Vazio = secao escondida. Foto em /public/equipe/. */
-export const team: { name: string; role: string; oab: string; bio: string; photo: string }[] = [
-  { name: "Gisele Marchi", role: "Sócia fundadora", oab: "", bio: "", photo: "" },
-  { name: "Gabriel Gomes", role: "Sócio fundador", oab: "", bio: "", photo: "" },
+/**
+ * Equipe, conforme os cartoes de visita do escritorio. Cargos como impressos.
+ * So Gisele Marchi tem OAB informada: ninguem mais e apresentado como advogado.
+ * `founder` segue o texto institucional (fundacao por Gisele Marchi e Gabriel Gomes).
+ */
+export const team: { name: string; role: string; oab: string; bio: string; photo: string; founder?: boolean }[] = [
+  { name: "Gisele Marchi", role: "Sócia fundadora", oab: "OAB/SP 519070", bio: "", photo: "", founder: true },
+  { name: "Gabriel Gomes", role: "Sócio fundador · Diretor Comercial", oab: "", bio: "", photo: "", founder: true },
+  { name: "Wagner Marchi", role: "CEO · Diretor Executivo", oab: "", bio: "", photo: "" },
+  { name: "José Vidotti", role: "Diretor · Economista", oab: "", bio: "", photo: "" },
+  { name: "Ronaldo Gomes", role: "CBO · Diretor de Negócios", oab: "", bio: "", photo: "" },
 ];
 
 const mapsQuery = encodeURIComponent("R. Valdir Dalfré, 57 - Jardim Porto Real II, Limeira - SP, 13485-402");

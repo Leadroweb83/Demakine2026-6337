@@ -14,9 +14,13 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
   (texto do documento "História 2", com um ajuste de digitação: "destaque na região")
 
 ## Dados que faltam (preencher em `content/site.ts`)
-- [ ] E-mail e horário de atendimento
-- [ ] Registro da sociedade na OAB e OAB de cada sócio
-- [ ] Mini biografia e foto de Gisele Marchi e de Gabriel Gomes
+- [ ] E-mail público do escritório e e-mail que recebe os leads: os cartões trazem só e-mails
+      pessoais (nome.sobrenome@marchigomes.adv.br); decidir qual vai no site. Horário de atendimento
+- [x] Equipe dos cartões de visita: Gisele Marchi (OAB/SP 519070), Gabriel Gomes, Wagner Marchi,
+      José Vidotti e Ronaldo Gomes, com os cargos impressos. Só a Gisele tem OAB nos cartões:
+      confirmar se mais alguém é advogado antes de apresentá-lo como tal
+- [ ] Registro da sociedade na OAB
+- [ ] Mini biografia e foto de cada integrante da equipe
 - [ ] Foto e, se houver, depoimento identificado sobre o Dr. João Jair Marchi
 - [ ] Instagram e LinkedIn
 - [ ] Domínio (`NEXT_PUBLIC_SITE_URL`)
@@ -80,6 +84,12 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 - [ ] `NEXT_PUBLIC_CLARITY_ID`: Microsoft Clarity (só carrega após o aceite)
 - [ ] `NEXT_PUBLIC_SCHEDULING_URL`: link do Calendly ou do Google Agenda
 - [ ] Sanity: precisa de uma conta/projeto do escritório para ligar o painel
+
+## Conferir nos cartões
+- [ ] José Vidotti e Ronaldo Gomes têm o mesmo WhatsApp impresso, +55 (19) 99939-2667.
+      Provável erro de digitação em um dos dois
+- [ ] Os telefones e e-mails individuais dos cartões NÃO estão publicados no site; o número
+      do site é o da Gisele, (19) 98184-3010
 
 ## Arquivos de marca
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório

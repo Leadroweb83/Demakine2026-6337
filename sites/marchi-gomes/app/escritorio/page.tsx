@@ -59,10 +59,10 @@ export default function FirmPage() {
             jobTitle: m.role,
             ...(m.bio ? { description: m.bio } : {}),
             ...(m.oab ? { identifier: { "@type": "PropertyValue", propertyID: "OAB", value: m.oab } } : {}),
-            hasOccupation: { "@type": "Occupation", name: "Advogado" },
+            ...(m.oab ? { hasOccupation: { "@type": "Occupation", name: "Advogado" } } : {}),
             worksFor: { "@id": `${site.url}/#escritorio` },
             workLocation: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: site.contact.city, addressRegion: site.contact.state, addressCountry: "BR" } },
-            knowsAbout: areas.map((a) => a.title),
+            ...(m.oab ? { knowsAbout: areas.map((a) => a.title) } : {}),
           }}
         />
       ))}
