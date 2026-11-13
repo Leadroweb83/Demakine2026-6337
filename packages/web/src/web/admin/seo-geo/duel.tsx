@@ -66,7 +66,11 @@ function Result({ r, go }: { r: DuelResultRow; go: PanelProps["go"] }) {
                   <span className="mt-1 block text-[12px] text-dm-ink/50">{s.metrics?.pages} páginas lidas</span>
                 </p>
               ) : (
-                <p className="mt-2 text-[13px] text-dm-ink/65">{STATUS_TEXT[s.status] ?? "Sem comparação."}</p>
+                <p className="mt-2 text-[13px] text-dm-ink/65">
+                  {s.status === "redireciona" && s.redirectTo
+                    ? `Este site redireciona para ${s.redirectTo}. Troque o endereço do concorrente por esse e rode o duelo de novo.`
+                    : (STATUS_TEXT[s.status] ?? "Sem comparação.")}
+                </p>
               )}
             </div>
           );

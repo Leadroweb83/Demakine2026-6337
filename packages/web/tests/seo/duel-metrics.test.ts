@@ -61,6 +61,15 @@ describe("siteMetrics: notas por item, de 0 a 100", () => {
     expect(m.samples).toBe(2);
   });
 
+  test("página que pula uma métrica não entra na média dela, mas conta nas outras", () => {
+    const nenhum = page({ hreflangs: [] }, "/so-pt");
+    const m = siteMetrics([page({ hreflangs: [{ lang: "pt", href: "x" }, { lang: "en", href: "x" }, { lang: "es", href: "x" }] }), { ...nenhum, skip: ["idiomas" as const] }], noSitemap, TODAY);
+    expect(m.scores.idiomas).toBe(100);
+    expect(m.scores.titulo).toBe(100);
+    expect(m.samples).toBe(2);
+    expect(siteMetrics([{ ...nenhum, skip: ["idiomas" as const] }], noSitemap, TODAY).scores.idiomas).toBeUndefined();
+  });
+
   test("zero páginas devolve amostra 0 e nenhuma nota (não zero)", () => {
     const m = siteMetrics([], { total: 0, blogLastmods: [] }, TODAY);
     expect(m.samples).toBe(0);

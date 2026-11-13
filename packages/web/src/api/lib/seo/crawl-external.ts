@@ -126,7 +126,7 @@ export function parseRobots(text: string, agent: string): Robots {
   };
 }
 
-type Got = { status: number; html: string; finalUrl: string };
+type Got = { status: number; html: string; finalUrl: string; /** para onde o site redireciona, quando o redirecionamento sai do site e não foi seguido */ location?: string };
 type Get = (url: string) => Promise<Got>;
 
 /** robots.txt do concorrente: 404 libera tudo; null = não deu para ler (erro do servidor ou da rede). */
@@ -170,7 +170,13 @@ export async function fetchExternal(url: string, opts: ExternalOpts): Promise<Go
           current = next.href;
           continue;
         } catch {
-          return { status: res.status, html: "", finalUrl: current }; // sai do site ou vai para endereço não permitido: não seguimos
+          let to: string | undefined;
+          try {
+            to = new URL(location, current).href;
+          } catch {
+            to = undefined;
+          }
+          return { status: res.status, html: "", finalUrl: current, ...(to ? { location: to } : {}) }; // sai do site ou vai para endereço não permitido: não seguimos
         }
       }
       const textual = /^(text\/|application\/(xml|xhtml\+xml)|[^;]*\+xml)/i.test(res.headers.get("content-type") ?? "");
@@ -186,7 +192,7 @@ export async function fetchExternal(url: string, opts: ExternalOpts): Promise<Go
 
 const ASSET = /\.(pdf|jpe?g|png|webp|avif|gif|svg|ico|zip|rar|xml|txt|css|js|json|mp4|webm|docx?|xlsx?)$/i;
 
-export type Discovered = { paths: string[]; source: "sitemap" | "home" | "nenhuma"; total: number; lastmods: Record<string, string> };
+export type Discovered = { paths: string[]; source: "sitemap" | "home" | "nenhuma"; total: number; lastmods: Record<string, string>; /** a home redireciona para outro site: o endereço certo é esse */ homeRedirect?: string };
 
 function pathOf(loc: string, originHost: string): string | null {
   try {
@@ -223,8 +229,10 @@ export async function discoverPages(origin: string, robots: Robots, get: Get): P
     } else readUrlset(r.html);
   }
   let source: Discovered["source"] = "sitemap";
+  let homeRedirect: string | undefined;
   if (found.size === 0) {
     const home = await get(`${origin}/`);
+    if (home.status >= 300 && home.status < 400 && home.location) homeRedirect = home.location;
     const links = home.status === 200 ? extractFacts(home.html, `${origin}/`).internalLinks.filter((l) => !ASSET.test(l)) : [];
     if (links.length > 0) {
       found.set("/", "");
@@ -239,5 +247,5 @@ export async function discoverPages(origin: string, robots: Robots, get: Get): P
     .sort((a, b) => a.depth - b.depth || a.i - b.i)
     .slice(0, MAX_PAGES)
     .map((x) => x.p);
-  return { paths, source: paths.length ? source : "nenhuma", total: all.length, lastmods: Object.fromEntries([...found].filter(([, d]) => d)) };
+  return { paths, source: paths.length ? source : "nenhuma", total: all.length, lastmods: Object.fromEntries([...found].filter(([, d]) => d)), ...(homeRedirect && paths.length === 0 ? { homeRedirect } : {}) };
 }

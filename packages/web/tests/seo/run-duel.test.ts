@@ -6,7 +6,7 @@ import { perfectFacts } from "./helpers/facts";
 const N = 10;
 const sitemapOf = (origin: string, n = N) => `<urlset>${Array.from({ length: n }, (_, i) => `<url><loc>${origin}/${i === 0 ? "" : `p${i}`}</loc><lastmod>2026-11-0${(i % 9) + 1}</lastmod></url>`).join("")}</urlset>`;
 
-type Site = { robots?: string; robotsStatus?: number; sitemap?: string | null; home?: string };
+type Site = { robots?: string; robotsStatus?: number; sitemap?: string | null; home?: string; homeRedirect?: string };
 function fakeWeb(sites: Record<string, Site>) {
   const web = {
     t: 1_000_000,
@@ -20,6 +20,7 @@ function fakeWeb(sites: Record<string, Site>) {
       const ok = (html: string) => ({ status: 200, html, finalUrl: url });
       if (path === "/robots.txt") return s.robotsStatus ? { status: s.robotsStatus, html: "", finalUrl: url } : ok(s.robots ?? "");
       if (path === "/sitemap.xml") return s.sitemap === null ? { status: 404, html: "", finalUrl: url } : ok(s.sitemap ?? sitemapOf(origin));
+      if (path === "/" && s.homeRedirect) return { status: 301, html: "", finalUrl: url, location: s.homeRedirect };
       if (path === "/" && s.home) return ok(s.home);
       return ok(pageHtml(path === "/" ? "/home" : path));
     },
@@ -118,6 +119,26 @@ describe("runDuel", () => {
     await runDuel({ budgetMs: 10_000_000 }, base(web, duels));
     expect(duels.finished[0]!.sites.map((s) => s.status)).toEqual(["erro", "sem-paginas"]);
     expect(duels.finished[0]!.actions).toEqual([]);
+  });
+
+  test("site que redireciona para outro endereço vira 'redireciona', com o destino, em vez de 'sem páginas'", async () => {
+    const web = fakeWeb({ [A.url]: { sitemap: null, homeRedirect: "https://www.outro.com/" } });
+    const duels = memoryDuels([A]);
+    await runDuel({ budgetMs: 10_000_000 }, base(web, duels));
+    expect(duels.finished[0]!.sites[0]).toMatchObject({ status: "redireciona", redirectTo: "https://www.outro.com/", metrics: null });
+  });
+
+  test("página só em português (de propósito) não derruba a nota de idiomas da Demakine", async () => {
+    const web = fakeWeb({ [A.url]: {} });
+    const duels = memoryDuels([A]);
+    const audit = ours();
+    audit.pages.push(sitePage("/esteira-transportadora-preco"));
+    audit.rows.push({ runId: 1, path: "/esteira-transportadora-preco", lang: "pt", area: "comerciais", seoScore: 90, checks: [], facts: perfectFacts({ hreflangs: [] }), statusCode: 200, indexable: true, inlinks: 3 });
+    await runDuel({ budgetMs: 10_000_000 }, base(web, duels, audit));
+    const res = duels.finished[0]!;
+    expect(res.ours.samples).toBe(3);
+    expect(res.ours.scores.idiomas).toBe(100); // /a e /b têm os 4 idiomas; a página só em português fica fora
+    expect(res.ours.scores.titulo).toBe(100);
   });
 
   test("sem auditoria completa da Demakine ou sem concorrente cadastrado, pede o passo que falta", async () => {

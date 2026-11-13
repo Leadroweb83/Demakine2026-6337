@@ -106,6 +106,7 @@ describe("fetchExternal", () => {
       expect(calls).toEqual(["https://dentro2.com.br/a"]);
       expect(r.status).toBe(302);
       expect(r.html).toBe("");
+      expect(r.location).toBe(loc.startsWith("http://") ? loc : loc);
     }
   });
 
@@ -142,6 +143,12 @@ describe("discoverPages", () => {
     const robots = parseRobots("User-agent: *\nDisallow: /privado/", "x");
     const r = await discoverPages(O, robots, getter({ [`${O}/sitemap.xml`]: { status: 200, html: idx }, [`${O}/s1.xml`]: { status: 200, html: child } }));
     expect(r.paths).toEqual(["/a"]);
+  });
+
+  test("home que redireciona para outro site: devolve para onde, para o painel avisar", async () => {
+    const get = async (url: string) => (url === `${O}/` ? { status: 301, html: "", finalUrl: url, location: "https://www.outro-dominio.com/" } : { status: 404, html: "", finalUrl: url });
+    const r = await discoverPages(O, robotsOk, get);
+    expect(r).toMatchObject({ source: "nenhuma", paths: [], homeRedirect: "https://www.outro-dominio.com/" });
   });
 
   test("sem sitemap usa os links da home; sem nada devolve 'nenhuma'", async () => {

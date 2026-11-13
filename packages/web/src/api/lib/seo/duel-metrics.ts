@@ -44,10 +44,12 @@ function pageScores(f: PageFacts): Partial<Record<MetricId, number>> {
   };
 }
 
-export function siteMetrics(pages: { path: string; facts: PageFacts }[], sitemap: { total: number; blogLastmods: string[] }, today: string): SiteMetrics {
+/** `skip`: métricas que não se aplicam àquela página (ex.: idiomas numa página só em português de propósito). */
+export function siteMetrics(pages: { path: string; facts: PageFacts; skip?: MetricId[] }[], sitemap: { total: number; blogLastmods: string[] }, today: string): SiteMetrics {
   const sums = new Map<MetricId, { sum: number; n: number }>();
   for (const p of pages) {
     for (const [k, v] of Object.entries(pageScores(p.facts)) as [MetricId, number][]) {
+      if (p.skip?.includes(k)) continue;
       const cur = sums.get(k) ?? { sum: 0, n: 0 };
       sums.set(k, { sum: cur.sum + v, n: cur.n + 1 });
     }

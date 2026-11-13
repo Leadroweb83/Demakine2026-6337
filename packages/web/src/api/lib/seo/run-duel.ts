@@ -7,20 +7,21 @@ import { actionsFor, type DuelAction } from "./duel-actions";
 import { compare, scoreboard, siteMetrics, type SiteMetrics, type Verdict } from "./duel-metrics";
 import { discoverPages, fetchExternal as realFetch, loadRobots } from "./crawl-external";
 import { extractFacts, type PageFacts } from "./html";
+import { expectedHreflangs } from "./pages";
 import type { AuditStore } from "./run-audit";
 
 const RESUME_WINDOW_MS = 30 * 60_000;
 const ESTIMATE_PAGES = 40;
 const BLOG = /^\/(blog|noticias|artigos|novidades|news|posts?)\//i;
 
-export type SiteStatus = "pendente" | "lendo" | "ok" | "bloqueado-robots" | "sem-paginas" | "erro";
-export type SiteState = { name: string; status: SiteStatus; paths: string[]; total: number; lastmods: Record<string, string>; pages: { path: string; facts: PageFacts | null }[] };
+export type SiteStatus = "pendente" | "lendo" | "ok" | "bloqueado-robots" | "sem-paginas" | "redireciona" | "erro";
+export type SiteState = { name: string; status: SiteStatus; redirectTo?: string; paths: string[]; total: number; lastmods: Record<string, string>; pages: { path: string; facts: PageFacts | null }[] };
 export type DuelState = { sites: Record<string, SiteState> };
 export type DuelRow = { id: number; startedAt: Date; status: "em-andamento" | "completa"; state: DuelState };
 
 export type DuelResult = {
   at: string;
-  sites: { name: string; url: string; status: SiteStatus; metrics: SiteMetrics | null }[];
+  sites: { name: string; url: string; status: SiteStatus; redirectTo?: string; metrics: SiteMetrics | null }[];
   ours: SiteMetrics;
   verdicts: Record<string, Verdict[]>;
   board: Record<string, { better: number; worse: number; tie: number }>;
@@ -42,7 +43,7 @@ export type DuelDeps = {
   audit: AuditStore;
   /** tamanho do sitemap da Demakine e datas dos posts do blog */
   ourSitemap: () => Promise<{ total: number; blogLastmods: string[] }>;
-  fetchExternal?: (url: string, origin: string) => Promise<{ status: number; html: string; finalUrl: string }>;
+  fetchExternal?: (url: string, origin: string) => Promise<{ status: number; html: string; finalUrl: string; location?: string }>;
   now?: () => number;
 };
 
@@ -83,7 +84,10 @@ export async function runDuel(opts: { budgetMs: number }, deps: DuelDeps): Promi
       else if (!robots.allows("/")) s.status = "bloqueado-robots";
       else {
         const found = await discoverPages(c.url, robots, getHere);
-        if (found.paths.length === 0) s.status = "sem-paginas";
+        if (found.paths.length === 0) {
+          s.status = found.homeRedirect ? "redireciona" : "sem-paginas";
+          if (found.homeRedirect) s.redirectTo = found.homeRedirect;
+        }
         else Object.assign(s, { status: "lendo", paths: found.paths, total: found.total, lastmods: found.lastmods });
       }
     }
@@ -105,7 +109,8 @@ export async function runDuel(opts: { budgetMs: number }, deps: DuelDeps): Promi
   });
   const sitemap = await deps.ourSitemap();
   const today = new Date(now()).toISOString().slice(0, 10);
-  const ours = siteMetrics(rows.map((r) => ({ path: r.path, facts: r.facts! })), sitemap, today);
+  // página só em português de propósito (comerciais, vagas) não conta contra a Demakine em idiomas
+  const ours = siteMetrics(rows.map((r) => ({ path: r.path, facts: r.facts!, skip: expectedHreflangs(r.path).length === 0 ? (["idiomas"] as const).slice() : undefined })), sitemap, today);
 
   const verdicts: Record<string, Verdict[]> = {};
   const board: DuelResult["board"] = {};
@@ -118,7 +123,7 @@ export async function runDuel(opts: { budgetMs: number }, deps: DuelDeps): Promi
       verdicts[c.name] = compare(ours, metrics);
       board[c.name] = scoreboard(verdicts[c.name]!);
     }
-    return { name: c.name, url: c.url, status: s.status, metrics };
+    return { name: c.name, url: c.url, status: s.status, ...(s.redirectTo ? { redirectTo: s.redirectTo } : {}), metrics };
   });
   const actions = actionsFor(verdicts, rows.map((r) => ({ path: r.path, label: siteInfo.get(r.path)?.label ?? r.path, checks: r.checks })));
   const result: DuelResult = { at: new Date(now()).toISOString(), sites, ours, verdicts, board, actions };
