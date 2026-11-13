@@ -35,7 +35,7 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
       escritas para o site. Validar por um advogado
 
 ## Recursos prontos, esperando dado
-- [ ] Vídeo do hero (`images.heroVideo`, mp4 curto e sem som) e foto de capa
+- [x] Vídeo do hero: `public/img/hero-video.mp4` (2 MB) e versão vertical para celular (0,8 MB), comprimidos do original de 24 MB. A foto anterior segue em `images.hero` e é usada na página "Para empresas"
 - [ ] Cidades vizinhas atendidas (`cities`): cada uma gera `/atuacao/<cidade>`
 - [ ] `NEXT_PUBLIC_GSC_VERIFICATION` e `NEXT_PUBLIC_BING_VERIFICATION`: códigos de
       verificação; depois, enviar `/sitemap.xml` nos dois painéis

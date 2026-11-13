@@ -17,7 +17,7 @@ export default function BusinessPage() {
   return (
     <>
       <section className="hero-light relative isolate overflow-hidden">
-        <HeroMedia strong />
+        <HeroMedia strong video={false} />
         <div className="wrap pb-20 pt-40 lg:pb-28 lg:pt-52">
           <p className="eyebrow" data-reveal>Para empresas</p>
           <h1 className="display mt-8 max-w-[16ch] text-[clamp(2.8rem,7vw,6.25rem)]" data-split>{business.title}</h1>

@@ -42,8 +42,13 @@ export const images = {
   /** Faixa de tres imagens entre secoes. */
   strip: ["/img/faixa-livros.webp", "/img/justica.webp", "/img/faixa-janela.webp"],
   detail: "/img/detalhe-pasta.webp",
-  /** Video curto e sem som para o hero (mp4 em /public, ideal ate 3 MB). Usa `hero` como capa. */
-  heroVideo: "",
+  /** Video do hero (mp4 sem som). Vazio = o hero usa a foto. */
+  heroVideo: "/img/hero-video.mp4",
+  /** Versao vertical e menor do video, para celular. */
+  heroVideoMobile: "/img/hero-video-mobile.mp4",
+  /** Primeiro quadro do video: aparece enquanto ele carrega e e o LCP da pagina. */
+  heroPoster: "/img/hero-video-poster.webp",
+  heroPosterMobile: "/img/hero-video-poster-mobile.webp",
   firm: "/img/justica.webp",
 };
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image, { getImageProps } from "next/image";
 import { visibleArticles } from "@/content/articles";
+import { HeroVideo } from "./hero-video";
 import { MapBlock } from "./map-block";
 import { approach, areas, featuredAreas, timeline, faqs, future, history, images, legacy, marquee, integrations, pillars, services, site, stats, team } from "@/content/site";
 import { hasAddress, whatsappHref } from "@/lib/site";
@@ -8,24 +9,23 @@ import { Arrow, WhatsAppIcon } from "./icons";
 import { Monogram } from "./logo";
 import { LeadForm } from "./lead-form";
 
-/** Fundo do hero: recorte vertical no celular, zoom lento, parallax e brilho que segue o cursor. */
-export function HeroMedia({ strong = false }: { strong?: boolean }) {
+/** Fundo do hero: video (ou foto), recorte vertical no celular, parallax e brilho que segue o cursor. */
+export function HeroMedia({ strong = false, video = true }: { strong?: boolean; video?: boolean }) {
   if (!images.hero) return null;
+  const withVideo = video && Boolean(images.heroVideo);
   const common = { alt: "", sizes: "100vw", quality: 80, priority: true } as const;
-  const { props: { srcSet: desktop, ...img } } = getImageProps({ ...common, src: images.hero, width: 1672, height: 941 });
-  const { props: { srcSet: mobile } } = getImageProps({ ...common, src: images.heroMobile || images.hero, width: 640, height: 941 });
+  const { props: { srcSet: desktop, ...img } } = getImageProps({ ...common, src: withVideo ? images.heroPoster : images.hero, width: 1280, height: 720 });
+  const { props: { srcSet: mobile } } = getImageProps({ ...common, src: withVideo ? images.heroPosterMobile : images.heroMobile || images.hero, width: 480, height: 854 });
   return (
     <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
       <div className="absolute inset-[-8%]" data-parallax="0.12">
-        <div className="absolute inset-0" data-kenburns>
+        <div className="absolute inset-0" {...(withVideo ? {} : { "data-kenburns": true })}>
           <picture>
             <source media="(max-width: 767px)" srcSet={mobile} />
             <source media="(min-width: 768px)" srcSet={desktop} />
             <img {...img} alt="" className="h-full w-full object-cover object-[68%_center] max-md:object-center" />
           </picture>
-          {images.heroVideo && (
-            <video className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden" src={images.heroVideo} poster={images.hero} autoPlay muted loop playsInline preload="metadata" />
-          )}
+          {withVideo && <HeroVideo src={images.heroVideo} mobileSrc={images.heroVideoMobile} poster={images.heroPoster} />}
         </div>
       </div>
       <div className={`absolute inset-0 bg-gradient-to-r from-ink to-ink/10 max-lg:via-ink/85 max-lg:to-ink/55 ${strong ? "via-ink/88" : "via-ink/75"}`} />
