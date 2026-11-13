@@ -14,13 +14,13 @@ export function Hero() {
       {images.hero ? (
         <div className="absolute inset-0 -z-10" aria-hidden="true">
           <div className="absolute inset-[-8%]" data-parallax="0.12">
-            <Image src={images.hero} alt="" fill priority sizes="100vw" className="object-cover" />
+            <Image src={images.hero} alt="" fill priority sizes="100vw" quality={80} className="object-cover object-[68%_center]" />
             {images.heroVideo && (
               <video className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden" src={images.heroVideo} poster={images.hero} autoPlay muted loop playsInline preload="metadata" />
             )}
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/25" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10 max-lg:via-ink/85 max-lg:to-ink/55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/55" />
         </div>
       ) : (
         <div className="pointer-events-none absolute inset-y-0 right-[-12%] -z-10 flex items-center lg:right-[-2%]" aria-hidden="true">
@@ -286,8 +286,8 @@ export function Firm() {
         <div className="relative aspect-[4/5] overflow-hidden bg-navy" data-clip>
           {/* Slot de foto real do escritorio/socios. Ate chegar, fica o monograma. */}
           {images.firm ? (
-            <div className="absolute inset-[-10%]" data-parallax="0.14">
-              <Image src={images.firm} alt={`Escritório ${site.name}`} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+            <div className="absolute inset-x-0 bottom-[-12%] top-0" data-parallax="0.1">
+              <Image src={images.firm} alt="Estátua da Justiça, de olhos vendados, segurando a balança" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-top" />
             </div>
           ) : (
             <>

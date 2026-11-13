@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dict, locales, type Locale } from "@/content/i18n";
-import { maps, site } from "@/content/site";
+import Image from "next/image";
+import { images, maps, site } from "@/content/site";
 import { whatsappHref } from "@/lib/site";
 import { Arrow, WhatsAppIcon } from "@/components/icons";
-import { Monogram } from "@/components/logo";
 import { LeadForm } from "@/components/lead-form";
 import { MapBlock } from "@/components/map-block";
 
@@ -35,8 +35,12 @@ export default async function IntlHome({ params }: Props) {
   return (
     <div lang={lang}>
       <section className="hero-light relative isolate overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 right-[-12%] -z-10 flex items-center lg:right-[-2%]" aria-hidden="true">
-          <div data-parallax="0.3"><Monogram className="h-[78vh] w-[78vh] max-w-none text-copper/[0.09]" /></div>
+        <div className="absolute inset-0 -z-10" aria-hidden="true">
+          <div className="absolute inset-[-8%]" data-parallax="0.12">
+            <Image src={images.hero} alt="" fill priority sizes="100vw" quality={80} className="object-cover object-[68%_center]" />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10 max-lg:via-ink/85 max-lg:to-ink/55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/55" />
         </div>
         <div className="wrap flex min-h-[100svh] flex-col justify-end pb-16 pt-36">
           <p className="eyebrow" data-reveal>{t.hero.eyebrow}</p>

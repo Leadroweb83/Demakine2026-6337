@@ -78,7 +78,9 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
 
 ## Arquivos de marca
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório
-- [ ] Fotos reais: hero, escritório, sócios e uma por frente de atuação
+- [x] Hero: `public/img/hero-escritorio.webp` (imagem enviada pelo Leandro)
+- [x] Seção O escritório: `public/img/justica.webp` (estátua da Justiça)
+- [ ] Fotos reais dos sócios, do escritório e uma por frente de atuação
 - [ ] Imagem de compartilhamento (Open Graph 1200x630) e favicon
 
 ## Antes do ar

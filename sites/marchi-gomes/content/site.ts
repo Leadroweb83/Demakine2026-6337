@@ -36,10 +36,10 @@ export const site = {
 
 /** Caminhos em /public. Vazio = o site usa o fundo de luz e o monograma. */
 export const images = {
-  hero: "",
+  hero: "/img/hero-escritorio.webp",
   /** Video curto e sem som para o hero (mp4 em /public, ideal ate 3 MB). Usa `hero` como capa. */
   heroVideo: "",
-  firm: "",
+  firm: "/img/justica.webp",
 };
 
 /** Palavras das lombadas dos livros nas pecas da marca. */
