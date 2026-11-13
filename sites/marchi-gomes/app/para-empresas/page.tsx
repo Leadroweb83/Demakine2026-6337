@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { areas, business, site } from "@/content/site";
 import { whatsappHref } from "@/lib/site";
-import { Contact, Faq, Services } from "@/components/sections";
+import { Contact, Faq, HeroMedia, Services } from "@/components/sections";
 import { Arrow, WhatsAppIcon } from "@/components/icons";
 import { JsonLd } from "@/components/json-ld";
 
@@ -16,7 +16,8 @@ export default function BusinessPage() {
   const list = business.areaSlugs.map((sl) => areas.find((a) => a.slug === sl)!).filter(Boolean);
   return (
     <>
-      <section className="hero-light">
+      <section className="hero-light relative isolate overflow-hidden">
+        <HeroMedia strong />
         <div className="wrap pb-20 pt-40 lg:pb-28 lg:pt-52">
           <p className="eyebrow" data-reveal>Para empresas</p>
           <h1 className="display mt-8 max-w-[16ch] text-[clamp(2.8rem,7vw,6.25rem)]" data-split>{business.title}</h1>

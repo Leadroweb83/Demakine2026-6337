@@ -130,6 +130,15 @@ html.lenis { scroll-behavior: auto; }
 .ulink:hover, footer nav a:hover, footer address a:hover, [data-header] nav a:hover, .prose-links a:hover,
 .ulink:focus-visible, footer nav a:focus-visible, [data-header] nav a:focus-visible { background-size: 100% 1px; }
 
+[data-spotlight] { background: radial-gradient(460px circle at var(--sx, 70%) var(--sy, 40%), rgb(232 200 160 / 0.2), transparent 70%); mix-blend-mode: screen; opacity: 0; transition: opacity 0.6s; }
+
+/* Menu em tela cheia: itens entram em cascata */
+.menu-overlay { visibility: hidden; opacity: 0; transition: opacity 0.5s var(--ease-out-expo), visibility 0s 0.5s; }
+.menu-overlay.is-open { visibility: visible; opacity: 1; transition: opacity 0.5s var(--ease-out-expo); }
+.menu-overlay .menu-item { opacity: 0; transform: translateY(1.5rem); }
+.menu-overlay.is-open .menu-item { opacity: 1; transform: none; transition: opacity 0.7s var(--ease-out-expo), transform 0.9s var(--ease-out-expo); transition-delay: calc(0.12s + var(--i) * 0.035s); }
+@media (prefers-reduced-motion: reduce) { .menu-overlay .menu-item { transition: none !important; transform: none; } }
+
 [data-count] { font-feature-settings: "lnum", "tnum"; }
 
 /* Linha do tempo: lista vertical por padrao; o GSAP transforma em faixa horizontal em telas largas */

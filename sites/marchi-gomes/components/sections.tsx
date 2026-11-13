@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { visibleArticles } from "@/content/articles";
 import { MapBlock } from "./map-block";
 import { approach, areas, featuredAreas, timeline, faqs, future, history, images, legacy, marquee, integrations, pillars, services, site, stats, team } from "@/content/site";
@@ -8,20 +8,57 @@ import { Arrow, WhatsAppIcon } from "./icons";
 import { Monogram } from "./logo";
 import { LeadForm } from "./lead-form";
 
+/** Fundo do hero: recorte vertical no celular, zoom lento, parallax e brilho que segue o cursor. */
+export function HeroMedia({ strong = false }: { strong?: boolean }) {
+  if (!images.hero) return null;
+  const common = { alt: "", sizes: "100vw", quality: 80, priority: true } as const;
+  const { props: { srcSet: desktop, ...img } } = getImageProps({ ...common, src: images.hero, width: 1672, height: 941 });
+  const { props: { srcSet: mobile } } = getImageProps({ ...common, src: images.heroMobile || images.hero, width: 640, height: 941 });
+  return (
+    <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+      <div className="absolute inset-[-8%]" data-parallax="0.12">
+        <div className="absolute inset-0" data-kenburns>
+          <picture>
+            <source media="(max-width: 767px)" srcSet={mobile} />
+            <source media="(min-width: 768px)" srcSet={desktop} />
+            <img {...img} alt="" className="h-full w-full object-cover object-[68%_center] max-md:object-center" />
+          </picture>
+          {images.heroVideo && (
+            <video className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden" src={images.heroVideo} poster={images.hero} autoPlay muted loop playsInline preload="metadata" />
+          )}
+        </div>
+      </div>
+      <div className={`absolute inset-0 bg-gradient-to-r from-ink to-ink/10 max-lg:via-ink/85 max-lg:to-ink/55 ${strong ? "via-ink/88" : "via-ink/75"}`} />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/55" />
+      <div className="absolute inset-0" data-spotlight />
+    </div>
+  );
+}
+
+/** Tres imagens em faixa: deslizam de lado e cada uma se move em um ritmo. */
+export function ImageStrip() {
+  if (images.strip.length === 0) return null;
+  const alts = ["Livros de Direito sobre a mesa do escritório", "Estátua da Justiça com a balança", "Cadeira e janela do escritório ao entardecer"];
+  return (
+    <section className="overflow-hidden bg-ink py-16 lg:py-24" aria-label="Imagens do escritório">
+      <div className="flex w-[150vw] gap-4 lg:w-[118vw] lg:gap-8" data-strip>
+        {images.strip.map((src, i) => (
+          <div key={src} className={`relative aspect-[3/4] flex-1 overflow-hidden ${i === 1 ? "lg:mt-16" : ""}`}>
+            <div className="absolute inset-x-0 bottom-[-14%] top-[-14%]" data-parallax={[0.12, 0.26, 0.18][i % 3]}>
+              <Image src={src} alt={alts[i] ?? ""} fill sizes="(min-width: 1024px) 38vw, 50vw" className="object-cover" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function Hero() {
   return (
     <section className="hero-light relative isolate overflow-hidden">
       {images.hero ? (
-        <div className="absolute inset-0 -z-10" aria-hidden="true">
-          <div className="absolute inset-[-8%]" data-parallax="0.12">
-            <Image src={images.hero} alt="" fill priority sizes="100vw" quality={80} className="object-cover object-[68%_center]" />
-            {images.heroVideo && (
-              <video className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden" src={images.heroVideo} poster={images.hero} autoPlay muted loop playsInline preload="metadata" />
-            )}
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10 max-lg:via-ink/85 max-lg:to-ink/55" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/55" />
-        </div>
+        <HeroMedia />
       ) : (
         <div className="pointer-events-none absolute inset-y-0 right-[-12%] -z-10 flex items-center lg:right-[-2%]" aria-hidden="true">
           <div data-parallax="0.3">
@@ -148,6 +185,7 @@ export function Articles() {
             <li key={ar.slug} data-reveal>
               <Link href={`/artigos/${ar.slug}`} className="group flex h-full flex-col justify-between gap-10 border-b border-ink/15 py-8 lg:border-b-0 lg:border-r lg:px-8 lg:first:pl-0">
                 <div>
+                  {ar.cover && <div className="relative mb-6 aspect-[16/10] overflow-hidden"><Image src={ar.cover} alt="" fill sizes="(min-width: 1024px) 30vw, 100vw" className="object-cover transition-transform duration-[1.2s] group-hover:scale-105" /></div>}
                   <p className="text-xs uppercase tracking-[0.22em] text-copper-lo">{ar.area}{ar.draft ? " · Rascunho" : ""}</p>
                   <h3 className="mt-4 font-display text-[1.75rem] leading-tight group-hover:text-copper-lo">{ar.title}</h3>
                   <p className="mt-4 text-ink/70">{ar.excerpt}</p>
@@ -286,7 +324,7 @@ export function Firm() {
         <div className="relative aspect-[4/5] overflow-hidden bg-navy" data-clip>
           {/* Slot de foto real do escritorio/socios. Ate chegar, fica o monograma. */}
           {images.firm ? (
-            <div className="absolute inset-x-0 bottom-[-12%] top-0" data-parallax="0.1">
+            <div className="absolute inset-x-0 bottom-[-30%] top-[-4%]" data-parallax="-0.3">
               <Image src={images.firm} alt="Estátua da Justiça, de olhos vendados, segurando a balança" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-top" />
             </div>
           ) : (

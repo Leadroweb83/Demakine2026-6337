@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { firstContact, firstContactChecklist } from "@/content/site";
+import { firstContact, firstContactChecklist, images } from "@/content/site";
 import { whatsappHref } from "@/lib/site";
 import { Contact } from "@/components/sections";
 import { WhatsAppIcon } from "@/components/icons";
@@ -49,6 +50,14 @@ export default function FirstContactPage() {
               <WhatsAppIcon /> Iniciar a conversa
             </a>
           </div>
+          <div>
+          {images.detail && (
+            <div className="relative mb-10 aspect-[21/9] overflow-hidden" data-clip>
+              <div className="absolute inset-x-0 bottom-[-16%] top-[-16%]" data-parallax="0.2">
+                <Image src={images.detail} alt="Pasta do escritório Marchi Gomes Advogados sobre a mesa" fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
+              </div>
+            </div>
+          )}
           <ul className="border-t border-ink/15">
             {firstContactChecklist.map((c) => (
               <li key={c} className="flex gap-5 border-b border-ink/15 py-6 text-lg" data-reveal>
@@ -56,6 +65,7 @@ export default function FirstContactPage() {
               </li>
             ))}
           </ul>
+          </div>
         </div>
       </section>
       <section className="border-t hairline bg-navy py-14">

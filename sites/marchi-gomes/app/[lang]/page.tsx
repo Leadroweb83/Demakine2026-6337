@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dict, locales, type Locale } from "@/content/i18n";
-import Image from "next/image";
-import { images, maps, site } from "@/content/site";
+import { maps, site } from "@/content/site";
+import { HeroMedia } from "@/components/sections";
 import { whatsappHref } from "@/lib/site";
 import { Arrow, WhatsAppIcon } from "@/components/icons";
 import { LeadForm } from "@/components/lead-form";
@@ -35,13 +35,7 @@ export default async function IntlHome({ params }: Props) {
   return (
     <div lang={lang}>
       <section className="hero-light relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10" aria-hidden="true">
-          <div className="absolute inset-[-8%]" data-parallax="0.12">
-            <Image src={images.hero} alt="" fill priority sizes="100vw" quality={80} className="object-cover object-[68%_center]" />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10 max-lg:via-ink/85 max-lg:to-ink/55" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/55" />
-        </div>
+        <HeroMedia />
         <div className="wrap flex min-h-[100svh] flex-col justify-end pb-16 pt-36">
           <p className="eyebrow" data-reveal>{t.hero.eyebrow}</p>
           <h1 className="display mt-6 max-w-[16ch] text-[clamp(2.8rem,7.6vw,6.75rem)]" data-split>

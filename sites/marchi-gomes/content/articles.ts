@@ -6,6 +6,8 @@ export type Article = {
   excerpt: string;
   area: string;
   date: string;
+  /** Capa em /public (aparece na lista, no artigo e no compartilhamento). Opcional. */
+  cover?: string;
   /** Rascunho: aparece so enquanto o site esta em pre-lancamento. */
   draft: boolean;
   body: { h?: string; p: string }[];

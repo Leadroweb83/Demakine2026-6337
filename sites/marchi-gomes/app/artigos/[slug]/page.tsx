@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { visibleArticles } from "@/content/articles";
@@ -46,6 +47,7 @@ export default async function ArticlePage({ params }: Props) {
         <div className="wrap grid gap-16 lg:grid-cols-[14rem_minmax(0,46rem)]">
           <Toc items={a.body.flatMap((b, i) => (b.h ? [{ id: `s-${i}`, label: b.h }] : []))} />
           <div>
+            {a.cover && <div className="relative mb-12 aspect-[16/9] overflow-hidden" data-clip><Image src={a.cover} alt="" fill sizes="(min-width: 1024px) 46rem, 100vw" className="object-cover" /></div>}
             <p className="font-display text-[clamp(1.5rem,2.4vw,2rem)] leading-snug" data-reveal>{a.excerpt}</p>
             {a.body.map((b, i) => (
               <section key={b.p} id={b.h ? `s-${i}` : undefined} className="scroll-mt-32">

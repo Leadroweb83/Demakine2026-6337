@@ -80,8 +80,22 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório
 - [x] Hero: `public/img/hero-escritorio.webp` (imagem enviada pelo Leandro)
 - [x] Seção O escritório: `public/img/justica.webp` (estátua da Justiça)
-- [ ] Fotos reais dos sócios, do escritório e uma por frente de atuação
+- [ ] As imagens das 4 frentes, da faixa e do "Primeiro atendimento" são RECORTES
+      das duas imagens enviadas. Trocar por fotos próprias quando houver
+- [ ] Hero em alta resolução (o arquivo atual tem 1672 px; ideal 2560 px ou mais)
+- [ ] Fotos reais dos sócios, do escritório e do Dr. João Jair Marchi
+- [ ] Capas dos artigos (`cover` em `content/articles.ts`)
 - [ ] Imagem de compartilhamento (Open Graph 1200x630) e favicon
+
+## Campanhas e presença local
+- [ ] GTM: criar o contêiner e informar o ID. Dentro dele entram GA4, pixel da Meta
+      e tag do Google Ads. Eventos já enviados pelo site: `generate_lead` (conversão
+      principal), `cta_click` com o nome do botão (ex.: `whatsapp_hero`, `como_chegar`)
+      e `section_view`
+- [ ] Perfil da Empresa no Google, com os mesmos dados do site:
+      Marchi Gomes Advogados · R. Valdir Dalfré, 57 - Jardim Porto Real II,
+      Limeira - SP, 13485-402 · (19) 98184-3010 · categoria "Escritório de advocacia"
+- [ ] Link compartilhável da prévia na Vercel (ou desligar Vercel Authentication)
 
 ## Antes do ar
 - [ ] Política de Privacidade: minuta em `/politica-de-privacidade`, a aprovar pelos sócios

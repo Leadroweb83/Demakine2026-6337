@@ -37,6 +37,11 @@ export const site = {
 /** Caminhos em /public. Vazio = o site usa o fundo de luz e o monograma. */
 export const images = {
   hero: "/img/hero-escritorio.webp",
+  /** Recorte vertical do hero para celular. */
+  heroMobile: "/img/hero-escritorio-vertical.webp",
+  /** Faixa de tres imagens entre secoes. */
+  strip: ["/img/faixa-livros.webp", "/img/justica.webp", "/img/faixa-janela.webp"],
+  detail: "/img/detalhe-pasta.webp",
   /** Video curto e sem som para o hero (mp4 em /public, ideal ate 3 MB). Usa `hero` como capa. */
   heroVideo: "",
   firm: "/img/justica.webp",
@@ -122,6 +127,7 @@ export type Area = {
 export const areas: Area[] = [
   {
     slug: "familia-e-sucessoes",
+    image: "/img/justica.webp",
     featured: true,
     keyword: "Advogado de família e sucessões",
     name: "Família e Sucessões",
@@ -131,6 +137,7 @@ export const areas: Area[] = [
   },
   {
     slug: "patrimonio-e-imoveis",
+    image: "/img/area-livros.webp",
     featured: true,
     keyword: "Advogado imobiliário",
     name: "Patrimônio e Imóveis",
@@ -140,6 +147,7 @@ export const areas: Area[] = [
   },
   {
     slug: "contratos",
+    image: "/img/area-pasta.webp",
     featured: true,
     keyword: "Advogado de contratos",
     name: "Contratos",
@@ -149,6 +157,7 @@ export const areas: Area[] = [
   },
   {
     slug: "empresarial-e-societario",
+    image: "/img/area-janela.webp",
     featured: true,
     keyword: "Advogado empresarial",
     name: "Empresarial e Societário",

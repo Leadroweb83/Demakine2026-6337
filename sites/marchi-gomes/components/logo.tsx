@@ -18,7 +18,7 @@ export function Logo() {
     <span className="flex items-center gap-3">
       <Monogram className="h-9 w-9 text-copper" />
       <span className="h-9 w-px bg-copper/50" aria-hidden="true" />
-      <span className="leading-none">
+      <span className="whitespace-nowrap leading-none">
         <span className="block font-display text-[1.15rem] font-semibold uppercase tracking-[0.08em] text-bone">
           Marchi Gomes
         </span>

@@ -208,6 +208,31 @@ export function MotionRoot({ children }: { children: ReactNode }) {
             ctx.add(() => () => { el.textContent = text; el.removeAttribute("role"); });
           });
 
+          // Hero: zoom lento da foto ao longo de 20 segundos
+          q("[data-kenburns]").forEach((el) => {
+            gsap.fromTo(el, { scale: 1 }, { scale: 1.09, duration: 20, ease: "none" });
+          });
+
+          // Hero: brilho dourado que acompanha o cursor
+          if (hover) {
+            q("[data-spotlight]").forEach((el) => {
+              const host = el.closest("section");
+              if (!host) return;
+              const sx = gsap.quickTo(el, "--sx", { duration: 0.7, ease: "power3", unit: "px" });
+              const sy = gsap.quickTo(el, "--sy", { duration: 0.7, ease: "power3", unit: "px" });
+              const move = (e: PointerEvent) => { const r = host.getBoundingClientRect(); sx(e.clientX - r.left); sy(e.clientY - r.top); (el as HTMLElement).style.opacity = "1"; };
+              const leave = () => { (el as HTMLElement).style.opacity = "0"; };
+              host.addEventListener("pointermove", move as EventListener);
+              host.addEventListener("pointerleave", leave);
+              ctx.add(() => () => { host.removeEventListener("pointermove", move as EventListener); host.removeEventListener("pointerleave", leave); });
+            });
+          }
+
+          // Faixa de imagens: desliza de lado com a rolagem
+          q("[data-strip]").forEach((el) => {
+            gsap.fromTo(el, { xPercent: 3 }, { xPercent: -12, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: 0.5 } });
+          });
+
           // 404: o monograma se monta peca por peca
           q("[data-assemble]").forEach((svg) => {
             const from = [{ x: -90, y: 0 }, { x: 0, y: -90 }, { x: 60, y: -60, rotation: -25 }, { x: 90, y: 40 }];
