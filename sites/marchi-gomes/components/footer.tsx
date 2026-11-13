@@ -32,6 +32,9 @@ export function Footer() {
           </ul>
         </nav>
       </div>
+      <p style={{ textWrap: "nowrap" }} className="display overflow-hidden whitespace-nowrap pb-6 text-center text-[clamp(2.4rem,10.8vw,13rem)] uppercase leading-[0.85] text-copper/20" aria-hidden="true" data-split>
+        Marchi Gomes
+      </p>
       <div className="wrap flex flex-col gap-2 border-t hairline py-6 text-xs text-mist md:flex-row md:justify-between">
         <p>
           © {new Date().getFullYear()} {site.name}.{c.oab ? ` ${c.oab}.` : ""}

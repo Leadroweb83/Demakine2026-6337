@@ -7,6 +7,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { Draggable } from "gsap/Draggable";
 import { useGSAP } from "@gsap/react";
+import Lenis from "lenis";
+import { Monogram } from "./logo";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
 
@@ -18,6 +20,9 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
  *   data-draw             filete que se desenha da esquerda
  *   data-parallax="0.15"  deslocamento leve atrelado ao scroll (so transform)
  *   data-magnetic         botao que acompanha o cursor
+ *   data-marquee          faixa continua que acelera com a velocidade do scroll
+ *   data-count="20"       numero que conta ate o valor ao entrar na tela
+ *   data-cursor-label     texto que o cursor mostra sobre o elemento
  *   data-drag             elemento arrastavel que volta com mola ao soltar
  *   data-story            secao fixa com passos trocados pelo scroll
  * Nada roda com prefers-reduced-motion, e nada altera layout (sem CLS).
@@ -41,6 +46,89 @@ export function MotionRoot({ children }: { children: ReactNode }) {
         (ctx) => {
           const { motion, wide, hover } = ctx.conditions as Record<string, boolean>;
           if (!motion) return;
+
+          const html = document.documentElement;
+
+          // Abertura: monograma e cortina, uma vez por sessao (menos de 1,5s)
+          const intro = q("[data-intro]")[0];
+          if (intro && !html.classList.contains("intro-done")) {
+            gsap
+              .timeline({
+                onComplete: () => {
+                  html.classList.add("intro-done");
+                  try { sessionStorage.setItem("mg-intro", "1"); } catch {}
+                },
+              })
+              .from(intro.querySelector("svg"), { autoAlpha: 0, scale: 0.86, duration: 0.55, ease: "power3.out" })
+              .to(intro.querySelector("svg"), { autoAlpha: 0, y: -24, duration: 0.3, ease: "power2.in" }, "+=0.15")
+              .to(intro, { yPercent: -100, duration: 0.8, ease: "expo.inOut" }, "<0.05");
+          }
+
+          // Rolagem suave em desktop com mouse; toque e teclado seguem nativos
+          if (hover) {
+            const lenis = new Lenis({ lerp: 0.12, anchors: true });
+            lenis.on("scroll", ScrollTrigger.update);
+            const raf = (t: number) => lenis.raf(t * 1000);
+            gsap.ticker.add(raf);
+            ctx.add(() => () => { gsap.ticker.remove(raf); lenis.destroy(); });
+          }
+
+          // Cursor que acompanha e cresce sobre o que e clicavel
+          const cursor = q("[data-cursor]")[0] as HTMLElement | undefined;
+          if (hover && cursor) {
+            html.classList.add("has-cursor");
+            const label = cursor.querySelector("span")!;
+            gsap.set(cursor, { xPercent: -50, yPercent: -50, scale: 0.18, autoAlpha: 0 });
+            const cx = gsap.quickTo(cursor, "x", { duration: 0.35, ease: "power3" });
+            const cy = gsap.quickTo(cursor, "y", { duration: 0.35, ease: "power3" });
+            let shown = false;
+            const move = (e: PointerEvent) => {
+              cx(e.clientX); cy(e.clientY);
+              if (!shown) { shown = true; gsap.set(cursor, { x: e.clientX, y: e.clientY }); gsap.to(cursor, { autoAlpha: 1, duration: 0.3 }); }
+            };
+            const over = (e: PointerEvent) => {
+              const t = (e.target as Element).closest?.("[data-cursor-label], a, button, summary, [data-drag]");
+              const text = t?.closest<HTMLElement>("[data-cursor-label]")?.dataset.cursorLabel ?? "";
+              label.textContent = text;
+              gsap.to(cursor, { scale: text ? 1 : t ? 0.55 : 0.18, opacity: text || !t ? 1 : 0.28, duration: 0.4, ease: "power3.out", overwrite: "auto" });
+            };
+            window.addEventListener("pointermove", move);
+            window.addEventListener("pointerover", over);
+            ctx.add(() => () => {
+              window.removeEventListener("pointermove", move);
+              window.removeEventListener("pointerover", over);
+              html.classList.remove("has-cursor");
+            });
+          }
+
+          // Faixa continua: anda sozinha e acelera com o scroll
+          q("[data-marquee]").forEach((el) => {
+            const track = el.querySelector(".marquee-track");
+            const loop = gsap.to(track, { xPercent: -50, duration: 38, ease: "none", repeat: -1 });
+            ScrollTrigger.create({
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              onUpdate: (self) => {
+                const boost = gsap.utils.clamp(0, 7, Math.abs(self.getVelocity()) / 260);
+                gsap.to(loop, { timeScale: 1 + boost, duration: 0.25, overwrite: true });
+                gsap.to(loop, { timeScale: 1, duration: 1.2, delay: 0.25 });
+              },
+            });
+          });
+
+          // Numeros
+          q("[data-count]").forEach((el) => {
+            const end = Number((el as HTMLElement).dataset.count);
+            const o = { v: 0 };
+            gsap.to(o, {
+              v: end,
+              duration: 1.8,
+              ease: "power2.out",
+              scrollTrigger: { trigger: el, start: "top 88%", once: true },
+              onUpdate: () => { el.textContent = Math.round(o.v).toLocaleString("pt-BR"); },
+            });
+          });
 
           // Titulos: linha a linha, depois que a fonte carregou (evita requebra)
           q("[data-split]").forEach((el) => {
@@ -179,5 +267,19 @@ export function MotionRoot({ children }: { children: ReactNode }) {
     { scope: root, dependencies: [pathname], revertOnUpdate: true },
   );
 
-  return <div ref={root}>{children}</div>;
+  return (
+    <div ref={root}>
+      <div data-intro className="fixed inset-0 z-[100] items-center justify-center bg-ink" aria-hidden="true">
+        <Monogram className="h-20 w-20 text-copper" />
+      </div>
+      <div
+        data-cursor
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-[90] h-24 w-24 items-center justify-center rounded-full bg-copper-hi text-center text-[0.6rem] font-semibold uppercase leading-tight tracking-[0.14em] text-ink"
+      >
+        <span />
+      </div>
+      {children}
+    </div>
+  );
 }

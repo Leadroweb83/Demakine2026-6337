@@ -33,6 +33,18 @@ export const site = {
   social: { instagram: "", linkedin: "" },
 };
 
+/** Caminhos em /public. Vazio = o site usa o fundo de luz e o monograma. */
+export const images = { hero: "", firm: "" };
+
+/** Palavras das lombadas dos livros nas pecas da marca. */
+export const marquee = ["Direito", "Estratégia", "Ética", "Patrimônio", "Negócios", "Confiança"];
+
+/** Numeros reais do escritorio. Vazio = bloco escondido. Ex.: { value: 20, suffix: "+", label: "anos de atuação" } */
+export const stats: { value: number; suffix?: string; label: string }[] = [];
+
+/** Socios e advogados. Vazio = secao escondida. Foto em /public/equipe/. */
+export const team: { name: string; role: string; oab: string; bio: string; photo: string }[] = [];
+
 export const whatsappMessage =
   "Olá! Vim pelo site e gostaria de falar com a equipe da Marchi Gomes Advogados.";
 

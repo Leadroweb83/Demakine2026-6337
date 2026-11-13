@@ -19,6 +19,11 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
       "segurança e tranquilidade" no lugar de "resultados", que pode ser lido
       como promessa de resultado
 
+## Blocos prontos, esperando dado real (ficam escondidos enquanto vazios)
+- [ ] Números do escritório (`stats`): anos de atuação, clientes atendidos etc.
+- [ ] Equipe (`team`): nome, cargo, OAB, mini bio e foto de cada advogado
+- [ ] Foto do hero em tela cheia e foto do escritório (`images`)
+
 ## Arquivos de marca
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório
 - [ ] Fotos reais do escritório e dos sócios (slot na seção O escritório)

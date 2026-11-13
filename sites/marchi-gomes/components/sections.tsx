@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { approach, areas, faqs, pillars, site } from "@/content/site";
+import Image from "next/image";
+import { approach, areas, faqs, images, marquee, pillars, site, stats, team } from "@/content/site";
 import { hasAddress, whatsappHref } from "@/lib/site";
 import { Arrow, WhatsAppIcon } from "./icons";
 import { Monogram } from "./logo";
@@ -8,12 +9,27 @@ import { LeadForm } from "./lead-form";
 export function Hero() {
   return (
     <section className="hero-light relative isolate overflow-hidden">
-      <div className="pointer-events-none absolute inset-y-0 right-[-12%] -z-10 flex items-center lg:right-[-2%]" aria-hidden="true">
-        <div data-parallax="0.3">
-          <Monogram className="h-[78vh] w-[78vh] max-w-none text-copper/[0.09]" />
+      {images.hero ? (
+        <div className="absolute inset-0 -z-10" aria-hidden="true">
+          <div className="absolute inset-[-8%]" data-parallax="0.12">
+            <Image src={images.hero} alt="" fill priority sizes="100vw" className="object-cover" />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/25" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
         </div>
+      ) : (
+        <div className="pointer-events-none absolute inset-y-0 right-[-12%] -z-10 flex items-center lg:right-[-2%]" aria-hidden="true">
+          <div data-parallax="0.3">
+            <Monogram className="h-[78vh] w-[78vh] max-w-none text-copper/[0.09]" />
+          </div>
+        </div>
+      )}
+      {/* Camadas em velocidades diferentes: luz ao fundo sobe, monograma desce, texto segue o scroll */}
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div data-parallax="-0.35" className="absolute right-[-10%] top-[-20%] h-[90vh] w-[70vw] rounded-full bg-[radial-gradient(closest-side,rgb(232_200_160/0.16),transparent)]" />
+        <div data-parallax="0.5" className="absolute bottom-[-30%] left-[-15%] h-[70vh] w-[55vw] rounded-full bg-[radial-gradient(closest-side,rgb(143_107_71/0.14),transparent)]" />
       </div>
-      <div className="wrap flex min-h-[100svh] flex-col justify-end pb-14 pt-36 lg:pb-20">
+      <div className="wrap flex min-h-[100svh] flex-col justify-end pb-10 pt-36">
         <p className="eyebrow" data-reveal>Advocacia para pessoas e empresas</p>
         <h1 className="display mt-6 max-w-[15ch] text-[clamp(2.9rem,8.2vw,7.25rem)]" data-split>
           Seu patrimônio, seus negócios e seus planos <em className="not-italic text-copper-hi">em boas mãos.</em>
@@ -33,16 +49,39 @@ export function Hero() {
             </Link>
           </div>
         </div>
+        <div className="mt-14 flex flex-wrap items-center justify-between gap-x-10 gap-y-4 border-t hairline pt-6" data-reveal>
+          <nav aria-label="Atalhos para as áreas" className="flex flex-wrap gap-x-8 gap-y-3">
+            {areas.map((a) => (
+              <Link key={a.slug} href={`/areas/${a.slug}`} className="group flex items-center gap-2 text-sm text-bone/85 hover:text-copper-hi">
+                {a.title} <Arrow className="h-3.5 w-3.5 text-copper transition-transform duration-500 group-hover:translate-x-1.5" />
+              </Link>
+            ))}
+          </nav>
+          <Link href="/#areas" className="text-xs uppercase tracking-[0.3em] text-mist hover:text-copper-hi max-md:hidden">
+            Role para baixo <span aria-hidden="true">↓</span>
+          </Link>
+        </div>
       </div>
-      <ul className="wrap grid grid-cols-2 border-t hairline lg:grid-cols-4">
-        {pillars.map((p, i) => (
-          <li key={p.title} className={`py-6 lg:py-8 ${i % 2 ? "pl-5" : ""} ${i ? "lg:border-l lg:pl-8 hairline" : ""} ${i > 1 ? "max-lg:border-t hairline" : ""}`} data-reveal>
-            <p className="font-display text-2xl uppercase tracking-[0.12em] text-copper-hi">{p.title}</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.22em] text-mist">{p.text}</p>
-          </li>
-        ))}
-      </ul>
     </section>
+  );
+}
+
+/** Faixa com as palavras da marca: anda sozinha e acelera com o scroll. */
+export function Marquee() {
+  const row = (hidden: boolean) => (
+    <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+      {marquee.map((w, i) => (
+        <li key={w} className="flex items-center">
+          <span className={`display px-8 text-[clamp(3rem,8vw,7rem)] uppercase ${i % 2 ? "outline-text" : "text-bone"}`}>{w}</span>
+          <Monogram className="h-8 w-8 text-copper lg:h-12 lg:w-12" />
+        </li>
+      ))}
+    </ul>
+  );
+  return (
+    <div data-marquee className="overflow-hidden border-y hairline bg-ink py-8 lg:py-12">
+      <div className="marquee-track">{row(false)}{row(true)}</div>
+    </div>
   );
 }
 
@@ -67,6 +106,7 @@ export function Areas() {
             <li key={a.slug} className="border-b hairline" data-reveal>
               <Link
                 href={`/areas/${a.slug}`}
+                data-cursor-label="Ver área"
                 className="group grid gap-x-10 gap-y-4 py-9 transition-colors duration-500 hover:bg-navy lg:grid-cols-[5rem_1fr_1.2fr_auto] lg:items-baseline lg:px-6 lg:py-12"
               >
                 <span className="font-display text-xl text-copper/70">0{i + 1}</span>
@@ -92,7 +132,7 @@ export function Areas() {
 /** Selo da marca: gira devagar e pode ser arrastado; ao soltar, volta com mola. */
 function Seal() {
   return (
-    <div data-drag className="absolute -right-4 -top-10 z-10 h-32 w-32 touch-none select-none rounded-full bg-ink text-copper-hi shadow-xl shadow-ink/30 lg:-right-14 lg:h-40 lg:w-40" aria-hidden="true">
+    <div data-drag className="absolute -right-4 -top-10 z-10 h-32 w-32 overflow-hidden touch-none select-none rounded-full bg-ink text-copper-hi shadow-xl shadow-ink/30 lg:-right-14 lg:h-40 lg:w-40" aria-hidden="true">
       <svg data-drag-spin viewBox="0 0 100 100" className="h-full w-full">
         <defs><path id="seal-path" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" /></defs>
         <text fill="currentColor" fontSize="6.2" style={{ textTransform: "uppercase" }}>
@@ -112,8 +152,16 @@ export function Firm() {
           <Seal />
         <div className="relative aspect-[4/5] overflow-hidden bg-navy">
           {/* Slot de foto real do escritorio/socios. Ate chegar, fica o monograma. */}
-          <div className="absolute inset-[-12%] hero-light" data-parallax="0.16" />
-          <Monogram className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 text-copper" />
+          {images.firm ? (
+            <div className="absolute inset-[-10%]" data-parallax="0.14">
+              <Image src={images.firm} alt={`Escritório ${site.name}`} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+            </div>
+          ) : (
+            <>
+              <div className="absolute inset-[-12%] hero-light" data-parallax="0.16" />
+              <Monogram className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 text-copper" />
+            </>
+          )}
         </div>
         </div>
         <div className="self-center">
@@ -134,6 +182,54 @@ export function Firm() {
             <WhatsAppIcon /> Conversar com a equipe
           </a>
         </div>
+      </div>
+      {stats.length > 0 && (
+        <dl className="wrap mt-20 grid grid-cols-2 gap-y-10 border-t border-ink/15 pt-12 lg:grid-cols-4">
+          {stats.map((st) => (
+            <div key={st.label} data-reveal>
+              <dd className="display text-[clamp(3rem,6vw,5.5rem)]">
+                <span data-count={st.value}>{st.value.toLocaleString("pt-BR")}</span>{st.suffix}
+              </dd>
+              <dt className="mt-1 text-xs uppercase tracking-[0.22em] text-ink/60">{st.label}</dt>
+            </div>
+          ))}
+        </dl>
+      )}
+      <ul className="wrap mt-20 grid grid-cols-2 border-t border-ink/15 lg:grid-cols-4">
+        {pillars.map((p, i) => (
+          <li key={p.title} className={`py-7 ${i % 2 ? "max-lg:pl-5" : ""} ${i ? "lg:border-l lg:border-ink/15 lg:pl-8" : ""} ${i > 1 ? "max-lg:border-t max-lg:border-ink/15" : ""}`} data-reveal>
+            <p className="font-display text-2xl uppercase tracking-[0.12em] text-copper-lo">{p.title}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.22em] text-ink/60">{p.text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Equipe: so aparece quando houver advogados reais cadastrados em content/site.ts. */
+export function Team() {
+  if (team.length === 0) return null;
+  return (
+    <section id="equipe" className="bg-ink py-24 lg:py-36">
+      <div className="wrap">
+        <p className="eyebrow" data-reveal>Quem conduz o seu caso</p>
+        <h2 className="display mt-5 max-w-[14ch] text-[clamp(2.4rem,5vw,4.4rem)]" data-split>
+          Os advogados por trás de cada decisão.
+        </h2>
+        <ul className="team-row mt-14 flex flex-col gap-4 min-[900px]:h-[34rem] min-[900px]:flex-row">
+          {team.map((m) => (
+            <li key={m.name} className="team-card relative overflow-hidden bg-navy max-[899px]:h-80" tabIndex={0}>
+              {m.photo && <Image src={m.photo} alt={m.name} fill sizes="(min-width: 900px) 50vw, 100vw" className="object-cover" />}
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6">
+                <h3 className="display whitespace-nowrap text-3xl">{m.name}</h3>
+                <p className="mt-1 whitespace-nowrap text-xs uppercase tracking-[0.2em] text-copper">{m.role} · {m.oab}</p>
+                <p className="team-bio mt-4 max-w-md text-sm text-bone/80 min-[900px]:w-[26rem]">{m.bio}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

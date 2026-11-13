@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#070b14", colorScheme: "dark" };
 
 // Marca que ha JS antes da primeira pintura; se o motion nao subir em 3s, libera o conteudo.
-const bootScript = `(function(d){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('motion-ready'))d.classList.remove('js')},3000)})(document.documentElement)`;
+const bootScript = `(function(d){d.classList.add('js');try{if(sessionStorage.getItem('mg-intro'))d.classList.add('intro-done')}catch(e){}setTimeout(function(){d.classList.add('intro-done');if(!d.classList.contains('motion-ready'))d.classList.remove('js')},3000)})(document.documentElement)`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
