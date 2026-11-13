@@ -98,6 +98,8 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 ## Imagens que aguardam arquivo
 - [ ] Foto da estátua com a advogada desfocada (vertical): trocar a imagem da seção "O escritório"
       (`images.firm`). Reenviar como arquivo anexado, o print na conversa não vira arquivo
+- [ ] Foto da mão apontando documentos, com pessoas desfocadas (vertical e escura): entra no túnel de
+      imagens da home (`tunnel.items` em `content/site.ts`)
 - [ ] Foto da estátua com livros e bokeh (3:2): fundo da seção "O futuro" (`images.future`, já preparado,
       com degradê escuro à esquerda). Melhorar (2x, nitidez) ao receber o arquivo
 

@@ -39,7 +39,7 @@ export const images = {
   hero: "/img/hero-escritorio.webp",
   /** Recorte vertical do hero para celular. */
   heroMobile: "/img/hero-escritorio-vertical.webp",
-  /** Faixa de tres imagens entre secoes. */
+  /** Faixa de tres imagens (versao estatica, usada sem JS e com "reduzir movimento"). */
   strip: ["/img/faixa-balanca.webp", "/img/faixa-martelo.webp", "/img/faixa-notebook.webp"],
   detail: "/img/primeiro-atendimento.webp",
   /** Imagem ao lado dos servicos, na home. */
@@ -87,6 +87,28 @@ const mapsQuery = encodeURIComponent("R. Valdir Dalfré, 57 - Jardim Porto Real 
 export const maps = {
   directions: `https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`,
   embed: `https://www.google.com/maps?q=${mapsQuery}&output=embed`,
+};
+
+/**
+ * Tunel de imagens entre as secoes (rolagem em perspectiva). Para incluir mais fotos, adicione
+ * itens aqui; 9 a 12 funcionam bem. Os rotulos usam so palavras da marca e das areas.
+ */
+export const tunnel = {
+  eyebrow: "Desde 1996",
+  title: "Tradição que impulsiona",
+  highlight: "novos caminhos.",
+  prompt: "Role para explorar",
+  items: [
+    { src: "/img/justica.webp", title: "Ética", alt: "Estátua da Justiça de olhos vendados, em tons escuros" },
+    { src: "/img/faixa-balanca.webp", title: "Direito", alt: "Balança da Justiça dourada sobre um livro, ao lado de um martelo" },
+    { src: "/img/faixa-martelo.webp", title: "Contencioso", alt: "Martelo de juiz sobre um documento" },
+    { src: "/img/area-empresarial.webp", title: "Negócios", alt: "Aperto de mãos entre dois empresários, com a balança da Justiça ao fundo" },
+    { src: "/img/contratos-revisao.webp", title: "Contratos", alt: "Mãos revisando um contrato com canetas douradas" },
+    { src: "/img/faixa-notebook.webp", title: "Consultoria", alt: "Mãos digitando em um notebook, com a estátua da Justiça ao fundo" },
+    { src: "/img/primeiro-atendimento.webp", title: "Confiança", alt: "Uma pessoa entrega uma caneta a outra, sobre uma mesa com um documento" },
+    { src: "/img/servicos-assinatura.webp", title: "Planejamento", alt: "Duas pessoas revisam e assinam um documento, com a estátua da Justiça ao fundo" },
+    { src: "/img/area-livros.webp", title: "Patrimônio", alt: "Livros de Direito sobre a mesa do escritório" },
+  ],
 };
 
 export const whatsappMessage =
