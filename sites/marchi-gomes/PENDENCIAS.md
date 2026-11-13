@@ -14,13 +14,16 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
   (texto do documento "História 2", com um ajuste de digitação: "destaque na região")
 
 ## Dados que faltam (preencher em `content/site.ts`)
-- [ ] E-mail público do escritório e e-mail que recebe os leads: os cartões trazem só e-mails
-      pessoais (nome.sobrenome@marchigomes.adv.br); decidir qual vai no site. Horário de atendimento
-- [x] Equipe dos cartões de visita: Gisele Marchi (OAB/SP 519070), Gabriel Gomes, Wagner Marchi,
+- [x] E-mail geral no site: contato@marchigomes.adv.br (o pedido veio como "contao@", tratado como
+      erro de digitação; confirmar que a caixa existe)
+- [ ] E-mail que recebe os leads do formulário (`LEAD_NOTIFY_EMAIL` + Resend, ou webhook). Horário de atendimento
+- [x] Fundadores dos cartões de visita: Gisele Marchi (OAB/SP 519070), Gabriel Gomes, Wagner Marchi,
       José Vidotti e Ronaldo Gomes, com os cargos impressos. Só a Gisele tem OAB nos cartões:
       confirmar se mais alguém é advogado antes de apresentá-lo como tal
 - [ ] Registro da sociedade na OAB
-- [ ] Mini biografia e foto de cada integrante da equipe
+- [ ] Mini biografia e foto de cada fundador
+- [ ] O texto "A história do escritório" cita só Gisele Marchi e Gabriel Gomes como fundadores;
+      com cinco fundadores, ajustar o texto (em `content/site.ts`, `history`) se os sócios quiserem
 - [ ] Foto e, se houver, depoimento identificado sobre o Dr. João Jair Marchi
 - [ ] Instagram e LinkedIn
 - [ ] Domínio (`NEXT_PUBLIC_SITE_URL`)

@@ -40,6 +40,7 @@ export function Footer({ showArticles = true }: { showArticles?: boolean }) {
           <address className="mt-6 space-y-1 text-sm not-italic text-bone/70">
             {c.street && <p>{c.street}<br />{c.city} - {c.state}, {c.zip}</p>}
             {c.phone && <p><a href={`tel:+${c.whatsapp}`} className="hover:text-copper-hi">{c.phone}</a></p>}
+            {c.email && <p><a href={`mailto:${c.email}`} className="hover:text-copper-hi">{c.email}</a></p>}
           </address>
         </div>
         <nav aria-label="Áreas de atuação">
