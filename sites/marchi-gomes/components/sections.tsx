@@ -273,7 +273,7 @@ export function Areas() {
   );
 }
 
-export function Services({ heading = "O que o escritório faz por você." }: { heading?: string }) {
+export function Services({ heading = "O que o escritório faz por você.", image, imageAlt = "" }: { heading?: string; image?: string; imageAlt?: string }) {
   return (
     <section id="servicos" className="bg-bone py-24 text-ink lg:py-36">
       <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
@@ -283,6 +283,13 @@ export function Services({ heading = "O que o escritório faz por você." }: { h
           <p className="mt-6 max-w-md text-ink/70" data-reveal>
             Da orientação pontual à representação em juízo, com a mesma exigência técnica em cada etapa.
           </p>
+          {image && (
+            <div className="tone relative mt-10 aspect-square max-w-xs overflow-hidden max-lg:hidden" data-clip>
+              <div className="absolute inset-x-0 bottom-[-12%] top-[-4%]" data-parallax="0.14">
+                <Image src={image} alt={imageAlt} fill sizes="24rem" className="object-cover" />
+              </div>
+            </div>
+          )}
         </div>
         <ol className="border-t border-ink/15">
           {services.map((sv, i) => (

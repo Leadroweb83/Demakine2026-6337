@@ -41,7 +41,9 @@ export const images = {
   heroMobile: "/img/hero-escritorio-vertical.webp",
   /** Faixa de tres imagens entre secoes. */
   strip: ["/img/faixa-balanca.webp", "/img/faixa-martelo.webp", "/img/faixa-notebook.webp"],
-  detail: "/img/area-contratos.webp",
+  detail: "/img/primeiro-atendimento.webp",
+  /** Imagem ao lado dos servicos, na home. */
+  services: "/img/servicos-assinatura.webp",
   /** Imagem da pagina Para empresas. */
   business: "/img/area-empresarial.webp",
   /** Video do hero (mp4 sem som). Vazio = o hero usa a foto. */
@@ -161,7 +163,7 @@ export const areas: Area[] = [
   },
   {
     slug: "contratos",
-    image: "/img/area-contratos.webp",
+    image: "/img/contratos-revisao.webp",
     featured: true,
     keyword: "Advogado de contratos",
     name: "Contratos",

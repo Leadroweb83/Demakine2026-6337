@@ -99,8 +99,9 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório
 - [x] Hero: `public/img/hero-escritorio.webp` (imagem enviada pelo Leandro)
 - [x] Seção O escritório: `public/img/justica.webp` (estátua da Justiça)
-- [x] As cinco imagens de banco de imagens enviadas (balança, martelo, notebook, assinatura e aperto
-      de mãos) estão na faixa da home, no painel das frentes, no "Primeiro atendimento" e em "Para empresas".
+- [x] As sete imagens de banco de imagens enviadas (balança, martelo, notebook, assinatura, aperto de mãos,
+      entrega da caneta e revisão de contrato) estão na faixa e nos serviços da home, no painel e na
+      página das frentes, no "Primeiro atendimento" e em "Para empresas".
       Licença de uso confirmada pelo Leandro
 - [ ] As imagens das 4 frentes, da faixa e do "Primeiro atendimento" eram RECORTES
       das duas imagens enviadas. Trocar por fotos próprias quando houver

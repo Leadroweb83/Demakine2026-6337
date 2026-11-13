@@ -60,7 +60,7 @@ export default async function AreaPage({ params }: Props) {
         </div>
       </section>
 
-      <Services heading={`Como atuamos em ${area.name}.`} />
+      <Services heading={`Como atuamos em ${area.name}.`} image={area.image} />
 
       <section className="border-t hairline bg-navy py-16">
         <div className="wrap">

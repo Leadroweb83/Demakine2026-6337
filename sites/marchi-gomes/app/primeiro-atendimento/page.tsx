@@ -54,7 +54,7 @@ export default function FirstContactPage() {
           {images.detail && (
             <div className="tone relative mb-10 aspect-[16/10] overflow-hidden" data-clip>
               <div className="absolute inset-x-0 bottom-[-16%] top-[-16%]" data-parallax="0.2">
-                <Image src={images.detail} alt="Duas pessoas revisam e assinam um documento, com a estátua da Justiça ao fundo" fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover object-[50%_62%]" />
+                <Image src={images.detail} alt="Uma pessoa entrega uma caneta a outra, sobre uma mesa com um documento para assinar" fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover object-[50%_52%]" />
               </div>
             </div>
           )}
