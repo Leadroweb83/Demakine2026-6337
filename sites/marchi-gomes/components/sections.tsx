@@ -464,9 +464,9 @@ export function Team() {
   return (
     <section id="equipe" className="bg-ink py-24 lg:py-36">
       <div className="wrap">
-        <p className="eyebrow" data-reveal>Os fundadores</p>
+        <p className="eyebrow" data-reveal>Fundadores e diretores</p>
         <h2 className="display mt-5 max-w-[14ch] text-[clamp(2.4rem,5vw,4.4rem)]" data-split>
-          Quem fundou e conduz o escritório.
+          Quem fundou e dirige o escritório.
         </h2>
         <ul className={`team-row mt-14 flex flex-col gap-4 min-[900px]:flex-row ${team.some((m) => m.bio) ? "has-bios" : ""} ${team.some((m) => m.photo) ? "min-[900px]:h-[30rem]" : "min-[900px]:h-60"}`}>
           {team.map((m) => (

@@ -17,7 +17,7 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 - [x] E-mail geral no site: contato@marchigomes.adv.br (o pedido veio como "contao@", tratado como
       erro de digitação; confirmar que a caixa existe)
 - [ ] E-mail que recebe os leads do formulário (`LEAD_NOTIFY_EMAIL` + Resend, ou webhook). Horário de atendimento
-- [x] Fundadores dos cartões de visita: Gisele Marchi (OAB/SP 519070), Gabriel Gomes, Wagner Marchi,
+- [x] Seção "Fundadores e diretores", com os cartões de visita: Gisele Marchi (OAB/SP 519070), Gabriel Gomes, Wagner Marchi,
       José Vidotti e Ronaldo Gomes, com os cargos impressos. Só a Gisele tem OAB nos cartões:
       confirmar se mais alguém é advogado antes de apresentá-lo como tal
 - [ ] Registro da sociedade na OAB
