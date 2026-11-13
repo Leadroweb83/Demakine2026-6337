@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { visibleArticles } from "@/content/articles";
 import { Arrow } from "@/components/icons";
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 export default function ArticlesPage() {
   const list = visibleArticles();
+  if (list.length === 0) notFound();
   return (
     <>
       <section className="hero-light">

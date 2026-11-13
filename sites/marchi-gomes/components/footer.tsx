@@ -3,10 +3,11 @@
 import { usePathname } from "next/navigation";
 import { dict, localeOf } from "@/content/i18n";
 import Link from "next/link";
-import { featuredAreas, nav, site } from "@/content/site";
+import { featuredAreas, nav as allNav, site } from "@/content/site";
 import { Logo } from "./logo";
 
-export function Footer() {
+export function Footer({ showArticles = true }: { showArticles?: boolean }) {
+  const nav = showArticles ? allNav : allNav.filter((i) => i.href !== "/artigos");
   const c = site.contact;
   const lang = localeOf(usePathname());
   if (lang) {

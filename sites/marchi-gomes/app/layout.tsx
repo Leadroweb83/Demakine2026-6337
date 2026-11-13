@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import { MotionRoot } from "@/components/motion-root";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { visibleArticles } from "@/content/articles";
 import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { Tracking } from "@/components/tracking";
 import "./globals.css";
@@ -49,9 +50,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Pular para o conteúdo
         </a>
         <MotionRoot>
-          <Header />
+          <Header showArticles={visibleArticles().length > 0} />
           <main id="conteudo">{children}</main>
-          <Footer />
+          <Footer showArticles={visibleArticles().length > 0} />
         </MotionRoot>
         <WhatsAppFloat />
         <Tracking />

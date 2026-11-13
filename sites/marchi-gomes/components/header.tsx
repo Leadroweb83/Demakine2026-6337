@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { areas, nav as ptNav, site } from "@/content/site";
+import { areas, nav as allNav, site } from "@/content/site";
 import { dict, localeMeta, localeOf } from "@/content/i18n";
 import { whatsappHref } from "@/lib/site";
 import { Logo } from "./logo";
 import { WhatsAppIcon } from "./icons";
 
-export function Header() {
+export function Header({ showArticles = true }: { showArticles?: boolean }) {
+  const ptNav = showArticles ? allNav : allNav.filter((i) => i.href !== "/artigos");
   const pathname = usePathname();
   const lang = localeOf(pathname);
   const [open, setOpen] = useState(false);

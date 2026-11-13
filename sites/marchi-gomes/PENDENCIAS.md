@@ -1,7 +1,12 @@
 # Marchi Gomes Advogados: o que falta para publicar
 
-O site está com `launchReady: false` em `content/site.ts`: robots bloqueia tudo e
-as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
+**Site liberado para o Google** (`launchReady: true` em `content/site.ts`): robots
+permite o rastreio, as páginas saem com `index, follow` e o sitemap lista 20 URLs.
+Efeitos automáticos: os artigos em rascunho somem do site, a página `/artigos` e o
+link do menu só aparecem quando houver artigo publicado (`draft: false`), e os
+endereços `.vercel.app` ficam sempre com `noindex` para não duplicar o site.
+Para tirar do ar a indexação, volte `launchReady` para `false`.
+Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 
 ## Já preenchido com dados reais
 - Nome, cidade (Limeira, SP), fundação (1996), endereço, telefone e WhatsApp

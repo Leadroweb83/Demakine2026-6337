@@ -6,8 +6,8 @@
  */
 
 export const site = {
-  /** Enquanto false: robots bloqueia tudo e as paginas saem com noindex. */
-  launchReady: false as boolean,
+  /** false = robots bloqueia tudo e as paginas saem com noindex (pre-lancamento). */
+  launchReady: true as boolean,
 
   name: "Marchi Gomes Advogados",
   shortName: "Marchi Gomes",
