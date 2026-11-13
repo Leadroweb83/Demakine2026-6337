@@ -28,7 +28,10 @@ export function LeadForm({ defaultArea }: { defaultArea?: string }) {
     },
   });
 
-  async function onSubmit(data: Lead) {
+  async function onSubmit(form: Lead) {
+    let attribution: Record<string, string> = {};
+    try { attribution = JSON.parse(sessionStorage.getItem("mg-attr") ?? "{}"); } catch {}
+    const data = { ...form, attribution };
     const res = await fetch("/api/lead", {
       method: "POST",
       headers: { "content-type": "application/json" },

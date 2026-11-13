@@ -4,12 +4,13 @@ import { site } from "@/content/site";
 import { MotionRoot } from "@/components/motion-root";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Tracking } from "@/components/tracking";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Advocacia empresarial, civil, tributária e trabalhista`,
+    default: `${site.name} | Escritório de advocacia em Limeira, SP`,
     template: `%s | ${site.name}`,
   },
   description: site.description,
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="conteudo">{children}</main>
           <Footer />
         </MotionRoot>
+        <Tracking />
       </body>
     </html>
   );

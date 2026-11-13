@@ -1,4 +1,4 @@
-import { Approach, Areas, Contact, Faq, Firm, Hero, Marquee, Team } from "@/components/sections";
+import { Approach, Areas, Articles, Contact, Doors, Faq, Firm, Future, Hero, Marquee, Pillars, Services } from "@/components/sections";
 import { JsonLd, faqLd, legalServiceLd } from "@/components/json-ld";
 
 export default function Home() {
@@ -6,10 +6,14 @@ export default function Home() {
     <>
       <Hero />
       <Marquee />
+      <Doors />
       <Areas />
-      <Firm />
+      <Services />
       <Approach />
-      <Team />
+      <Firm />
+      <Pillars />
+      <Future />
+      <Articles />
       <Faq />
       <Contact />
       <JsonLd data={legalServiceLd()} />

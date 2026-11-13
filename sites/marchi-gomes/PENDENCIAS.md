@@ -3,33 +3,47 @@
 O site está com `launchReady: false` em `content/site.ts`: robots bloqueia tudo e
 as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
 
-## Dados do escritório (preencher em `content/site.ts`)
-- [ ] WhatsApp com DDI (sem ele, os botões levam para o formulário)
-- [ ] Telefone, e-mail, endereço completo, horário
-- [ ] Registro na OAB (número da sociedade) e nomes/OAB dos sócios
-- [ ] Cidade de atuação (entra nos títulos: "Advogado de Direito Tributário em ...")
+## Já preenchido com dados reais
+- Nome, cidade (Limeira, SP), fundação (1996), endereço, telefone e WhatsApp
+- História, legado do Dr. João Jair Marchi, serviços, áreas e visão de futuro
+  (texto do documento "História 2", com um ajuste de digitação: "destaque na região")
+
+## Dados que faltam (preencher em `content/site.ts`)
+- [ ] E-mail e horário de atendimento
+- [ ] Registro da sociedade na OAB e OAB de cada sócio
+- [ ] Mini biografia e foto de Gisele Marchi e de Gabriel Gomes
+- [ ] Foto e, se houver, depoimento identificado sobre o Dr. João Jair Marchi
 - [ ] Instagram e LinkedIn
-- [ ] Domínio (`NEXT_PUBLIC_SITE_URL`) e destino dos leads (`LEAD_WEBHOOK_URL`)
+- [ ] Domínio (`NEXT_PUBLIC_SITE_URL`)
 
-## Conteúdo a validar com o escritório
-- [ ] Temas listados em cada área (`areas[].topics`): são temas típicos, não confirmados
+## Decisões a confirmar com os sócios
+- [ ] As quatro frentes em destaque: Família e Sucessões, Patrimônio e Imóveis,
+      Contratos, Empresarial e Societário. Foram escolhidas pela ênfase do texto
+      institucional; as peças da marca citavam Empresarial, Civil, Tributário e Trabalhista
+- [ ] Números exibidos: anos desde 1996, 12 áreas, 3 frentes de atuação
 - [ ] Respostas das dúvidas frequentes (`faqs`)
-- [ ] Texto "A marca mudou, a essência é a mesma" na seção O escritório
-- [ ] Copy revisada para o Provimento 205/2021 da OAB: o hero usa
-      "segurança e tranquilidade" no lugar de "resultados", que pode ser lido
-      como promessa de resultado
+- [ ] Textos das duas portas de entrada (pessoas e famílias / empresas)
+- [ ] Hero usa "orientação rigorosa, atendimento próximo" e evita "resultados"
+      (Provimento 205/2021 da OAB)
 
-## Blocos prontos, esperando dado real (ficam escondidos enquanto vazios)
-- [ ] Números do escritório (`stats`): anos de atuação, clientes atendidos etc.
-- [ ] Equipe (`team`): nome, cargo, OAB, mini bio e foto de cada advogado
-- [ ] Foto do hero em tela cheia e foto do escritório (`images`)
+## Artigos
+- [ ] Os 3 artigos em `content/articles.ts` são RASCUNHOS. Precisam de revisão e
+      aprovação de um advogado. Enquanto `draft: true`, somem do site no lançamento
+
+## Integrações (ligam ao preencher o `.env`)
+- [ ] `LEAD_WEBHOOK_URL`: destino dos leads (CRM, Make, n8n). Já recebe área,
+      data preferida e origem (UTM, gclid, fbclid, referrer, página de entrada)
+- [ ] `NEXT_PUBLIC_GTM_ID`: Google Tag Manager com Consent Mode v2. Eventos
+      prontos: `cta_click`, `section_view`, `generate_lead`
+- [ ] `NEXT_PUBLIC_CLARITY_ID`: Microsoft Clarity (só carrega após o aceite)
+- [ ] `NEXT_PUBLIC_SCHEDULING_URL`: link do Calendly ou do Google Agenda
+- [ ] Sanity: precisa de uma conta/projeto do escritório para ligar o painel
 
 ## Arquivos de marca
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório
-- [ ] Fotos reais do escritório e dos sócios (slot na seção O escritório)
+- [ ] Fotos reais: hero, escritório, sócios e uma por frente de atuação
 - [ ] Imagem de compartilhamento (Open Graph 1200x630) e favicon
 
 ## Antes do ar
-- [ ] Páginas: Política de Privacidade (LGPD) e perfis dos advogados
-- [ ] GTM/GA4 e consentimento de cookies (o formulário já dispara `generate_lead`)
+- [ ] Política de Privacidade (LGPD)
 - [ ] Perfil da Empresa no Google com o mesmo nome, endereço e telefone do site

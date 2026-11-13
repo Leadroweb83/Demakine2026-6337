@@ -10,6 +10,10 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-6 max-w-xs font-display text-2xl leading-tight text-bone/90">{site.tagline}</p>
+          <address className="mt-6 space-y-1 text-sm not-italic text-bone/70">
+            {c.street && <p>{c.street}<br />{c.city} - {c.state}, {c.zip}</p>}
+            {c.phone && <p><a href={`tel:+${c.whatsapp}`} className="hover:text-copper-hi">{c.phone}</a></p>}
+          </address>
         </div>
         <nav aria-label="Áreas de atuação">
           <p className="eyebrow mb-4">Áreas de atuação</p>

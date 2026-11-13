@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -23,6 +23,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
  *   data-marquee          faixa continua que acelera com a velocidade do scroll
  *   data-count="20"       numero que conta ate o valor ao entrar na tela
  *   data-cursor-label     texto que o cursor mostra sobre o elemento
+ *   data-fill             frase que vai acendendo palavra a palavra com o scroll
  *   data-drag             elemento arrastavel que volta com mola ao soltar
  *   data-story            secao fixa com passos trocados pelo scroll
  * Nada roda com prefers-reduced-motion, e nada altera layout (sem CLS).
@@ -30,6 +31,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
 export function MotionRoot({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
+  const leaving = useRef(false);
 
   useGSAP(
     () => {
@@ -48,6 +51,64 @@ export function MotionRoot({ children }: { children: ReactNode }) {
           if (!motion) return;
 
           const html = document.documentElement;
+
+          // Transicao entre paginas: cortina no azul da marca cobre e descobre
+          const curtain = q("[data-curtain]")[0];
+          if (curtain) {
+            if (leaving.current) {
+              leaving.current = false;
+              gsap.fromTo(curtain, { yPercent: 0, display: "flex" }, { yPercent: -100, duration: 0.75, ease: "expo.inOut", delay: 0.1, onComplete: () => { gsap.set(curtain, { display: "none" }); } });
+            }
+            const onNav = (e: MouseEvent) => {
+              if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              const a = (e.target as Element).closest("a");
+              if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
+              const url = new URL(a.href, location.href);
+              if (url.origin !== location.origin || url.pathname === location.pathname) return;
+              e.preventDefault();
+              leaving.current = true;
+              gsap.fromTo(curtain, { yPercent: 100, display: "flex" }, {
+                yPercent: 0, duration: 0.55, ease: "expo.inOut",
+                onComplete: () => router.push(url.pathname + url.search + url.hash),
+              });
+            };
+            document.addEventListener("click", onNav, true);
+            ctx.add(() => () => document.removeEventListener("click", onNav, true));
+          }
+
+          // Filete dourado de progresso de leitura
+          const progress = q("[data-progress]")[0];
+          if (progress) {
+            gsap.fromTo(progress, { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } });
+          }
+
+          // Imagens que se revelam por recorte, de baixo para cima
+          q("[data-clip]").forEach((el) => {
+            gsap.fromTo(el, { clipPath: "inset(100% 0% 0% 0%)" }, {
+              clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.out",
+              scrollTrigger: { trigger: el.parentElement, start: "top 80%", once: true },
+            });
+          });
+
+          // Painel que segue o cursor nas linhas de area
+          const preview = q("[data-preview]")[0] as HTMLElement | undefined;
+          if (hover && preview) {
+            const items = gsap.utils.toArray<HTMLElement>("[data-preview-item]", preview);
+            gsap.set(preview, { display: "block", autoAlpha: 0, scale: 0.9, xPercent: 35, yPercent: -108 });
+            gsap.set(items, { autoAlpha: 0 });
+            const px = gsap.quickTo(preview, "x", { duration: 0.6, ease: "power3" });
+            const py = gsap.quickTo(preview, "y", { duration: 0.6, ease: "power3" });
+            const rows = q("[data-preview-index]");
+            const enter = (e: Event) => {
+              const i = Number((e.currentTarget as HTMLElement).dataset.previewIndex);
+              gsap.to(items, { autoAlpha: (n: number) => (n === i ? 1 : 0), duration: 0.35, overwrite: true });
+              gsap.to(preview, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "power3.out", overwrite: "auto" });
+            };
+            const leave = () => gsap.to(preview, { autoAlpha: 0, scale: 0.9, duration: 0.3, overwrite: "auto" });
+            const track = (e: PointerEvent) => { px(e.clientX); py(e.clientY); };
+            rows.forEach((r) => { r.addEventListener("pointerenter", enter); r.addEventListener("pointerleave", leave); r.addEventListener("pointermove", track as EventListener); });
+            ctx.add(() => () => rows.forEach((r) => { r.removeEventListener("pointerenter", enter); r.removeEventListener("pointerleave", leave); r.removeEventListener("pointermove", track as EventListener); }));
+          }
 
           // Abertura: monograma e cortina, uma vez por sessao (menos de 1,5s)
           const intro = q("[data-intro]")[0];
@@ -144,6 +205,20 @@ export function MotionRoot({ children }: { children: ReactNode }) {
                   ease: "expo.out",
                   stagger: 0.09,
                   scrollTrigger: { trigger: el, start: "top 88%", once: true },
+                });
+              },
+            });
+          });
+
+          // Frase que acende com a leitura
+          q("[data-fill]").forEach((el) => {
+            SplitText.create(el, {
+              type: "words",
+              autoSplit: true,
+              onSplit(self) {
+                return gsap.fromTo(self.words, { opacity: 0.16 }, {
+                  opacity: 1, ease: "none", stagger: 0.1,
+                  scrollTrigger: { trigger: el, start: "top 82%", end: "bottom 48%", scrub: true },
                 });
               },
             });
@@ -272,6 +347,10 @@ export function MotionRoot({ children }: { children: ReactNode }) {
       <div data-intro className="fixed inset-0 z-[100] items-center justify-center bg-ink" aria-hidden="true">
         <Monogram className="h-20 w-20 text-copper" />
       </div>
+      <div data-curtain className="fixed inset-0 z-[95] hidden items-center justify-center bg-navy" aria-hidden="true">
+        <Monogram className="h-16 w-16 text-copper" />
+      </div>
+      <div data-progress className="fixed inset-x-0 top-0 z-[70] h-[2px] origin-left bg-copper-hi" style={{ transform: "scaleX(0)" }} aria-hidden="true" />
       <div
         data-cursor
         aria-hidden="true"
