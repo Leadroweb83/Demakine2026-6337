@@ -12,6 +12,8 @@ import { seoKey } from "../web/lib/seo-pages";
 import type { Issue } from "./lib/seo/issues";
 import type { LinkReport } from "./lib/seo/links";
 import type { Tip } from "./lib/seo/tips-library";
+import { assertPublicUrl } from "./lib/seo/crawl-external";
+import type { DuelResult } from "./lib/seo/run-duel";
 import { imageIssues } from "./lib/seo/images";
 import { checkSchema } from "./lib/seo/schema-check";
 import { expectedSchema } from "./lib/seo/pages";
@@ -30,6 +32,14 @@ export interface SeoData {
   /** grava o documento de SEO de uma página (coleção "seo"); documento vazio apaga a linha */
   savePageDoc(key: string, doc: Record<string, unknown>, userId: string): Promise<void>;
   saveRules(rules: SeoRules, userId: string): Promise<void>;
+  duel: {
+    competitors(): Promise<{ id: number; name: string; url: string }[]>;
+    /** troca a lista de concorrentes (já validada) */
+    save(items: { name: string; url: string }[]): Promise<void>;
+    latest(): Promise<DuelResult | null>;
+    running(): Promise<{ done: number; total: number } | null>;
+    run(opts: { budgetMs: number }): Promise<{ duelId: number; status: "completa" | "parcial"; done: number; total: number }>;
+  };
   /** as 15 dicas do dia (escolhe e guarda se o dia mudou) */
   tips: { today(): Promise<{ date: string; tips: Tip[] }> };
   /** grava a descrição (alt) de uma foto de produto no documento do produto */
@@ -56,7 +66,7 @@ const RESUME_WINDOW_MS = 30 * 60_000;
 /** Caminho de página do site: começa com "/", sem espaço, consulta nem #, tamanho razoável. */
 const isSitePath = (v: unknown): v is string => typeof v === "string" && v.length <= 300 && /^\/(?!\/)[^\s?#]*$/.test(v);
 
-export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string | undefined }) {
+export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string | undefined; resolve?: (host: string) => Promise<string[]> }) {
   const { data } = deps;
   const guard = requireRole();
 
@@ -204,6 +214,53 @@ export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string
       return c.json({ pages }, 200);
     })
 
+    .get("/admin/seo/concorrentes", guard, async (c) => {
+      const competitors = await data.duel.competitors();
+      const latest = await data.duel.latest();
+      // o último duelo só vale para os concorrentes de hoje (trocou um, o duelo dele sai)
+      const current = new Set(competitors.map((x) => x.url));
+      const valid = latest && latest.sites.length > 0 && latest.sites.every((s) => current.has(s.url)) ? latest : null;
+      return c.json({ competitors, latest: valid, running: await data.duel.running() }, 200);
+    })
+
+    .put(
+      "/admin/seo/concorrentes",
+      guard,
+      validator("json", (v, c) => {
+        const items = (v as { items?: unknown } | null)?.items;
+        const ok = Array.isArray(items) && items.length <= 2 && items.every((i) => typeof i?.name === "string" && typeof i?.url === "string");
+        if (!ok) return c.json({ error: "Informe até 2 concorrentes, cada um com nome e endereço" }, 400);
+        return { items: (items as { name: string; url: string }[]).map((i) => ({ name: i.name.trim(), url: i.url.trim() })) };
+      }),
+      async (c) => {
+        const { items } = c.req.valid("json");
+        const clean: { name: string; url: string }[] = [];
+        for (const i of items) {
+          if (!i.name || i.name.length > 60) return c.json({ error: "O nome do concorrente precisa ter de 1 a 60 caracteres" }, 400);
+          try {
+            const u = await assertPublicUrl(i.url, deps.resolve);
+            clean.push({ name: i.name, url: u.origin });
+          } catch {
+            return c.json({ error: `Endereço não permitido: use o site público do concorrente, em https (${i.name})` }, 400);
+          }
+        }
+        if (new Set(clean.map((x) => x.url.replace("://www.", "://"))).size !== clean.length) return c.json({ error: "Os dois concorrentes são o mesmo site" }, 400);
+        await data.duel.save(clean);
+        return c.json({ ok: true, competitors: clean }, 200);
+      },
+    )
+
+    .post("/admin/seo/duelar", guard, async (c) => {
+      try {
+        return c.json(await data.duel.run({ budgetMs: BUDGET_MS }), 200);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "";
+        if (msg === "Cadastre um concorrente primeiro" || msg === "Rode a auditoria completa primeiro") return c.json({ error: msg }, 409);
+        console.error("[seo] duelo falhou", err);
+        return c.json({ error: "Não foi possível rodar o duelo agora. Tente de novo em instantes." }, 500);
+      }
+    })
+
     .get("/admin/seo/dicas", guard, async (c) => c.json(await data.tips.today(), 200))
 
     .get("/admin/seo/links", guard, async (c) => c.json({ report: await data.links.latest() }, 200))
@@ -263,6 +320,20 @@ export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string
     .delete("/admin/seo/regras", guard, async (c) => {
       await data.resetRules();
       return c.json({ rules: DEFAULT_RULES }, 200);
+    })
+
+    // ---- duelo semanal com concorrentes (segunda, 08h de Brasília)
+    .get("/cron/seo-duelo", async (c) => {
+      const secret = (deps.cronSecret ?? (() => process.env.CRON_SECRET))();
+      const sent = Buffer.from(c.req.header("authorization") ?? "");
+      const want = Buffer.from(`Bearer ${secret ?? ""}`);
+      if (!secret || sent.length !== want.length || !timingSafeEqual(sent, want)) return c.json({ error: "Não autorizado" }, 401);
+      try {
+        return c.json({ ok: true, ...(await data.duel.run({ budgetMs: BUDGET_MS })) }, 200);
+      } catch (err) {
+        console.error("[seo] duelo semanal falhou", err);
+        return c.json({ error: "Falha no duelo semanal" }, 500);
+      }
     })
 
     // ---- auditoria diária (Vercel Cron, 07h de Brasília): protegida pelo mesmo CRON_SECRET do /cron/diario

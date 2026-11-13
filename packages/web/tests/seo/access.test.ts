@@ -43,9 +43,9 @@ describe("allowed", () => {
 });
 
 describe("abas da área SEO e GEO", () => {
-  test("são nove, na ordem combinada, com ids únicos", () => {
-    expect(SEO_GEO_TABS.map((t) => t.label)).toEqual(["Visão geral", "Páginas", "O que melhorar", "Regras", "Links", "Endereços antigos", "Imagens", "Dados estruturados", "Dicas"]);
-    expect(SEO_GEO_TABS.map((t) => t.id)).toEqual(["visao-geral", "paginas", "melhorar", "regras", "links", "enderecos-antigos", "imagens", "dados-estruturados", "dicas"]);
+  test("são dez, na ordem combinada, com ids únicos", () => {
+    expect(SEO_GEO_TABS.map((t) => t.label)).toEqual(["Visão geral", "Páginas", "O que melhorar", "Regras", "Links", "Endereços antigos", "Imagens", "Dados estruturados", "Dicas", "Guerra é Guerra"]);
+    expect(SEO_GEO_TABS.map((t) => t.id)).toEqual(["visao-geral", "paginas", "melhorar", "regras", "links", "enderecos-antigos", "imagens", "dados-estruturados", "dicas", "guerra"]);
     expect(new Set(SEO_GEO_TABS.map((t) => t.id)).size).toBe(SEO_GEO_TABS.length);
   });
 
@@ -54,7 +54,7 @@ describe("abas da área SEO e GEO", () => {
     expect(html).toContain("SEO e GEO");
     for (const t of SEO_GEO_TABS) expect(html, t.label).toContain(t.label);
     expect(html).toContain('role="tablist"');
-    expect((html.match(/role="tab"/g) ?? []).length).toBe(9);
+    expect((html.match(/role="tab"/g) ?? []).length).toBe(10);
     expect(html).toMatch(/<button[^>]*aria-selected="true"[^>]*>Visão geral<\/button>/);
     expect((html.match(/aria-selected="true"/g) ?? []).length).toBe(1);
   });

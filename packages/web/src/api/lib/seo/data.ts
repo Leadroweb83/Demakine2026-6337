@@ -2,13 +2,17 @@
  * Dados do painel "SEO e GEO" vindos do banco (Drizzle). Sem teste automático (não há banco nos testes); as rotas
  * são testadas com uma versão em memória de SeoData. Conferir com o painel depois de aplicar a migração 0017.
  */
-import { and, count, desc, eq, gte, inArray, like, or } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, isNull, like, or } from "drizzle-orm";
 import { db } from "../../database";
 import * as schema from "../../database/schema";
 import type { SeoData } from "../../seo-routes";
 import { dbStore, RULES_KEY } from "./db-store";
 import content from "../../../web/data/content.json";
 import { toWebp } from "../../../web/lib/images";
+import { isJobOpen } from "../jobs";
+import { dbDuelStore } from "./duel-store";
+import { runDuel } from "./run-duel";
+import { buildAllEntries } from "../sitemap";
 import { auditSite } from "./run-audit";
 import { checkLinks, type LinkReport } from "./links";
 import { createRedirects, testOldUrls } from "./import-old";
@@ -116,6 +120,34 @@ export const dbSeoData: SeoData = {
 
   audit: (opts) => auditSite(opts, { store: dbStore }),
   tips: { today: dailyTips },
+
+  duel: {
+    competitors: () => dbDuelStore.competitors(),
+    async save(items) {
+      // troca a lista inteira (no máximo 2)
+      await db.delete(schema.seoCompetitors);
+      if (items.length) await db.insert(schema.seoCompetitors).values(items.map((i) => ({ name: i.name, url: i.url })));
+    },
+    latest: () => dbDuelStore.latest(),
+    async running() {
+      const row = await dbDuelStore.findResumable(new Date(Date.now() - 30 * 60_000));
+      if (!row) return null;
+      const sites = Object.values(row.state.sites ?? {});
+      return { done: sites.reduce((a, s) => a + s.pages.length, 0), total: sites.reduce((a, s) => a + (s.paths.length || 40), 0) };
+    },
+    async run(opts) {
+      const docs = await db.select().from(schema.contentDocs);
+      const jobs = (await db.select().from(schema.jobs).where(isNull(schema.jobs.deletedAt))).filter(isJobOpen);
+      return runDuel(opts, {
+        store: dbDuelStore,
+        audit: dbStore,
+        ourSitemap: async () => {
+          const entries = buildAllEntries(docs, jobs);
+          return { total: entries.length, blogLastmods: entries.filter((e) => e.path.startsWith("/blog/") && e.lastmod).map((e) => e.lastmod!) };
+        },
+      });
+    },
+  },
   // fechou a auditoria diária: já escolhe as dicas do dia com os problemas abertos
   onAuditClosed: async () => void (await dailyTips()),
 

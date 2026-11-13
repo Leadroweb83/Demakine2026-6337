@@ -9,6 +9,7 @@ export const SEO_GEO_TABS = [
   { id: "imagens", label: "Imagens" },
   { id: "dados-estruturados", label: "Dados estruturados" },
   { id: "dicas", label: "Dicas" },
+  { id: "guerra", label: "Guerra é Guerra" },
 ] as const;
 
 export type SeoGeoTab = (typeof SEO_GEO_TABS)[number]["id"];
