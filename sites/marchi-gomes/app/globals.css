@@ -73,6 +73,14 @@ body {
     linear-gradient(180deg, var(--color-navy), var(--color-ink));
 }
 
+/* Titulos animados: a mascara do SplitText corta na altura exata da linha e come
+   acentos, virgulas e as "pernas" de g, p, q, j, y. Folga vertical em volta de cada
+   linha, compensada com margem negativa para o layout nao mudar. */
+/* Em coluna flex as margens negativas de linhas vizinhas nao se fundem; o :has() so
+   liga depois que o texto foi dividido (sem JS o titulo segue como texto corrido). */
+[data-split]:has(> div[style*="overflow"]) { display: flex; flex-direction: column; }
+[data-split] > div[style*="overflow"] { padding-block: 0.28em; margin-block: -0.28em; }
+
 /* Motion: o conteudo so e escondido quando ha JS e o usuario aceita movimento.
    Se o JS falhar, o script do layout remove .js e tudo aparece. */
 @media (prefers-reduced-motion: no-preference) {

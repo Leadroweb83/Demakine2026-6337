@@ -284,7 +284,7 @@ export function MotionRoot({ children }: { children: ReactNode }) {
               onSplit(self) {
                 gsap.set(el, { autoAlpha: 1 });
                 return gsap.from(self.lines, {
-                  yPercent: 110,
+                  yPercent: 150,
                   duration: 1.1,
                   ease: "expo.out",
                   stagger: 0.09,
