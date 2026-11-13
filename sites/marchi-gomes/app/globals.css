@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@import "@fontsource-variable/cormorant-garamond";
+
+@theme {
+  --color-ink: #070b14;
+  --color-navy: #0c1422;
+  --color-navy-2: #121c2f;
+  --color-copper: #c9a078;
+  --color-copper-hi: #e8c8a0;
+  --color-copper-lo: #8f6b47;
+  --color-bone: #f3eee5;
+  --color-mist: #a8b0c0;
+  --font-display: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Tokens shadcn mapeados para a marca */
+  --color-background: #070b14;
+  --color-foreground: #f3eee5;
+  --color-primary: #c9a078;
+  --color-primary-foreground: #070b14;
+  --color-secondary: #121c2f;
+  --color-secondary-foreground: #f3eee5;
+  --color-accent: #1b2740;
+  --color-accent-foreground: #e8c8a0;
+  --color-muted-foreground: #a8b0c0;
+  --color-input: rgb(201 160 120 / 0.35);
+  --color-ring: #e8c8a0;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+::selection { background: var(--color-copper); color: var(--color-ink); }
+:focus-visible { outline: 2px solid var(--color-copper-hi); outline-offset: 3px; }
+
+.wrap { width: 100%; max-width: 78rem; margin-inline: auto; padding-inline: 1.25rem; }
+@media (min-width: 768px) { .wrap { padding-inline: 2.5rem; } }
+
+.display { font-family: var(--font-display); font-weight: 500; line-height: 1.02; letter-spacing: -0.015em; text-wrap: balance; }
+.eyebrow { font-size: 0.72rem; letter-spacing: 0.34em; text-transform: uppercase; color: var(--color-copper); }
+.rule { display: block; width: 3.5rem; height: 1px; background: var(--color-copper); transform-origin: left; }
+.hairline { border-color: color-mix(in srgb, var(--color-copper) 22%, transparent); }
+
+/* Botoes */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.75rem; min-height: 3.25rem;
+  padding: 0.75rem 1.5rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; will-change: transform;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+.btn-primary { background: linear-gradient(135deg, var(--color-copper-hi), var(--color-copper) 55%, var(--color-copper-lo)); color: var(--color-ink); }
+.btn-primary:hover { background: var(--color-copper-hi); }
+.btn-ghost { border: 1px solid color-mix(in srgb, var(--color-copper) 55%, transparent); color: var(--color-bone); }
+.btn-ghost:hover { border-color: var(--color-copper-hi); color: var(--color-copper-hi); }
+
+/* Luz quente da janela: referencia direta as fotos da marca */
+.hero-light {
+  background:
+    radial-gradient(60% 70% at 88% 18%, rgb(232 200 160 / 0.2), transparent 62%),
+    radial-gradient(45% 55% at 100% 80%, rgb(143 107 71 / 0.22), transparent 70%),
+    linear-gradient(180deg, var(--color-navy), var(--color-ink));
+}
+
+/* Motion: o conteudo so e escondido quando ha JS e o usuario aceita movimento.
+   Se o JS falhar, o script do layout remove .js e tudo aparece. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal], .js [data-split] { visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Storytelling fixo (ativado pelo GSAP so em telas largas) */
+[data-story].is-pinned { height: 320vh; }
+[data-story].is-pinned [data-story-sticky] { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
+[data-story].is-pinned [data-story-steps] { display: grid; }
+[data-story].is-pinned [data-story-step] { grid-area: 1 / 1; border: 0; padding: 0; }
+[data-story]:not(.is-pinned) [data-story-progress] { display: none; }
+
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .faq-plus { transform: rotate(45deg); }
+
+.field { width: 100%; background: transparent; border-bottom: 1px solid color-mix(in srgb, var(--color-copper) 35%, transparent); padding: 0.85rem 0; color: var(--color-bone); font-size: 1rem; transition: border-color 0.25s; }
+.field::placeholder { color: color-mix(in srgb, var(--color-mist) 60%, transparent); }
+.field:focus { outline: none; border-color: var(--color-copper-hi); }
+select.field option { color: #111; }
