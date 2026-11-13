@@ -23,6 +23,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
  *   data-marquee          faixa continua que acelera com o scroll; data-direction="right" inverte; pausa no hover
  *   data-count            numero em contador mecanico (digitos girando)
  *   data-hscroll          linha do tempo que rola na horizontal
+ *   data-map              mapa de contato: rota, pino que quica, pulsos, cartao e zoom
  *   data-route            traco de rota que se desenha no mapa
  *   data-cursor-label     texto que o cursor mostra sobre o elemento
  *   data-fill             frase que vai acendendo palavra a palavra com o scroll
@@ -243,6 +244,38 @@ export function MotionRoot({ children }: { children: ReactNode }) {
           // Faixa de imagens: desliza de lado com a rolagem
           q("[data-strip]").forEach((el) => {
             gsap.fromTo(el, { xPercent: 3 }, { xPercent: -12, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: 0.5 } });
+          });
+
+          // Mapa: rota dourada, pino que quica, pulsos, cartao que desliza e zoom com a rolagem
+          q("[data-map]").forEach((root) => {
+            const all = (sel: string) => Array.from(root.querySelectorAll<HTMLElement>(sel));
+            const routes = all("[data-map-route]");
+            const rings = all("[data-map-ring]");
+            const pin = root.querySelector<HTMLElement>("[data-map-pin]");
+            const card = root.querySelector<HTMLElement>("[data-map-card]");
+            const zoom = root.querySelector<HTMLElement>("[data-map-zoom]");
+            const seal = root.querySelector("[data-map-seal]");
+
+            gsap.set(routes, { strokeDasharray: 1, strokeDashoffset: 1 });
+            if (pin) gsap.set(pin, { autoAlpha: 0, y: -300 });
+            if (card) gsap.set(card, { autoAlpha: 0, x: 90 });
+            const pulses = rings.map((r, i) =>
+              gsap.fromTo(r, { scale: 0.2, autoAlpha: 0.65 }, { scale: 1.9, autoAlpha: 0, duration: 2.8, ease: "power1.out", repeat: -1, delay: i * 0.95, paused: true }),
+            );
+
+            const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 78%", once: true } });
+            tl.to(routes, { strokeDashoffset: 0, duration: 2.4, ease: "power2.inOut" }, 0);
+            if (card) tl.to(card, { autoAlpha: 1, x: 0, duration: 1.1, ease: "expo.out" }, 0.5);
+            if (pin) tl.to(pin, { autoAlpha: 1, y: 0, duration: 1.25, ease: "bounce.out" }, 1.7);
+            tl.add(() => pulses.forEach((p) => p.play()), 2.75);
+
+            if (card && getComputedStyle(card).position === "absolute") {
+              gsap.to(card, { y: -7, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2.2 });
+            }
+            if (seal) gsap.to(seal, { rotation: 360, svgOrigin: "32 31", duration: 14, ease: "none", repeat: -1 });
+            if (zoom) {
+              gsap.fromTo(zoom, { scale: 1 }, { scale: 1.2, ease: "none", scrollTrigger: { trigger: root, start: "top 85%", end: "bottom 20%", scrub: 0.6 } });
+            }
           });
 
           // 404: o monograma se monta peca por peca

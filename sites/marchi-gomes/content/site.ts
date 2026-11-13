@@ -83,10 +83,13 @@ export const team: { name: string; role: string; oab: string; bio: string; photo
   { name: "Ronaldo Gomes", role: "CBO · Diretor de Negócios", oab: "", bio: "", photo: "", founder: true },
 ];
 
+/** Coordenadas do endereco, conforme o Google Maps. Usadas so para calcular a distancia do visitante. */
+export const office = { lat: -22.5527872, lng: -47.3811622 };
+
 const mapsQuery = encodeURIComponent("R. Valdir Dalfré, 57 - Jardim Porto Real II, Limeira - SP, 13485-402");
 export const maps = {
   directions: `https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`,
-  embed: `https://www.google.com/maps?q=${mapsQuery}&output=embed`,
+  embed: `https://www.google.com/maps?q=${mapsQuery}&z=15&output=embed`,
 };
 
 /**

@@ -166,6 +166,14 @@ html:not(.js) .areas-row [data-dup] { display: none; }
 }
 .frame-sm { border-radius: 0.9rem; }
 
+/* Mapa em tom azul-noite; volta as cores reais ao passar o mouse. No toque (sem hover) fica colorido. */
+@media (hover: hover) {
+  .map-tone iframe { filter: invert(0.92) hue-rotate(180deg) saturate(0.75) brightness(0.9) contrast(0.95); transition: filter 0.9s ease; }
+  .map-tone:hover iframe { filter: none; }
+  .map-tone:hover .map-tint { opacity: 0; }
+}
+@media (hover: none) { .map-tint { display: none; } }
+
 /* Fotos claras de banco de imagens: veu azul-noite para combinar com o resto do site */
 .tone::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgb(10 19 34 / 0.12), rgb(10 19 34 / 0.5)); }
 

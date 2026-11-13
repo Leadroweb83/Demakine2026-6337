@@ -103,6 +103,13 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
 - [ ] Foto da estátua com livros e bokeh (3:2): fundo da seção "O futuro" (`images.future`, já preparado,
       com degradê escuro à esquerda). Melhorar (2x, nitidez) ao receber o arquivo
 
+## Mapa
+- A linha dourada do mapa é ilustrativa (liga o "centro" ao escritório), não é uma rota real; a rota
+  real fica no botão Como chegar. Coordenadas do escritório em `office` (`content/site.ts`), lidas do
+  próprio Google Maps do endereço. O cálculo de distância pede a localização do visitante, roda no
+  aparelho dele e não envia nada. O tempo de carro é estimativa (linha reta + 30%, velocidade média
+  por faixa de distância)
+
 ## Arquivos de marca
 - [ ] Logo em vetor (SVG). O monograma em `components/logo.tsx` é um redesenho provisório
 - [x] Hero: `public/img/hero-escritorio.webp` (imagem enviada pelo Leandro)

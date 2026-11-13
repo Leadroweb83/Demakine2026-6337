@@ -7,37 +7,50 @@ import { tunnel } from "@/content/site";
 // O tunel (e a biblioteca de animacao dele) so e baixado quando a secao esta perto da tela.
 const Tunnel = dynamic(() => import("./ui/perspective-tunnel-hero"), { ssr: false });
 
+const HEIGHT_SVH = 320;
+
 /**
- * Mostra a faixa estatica (`fallback`) por padrao: serve para quem nao tem JS, para
- * buscadores e para quem pediu menos movimento. Com movimento permitido, troca pelo
- * tunel um pouco antes de a secao aparecer, e so se ela ainda estiver ABAIXO da tela,
- * para a troca de altura nao empurrar o conteudo que o visitante esta lendo.
+ * Tres estados:
+ * - "static": faixa estatica (`fallback`). E o que vale sem JS, para buscadores e para
+ *   quem pediu menos movimento.
+ * - "reserved": com movimento permitido, logo apos montar, a faixa vira um bloco vazio com a
+ *   MESMA altura do tunel. Assim a pagina nao muda de tamanho depois (links do menu e ancoras
+ *   continuam caindo no lugar certo) e nada pesado e baixado ainda.
+ * - "live": quando a secao esta perto da tela, o tunel substitui o bloco, sem mudar a altura.
  */
 export function TunnelLazy({ fallback }: { fallback: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [live, setLive] = useState(false);
+  const [mode, setMode] = useState<"static" | "reserved" | "live">("static");
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setMode("reserved");
+  }, []);
+
+  useEffect(() => {
+    if (mode !== "reserved") return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      (entries) => {
-        const e = entries[entries.length - 1];
-        if (e.isIntersecting && e.boundingClientRect.top > window.innerHeight * 0.1) {
-          setLive(true);
+      ([e]) => {
+        if (e.isIntersecting) {
+          setMode("live");
           io.disconnect();
         }
       },
-      { rootMargin: "100% 0px 100% 0px", threshold: [0, 0.1, 0.5, 1] },
+      { rootMargin: "120% 0px 120% 0px" },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [mode]);
 
   return (
     <div ref={ref}>
-      {live ? <Tunnel items={tunnel.items} eyebrow={tunnel.eyebrow} title={tunnel.title} highlight={tunnel.highlight} prompt={tunnel.prompt} /> : fallback}
+      {mode === "static" && fallback}
+      {mode === "reserved" && <div className="bg-ink" style={{ height: `${HEIGHT_SVH}svh` }} aria-hidden="true" />}
+      {mode === "live" && (
+        <Tunnel items={tunnel.items} eyebrow={tunnel.eyebrow} title={tunnel.title} highlight={tunnel.highlight} prompt={tunnel.prompt} heightSvh={HEIGHT_SVH} />
+      )}
     </div>
   );
 }

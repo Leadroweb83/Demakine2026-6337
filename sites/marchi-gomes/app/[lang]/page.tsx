@@ -144,7 +144,7 @@ export default async function IntlHome({ params }: Props) {
           </div>
           <div className="self-center" data-reveal><LeadForm labels={t.form} defaultArea="Outra área" /></div>
         </div>
-        <div className="wrap"><MapBlock /></div>
+        <div className="wrap"><MapBlock lang={lang as "en" | "es"} /></div>
       </section>
     </div>
   );
