@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "O escritório: história, sócios e legado",
-  description: "A história da Marchi Gomes Advogados, fundada em 1996 em Limeira por Gisele Marchi e Gabriel Gomes, e o legado do Dr. João Jair Marchi.",
+  description: "A história da Marchi Gomes Advogados, nascida em 1996 em Limeira como escritório João Jair Marchi e, desde 2026, Marchi Gomes, com Gisele Marchi e Gabriel Gomes.",
   alternates: { canonical: "/escritorio" },
 };
 

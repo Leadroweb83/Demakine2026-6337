@@ -550,6 +550,7 @@ export function Team() {
           {team.map((m) => (
             <li key={m.name} className={`team-card relative overflow-hidden bg-navy-2 ${m.photo ? "max-[899px]:h-80" : "max-[899px]:min-h-36"}`} tabIndex={0}>
               {!m.photo && <Monogram className="absolute right-6 top-6 h-12 w-12 text-copper/50" />}
+              {m.memoriam && <span className="absolute left-6 top-6 border border-copper/50 px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-copper">In memoriam</span>}
               {m.photo && <Image src={m.photo} alt={m.name} fill sizes="(min-width: 900px) 50vw, 100vw" className="object-cover" />}
               <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">

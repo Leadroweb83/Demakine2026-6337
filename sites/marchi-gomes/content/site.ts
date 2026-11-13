@@ -75,7 +75,8 @@ export const stats: { value: number; suffix?: string; label: string }[] = [
  * Fundadores, conforme os cartoes de visita do escritorio. Cargos como impressos.
  * So Gisele Marchi tem OAB informada: ninguem mais e apresentado como advogado.
  */
-export const team: { name: string; role: string; oab: string; bio: string; photo: string; founder?: boolean }[] = [
+export const team: { name: string; role: string; oab: string; bio: string; photo: string; founder?: boolean; memoriam?: boolean }[] = [
+  { name: "João Jair Marchi", role: "Fundador · In memoriam", oab: "", bio: "", photo: "", founder: true, memoriam: true },
   { name: "Gisele Marchi", role: "Sócia fundadora", oab: "OAB/SP 519070", bio: "", photo: "", founder: true },
   { name: "Gabriel Gomes", role: "Diretor Comercial", oab: "", bio: "", photo: "", founder: true },
   { name: "Wagner Marchi", role: "CEO · Diretor Executivo", oab: "", bio: "", photo: "", founder: true },
@@ -306,7 +307,7 @@ export const approach = [
 export const history = {
   title: "Duas trajetórias, um legado de responsabilidade e uma visão compartilhada da advocacia.",
   paragraphs: [
-    "A Marchi Gomes Advogados nasce da união profissional entre Gisele Marchi e Gabriel Gomes. Fundado em 1996, em Limeira, o escritório reúne experiências complementares com um propósito definido: oferecer orientação jurídica rigorosa, atendimento próximo e estratégia alinhada à realidade de cada cliente.",
+    "A Marchi Gomes Advogados nasce da união profissional entre Gisele Marchi e Gabriel Gomes. O escritório nasceu em 1996, em Limeira, como João Jair Marchi Advogados e, em 2026, ao assumir o legado, renasce como Marchi Gomes. Ele reúne experiências complementares com um propósito definido: oferecer orientação jurídica rigorosa, atendimento próximo e estratégia alinhada à realidade de cada cliente.",
     "Antes da constituição da sociedade, Gisele Marchi e Gabriel Gomes desenvolveram percursos próprios, com atuação em Administração Pública e bancária. A convivência profissional revelou uma afinidade de princípios e uma oportunidade concreta: reunir competências para acompanhar pessoas, famílias e empresas em decisões que exigem análise cuidadosa, capacidade de negociação e responsabilidade.",
     "A Marchi Gomes foi criada para atuar tanto na solução de conflitos quanto na organização jurídica das escolhas que os antecedem. Questões familiares, proteção patrimonial, contratos e decisões empresariais demandam uma compreensão que vai além do processo. Exigem atenção às relações envolvidas, aos objetivos do cliente e aos efeitos de cada medida.",
     "Os sobrenomes dos fundadores expressam essa responsabilidade pessoal. Cada orientação leva consigo o compromisso de compreender o que está em jogo, apresentar os caminhos disponíveis e conduzir o trabalho com clareza e franqueza.",
@@ -333,8 +334,8 @@ export const legacy = {
 export const timeline = [
   { when: "As origens", title: "A tradição da família Marchi", text: "Depois de se aposentar como Delegado de Polícia, o Dr. João Jair Marchi dedica sua experiência à advocacia e constrói uma trajetória de destaque na região de Limeira." },
   { when: "Antes da sociedade", title: "Dois percursos próprios", text: "Gisele Marchi e Gabriel Gomes desenvolvem suas carreiras com atuação em Administração Pública e bancária. A convivência profissional revela uma afinidade de princípios." },
-  { when: "1996", title: "Fundação em Limeira", text: "Nasce a Marchi Gomes Advogados, para atuar tanto na solução de conflitos quanto na organização jurídica das escolhas que os antecedem." },
-  { when: "Hoje", title: "Nova identidade, a mesma essência", text: "A marca evolui para refletir o propósito do escritório: tradição, ética e soluções que impulsionam novos caminhos." },
+  { when: "1996", title: "Nasce o escritório João Jair Marchi", text: "Em Limeira, o Dr. João Jair Marchi funda o escritório de advocacia que dá origem a tudo o que a família constrói depois." },
+  { when: "2026", title: "Renasce como Marchi Gomes", text: "Ao assumir o legado, o escritório ganha nova identidade, com os mesmos princípios: tradição, ética e soluções que impulsionam novos caminhos." },
   { when: "Adiante", title: "Crescer com consistência", text: "Ampliar a presença da advocacia preventiva e preservar a proximidade que dá sentido ao trabalho." },
 ];
 
