@@ -22,8 +22,7 @@ Os itens abaixo continuam valendo e agora afetam o que o Google vê.
       confirmar se mais alguém é advogado antes de apresentá-lo como tal
 - [ ] Registro da sociedade na OAB
 - [ ] Mini biografia e foto de cada fundador
-- [ ] O texto "A história do escritório" cita só Gisele Marchi e Gabriel Gomes como fundadores;
-      com cinco fundadores, ajustar o texto (em `content/site.ts`, `history`) se os sócios quiserem
+- [x] Texto "A história do escritório": mantido como enviado, sem citar os cinco fundadores (decisão do Leandro)
 - [ ] Foto e, se houver, depoimento identificado sobre o Dr. João Jair Marchi
 - [ ] Instagram e LinkedIn
 - [ ] Domínio (`NEXT_PUBLIC_SITE_URL`)
