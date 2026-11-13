@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image, { getImageProps } from "next/image";
+import { Building2, FileSignature, Gavel, Globe, HardHat, House, Landmark, Percent, Scale, ShoppingBag, Swords, Users, type LucideIcon } from "lucide-react";
 import { visibleArticles } from "@/content/articles";
 import { HeroVideo } from "./hero-video";
 import { MapBlock } from "./map-block";
@@ -200,9 +201,73 @@ export function Articles() {
   );
 }
 
+const areaIcons: Record<string, LucideIcon> = {
+  "familia-e-sucessoes": Users,
+  "patrimonio-e-imoveis": House,
+  contratos: FileSignature,
+  "empresarial-e-societario": Building2,
+  "direito-civil": Scale,
+  "direito-do-consumidor": ShoppingBag,
+  "bancario-e-financeiro": Landmark,
+  "trabalho-e-previdenciario": HardHat,
+  "direito-tributario": Percent,
+  "direito-penal": Gavel,
+  "direito-internacional": Globe,
+  "contencioso-estrategico": Swords,
+};
+
+function AreaChip({ a, dup }: { a: (typeof areas)[number]; dup: boolean }) {
+  const Icon = areaIcons[a.slug] ?? Scale;
+  return (
+    <li className="mr-4 shrink-0 lg:mr-5" aria-hidden={dup || undefined} {...(dup ? { "data-dup": true } : {})}>
+      <Link
+        href={`/areas/${a.slug}`}
+        tabIndex={dup ? -1 : undefined}
+        data-cursor-label="Ver área"
+        className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white/70 py-3 pl-3 pr-7 shadow-[0_1px_2px_rgb(0_0_0/0.05),0_18px_34px_-22px_rgb(10_19_34/0.4)] transition-[background-color,box-shadow,transform] duration-500 hover:-translate-y-1 hover:bg-ink hover:shadow-[0_26px_40px_-20px_rgb(10_19_34/0.6)]"
+      >
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ink text-copper-hi transition-colors duration-500 group-hover:bg-copper-hi group-hover:text-ink lg:h-14 lg:w-14">
+          <Icon className="h-[1.35rem] w-[1.35rem] lg:h-6 lg:w-6" strokeWidth={1.4} aria-hidden="true" />
+        </span>
+        <span className="whitespace-nowrap font-display text-[1.3rem] leading-tight text-ink transition-colors duration-500 group-hover:text-bone lg:text-[1.6rem]">{a.title}</span>
+      </Link>
+    </li>
+  );
+}
+
+/** Uma linha do marquee. Cada metade repete as areas duas vezes para nunca abrir buraco em telas largas. */
+function AreasRow({ list, direction, speed }: { list: (typeof areas); direction: "left" | "right"; speed: number }) {
+  const copies = [false, true, true, true];
+  return (
+    <div data-marquee data-direction={direction} data-speed={speed} className="areas-row overflow-hidden py-7 [mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent)]">
+      <ul className="marquee-track">
+        {copies.map((dup, k) => list.map((a) => <AreaChip key={`${k}-${a.slug}`} a={a} dup={dup} />))}
+      </ul>
+    </div>
+  );
+}
+
+/** Todas as areas em duas linhas que andam em sentidos opostos: a de cima para a esquerda, a de baixo para a direita. */
+export function AreasMarquee() {
+  const half = Math.ceil(areas.length / 2);
+  return (
+    <div className="areas-marquee mt-16 lg:mt-24" aria-label="Todas as áreas de atuação">
+      <div className="wrap mb-8 flex flex-wrap items-end justify-between gap-4" data-reveal>
+        <div>
+          <p className="eyebrow !text-copper-lo">Todas as áreas de atuação</p>
+          <h3 className="display mt-3 text-[clamp(1.9rem,3.4vw,3rem)]">Onde o escritório atua.</h3>
+        </div>
+        <p className="max-w-xs text-sm text-ink/60">Clique em uma área para ver como o escritório atua.<span className="hidden [@media(hover:hover)]:inline"> Passe o mouse para pausar.</span></p>
+      </div>
+      <AreasRow list={areas.slice(0, half)} direction="left" speed={46} />
+      <AreasRow list={areas.slice(half)} direction="right" speed={52} />
+    </div>
+  );
+}
+
 export function Areas() {
   return (
-    <section id="areas" className="bg-paper text-ink py-24 lg:py-36">
+    <section id="areas" className="bg-paper text-ink pt-24 pb-16 lg:pt-36 lg:pb-20">
       <div className="wrap">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-end">
           <div>
@@ -257,18 +322,9 @@ export function Areas() {
             </div>
           ))}
         </div>
-
-        <div className="mt-16 grid gap-6 lg:grid-cols-[5rem_1fr] lg:px-6" data-reveal>
-          <p className="eyebrow !text-copper-lo lg:col-span-2">Todas as áreas de atuação</p>
-          <ul className="flex flex-wrap gap-x-3 gap-y-3 lg:col-span-2">
-            {areas.map((a) => (
-              <li key={a.slug}>
-                <Link href={`/areas/${a.slug}`} className="block rounded-full border border-ink/15 px-4 py-2 text-sm text-ink/75 transition-colors hover:border-ink hover:bg-ink hover:text-bone">{a.title}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
+
+      <AreasMarquee />
     </section>
   );
 }

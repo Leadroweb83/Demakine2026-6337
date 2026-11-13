@@ -20,7 +20,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
  *   data-draw             filete que se desenha da esquerda
  *   data-parallax="0.15"  deslocamento leve atrelado ao scroll (so transform)
  *   data-magnetic         botao que acompanha o cursor
- *   data-marquee          faixa continua que acelera com a velocidade do scroll
+ *   data-marquee          faixa continua que acelera com o scroll; data-direction="right" inverte; pausa no hover
  *   data-count            numero em contador mecanico (digitos girando)
  *   data-hscroll          linha do tempo que rola na horizontal
  *   data-route            traco de rota que se desenha no mapa
@@ -167,17 +167,29 @@ export function MotionRoot({ children }: { children: ReactNode }) {
           // Faixa continua: anda sozinha e acelera com o scroll
           q("[data-marquee]").forEach((el) => {
             const track = el.querySelector(".marquee-track");
-            const loop = gsap.to(track, { xPercent: -50, duration: 38, ease: "none", repeat: -1 });
+            const right = (el as HTMLElement).dataset.direction === "right";
+            const duration = Number((el as HTMLElement).dataset.speed) || 38;
+            const loop = gsap.fromTo(track, { xPercent: right ? -50 : 0 }, { xPercent: right ? 0 : -50, duration, ease: "none", repeat: -1 });
+            let held = false;
             ScrollTrigger.create({
               trigger: el,
               start: "top bottom",
               end: "bottom top",
               onUpdate: (self) => {
+                if (held) return;
                 const boost = gsap.utils.clamp(0, 7, Math.abs(self.getVelocity()) / 260);
                 gsap.to(loop, { timeScale: 1 + boost, duration: 0.25, overwrite: true });
                 gsap.to(loop, { timeScale: 1, duration: 1.2, delay: 0.25 });
               },
             });
+            // Passar o mouse pausa a linha (suave), para dar tempo de ler e clicar
+            if (hover) {
+              const hold = () => { held = true; gsap.to(loop, { timeScale: 0, duration: 0.6, ease: "power2.out", overwrite: true }); };
+              const free = () => { held = false; gsap.to(loop, { timeScale: 1, duration: 0.8, ease: "power2.in", overwrite: true }); };
+              el.addEventListener("pointerenter", hold);
+              el.addEventListener("pointerleave", free);
+              ctx.add(() => () => { el.removeEventListener("pointerenter", hold); el.removeEventListener("pointerleave", free); });
+            }
           });
 
           // Numeros: contador mecanico, cada digito gira em sua coluna

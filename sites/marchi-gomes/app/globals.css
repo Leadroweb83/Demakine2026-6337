@@ -103,6 +103,15 @@ html.lenis { scroll-behavior: auto; }
 .has-cursor [data-cursor] { display: flex; }
 
 .marquee-track { display: flex; width: max-content; will-change: transform; }
+/* Sem movimento (preferencia do usuario) ou sem JS: as areas viram grade e as copias somem */
+@media (prefers-reduced-motion: reduce) {
+  .areas-row { mask-image: none !important; }
+  .areas-row .marquee-track { width: auto; flex-wrap: wrap; row-gap: 1rem; padding-inline: 1.25rem; justify-content: center; }
+  .areas-row [data-dup] { display: none; }
+}
+html:not(.js) .areas-row { mask-image: none !important; }
+html:not(.js) .areas-row .marquee-track { width: auto; flex-wrap: wrap; row-gap: 1rem; padding-inline: 1.25rem; justify-content: center; }
+html:not(.js) .areas-row [data-dup] { display: none; }
 .outline-text { color: transparent; -webkit-text-stroke: 1px var(--color-copper-lo); }
 
 /* Equipe: cards que abrem ao passar o mouse ou focar */
