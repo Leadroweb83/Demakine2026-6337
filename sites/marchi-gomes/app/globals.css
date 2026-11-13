@@ -147,6 +147,9 @@ html.lenis { scroll-behavior: auto; }
 .menu-overlay.is-open .menu-item { opacity: 1; transform: none; transition: opacity 0.7s var(--ease-out-expo), transform 0.9s var(--ease-out-expo); transition-delay: calc(0.12s + var(--i) * 0.035s); }
 @media (prefers-reduced-motion: reduce) { .menu-overlay .menu-item { transition: none !important; transform: none; } }
 
+/* Fotos claras de banco de imagens: veu azul-noite para combinar com o resto do site */
+.tone::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgb(10 19 34 / 0.12), rgb(10 19 34 / 0.5)); }
+
 [data-count] { font-feature-settings: "lnum", "tnum"; }
 
 /* Linha do tempo: lista vertical por padrao; o GSAP transforma em faixa horizontal em telas largas */

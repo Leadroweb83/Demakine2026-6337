@@ -40,8 +40,10 @@ export const images = {
   /** Recorte vertical do hero para celular. */
   heroMobile: "/img/hero-escritorio-vertical.webp",
   /** Faixa de tres imagens entre secoes. */
-  strip: ["/img/faixa-livros.webp", "/img/justica.webp", "/img/faixa-janela.webp"],
-  detail: "/img/detalhe-pasta.webp",
+  strip: ["/img/faixa-balanca.webp", "/img/faixa-martelo.webp", "/img/faixa-notebook.webp"],
+  detail: "/img/area-contratos.webp",
+  /** Imagem da pagina Para empresas. */
+  business: "/img/area-empresarial.webp",
   /** Video do hero (mp4 sem som). Vazio = o hero usa a foto. */
   heroVideo: "/img/hero-video.mp4",
   /** Versao vertical e menor do video, para celular. */
@@ -159,7 +161,7 @@ export const areas: Area[] = [
   },
   {
     slug: "contratos",
-    image: "/img/area-pasta.webp",
+    image: "/img/area-contratos.webp",
     featured: true,
     keyword: "Advogado de contratos",
     name: "Contratos",
@@ -169,7 +171,7 @@ export const areas: Area[] = [
   },
   {
     slug: "empresarial-e-societario",
-    image: "/img/area-janela.webp",
+    image: "/img/area-empresarial.webp",
     featured: true,
     keyword: "Advogado empresarial",
     name: "Empresarial e Societário",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { areas, business, site } from "@/content/site";
+import Image from "next/image";
+import { areas, business, images, site } from "@/content/site";
 import { whatsappHref } from "@/lib/site";
 import { Contact, Faq, HeroMedia, Services } from "@/components/sections";
 import { Arrow, WhatsAppIcon } from "@/components/icons";
@@ -35,6 +36,13 @@ export default function BusinessPage() {
             <p className="eyebrow !text-copper-lo" data-reveal>A rotina da assessoria</p>
             <h2 className="display mt-5 text-[clamp(2.2rem,4.6vw,4rem)]" data-split>Atendimento personalizado, na prática.</h2>
             <p className="mt-6 max-w-md text-ink/70" data-reveal>A consultoria pode ser pontual ou continuada, conforme a necessidade da empresa.</p>
+            {images.business && (
+              <div className="tone relative mt-10 aspect-[4/5] max-w-sm overflow-hidden max-lg:hidden" data-clip>
+                <div className="absolute inset-x-0 bottom-[-12%] top-[-4%]" data-parallax="0.14">
+                  <Image src={images.business} alt="Aperto de mãos entre dois empresários, com a balança da Justiça ao fundo" fill sizes="24rem" className="object-cover" />
+                </div>
+              </div>
+            )}
           </div>
           <ol className="grid gap-px sm:grid-cols-2">
             {business.routine.map((r, i) => (

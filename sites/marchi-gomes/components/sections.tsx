@@ -38,12 +38,12 @@ export function HeroMedia({ strong = false, video = true }: { strong?: boolean; 
 /** Tres imagens em faixa: deslizam de lado e cada uma se move em um ritmo. */
 export function ImageStrip() {
   if (images.strip.length === 0) return null;
-  const alts = ["Livros de Direito sobre a mesa do escritório", "Estátua da Justiça com a balança", "Cadeira e janela do escritório ao entardecer"];
+  const alts = ["Balança da Justiça dourada sobre um livro, ao lado de um martelo", "Martelo de juiz sobre um documento", "Mãos digitando em um notebook, com a estátua da Justiça ao fundo"];
   return (
     <section className="overflow-hidden bg-ink py-16 lg:py-24" aria-label="Imagens do escritório">
       <div className="flex w-[150vw] gap-4 lg:w-[118vw] lg:gap-8" data-strip>
         {images.strip.map((src, i) => (
-          <div key={src} className={`relative aspect-[3/4] flex-1 overflow-hidden ${i === 1 ? "lg:mt-16" : ""}`}>
+          <div key={src} className={`tone relative aspect-[3/4] flex-1 overflow-hidden ${i === 1 ? "lg:mt-16" : ""}`}>
             <div className="absolute inset-x-0 bottom-[-14%] top-[-14%]" data-parallax={[0.12, 0.26, 0.18][i % 3]}>
               <Image src={src} alt={alts[i] ?? ""} fill sizes="(min-width: 1024px) 38vw, 50vw" className="object-cover" />
             </div>

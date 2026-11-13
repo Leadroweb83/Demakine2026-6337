@@ -52,9 +52,9 @@ export default function FirstContactPage() {
           </div>
           <div>
           {images.detail && (
-            <div className="relative mb-10 aspect-[21/9] overflow-hidden" data-clip>
+            <div className="tone relative mb-10 aspect-[16/10] overflow-hidden" data-clip>
               <div className="absolute inset-x-0 bottom-[-16%] top-[-16%]" data-parallax="0.2">
-                <Image src={images.detail} alt="Pasta do escritório Marchi Gomes Advogados sobre a mesa" fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
+                <Image src={images.detail} alt="Duas pessoas revisam e assinam um documento, com a estátua da Justiça ao fundo" fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover object-[50%_62%]" />
               </div>
             </div>
           )}
