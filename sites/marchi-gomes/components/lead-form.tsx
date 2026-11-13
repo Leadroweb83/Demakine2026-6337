@@ -24,7 +24,7 @@ export function LeadForm({ defaultArea }: { defaultArea?: string }) {
     resolver: zodResolver(leadSchema),
     defaultValues: {
       name: "", phone: "", email: "", message: "", company: "", preferredDate: "",
-      area: (areaOptions as readonly string[]).includes(defaultArea ?? "") ? (defaultArea as Lead["area"]) : undefined,
+      area: (areaOptions as readonly string[]).includes(defaultArea ?? "") ? (defaultArea as Lead["area"]) : defaultArea ? "Outra área" : undefined,
     },
   });
 
@@ -110,7 +110,8 @@ export function LeadForm({ defaultArea }: { defaultArea?: string }) {
       <label className="flex items-start gap-3 text-sm text-bone/70 sm:col-span-2">
         <input type="checkbox" className="mt-1 h-4 w-4 accent-[#c9a078]" {...register("consent")} />
         <span>
-          Autorizo o uso destes dados para que o escritório retorne o meu contato.
+          Autorizo o uso destes dados para que o escritório retorne o meu contato, conforme a{" "}
+          <a href="/politica-de-privacidade" className="underline hover:text-copper-hi">política de privacidade</a>.
           {err("consent")}
         </span>
       </label>

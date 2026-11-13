@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { areas, nav, site } from "@/content/site";
+import { featuredAreas, nav, site } from "@/content/site";
 import { Logo } from "./logo";
 
 export function Footer() {
@@ -18,11 +18,12 @@ export function Footer() {
         <nav aria-label="Áreas de atuação">
           <p className="eyebrow mb-4">Áreas de atuação</p>
           <ul className="space-y-2 text-bone/75">
-            {areas.map((a) => (
+            {featuredAreas.map((a) => (
               <li key={a.slug}>
                 <Link href={`/areas/${a.slug}`} className="hover:text-copper-hi">{a.title}</Link>
               </li>
             ))}
+            <li><Link href="/#areas" className="text-copper hover:text-copper-hi">Todas as áreas</Link></li>
           </ul>
         </nav>
         <nav aria-label="Rodapé">
@@ -33,6 +34,9 @@ export function Footer() {
                 <Link href={n.href} className="hover:text-copper-hi">{n.label}</Link>
               </li>
             ))}
+            <li><Link href="/primeiro-atendimento" className="hover:text-copper-hi">Primeiro atendimento</Link></li>
+            <li><Link href="/glossario" className="hover:text-copper-hi">Glossário jurídico</Link></li>
+            <li><Link href="/politica-de-privacidade" className="hover:text-copper-hi">Política de privacidade</Link></li>
           </ul>
         </nav>
       </div>

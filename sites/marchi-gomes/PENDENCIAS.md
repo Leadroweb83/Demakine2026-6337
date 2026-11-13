@@ -17,9 +17,13 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
 - [ ] Domínio (`NEXT_PUBLIC_SITE_URL`)
 
 ## Decisões a confirmar com os sócios
-- [ ] As quatro frentes em destaque: Família e Sucessões, Patrimônio e Imóveis,
-      Contratos, Empresarial e Societário. Foram escolhidas pela ênfase do texto
-      institucional; as peças da marca citavam Empresarial, Civil, Tributário e Trabalhista
+- [x] As quatro frentes em destaque (Família e Sucessões, Patrimônio e Imóveis,
+      Contratos, Empresarial e Societário): confirmadas pelo Leandro
+- [ ] Resumos das 8 demais áreas (`areas` sem `featured`): textos descritivos escritos
+      para o site, a validar
+- [ ] Glossário (`content/glossary.ts`): definições gerais, a validar por um advogado
+- [ ] Linha do tempo (`timeline`): só 1996 tem data; faltam os anos dos outros marcos
+- [ ] Página "Primeiro atendimento": confirmar se o passo a passo reflete a rotina real
 - [ ] Números exibidos: anos desde 1996, 12 áreas, 3 frentes de atuação
 - [ ] Respostas das dúvidas frequentes (`faqs`)
 - [ ] Textos das duas portas de entrada (pessoas e famílias / empresas)
@@ -45,5 +49,6 @@ as páginas saem com `noindex`. Só virar para `true` depois dos itens abaixo.
 - [ ] Imagem de compartilhamento (Open Graph 1200x630) e favicon
 
 ## Antes do ar
-- [ ] Política de Privacidade (LGPD)
+- [ ] Política de Privacidade: minuta em `/politica-de-privacidade`, a aprovar pelos sócios
+- [ ] Depoimento identificado sobre o Dr. João Jair Marchi (`legacy.testimonial`)
 - [ ] Perfil da Empresa no Google com o mesmo nome, endereço e telefone do site

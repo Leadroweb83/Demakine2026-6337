@@ -78,7 +78,7 @@ export function Tracking() {
       {choice === "unset" && (
         <div role="dialog" aria-label="Privacidade" className="fixed inset-x-4 bottom-4 z-[80] mx-auto max-w-3xl border border-copper/30 bg-navy p-5 shadow-2xl shadow-black/50 sm:flex sm:items-center sm:gap-6">
           <p className="text-sm text-bone/80">
-            Usamos cookies de medição para entender como o site é usado e melhorar o atendimento. Você pode aceitar ou recusar.
+            Usamos cookies de medição para entender como o site é usado e melhorar o atendimento. Você pode aceitar ou recusar. <a href="/politica-de-privacidade" className="underline">Política de privacidade</a>.
           </p>
           <div className="mt-4 flex shrink-0 gap-3 sm:mt-0">
             <button onClick={() => decide("denied")} className="btn btn-ghost !min-h-11 !px-5">Recusar</button>

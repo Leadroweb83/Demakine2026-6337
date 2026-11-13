@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { visibleArticles } from "@/content/articles";
-import { allAreas, approach, areas, faqs, future, history, images, legacy, marquee, integrations, pillars, services, site, stats, team } from "@/content/site";
+import { MapBlock } from "./map-block";
+import { approach, areas, featuredAreas, timeline, faqs, future, history, images, legacy, marquee, integrations, pillars, services, site, stats, team } from "@/content/site";
 import { hasAddress, whatsappHref } from "@/lib/site";
 import { Arrow, WhatsAppIcon } from "./icons";
 import { Monogram } from "./logo";
@@ -52,7 +53,7 @@ export function Hero() {
         </div>
         <div className="mt-14 flex flex-wrap items-center justify-between gap-x-10 gap-y-4 border-t hairline pt-6" data-reveal>
           <nav aria-label="Atalhos para as áreas" className="flex flex-wrap gap-x-8 gap-y-3">
-            {areas.map((a) => (
+            {featuredAreas.map((a) => (
               <Link key={a.slug} href={`/areas/${a.slug}`} className="group flex items-center gap-2 text-sm text-bone/85 hover:text-copper-hi">
                 {a.title} <Arrow className="h-3.5 w-3.5 text-copper transition-transform duration-500 group-hover:translate-x-1.5" />
               </Link>
@@ -174,7 +175,7 @@ export function Areas() {
         </div>
 
         <ol className="mt-16 border-t hairline">
-          {areas.map((a, i) => (
+          {featuredAreas.map((a, i) => (
             <li key={a.slug} className="border-b hairline" data-reveal>
               <Link
                 href={`/areas/${a.slug}`}
@@ -199,7 +200,7 @@ export function Areas() {
 
         {/* Painel que acompanha o cursor sobre as linhas (so em desktop com mouse) */}
         <div data-preview aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-40 hidden h-[16rem] w-[12rem] overflow-hidden bg-navy shadow-2xl shadow-ink/40">
-          {areas.map((a, i) => (
+          {featuredAreas.map((a, i) => (
             <div key={a.slug} data-preview-item className="absolute inset-0">
               {a.image ? (
                 <Image src={a.image} alt="" fill sizes="272px" className="object-cover" />
@@ -217,8 +218,10 @@ export function Areas() {
         <div className="mt-16 grid gap-6 lg:grid-cols-[5rem_1fr] lg:px-6" data-reveal>
           <p className="eyebrow !text-copper-lo lg:col-span-2">Todas as áreas de atuação</p>
           <ul className="flex flex-wrap gap-x-3 gap-y-3 lg:col-span-2">
-            {allAreas.map((a) => (
-              <li key={a} className="rounded-full border border-ink/15 px-4 py-2 text-sm text-ink/75">{a}</li>
+            {areas.map((a) => (
+              <li key={a.slug}>
+                <Link href={`/areas/${a.slug}`} className="block rounded-full border border-ink/15 px-4 py-2 text-sm text-ink/75 transition-colors hover:border-ink hover:bg-ink hover:text-bone">{a.title}</Link>
+              </li>
             ))}
           </ul>
         </div>
@@ -355,7 +358,35 @@ export function Legacy() {
           {legacy.paragraphs.map((t) => (
             <p key={t} className="mt-7 max-w-2xl text-lg text-bone/80" data-reveal>{t}</p>
           ))}
+          {legacy.testimonial.quote && (
+            <figure className="mt-12 border-l border-copper pl-8" data-reveal>
+              <blockquote className="font-display text-[clamp(1.5rem,2.4vw,2.1rem)] leading-snug text-bone">“{legacy.testimonial.quote}”</blockquote>
+              <figcaption className="mt-4 text-xs uppercase tracking-[0.22em] text-copper">{legacy.testimonial.author}{legacy.testimonial.role ? ` · ${legacy.testimonial.role}` : ""}</figcaption>
+            </figure>
+          )}
         </div>
+      </div>
+    </section>
+  );
+}
+
+export function Timeline() {
+  return (
+    <section data-hscroll className="bg-ink">
+      <div data-hscroll-view className="py-24">
+        <div className="wrap">
+          <p className="eyebrow">Linha do tempo</p>
+          <h2 className="display mt-5 text-[clamp(2.4rem,5vw,4.4rem)]">De uma tradição a um escritório.</h2>
+        </div>
+        <ol data-hscroll-track className="wrap mt-14 flex flex-col lg:!max-w-none">
+          {timeline.map((t) => (
+            <li key={t.title} className="shrink-0 border-t hairline py-9">
+              <p className="display text-[clamp(3rem,6vw,5.5rem)] leading-none text-copper-hi">{t.when}</p>
+              <h3 className="mt-6 font-display text-[1.75rem] leading-tight">{t.title}</h3>
+              <p className="mt-4 max-w-md text-bone/75">{t.text}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
@@ -510,6 +541,7 @@ export function Contact({ defaultArea }: { defaultArea?: string }) {
           <LeadForm defaultArea={defaultArea} />
         </div>
       </div>
+      <div className="wrap"><MapBlock /></div>
     </section>
   );
 }

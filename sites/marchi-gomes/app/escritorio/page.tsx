@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { future, history, site } from "@/content/site";
-import { Contact, Future, Legacy, Team } from "@/components/sections";
+import { Contact, Future, Legacy, Team, Timeline } from "@/components/sections";
 import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
@@ -33,6 +33,7 @@ export default function FirmPage() {
         </div>
       </section>
 
+      <Timeline />
       <Legacy />
       <Team />
       <Future full />

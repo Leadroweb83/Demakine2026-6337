@@ -21,7 +21,9 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Draggable);
  *   data-parallax="0.15"  deslocamento leve atrelado ao scroll (so transform)
  *   data-magnetic         botao que acompanha o cursor
  *   data-marquee          faixa continua que acelera com a velocidade do scroll
- *   data-count="20"       numero que conta ate o valor ao entrar na tela
+ *   data-count            numero em contador mecanico (digitos girando)
+ *   data-hscroll          linha do tempo que rola na horizontal
+ *   data-route            traco de rota que se desenha no mapa
  *   data-cursor-label     texto que o cursor mostra sobre o elemento
  *   data-fill             frase que vai acendendo palavra a palavra com o scroll
  *   data-drag             elemento arrastavel que volta com mola ao soltar
@@ -178,18 +180,57 @@ export function MotionRoot({ children }: { children: ReactNode }) {
             });
           });
 
-          // Numeros
+          // Numeros: contador mecanico, cada digito gira em sua coluna
           q("[data-count]").forEach((el) => {
-            const end = Number((el as HTMLElement).dataset.count);
-            const o = { v: 0 };
-            gsap.to(o, {
-              v: end,
-              duration: 1.8,
-              ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 88%", once: true },
-              onUpdate: () => { el.textContent = Math.round(o.v).toLocaleString("pt-BR"); },
+            const text = el.textContent ?? "";
+            el.setAttribute("aria-label", text);
+            el.textContent = "";
+            const cols: { col: HTMLElement; d: number }[] = [];
+            [...text].forEach((ch) => {
+              if (!/\d/.test(ch)) { el.append(ch); return; }
+              const win = document.createElement("span");
+              win.style.cssText = "display:inline-block;height:1.05em;line-height:1.05;overflow:hidden;vertical-align:bottom";
+              const col = document.createElement("span");
+              col.style.cssText = "display:block;white-space:pre-line;will-change:transform";
+              col.textContent = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
+              win.append(col); el.append(win);
+              cols.push({ col, d: Number(ch) });
             });
+            cols.forEach(({ col, d }, i) => {
+              gsap.fromTo(col, { yPercent: 0 }, {
+                yPercent: -((10 + d) / 20) * 100,
+                duration: 2 + i * 0.35,
+                ease: "power3.out",
+                scrollTrigger: { trigger: el, start: "top 88%", once: true },
+              });
+            });
+            ctx.add(() => () => { el.textContent = text; });
           });
+
+          // Rota do mapa: traco dourado que se desenha ate o endereco
+          q("[data-route]").forEach((path) => {
+            const pin = path.parentElement?.querySelector("[data-route-pin]");
+            gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
+            const tl = gsap.timeline({ scrollTrigger: { trigger: path, start: "top 80%", once: true } });
+            tl.to(path, { strokeDashoffset: 0, duration: 2.6, ease: "power2.inOut" });
+            if (pin) tl.from(pin, { scale: 0, transformOrigin: "50% 50%", duration: 0.7, ease: "back.out(2.5)" }, "-=0.3");
+          });
+
+          // Linha do tempo horizontal: a secao fica fixa e os capitulos passam de lado
+          if (wide) {
+            q("[data-hscroll]").forEach((section) => {
+              const track = section.querySelector<HTMLElement>("[data-hscroll-track]");
+              if (!track) return;
+              section.classList.add("is-h");
+              const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + 160);
+              gsap.to(track, {
+                x: () => -dist(),
+                ease: "none",
+                scrollTrigger: { trigger: section, start: "top top", end: () => "+=" + dist(), pin: true, scrub: 0.6, invalidateOnRefresh: true },
+              });
+              ctx.add(() => () => section.classList.remove("is-h"));
+            });
+          }
 
           // Titulos: linha a linha, depois que a fonte carregou (evita requebra)
           q("[data-split]").forEach((el) => {

@@ -53,6 +53,12 @@ export const team: { name: string; role: string; oab: string; bio: string; photo
   { name: "Gabriel Gomes", role: "Sócio fundador", oab: "", bio: "", photo: "" },
 ];
 
+const mapsQuery = encodeURIComponent("R. Valdir Dalfré, 57 - Jardim Porto Real II, Limeira - SP, 13485-402");
+export const maps = {
+  directions: `https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`,
+  embed: `https://www.google.com/maps?q=${mapsQuery}&output=embed`,
+};
+
 export const whatsappMessage =
   "Olá! Vim pelo site e gostaria de falar com a equipe da Marchi Gomes Advogados.";
 
@@ -86,6 +92,10 @@ export type Area = {
   summary: string;
   /** Texto de abertura da pagina da frente, a partir do material do escritorio. */
   intro: string;
+  /** Termo de busca principal, usado no titulo da pagina: "<keyword> em Limeira". */
+  keyword: string;
+  /** Frente em destaque na home. */
+  featured?: boolean;
   /** Foto da frente em /public (aparece ao lado do cursor). Opcional. */
   image?: string;
 };
@@ -98,6 +108,8 @@ export type Area = {
 export const areas: Area[] = [
   {
     slug: "familia-e-sucessoes",
+    featured: true,
+    keyword: "Advogado de família e sucessões",
     name: "Família e Sucessões",
     title: "Direito de Família e Sucessões",
     summary: "Orientação para questões familiares e para a organização de uma sucessão antes que surjam conflitos.",
@@ -105,6 +117,8 @@ export const areas: Area[] = [
   },
   {
     slug: "patrimonio-e-imoveis",
+    featured: true,
+    keyword: "Advogado imobiliário",
     name: "Patrimônio e Imóveis",
     title: "Direito Imobiliário e Patrimonial",
     summary: "Proteção patrimonial e organização jurídica dos bens, conforme as necessidades de cada caso.",
@@ -112,6 +126,8 @@ export const areas: Area[] = [
   },
   {
     slug: "contratos",
+    featured: true,
+    keyword: "Advogado de contratos",
     name: "Contratos",
     title: "Direito Contratual",
     summary: "Elaboração, revisão e negociação de contratos, com atenção aos efeitos práticos de cada cláusula.",
@@ -119,28 +135,81 @@ export const areas: Area[] = [
   },
   {
     slug: "empresarial-e-societario",
+    featured: true,
+    keyword: "Advogado empresarial",
     name: "Empresarial e Societário",
     title: "Direito Empresarial e Societário",
     summary: "Recomendações que consideram a operação do negócio e podem ser aplicadas na gestão da empresa.",
     intro: "Para o cliente empresarial, a orientação jurídica considera a operação do negócio, seus compromissos comerciais e os efeitos econômicos das decisões, incluindo a definição segura das relações societárias.",
   },
+  // Demais areas informadas pelo escritorio. Resumos descritivos, A VALIDAR com os socios.
+  {
+    slug: "direito-civil",
+    keyword: "Advogado cível",
+    name: "Civil",
+    title: "Direito Civil e Responsabilidade Civil",
+    summary: "Relações entre pessoas, obrigações assumidas e reparação de danos, da orientação preventiva à defesa em juízo.",
+    intro: "O Direito Civil trata das relações do dia a dia entre pessoas e empresas: obrigações assumidas, danos sofridos ou causados e os direitos que decorrem dessas situações.",
+  },
+  {
+    slug: "direito-do-consumidor",
+    keyword: "Advogado do consumidor",
+    name: "Consumidor",
+    title: "Direito do Consumidor",
+    summary: "Relações de consumo analisadas com atenção aos direitos e deveres de cada parte.",
+    intro: "As relações de consumo têm regras próprias de informação, qualidade e responsabilidade. A orientação começa pela compreensão do que foi contratado e do que efetivamente ocorreu.",
+  },
+  {
+    slug: "bancario-e-financeiro",
+    keyword: "Advogado bancário",
+    name: "Bancário e Financeiro",
+    title: "Direito Bancário e Financeiro",
+    summary: "Contratos bancários, financiamentos e operações de crédito examinados com atenção a cada cláusula.",
+    intro: "Operações bancárias e financeiras envolvem contratos extensos e efeitos de longo prazo. A experiência dos sócios no setor bancário contribui para uma leitura prática dessas relações.",
+  },
+  {
+    slug: "trabalho-e-previdenciario",
+    keyword: "Advogado trabalhista e previdenciário",
+    name: "Trabalho e Previdenciário",
+    title: "Direito do Trabalho e Previdenciário",
+    summary: "Relações de trabalho e questões previdenciárias, para empresas e profissionais.",
+    intro: "As relações de trabalho e os direitos previdenciários afetam diretamente a vida das pessoas e a rotina das empresas. A orientação considera os dois lados dessa relação.",
+  },
+  {
+    slug: "direito-tributario",
+    keyword: "Advogado tributário",
+    name: "Tributário",
+    title: "Direito Tributário",
+    summary: "Questões tributárias de pessoas e empresas, com análise técnica e linguagem clara.",
+    intro: "A tributação influencia decisões patrimoniais e empresariais. A análise jurídica ajuda a compreender as obrigações existentes e os caminhos previstos em lei.",
+  },
+  {
+    slug: "direito-penal",
+    keyword: "Advogado criminalista",
+    name: "Penal",
+    title: "Direito Penal",
+    summary: "Orientação e defesa técnica em matéria penal, com sigilo e responsabilidade.",
+    intro: "Em matéria penal, a orientação precoce e a defesa técnica são decisivas para que os direitos da pessoa sejam respeitados em cada etapa.",
+  },
+  {
+    slug: "direito-internacional",
+    keyword: "Advogado de direito internacional",
+    name: "Internacional",
+    title: "Direito Internacional",
+    summary: "Questões jurídicas de pessoas e negócios que envolvem mais de um país.",
+    intro: "Relações pessoais, patrimoniais e comerciais que ultrapassam fronteiras exigem atenção às regras de cada país envolvido.",
+  },
+  {
+    slug: "contencioso-estrategico",
+    keyword: "Contencioso estratégico",
+    name: "Contencioso estratégico",
+    title: "Contencioso Estratégico",
+    summary: "Condução de litígios relevantes, com estratégia definida a partir dos fatos, das provas e dos objetivos envolvidos.",
+    intro: "Há conflitos cuja condução exige planejamento desde o primeiro movimento. A estratégia é definida a partir dos fatos, das provas e dos objetivos do cliente.",
+  },
 ];
 
-/** Lista completa, como informada pelo escritorio. */
-export const allAreas = [
-  "Direito Civil e Responsabilidade Civil",
-  "Direito de Família e Sucessões",
-  "Direito Contratual",
-  "Direito Empresarial e Societário",
-  "Direito do Consumidor",
-  "Direito Imobiliário e Patrimonial",
-  "Direito Bancário e Financeiro",
-  "Direito do Trabalho e Previdenciário",
-  "Direito Tributário",
-  "Direito Penal",
-  "Direito Internacional",
-  "Contencioso estratégico",
-];
+export const featuredAreas = areas.filter((a) => a.featured);
 
 export const services = [
   { title: "Consultoria e assessoria jurídica", text: "Orientação para decisões pessoais, patrimoniais e empresariais, de forma pontual ou continuada." },
@@ -178,6 +247,8 @@ export const history = {
 
 export const legacy = {
   name: "Dr. João Jair Marchi",
+  /** Depoimento real e identificado. Vazio = bloco escondido. */
+  testimonial: { quote: "", author: "", role: "" },
   /** Foto em /public. Vazio = bloco sem imagem. */
   photo: "",
   paragraphs: [
@@ -185,6 +256,33 @@ export const legacy = {
     "Seu legado ocupa um lugar especial nessa construção. A seriedade no exercício profissional, a firmeza na defesa de direitos e o respeito por quem busca orientação jurídica constituem referências para os valores que a Marchi Gomes deseja preservar e transmitir às próximas gerações.",
   ],
 };
+
+/**
+ * Capitulos da historia. So "1996" e data informada pelo escritorio; os demais
+ * marcos nao tem ano porque o documento nao informa. Completar com os socios.
+ */
+export const timeline = [
+  { when: "As origens", title: "A tradição da família Marchi", text: "Depois de se aposentar como Delegado de Polícia, o Dr. João Jair Marchi dedica sua experiência à advocacia e constrói uma trajetória de destaque na região de Limeira." },
+  { when: "Antes da sociedade", title: "Dois percursos próprios", text: "Gisele Marchi e Gabriel Gomes desenvolvem suas carreiras com atuação em Administração Pública e bancária. A convivência profissional revela uma afinidade de princípios." },
+  { when: "1996", title: "Fundação em Limeira", text: "Nasce a Marchi Gomes Advogados, para atuar tanto na solução de conflitos quanto na organização jurídica das escolhas que os antecedem." },
+  { when: "Hoje", title: "Nova identidade, a mesma essência", text: "A marca evolui para refletir o propósito do escritório: tradição, ética e soluções que impulsionam novos caminhos." },
+  { when: "Adiante", title: "Crescer com consistência", text: "Ampliar a presença da advocacia preventiva e preservar a proximidade que dá sentido ao trabalho." },
+];
+
+/** Passo a passo do primeiro contato, a partir do modo de trabalho descrito pelo escritorio. */
+export const firstContact = [
+  { title: "Você entra em contato", text: "Pelo WhatsApp ou pelo formulário do site. Basta contar, em poucas linhas, o que está acontecendo. O contato é sigiloso." },
+  { title: "Entendemos o contexto", text: "A conversa inicial serve para compreender os seus objetivos, quais interesses precisam ser preservados e o que está em jogo." },
+  { title: "Você conhece os caminhos", text: "O escritório apresenta as alternativas disponíveis e as consequências de cada uma, em linguagem clara, para que você tenha informação para decidir." },
+  { title: "A estratégia é definida", text: "Com a sua decisão, define-se a estratégia e um responsável pela demanda. Os sócios participam e você recebe comunicações periódicas sobre o andamento." },
+];
+
+export const firstContactChecklist = [
+  "Documentos pessoais ou da empresa relacionados ao assunto",
+  "Contratos, notificações, e-mails ou mensagens que registrem o que foi combinado",
+  "Uma linha do tempo simples: o que aconteceu e quando",
+  "O que você espera resolver",
+];
 
 export const future = {
   title: "Crescer com consistência e preservar a proximidade que dá sentido ao trabalho.",

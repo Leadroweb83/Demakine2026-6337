@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { areas } from "@/content/site";
+import { featuredAreas } from "@/content/site";
 
-export const areaOptions = [...areas.map((a) => a.name), "Outra área", "Ainda não sei"] as const;
+export const areaOptions = [...featuredAreas.map((a) => a.name), "Outra área", "Ainda não sei"] as const;
 
 export const leadSchema = z.object({
   name: z.string().trim().min(2, "Informe o seu nome."),

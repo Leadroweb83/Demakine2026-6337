@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
+    ...["primeiro-atendimento", "glossario", "politica-de-privacidade"].map((u) => ({ url: `${site.url}/${u}`, lastModified: now, priority: 0.5 })),
     { url: `${site.url}/artigos`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     ...articles.filter((a) => !a.draft).map((a) => ({ url: `${site.url}/artigos/${a.slug}`, lastModified: new Date(a.date), priority: 0.6 })),
   ];

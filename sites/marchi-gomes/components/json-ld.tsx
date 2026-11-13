@@ -1,4 +1,4 @@
-import { allAreas, areas, faqs, site, team } from "@/content/site";
+import { areas, faqs, site, team } from "@/content/site";
 
 const clean = <T extends Record<string, unknown>>(o: T) =>
   Object.fromEntries(Object.entries(o).filter(([, v]) => v !== "" && v != null));
@@ -32,7 +32,7 @@ export function legalServiceLd() {
     areaServed: c.city || "BR",
     foundingDate: String(site.founded),
     founder: team.map((m) => ({ "@type": "Person", name: m.name, jobTitle: m.role })),
-    knowsAbout: allAreas,
+    knowsAbout: areas.map((a) => a.title),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Áreas de atuação",

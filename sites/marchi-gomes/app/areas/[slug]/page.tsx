@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { areas, site } from "@/content/site";
+import { areas, featuredAreas, site } from "@/content/site";
 import { whatsappHref } from "@/lib/site";
 import { Contact, Services } from "@/components/sections";
 import { JsonLd } from "@/components/json-ld";
@@ -16,9 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const area = areas.find((a) => a.slug === slug);
   if (!area) return {};
-  const where = site.contact.city ? ` em ${site.contact.city}` : "";
-  return {
-    title: `Advogado de ${area.title}${where}`,
+    return {
+    title: `${area.keyword} em ${site.contact.city}`,
     description: `${area.summary} ${site.name}, em ${site.contact.city}, ${site.contact.state}, desde ${site.founded}.`,
     alternates: { canonical: `/areas/${area.slug}` },
     openGraph: { title: `${area.title} | ${site.name}`, description: area.summary, url: `/areas/${area.slug}` },
@@ -29,7 +28,7 @@ export default async function AreaPage({ params }: Props) {
   const { slug } = await params;
   const area = areas.find((a) => a.slug === slug);
   if (!area) notFound();
-  const others = areas.filter((a) => a.slug !== area.slug);
+  const others = featuredAreas.filter((a) => a.slug !== area.slug).slice(0, 3);
 
   return (
     <>
