@@ -8,6 +8,7 @@ import type { SeoRules } from "../../../api/lib/seo/rules";
 import type { Check } from "../../../api/lib/seo/score";
 import type { PageOverrides } from "../../lib/seo-overrides";
 import type { SeoGeoTab } from "./tabs";
+import type { Fixable } from "./model";
 import type { SiteArea } from "../../../api/lib/seo/types";
 
 export type RunInfo = {
@@ -323,4 +324,77 @@ export function useDuelar() {
     },
   });
   return { run: () => m.mutate(), busy: m.isPending, progress, error: m.isError ? m.error.message : null };
+}
+
+// ---- Corrigir e Copiar prompt (duelo)
+export type FixItemRow = import("../../../api/lib/seo/fix-rules").FixItem;
+export type FixBatchRow = import("../../../api/lib/seo/fix-apply").FixBatch;
+export type FixOutcome = { batchId: number; applied: number; skipped: { id: string; reason: string }[] };
+
+const errorOf = async (res: { json(): Promise<unknown> }, fallback: string) => ((await res.json().catch(() => ({}))) as { error?: string }).error ?? fallback;
+
+/** Propostas do grupo (todas as páginas em que o item falha). Não grava nada. */
+export function useProposals(metric: Fixable) {
+  return useQuery({
+    queryKey: [...SEO_KEY, "corrigir", "propor", metric],
+    refetchOnWindowFocus: false,
+    gcTime: 0,
+    queryFn: async () => {
+      const res = await api.admin.seo.corrigir.propor.$post({ json: { metric } });
+      if (!res.ok) throw new Error(await errorOf(res, "Não foi possível montar as propostas."));
+      return (await res.json()) as unknown as { items: FixItemRow[]; failing: number };
+    },
+  });
+}
+
+export function useAplicarCorrecao(metric: Fixable) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (items: FixItemRow[]) => {
+      const res = await api.admin.seo.corrigir.aplicar.$post({ json: { metric, items } });
+      if (!res.ok) throw new Error(await errorOf(res, "Não foi possível aplicar agora."));
+      return (await res.json()) as unknown as FixOutcome;
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: [...SEO_KEY, "corrigir", "lotes"] });
+      qc.invalidateQueries({ queryKey: [...SEO_KEY, "paginas"] });
+    },
+  });
+}
+
+export function useLotesCorrecao() {
+  return useQuery({
+    queryKey: [...SEO_KEY, "corrigir", "lotes"],
+    queryFn: async () => {
+      const res = await api.admin.seo.corrigir.lotes.$get();
+      if (!res.ok) throw new Error("Não foi possível carregar os lotes.");
+      return ((await res.json()) as unknown as { batches: FixBatchRow[] }).batches;
+    },
+  });
+}
+
+export function useDesfazerCorrecao() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (v: { batchId: number; ids?: string[] }) => {
+      const res = await api.admin.seo.corrigir.desfazer.$post({ json: { batchId: v.batchId, ids: v.ids } });
+      if (!res.ok) throw new Error(await errorOf(res, "Não foi possível desfazer agora."));
+      return (await res.json()) as unknown as { undone: number; skipped: { id: string; reason: string }[] };
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: [...SEO_KEY, "corrigir", "lotes"] });
+      qc.invalidateQueries({ queryKey: [...SEO_KEY, "paginas"] });
+    },
+  });
+}
+
+/** Pede o pacote de prompt (JSON) de uma derrota do duelo. */
+export function usePromptPack() {
+  return useMutation({
+    mutationFn: async (metric: string) => {
+      const res = await api.admin.seo.corrigir.prompt.$post({ json: { metric: metric as import("../../../api/lib/seo/duel-metrics").MetricId } });
+      if (!res.ok) throw new Error(await errorOf(res, "Não foi possível montar o prompt agora."));
+      return ((await res.json()) as unknown as { json: string }).json;
+    },
+  });
 }

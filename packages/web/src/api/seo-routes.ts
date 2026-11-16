@@ -13,6 +13,10 @@ import type { Issue } from "./lib/seo/issues";
 import type { LinkReport } from "./lib/seo/links";
 import type { Tip } from "./lib/seo/tips-library";
 import { assertPublicUrl } from "./lib/seo/crawl-external";
+import { applyFixes, MAX_ITEMS, undoBatch, type FixStore, type FixWriters } from "./lib/seo/fix-apply";
+import { buildProposals, countFailing, FIX_KINDS, type FixItem, type FixKind, type FixPage } from "./lib/seo/fix-rules";
+import { buildPromptPack, packToJson } from "./lib/seo/fix-prompt";
+import { METRICS, type MetricId } from "./lib/seo/duel-metrics";
 import type { DuelResult } from "./lib/seo/run-duel";
 import { imageIssues } from "./lib/seo/images";
 import { checkSchema } from "./lib/seo/schema-check";
@@ -49,6 +53,8 @@ export interface SeoData {
     test(paths: string[]): Promise<OldUrlResult[]>;
     create(items: { from: string; to: string }[], userId: string): Promise<{ created: number; skipped: { from: string; reason: string }[] }>;
   };
+  /** correções do duelo: páginas com a auditoria mais recente, lotes e escritores (título, descrição, imagem, alt) */
+  fix: { pages(): Promise<FixPage[]>; store: FixStore; /** uma instância nova por pedido: ela guarda as páginas carregadas */ writers(): FixWriters };
   resetRules(): Promise<void>;
   audit(opts: AuditOptions): Promise<AuditResult>;
   /** roda quando uma auditoria DIÁRIA fecha (escolhe as dicas do dia) */
@@ -65,6 +71,27 @@ const RESUME_WINDOW_MS = 30 * 60_000;
 
 /** Caminho de página do site: começa com "/", sem espaço, consulta nem #, tamanho razoável. */
 const isSitePath = (v: unknown): v is string => typeof v === "string" && v.length <= 300 && /^\/(?!\/)[^\s?#]*$/.test(v);
+
+const isFixKind = (v: unknown): v is FixKind => typeof v === "string" && (FIX_KINDS as readonly string[]).includes(v);
+const isMetric = (v: unknown): v is MetricId => typeof v === "string" && (METRICS as readonly string[]).includes(v);
+const FIELDS = ["title", "description", "ogImage", "alt"];
+const isFixItem = (v: unknown): v is FixItem => {
+  const o = v as Record<string, unknown> | null;
+  return (
+    typeof o === "object" &&
+    o !== null &&
+    typeof o.id === "string" && o.id.length <= 700 &&
+    isFixKind(o.kind) &&
+    isSitePath(o.path) &&
+    typeof o.label === "string" && o.label.length <= 300 &&
+    typeof o.field === "string" && FIELDS.includes(o.field) &&
+    (o.target === undefined || (typeof o.target === "string" && o.target.length <= 500)) &&
+    typeof o.before === "string" && o.before.length <= 2000 &&
+    typeof o.after === "string" && o.after.length <= 2000 &&
+    (o.hadOverride === undefined || typeof o.hadOverride === "boolean")
+  );
+};
+const logFixError = (id: string, err: unknown) => console.error("[seo] correção falhou", id, err);
 
 export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string | undefined; resolve?: (host: string) => Promise<string[]> }) {
   const { data } = deps;
@@ -335,6 +362,90 @@ export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string
         return c.json({ error: "Falha no duelo semanal" }, 500);
       }
     })
+
+    // ---- botão Corrigir e Copiar prompt do duelo: propor, aplicar (em lote), listar, desfazer, prompt
+    .post(
+      "/admin/seo/corrigir/propor",
+      guard,
+      validator("json", (v, c) => {
+        const metric = (v as { metric?: unknown } | null)?.metric;
+        if (!isFixKind(metric)) return c.json({ error: "Tipo de correção inválido" }, 400);
+        return { metric };
+      }),
+      async (c) => {
+        const { metric } = c.req.valid("json");
+        const pages = await data.fix.pages();
+        return c.json({ items: buildProposals(metric, pages), failing: countFailing(metric, pages) }, 200);
+      },
+    )
+
+    .post(
+      "/admin/seo/corrigir/aplicar",
+      guard,
+      validator("json", (v, c) => {
+        const b = v as { metric?: unknown; items?: unknown } | null;
+        if (!isFixKind(b?.metric)) return c.json({ error: "Tipo de correção inválido" }, 400);
+        if (!Array.isArray(b.items) || b.items.length === 0) return c.json({ error: "Nenhum item marcado" }, 400);
+        if (b.items.length > MAX_ITEMS) return c.json({ error: `Aplique no máximo ${MAX_ITEMS} itens por vez` }, 400);
+        if (!b.items.every(isFixItem)) return c.json({ error: "Item inválido" }, 400);
+        return { metric: b.metric, items: b.items as FixItem[] };
+      }),
+      async (c) => {
+        const { metric, items } = c.req.valid("json");
+        try {
+          const known = new Set((await data.fix.pages()).map((p) => p.path));
+          return c.json(await applyFixes(items, { store: data.fix.store, writers: data.fix.writers(), userId: (c.get("user") as SessionUser).id, metric, knownPaths: known, onError: logFixError }), 200);
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "";
+          if (msg === "Já existe uma aplicação em andamento") return c.json({ error: msg }, 409);
+          console.error("[seo] aplicar correções falhou", err);
+          return c.json({ error: "Não foi possível aplicar as correções agora." }, 500);
+        }
+      },
+    )
+
+    .get("/admin/seo/corrigir/lotes", guard, async (c) => c.json({ batches: await data.fix.store.list(20) }, 200))
+
+    .post(
+      "/admin/seo/corrigir/desfazer",
+      guard,
+      validator("json", (v, c) => {
+        const b = v as { batchId?: unknown; ids?: unknown } | null;
+        const idsOk = b?.ids === undefined || (Array.isArray(b.ids) && b.ids.length <= MAX_ITEMS && b.ids.every((i) => typeof i === "string" && i.length <= 700));
+        if (typeof b?.batchId !== "number" || !Number.isInteger(b.batchId) || b.batchId < 1 || !idsOk) return c.json({ error: "Dados inválidos" }, 400);
+        return { batchId: b.batchId, ids: b.ids as string[] | undefined };
+      }),
+      async (c) => {
+        const { batchId, ids } = c.req.valid("json");
+        try {
+          return c.json(await undoBatch(batchId, ids, { store: data.fix.store, writers: data.fix.writers(), userId: (c.get("user") as SessionUser).id, onError: logFixError }), 200);
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "";
+          if (msg === "Lote não encontrado") return c.json({ error: msg }, 404);
+          if (msg === "Lote já desfeito" || msg === "Nada para desfazer neste lote") return c.json({ error: msg }, 409);
+          console.error("[seo] desfazer correções falhou", err);
+          return c.json({ error: "Não foi possível desfazer agora." }, 500);
+        }
+      },
+    )
+
+    .post(
+      "/admin/seo/corrigir/prompt",
+      guard,
+      validator("json", (v, c) => {
+        const metric = (v as { metric?: unknown } | null)?.metric;
+        if (!isMetric(metric)) return c.json({ error: "Item inválido" }, 400);
+        return { metric };
+      }),
+      async (c) => {
+        const { metric } = c.req.valid("json");
+        const latest = await data.duel.latest();
+        const action = latest?.actions.find((a) => a.metric === metric);
+        const verdict = action ? latest?.verdicts[action.competitor]?.find((x) => x.metric === metric) : undefined;
+        if (!action || !verdict) return c.json({ error: "Rode o duelo primeiro" }, 409);
+        return c.json({ json: packToJson(buildPromptPack(action, verdict)) }, 200);
+      },
+    )
 
     // ---- auditoria diária (Vercel Cron, 07h de Brasília): protegida pelo mesmo CRON_SECRET do /cron/diario
     .get("/cron/seo", async (c) => {

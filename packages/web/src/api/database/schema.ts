@@ -336,3 +336,22 @@ export const seoDuels = pgTable("seo_duels", {
   state: jsonb("state").notNull().default({}),
   result: jsonb("result"),
 });
+
+/**
+ * Lotes de correção do "Guerra é Guerra": cada aplicação guarda o antes e o depois de cada item (para desfazer).
+ * O índice único parcial garante um lote "aplicando" por vez, mesmo com dois cliques ao mesmo tempo.
+ */
+export const seoFixBatches = pgTable(
+  "seo_fix_batches",
+  {
+    id: serial("id").primaryKey(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    userId: text("user_id").notNull(),
+    /** titulo | descricao | compartilhamento | imagens */
+    metric: text("metric").notNull(),
+    /** aplicando | aplicado | parcial | desfeito */
+    status: text("status").notNull().default("aplicando"),
+    items: jsonb("items").notNull().default([]),
+  },
+  (t) => [uniqueIndex("seo_fix_batches_one_running").on(t.status).where(sql`status = 'aplicando'`)],
+);
