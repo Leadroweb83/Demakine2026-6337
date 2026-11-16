@@ -275,3 +275,52 @@ export function useDicas() {
     },
   });
 }
+
+export type DuelResultRow = import("../../../api/lib/seo/run-duel").DuelResult;
+export type Competitor = { id: number; name: string; url: string };
+
+export function useConcorrentes() {
+  return useQuery({
+    queryKey: [...SEO_KEY, "concorrentes"],
+    refetchInterval: (q) => (q.state.data?.running ? 5000 : false),
+    queryFn: async () => {
+      const res = await api.admin.seo.concorrentes.$get();
+      if (!res.ok) throw new Error("Não foi possível carregar o duelo.");
+      return (await res.json()) as unknown as { competitors: Competitor[]; latest: DuelResultRow | null; running: { done: number; total: number } | null };
+    },
+  });
+}
+
+export function useSaveConcorrentes() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (items: { name: string; url: string }[]) => {
+      const res = await api.admin.seo.concorrentes.$put({ json: { items } });
+      if (!res.ok) throw new Error(((await res.json()) as { error?: string }).error ?? "Não foi possível salvar.");
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...SEO_KEY, "concorrentes"] }),
+  });
+}
+
+/** "Duelar agora": chama o duelo até ele fechar (cada chamada trabalha dentro do limite de tempo da função). */
+export function useDuelar() {
+  const qc = useQueryClient();
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const m = useMutation({
+    mutationFn: async () => {
+      for (let i = 0; i < 40; i++) {
+        const res = await api.admin.seo.duelar.$post({ json: {} });
+        const body = (await res.json()) as { error?: string; status?: string; done?: number; total?: number };
+        if (!res.ok) throw new Error(body.error ?? "Não foi possível rodar o duelo agora.");
+        setProgress({ done: body.done ?? 0, total: body.total ?? 0 });
+        if (body.status === "completa") return;
+      }
+      throw new Error("O duelo está demorando mais que o normal. Confira daqui a pouco.");
+    },
+    onSettled: () => {
+      setProgress(null);
+      qc.invalidateQueries({ queryKey: [...SEO_KEY, "concorrentes"] });
+    },
+  });
+  return { run: () => m.mutate(), busy: m.isPending, progress, error: m.isError ? m.error.message : null };
+}

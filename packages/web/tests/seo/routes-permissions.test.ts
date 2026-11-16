@@ -14,7 +14,7 @@ type Env = { Variables: { user: SessionUser | null; session: unknown } };
 const user = (role: string | null, extra: Partial<SessionUser> = {}): SessionUser | null =>
   role === null ? null : { id: "u1", name: "Fulano", email: "f@x.com", role, active: true, ...extra };
 
-type Fake = SeoData & { audits: AuditOptions[]; saved: SeoRules[]; resets: number; closed: AuditResult[]; verified: number; alts: { slug: string; src: string; alt: string }[]; tested: string[][]; created: { items: { from: string; to: string }[]; userId: string }[]; docs: { key: string; doc: Record<string, unknown>; userId: string }[] };
+type Fake = SeoData & { duelRuns: number; savedComps: { name: string; url: string }[][]; audits: AuditOptions[]; saved: SeoRules[]; resets: number; closed: AuditResult[]; verified: number; alts: { slug: string; src: string; alt: string }[]; tested: string[][]; created: { items: { from: string; to: string }[]; userId: string }[]; docs: { key: string; doc: Record<string, unknown>; userId: string }[] };
 
 function fakeData(): Fake {
   const pages = [sitePage("/a"), sitePage("/b", { area: "produtos", label: "Produto B" }), sitePage("/en/a", { lang: "en", label: "A (EN)" })];
@@ -35,6 +35,18 @@ function fakeData(): Fake {
     closed: [],
     verified: 0,
     alts: [],
+    duelRuns: 0,
+    savedComps: [],
+    duel: {
+      competitors: async () => [{ id: 1, name: "Rival A", url: "https://rival-a.com.br" }],
+      save: async (items) => void d.savedComps.push(items),
+      latest: async () => null,
+      running: async () => null,
+      run: async () => {
+        d.duelRuns++;
+        return { duelId: 1, status: "completa", done: 20, total: 20 };
+      },
+    },
     tips: { today: async () => ({ date: "2026-11-12", tips: [{ id: "x", title: "T", body: "Corpo da dica de teste", tab: "regras" as const, kind: "biblioteca" as const }] }) },
     setImageAlt: async (slug, src, alt) => void d.alts.push({ slug, src, alt }),
     tested: [],
@@ -79,7 +91,7 @@ const appFor = (role: string | null, secret = "segredo") => {
     c.set("user", user(role));
     await next();
   });
-  const routes = createSeoRoutes({ data, cronSecret: () => secret });
+  const routes = createSeoRoutes({ data, cronSecret: () => secret, resolve: async () => ["93.184.216.34"] });
   app.route("/", routes);
   return { app, routes };
 };
@@ -96,7 +108,7 @@ describe("permissões: só o super_admin entra em /admin/seo/*", () => {
 
   test("a lista de rotas protegidas não está vazia e cobre as da Task 8", () => {
     const sigs = new Set(seoRoutes.map((r) => `${r.method} ${r.path}`));
-    for (const s of ["GET /admin/seo/resumo", "GET /admin/seo/paginas", "GET /admin/seo/pagina", "PUT /admin/seo/pagina", "POST /admin/seo/auditar", "GET /admin/seo/links", "GET /admin/seo/dicas", "GET /admin/seo/imagens", "PUT /admin/seo/imagem-alt", "GET /admin/seo/estruturados", "POST /admin/seo/links/verificar", "POST /admin/seo/importar/testar", "POST /admin/seo/importar/criar", "GET /admin/seo/regras", "PUT /admin/seo/regras", "DELETE /admin/seo/regras"]) {
+    for (const s of ["GET /admin/seo/resumo", "GET /admin/seo/paginas", "GET /admin/seo/pagina", "PUT /admin/seo/pagina", "POST /admin/seo/auditar", "GET /admin/seo/links", "GET /admin/seo/concorrentes", "PUT /admin/seo/concorrentes", "POST /admin/seo/duelar", "GET /admin/seo/dicas", "GET /admin/seo/imagens", "PUT /admin/seo/imagem-alt", "GET /admin/seo/estruturados", "POST /admin/seo/links/verificar", "POST /admin/seo/importar/testar", "POST /admin/seo/importar/criar", "GET /admin/seo/regras", "PUT /admin/seo/regras", "DELETE /admin/seo/regras"]) {
       expect(sigs.has(s), s).toBe(true);
     }
   });
@@ -362,6 +374,84 @@ describe("imagens e dados estruturados", () => {
   });
 });
 
+describe("Guerra é Guerra", () => {
+  test("lista os concorrentes e o último duelo", async () => {
+    const b = (await (await appFor("super_admin").app.request("/admin/seo/concorrentes")).json()) as { competitors: { name: string }[]; latest: unknown; running: unknown };
+    expect(b.competitors[0]!.name).toBe("Rival A");
+    expect(b.latest).toBeNull();
+  });
+
+  test("salva até 2 concorrentes, guardando só a origem e o nome limpo", async () => {
+    const res = await appFor("super_admin").app.request("/admin/seo/concorrentes", put({ items: [{ name: "  Rival A  ", url: "https://www.rival-a.com.br/produtos?x=1#y" }, { name: "Rival B", url: "https://rival-b.com.br" }] }));
+    expect(res.status).toBe(200);
+    expect(data.savedComps).toEqual([[{ name: "Rival A", url: "https://www.rival-a.com.br" }, { name: "Rival B", url: "https://rival-b.com.br" }]]);
+  });
+
+  test("recusa mais de 2, endereço perigoso, nome inválido e repetidos, sem salvar", async () => {
+    const { app } = appFor("super_admin");
+    const ok = { name: "X", url: "https://x.com.br" };
+    const bad: unknown[] = [
+      { items: [ok, { ...ok, url: "https://y.com.br" }, { ...ok, url: "https://z.com.br" }] },
+      { items: [{ name: "Local", url: "https://127.0.0.1/" }] },
+      { items: [{ name: "Local", url: "https://localhost/" }] },
+      { items: [{ name: "Http", url: "http://x.com.br" }] },
+      { items: [{ name: "", url: "https://x.com.br" }] },
+      { items: [{ name: "n".repeat(61), url: "https://x.com.br" }] },
+      { items: [ok, { name: "Outro", url: "https://www.x.com.br/loja" }] },
+      { items: "x" },
+      {},
+    ];
+    for (const body of bad) expect((await app.request("/admin/seo/concorrentes", put(body))).status, JSON.stringify(body).slice(0, 60)).toBe(400);
+    expect(data.savedComps).toEqual([]);
+  });
+
+  test("endereço que resolve para IP interno é recusado", async () => {
+    const app = new Hono<Env>();
+    app.use(async (c, next) => {
+      c.set("user", user("super_admin"));
+      await next();
+    });
+    app.route("/", createSeoRoutes({ data, cronSecret: () => "x", resolve: async () => ["10.0.0.9"] }));
+    const res = await app.request("/admin/seo/concorrentes", put({ items: [{ name: "Interno", url: "https://parece-publico.com.br" }] }));
+    expect(res.status).toBe(400);
+    expect(data.savedComps).toEqual([]);
+  });
+
+  test("duelar roda e devolve o andamento; erros conhecidos viram 409; erro inesperado vira 500 genérico", async () => {
+    const { app } = appFor("super_admin");
+    expect(await (await app.request("/admin/seo/duelar", json({}))).json()).toEqual({ duelId: 1, status: "completa", done: 20, total: 20 });
+    data.duel.run = async () => {
+      throw new Error("Cadastre um concorrente primeiro");
+    };
+    expect((await app.request("/admin/seo/duelar", json({}))).status).toBe(409);
+    data.duel.run = async () => {
+      throw new Error("senha do banco: abc");
+    };
+    const original = console.error;
+    console.error = () => undefined;
+    try {
+      const res = await app.request("/admin/seo/duelar", json({}));
+      expect(res.status).toBe(500);
+      expect(JSON.stringify(await res.json())).not.toContain("senha");
+    } finally {
+      console.error = original;
+    }
+  });
+
+  test("cron do duelo exige o segredo", async () => {
+    expect((await appFor(null).app.request("/cron/seo-duelo")).status).toBe(401);
+    expect((await appFor(null).app.request("/cron/seo-duelo", { headers: { authorization: "Bearer segredo" } })).status).toBe(200);
+    expect(data.duelRuns).toBe(1);
+  });
+
+  test("o registro de alterações descreve as ações", async () => {
+    process.env.DATABASE_URL ??= "postgres://teste:teste@localhost:5432/teste";
+    const { describe: d } = await import("../../src/api/lib/audit");
+    expect(d("PUT", "/api/admin/seo/concorrentes", {})).toBe("Alterou os concorrentes do duelo");
+    expect(d("POST", "/api/admin/seo/duelar", {})).toBe("Rodou o duelo com concorrentes");
+  });
+});
+
 describe("dicas do dia", () => {
   test("devolve a data e as dicas", async () => {
     const res = await appFor("super_admin").app.request("/admin/seo/dicas");
@@ -530,6 +620,8 @@ describe("fiação", () => {
     const v = (await Bun.file(new URL("../../vercel.json", import.meta.url)).json()) as { crons: { path: string; schedule: string }[]; functions?: Record<string, { maxDuration?: number }> };
     expect(v.crons).toContainEqual({ path: "/api/cron/seo", schedule: "0 10 * * *" });
     expect(v.crons).toContainEqual({ path: "/api/cron/diario", schedule: "0 11 * * *" }); // o antigo continua
+    expect(v.crons).toContainEqual({ path: "/api/cron/seo-duelo", schedule: "0 11 * * 1" }); // duelo semanal: segunda, 08h de Brasília
+    expect(v.crons).toContainEqual({ path: "/api/cron/seo", schedule: "0 10 * * *" });
     expect(v.functions?.["api/index.ts"]?.maxDuration).toBeGreaterThanOrEqual(60);
   });
 });

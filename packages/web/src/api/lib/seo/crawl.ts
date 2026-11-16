@@ -27,7 +27,7 @@ export type FetchedPage = { status: number; html: string; finalUrl: string; hops
 /** Só HTML, XML, JSON e texto simples vêm com corpo (sitemap.xml e robots.txt também passam por aqui). */
 const TEXTUAL = /^(text\/|application\/(xml|xhtml\+xml|json)|[^;]*\+xml)/i;
 
-async function readCapped(res: Response): Promise<string> {
+export async function readCapped(res: Response): Promise<string> {
   const reader = res.body?.getReader();
   if (!reader) return "";
   const chunks: Uint8Array[] = [];

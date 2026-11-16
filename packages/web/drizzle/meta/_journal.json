@@ -127,6 +127,13 @@
       "when": 1794428828019,
       "tag": "0017_seo_auditor",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1794515572139,
+      "tag": "0018_seo_duelo",
+      "breakpoints": true
     }
   ]
 }

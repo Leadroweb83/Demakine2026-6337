@@ -316,3 +316,23 @@ export const seoIssues = pgTable(
   },
   (t) => [uniqueIndex("seo_issues_open_uniq").on(t.path, t.code).where(sql`${t.resolvedAt} is null`)],
 );
+
+/** Concorrentes do "Guerra é Guerra" (no máximo 2 ativos). `url` é só a origem, https://site.com.br. */
+export const seoCompetitors = pgTable("seo_competitors", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  url: text("url").notNull(),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Duelos: andamento (state, para retomar se a função estourar o tempo) e placar final (result). */
+export const seoDuels = pgTable("seo_duels", {
+  id: serial("id").primaryKey(),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull().defaultNow(),
+  finishedAt: timestamp("finished_at", { withTimezone: true }),
+  /** em-andamento | completa */
+  status: text("status").notNull().default("em-andamento"),
+  state: jsonb("state").notNull().default({}),
+  result: jsonb("result"),
+});
