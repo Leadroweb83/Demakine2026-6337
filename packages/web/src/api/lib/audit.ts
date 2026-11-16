@@ -87,6 +87,10 @@ export function describe(method: string, path: string, body: Record<string, unkn
   if (p === "/admin/seo/pagina") return typeof body.path === "string" && body.path ? `Editou o SEO da página ${body.path.slice(0, 100)}` : "Editou o SEO de uma página";
   if (p === "/admin/seo/concorrentes") return "Alterou os concorrentes do duelo";
   if (p === "/admin/seo/duelar") return "Rodou o duelo com concorrentes";
+  if (p === "/admin/seo/corrigir/propor") return "Propôs correções do duelo";
+  if (p === "/admin/seo/corrigir/aplicar") return `Aplicou correções do duelo: ${typeof body.metric === "string" ? body.metric.slice(0, 30) : "?"}, ${Array.isArray(body.items) ? body.items.length : 0} itens`;
+  if (p === "/admin/seo/corrigir/desfazer") return `Desfez o lote de correções #${typeof body.batchId === "number" ? body.batchId : "?"} do duelo`;
+  if (p === "/admin/seo/corrigir/prompt") return "Copiou o prompt do duelo";
   if (p === "/admin/seo/imagem-alt") return "Editou a descrição de uma foto de produto";
   if (p === "/admin/seo/links/verificar") return "Verificou os links do site";
   if (p === "/admin/seo/importar/testar") return "Testou uma lista de endereços antigos";

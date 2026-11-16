@@ -1,45 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { applyFixes, undoBatch, validateItem, type BatchItem, type FixBatch, type FixStore, type FixWriters } from "../../src/api/lib/seo/fix-apply";
+import { applyFixes, undoBatch, validateItem, type BatchItem } from "../../src/api/lib/seo/fix-apply";
 import type { FixItem, FixKind } from "../../src/api/lib/seo/fix-rules";
+import { memory } from "./helpers/fix-fakes";
 
 const item = (over: Partial<FixItem> = {}): FixItem => ({ id: "titulo:/a:", kind: "titulo", path: "/a", label: "A", field: "title", before: "Antigo", after: "Novo título da página A", ...over });
 
-function memory(opts: { busy?: boolean } = {}) {
-  const batches = new Map<number, FixBatch>();
-  let seq = 0;
-  const store: FixStore = {
-    async begin(userId, metric) {
-      if (opts.busy) return null;
-      const id = ++seq;
-      batches.set(id, { id, at: "2026-11-16T10:00:00.000Z", userId, metric, status: "aplicando", items: [] });
-      return { id };
-    },
-    async finish(id, items, status) {
-      const b = batches.get(id)!;
-      batches.set(id, { ...b, items, status });
-    },
-    async get(id) {
-      return batches.get(id) ?? null;
-    },
-    async list(limit) {
-      return [...batches.values()].reverse().slice(0, limit);
-    },
-  };
-  const values = new Map<string, string>();
-  const writes: { key: string; value: string; userId: string }[] = [];
-  const key = (i: Pick<FixItem, "path" | "field" | "target">) => `${i.path}|${i.field}|${i.target ?? ""}`;
-  const writers: FixWriters & { failOn?: string } = {
-    async current(i) {
-      return values.get(key(i)) ?? "";
-    },
-    async write(i, value, userId) {
-      if (writers.failOn === key(i)) throw new Error("banco fora do ar");
-      values.set(key(i), value);
-      writes.push({ key: key(i), value, userId });
-    },
-  };
-  return { store, writers, values, writes, batches, key };
-}
 const known = new Set(["/a", "/b", "/produtos/p"]);
 const deps = (m: ReturnType<typeof memory>, metric: FixKind = "titulo") => ({ store: m.store, writers: m.writers, userId: "u1", metric, knownPaths: known });
 
