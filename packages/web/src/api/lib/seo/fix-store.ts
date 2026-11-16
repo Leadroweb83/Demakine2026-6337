@@ -78,15 +78,21 @@ type WriterDeps = {
 
 const productSlug = (path: string) => /^\/produtos\/([a-z0-9-]+)$/.exec(path)?.[1];
 
-/** "Antes" e "depois" usam o mesmo critério da proposta (override primeiro, depois o que a auditoria leu). */
+/**
+ * "Antes" e "depois" usam o mesmo critério da proposta (override primeiro, depois o que a auditoria leu).
+ * Cada instância carrega as páginas UMA vez (a leitura é cara: todos os documentos do painel e a última auditoria) e
+ * atualiza o que gravou na própria cópia: um lote de 70 itens não pode custar 140 leituras. Crie uma instância por pedido.
+ */
 export function createFixWriters(deps: WriterDeps): FixWriters {
+  let cache: FixPage[] | null = null;
+  const pages = async () => (cache ??= await deps.pages());
   return {
     async current(item) {
       if (item.field === "alt") {
         const slug = productSlug(item.path);
         return slug && item.target ? deps.productAlt(slug, item.target) : "";
       }
-      const page = (await deps.pages()).find((p) => p.path === item.path);
+      const page = (await pages()).find((p) => p.path === item.path);
       if (!page) return "";
       const v = currentValue(page, item.field);
       return item.field === "ogImage" ? normalizeOgValue(v) : v;
@@ -98,12 +104,13 @@ export function createFixWriters(deps: WriterDeps): FixWriters {
         await deps.setImageAlt(slug, item.target, value, userId);
         return;
       }
-      const page = (await deps.pages()).find((p) => p.path === item.path);
+      const page = (await pages()).find((p) => p.path === item.path);
       if (!page) throw new Error("Página não encontrada");
       const doc: Record<string, unknown> = { ...page.overrides };
       if (value === "") delete doc[item.field];
       else doc[item.field] = value;
       await deps.savePageDoc(seoKey(item.path), toSeoDoc(doc), userId);
+      page.overrides = doc as FixPage["overrides"]; // a próxima leitura desta instância já enxerga o que foi gravado
     },
   };
 }

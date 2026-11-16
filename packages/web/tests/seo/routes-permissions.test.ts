@@ -80,7 +80,7 @@ function fakeData(): Fake {
     },
     docs: [],
     fixMem,
-    fix: { pages: async () => fixPages, store: fixMem.store, writers: fixMem.writers },
+    fix: { pages: async () => fixPages, store: fixMem.store, writers: () => fixMem.writers },
     savePageDoc: async (key, doc, userId) => void d.docs.push({ key, doc, userId }),
     history: async () => [{ date: "2026-11-10", site: 88 }],
     timeline: async () => [{ at: "2026-11-10T13:00:00.000Z", text: "Auditoria completa: nota 88" }],
@@ -650,6 +650,10 @@ describe("correções do duelo (Corrigir e Copiar prompt)", () => {
   test("propor devolve as páginas do grupo com antes e depois e recusa tipo inválido", async () => {
     const items = await proposed();
     expect(items.map((i) => [i.path, i.before])).toEqual([["/a", "Antigo"], ["/b", "B antigo"]]);
+    const body = (await (await post("/admin/seo/corrigir/propor", { metric: "titulo" })).json()) as { failing: number };
+    expect(body.failing).toBe(2);
+    const imgs = (await (await post("/admin/seo/corrigir/propor", { metric: "imagens" })).json()) as { items: unknown[]; failing: number };
+    expect(imgs).toEqual({ items: [], failing: 0 });
     expect(items[0]!.after).toBe("A | Demakine Equipamentos Agroindustriais");
     for (const metric of ["h1", "tamanho", "", 5, undefined]) expect((await post("/admin/seo/corrigir/propor", { metric })).status, String(metric)).toBe(400);
   });
@@ -693,7 +697,8 @@ describe("correções do duelo (Corrigir e Copiar prompt)", () => {
     const ok = await post("/admin/seo/corrigir/desfazer", { batchId: 1 });
     expect(ok.status).toBe(200);
     expect(await ok.json()).toEqual({ undone: 1, skipped: [] });
-    expect(data.fixMem.values.get("/a|title|")).toBe("Antigo");
+    // a página não tinha override: desfazer remove o campo que o painel criou (volta ao título do código)
+    expect(data.fixMem.values.get("/a|title|")).toBe("");
     expect((await post("/admin/seo/corrigir/desfazer", { batchId: 1 })).status).toBe(409);
     expect((await post("/admin/seo/corrigir/desfazer", { batchId: 99 })).status).toBe(404);
     for (const body of [{}, { batchId: "x" }, { batchId: 1.5 }, { batchId: 0 }, { batchId: 1, ids: "x" }]) expect((await post("/admin/seo/corrigir/desfazer", body)).status, JSON.stringify(body)).toBe(400);

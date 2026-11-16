@@ -142,3 +142,65 @@ describe("undoBatch", () => {
     await expect(undoBatch(1, undefined, ud(m))).rejects.toThrow("Lote já desfeito");
   });
 });
+
+describe("C1: tempo e progresso do lote", () => {
+  const many = (n: number) => Array.from({ length: n }, (_, i) => item({ id: `titulo:/p${i}:`, path: `/p${i}`, before: `Antigo ${i}`, after: `Título novo número ${i} da página` }));
+  const seeded = (n: number) => {
+    const m = memory();
+    for (let i = 0; i < n; i++) m.values.set(`/p${i}|title|`, `Antigo ${i}`);
+    return m;
+  };
+  const knownMany = new Set(Array.from({ length: 30 }, (_, i) => `/p${i}`));
+
+  test("o progresso é gravado a cada 5 itens, antes do fim (queda no meio não perde o registro)", async () => {
+    const m = seeded(8);
+    let writes = 0;
+    let snapshot: { n: number; status: string } | null = null;
+    const original = m.writers.write;
+    m.writers.write = async (i, v, u) => {
+      writes++;
+      if (writes === 6) snapshot = { n: m.batches.get(1)!.items.length, status: m.batches.get(1)!.status };
+      return original(i, v, u);
+    };
+    await applyFixes(many(8), { store: m.store, writers: m.writers, userId: "u1", metric: "titulo", knownPaths: knownMany });
+    expect(snapshot).toEqual({ n: 5, status: "aplicando" });
+    expect(m.batches.get(1)!.items).toHaveLength(8);
+  });
+
+  test("passou do orçamento de tempo: os itens que faltam são pulados com o motivo e o lote fecha parcial", async () => {
+    const m = seeded(5);
+    let t = 0;
+    const r = await applyFixes(many(5), { store: m.store, writers: m.writers, userId: "u1", metric: "titulo", knownPaths: knownMany, budgetMs: 25_000, now: () => (t += 10_000) });
+    expect(r.applied).toBe(2);
+    expect(r.skipped.map((s) => s.reason)).toEqual(["tempo esgotado, aplique de novo", "tempo esgotado, aplique de novo", "tempo esgotado, aplique de novo"]);
+    expect(m.batches.get(1)!.status).toBe("parcial");
+  });
+
+  test("o desfazer também respeita o orçamento: o que sobra fica gravado e o lote continua parcial", async () => {
+    const m = seeded(5);
+    await applyFixes(many(5), { store: m.store, writers: m.writers, userId: "u1", metric: "titulo", knownPaths: knownMany });
+    let t = 0;
+    const r = await undoBatch(1, undefined, { store: m.store, writers: m.writers, userId: "u2", budgetMs: 25_000, now: () => (t += 10_000) });
+    expect(r.undone).toBe(2);
+    expect(r.skipped.map((s) => s.reason)).toEqual(["tempo esgotado, desfaça de novo", "tempo esgotado, desfaça de novo", "tempo esgotado, desfaça de novo"]);
+    expect(m.batches.get(1)!.status).toBe("parcial");
+  });
+});
+
+describe("I3: desfazer devolve o estado de antes, sem criar override", () => {
+  test("sem override antes: o desfazer remove o campo (grava vazio) em vez de fixar o texto lido na auditoria", async () => {
+    const m = memory();
+    m.values.set("/a|title|", "Título do código");
+    await applyFixes([item({ before: "Título do código", hadOverride: false })], deps(m));
+    await undoBatch(1, undefined, { store: m.store, writers: m.writers, userId: "u2" });
+    expect(m.writes.at(-1)).toEqual({ key: "/a|title|", value: "", userId: "u2" });
+  });
+
+  test("com override antes: o desfazer devolve o texto de antes", async () => {
+    const m = memory();
+    m.values.set("/a|title|", "Texto do painel");
+    await applyFixes([item({ before: "Texto do painel", hadOverride: true })], deps(m));
+    await undoBatch(1, undefined, { store: m.store, writers: m.writers, userId: "u2" });
+    expect(m.writes.at(-1)).toEqual({ key: "/a|title|", value: "Texto do painel", userId: "u2" });
+  });
+});

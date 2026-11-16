@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { buildProposals, clean, currentValue, FIX_KINDS, proposeAlt, proposeDescription, proposeTitle, type FixPage } from "../../src/api/lib/seo/fix-rules";
+import { buildProposals, clean, countFailing, currentValue, FIX_KINDS, proposeAlt, proposeDescription, proposeTitle, type FixPage } from "../../src/api/lib/seo/fix-rules";
 import type { Check } from "../../src/api/lib/seo/score";
 import type { SiteArea } from "../../src/api/lib/seo/types";
 import { perfectFacts } from "./helpers/facts";
@@ -149,26 +149,86 @@ describe("buildProposals: imagens", () => {
 });
 
 describe("buildProposals: compartilhamento", () => {
-  const own = "https://www.demakine.com.br/img/produtos/a/1.webp";
+  const own = "https://www.demakine.com.br/img/produtos/esteira-dalla/1.webp";
+  const logo = "https://www.demakine.com.br/img/site/logo.webp";
+  const prod = (over: Partial<FixPage> = {}) => page({ checks: [check("compartilhamento")], ...over });
 
-  test("sem imagem de compartilhamento, usa o caminho da primeira foto do próprio site", () => {
-    const items = buildProposals("compartilhamento", [
-      page({ facts: perfectFacts({ og: {}, images: [{ src: "https://cdn.outro.com/x.jpg", alt: "x" }, { src: own, alt: "a" }] }), checks: [check("compartilhamento")] }),
-    ]);
+  test("sem imagem de compartilhamento, usa a primeira foto do próprio produto (nunca o logo do cabeçalho)", () => {
+    const items = buildProposals("compartilhamento", [prod({ facts: perfectFacts({ og: {}, images: [{ src: logo, alt: "logo" }, { src: own, alt: "a" }] }) })]);
     expect(items).toHaveLength(1);
-    expect(items[0]).toMatchObject({ kind: "compartilhamento", field: "ogImage", before: "", after: "/img/produtos/a/1.webp" });
+    expect(items[0]).toMatchObject({ kind: "compartilhamento", field: "ogImage", before: "", after: "/img/produtos/esteira-dalla/1.webp", hadOverride: false });
   });
 
   test("não propõe quando já há imagem no override ou na página", () => {
-    expect(buildProposals("compartilhamento", [page({ overrides: { ogImage: "/x.webp" }, facts: perfectFacts({ og: {}, images: [{ src: own, alt: "a" }] }), checks: [check("compartilhamento")] })])).toEqual([]);
-    expect(buildProposals("compartilhamento", [page({ facts: perfectFacts({ og: { image: "https://www.demakine.com.br/og.jpg" }, images: [{ src: own, alt: "a" }] }), checks: [check("compartilhamento")] })])).toEqual([]);
+    expect(buildProposals("compartilhamento", [prod({ overrides: { ogImage: "/x.webp" }, facts: perfectFacts({ og: {}, images: [{ src: own, alt: "a" }] }) })])).toEqual([]);
+    expect(buildProposals("compartilhamento", [prod({ facts: perfectFacts({ og: { image: "https://www.demakine.com.br/og.jpg" }, images: [{ src: own, alt: "a" }] }) })])).toEqual([]);
   });
 
-  test("sem foto do próprio site, nenhum item", () => {
-    expect(buildProposals("compartilhamento", [page({ facts: perfectFacts({ og: {}, images: [{ src: "https://cdn.outro.com/x.jpg", alt: "x" }] }), checks: [check("compartilhamento")] })])).toEqual([]);
+  test("sem foto do próprio produto, ou fora de página de produto, nenhum item", () => {
+    expect(buildProposals("compartilhamento", [prod({ facts: perfectFacts({ og: {}, images: [{ src: logo, alt: "logo" }, { src: "https://cdn.outro.com/x.jpg", alt: "x" }] }) })])).toEqual([]);
+    expect(buildProposals("compartilhamento", [prod({ path: "/blog/post", area: "blog", facts: perfectFacts({ og: {}, images: [{ src: own, alt: "a" }] }) })])).toEqual([]);
   });
 });
 
 test("FIX_KINDS lista os quatro tipos corrigíveis", () => {
   expect([...FIX_KINDS]).toEqual(["titulo", "descricao", "compartilhamento", "imagens"]);
+});
+
+describe("I1: proposta parte do texto que já existe, não do rótulo do menu", () => {
+  test("título longo é encurtado por palavra e sem preposição pendurada no fim", () => {
+    expect(proposeTitle("Blog", "Como escolher a esteira transportadora ideal para a sua empresa e indústria")).toBe("Como escolher a esteira transportadora ideal");
+    const t = proposeTitle("Home", "Demakine | Esteiras Transportadoras, Roscas e Elevadores Sob Medida em Limeira/SP");
+    expect(t.length).toBeLessThanOrEqual(60);
+    expect(t.startsWith("Demakine | Esteiras Transportadoras, Roscas")).toBe(true);
+    expect(t).not.toMatch(/\s(de|da|do|em|para|e|a|o|com|sua|seu)$/i);
+  });
+
+  test("título curto, mas com sentido, ganha a marca; quem já tem a marca ganha a cidade", () => {
+    expect(proposeTitle("Roletes", "Esteira de roletes livres")).toBe("Esteira de roletes livres | Demakine");
+    expect(proposeTitle("Rosca", "Demakine Rosca Chupim")).toBe("Demakine Rosca Chupim em Limeira/SP");
+  });
+
+  test("título atual muito curto (menos de 15 caracteres) cai no rótulo", () => {
+    expect(proposeTitle("Esteira Dalla", "T")).toBe(proposeTitle("Esteira Dalla"));
+  });
+
+  test("descrição longa é cortada na última frase inteira que cabe; curta ganha o convite", () => {
+    const long = "Fabricamos esteiras transportadoras sob medida para a indústria e o agronegócio. Projeto próprio, fabricação em Limeira/SP, entrega em todo o Brasil e assistência técnica com peças originais para todas as linhas de equipamentos.";
+    expect(proposeDescription("Home", "institucional", long)).toBe("Fabricamos esteiras transportadoras sob medida para a indústria e o agronegócio.");
+    const short = proposeDescription("X", "produtos", "Esteiras transportadoras sob medida em Limeira/SP.");
+    expect(short).toBe("Esteiras transportadoras sob medida em Limeira/SP. Peça seu orçamento com a Demakine.");
+    expect(proposeDescription("Esteira Dalla", "produtos", "curta")).toBe(proposeDescription("Esteira Dalla", "produtos"));
+  });
+
+  test("a descrição do blog não chama todo post de guia", () => {
+    expect(proposeDescription("Demakine na Agrishow 2026", "blog")).not.toContain("guia prático");
+  });
+
+  test("buildProposals usa o título atual e marca se havia override", () => {
+    const longTitle = "Como escolher a esteira transportadora ideal para a sua empresa e indústria";
+    const [fromCode] = buildProposals("titulo", [page({ facts: perfectFacts({ title: longTitle }), checks: [check("titulo")] })]);
+    expect(fromCode).toMatchObject({ before: longTitle, after: "Como escolher a esteira transportadora ideal", hadOverride: false });
+    const [fromPanel] = buildProposals("titulo", [page({ overrides: { title: longTitle }, facts: perfectFacts({ title: longTitle }), checks: [check("titulo")] })]);
+    expect(fromPanel).toMatchObject({ hadOverride: true });
+  });
+
+  test("a home e as páginas técnicas ficam fora das propostas de título e descrição", () => {
+    const pages = [page({ path: "/", checks: [check("titulo"), check("descricao")] }), page({ path: "/obrigado", area: "tecnica", checks: [check("titulo"), check("descricao")] })];
+    expect(buildProposals("titulo", pages)).toEqual([]);
+    expect(buildProposals("descricao", pages)).toEqual([]);
+  });
+});
+
+describe("I2: contar páginas com o problema, mesmo sem proposta", () => {
+  test("countFailing conta só página pt auditada com o item falhando", () => {
+    const pages = [
+      page({ path: "/a", checks: [check("imagens")] }),
+      page({ path: "/b", checks: [check("imagens")] }),
+      page({ path: "/c", lang: "en", checks: [check("imagens")] }),
+      page({ path: "/d", facts: null, checks: [check("imagens")] }),
+      page({ path: "/e", checks: [check("imagens", { ok: true })] }),
+    ];
+    expect(countFailing("imagens", pages)).toBe(2);
+    expect(buildProposals("imagens", pages)).toEqual([]);
+  });
 });

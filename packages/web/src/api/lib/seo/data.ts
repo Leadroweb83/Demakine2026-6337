@@ -63,23 +63,24 @@ async function fixPages(): Promise<FixPage[]> {
   return pages.map((p) => ({ path: p.path, label: p.label, lang: p.lang, area: p.area, overrides: p.overrides, facts: byPath.get(p.path)?.facts ?? null, checks: byPath.get(p.path)?.checks ?? [] }));
 }
 
-let fixCache: SeoData["fix"] | undefined;
-/** Monta uma vez; usa savePageDoc e setImageAlt do próprio dbSeoData, então só é chamado depois dele existir. */
+let fixStoreCache: ReturnType<typeof createFixStore> | undefined;
+/** Loja única; os escritores são novos a cada pedido (cada um guarda as páginas carregadas). Só roda depois de dbSeoData existir. */
 function fixData(): SeoData["fix"] {
-  fixCache ??= {
+  fixStoreCache ??= createFixStore(db);
+  return {
     pages: fixPages,
-    store: createFixStore(db),
-    writers: createFixWriters({
-      pages: fixPages,
-      savePageDoc: (key, doc, userId) => dbSeoData.savePageDoc(key, doc, userId),
-      setImageAlt: (slug, src, alt, userId) => dbSeoData.setImageAlt(slug, src, alt, userId),
-      productAlt: async (slug, src) => {
-        const { code, doc, key } = await productImage(slug, src);
-        return key ? currentAlt(doc, code?.imageAlts, key) : "";
-      },
-    }),
+    store: fixStoreCache,
+    writers: () =>
+      createFixWriters({
+        pages: fixPages,
+        savePageDoc: (key, doc, userId) => dbSeoData.savePageDoc(key, doc, userId),
+        setImageAlt: (slug, src, alt, userId) => dbSeoData.setImageAlt(slug, src, alt, userId),
+        productAlt: async (slug, src) => {
+          const { code, doc, key } = await productImage(slug, src);
+          return key ? currentAlt(doc, code?.imageAlts, key) : "";
+        },
+      }),
   };
-  return fixCache;
 }
 
 export const dbSeoData: SeoData = {

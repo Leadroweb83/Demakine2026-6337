@@ -51,7 +51,8 @@ export function FixReview({ metric, title, explanation, onClose }: { metric: Fix
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => heading.current?.focus(), []);
 
-  const items = q.data ?? [];
+  const items = q.data?.items ?? [];
+  const failing = q.data?.failing ?? 0;
   const valueOf = (i: FixItemRow) => text[i.id] ?? i.after;
   const chosen = items.filter((i) => !off.has(i.id)).map((i) => ({ ...i, after: valueOf(i).trim() }));
   const label = (id: string) => items.find((i) => i.id === id)?.label ?? id;
@@ -64,7 +65,18 @@ export function FixReview({ metric, title, explanation, onClose }: { metric: Fix
 
       {q.isPending && <p className="mt-3 text-[13px] text-dm-ink/55">Montando as propostas...</p>}
       {q.isError && <p className="mt-3 text-[13px] font-semibold text-dm-red" role="alert">{q.error.message}</p>}
-      {q.isSuccess && items.length === 0 && !done && <p className="mt-3 text-[13px] text-dm-ink/65">Nada para corrigir neste item. A auditoria mais recente não achou página com esse problema.</p>}
+      {q.isSuccess && items.length === 0 && !done && failing === 0 && <p className="mt-3 text-[13px] text-dm-ink/65">Nada para corrigir neste item. A auditoria mais recente não achou página com esse problema.</p>}
+      {q.isSuccess && items.length === 0 && !done && failing > 0 && (
+        <div className="mt-3">
+          <p className="max-w-3xl text-[13px] leading-relaxed text-dm-ink/75">
+            {failing} {failing === 1 ? "página tem" : "páginas têm"} esse problema, mas a correção é no código do site e não dá para fazer pelo painel (por exemplo, imagens do tema, como logo e ícones). Copie o prompt e cole no Claude.
+          </p>
+          <PromptButton metric={metric} />
+          <div className="mt-3">
+            <Btn tone="ghost" onClick={onClose}>Fechar</Btn>
+          </div>
+        </div>
+      )}
 
       {!done && items.length > 0 && (
         <>

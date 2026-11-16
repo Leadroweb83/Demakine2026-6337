@@ -14,7 +14,7 @@ import type { LinkReport } from "./lib/seo/links";
 import type { Tip } from "./lib/seo/tips-library";
 import { assertPublicUrl } from "./lib/seo/crawl-external";
 import { applyFixes, MAX_ITEMS, undoBatch, type FixStore, type FixWriters } from "./lib/seo/fix-apply";
-import { buildProposals, FIX_KINDS, type FixItem, type FixKind, type FixPage } from "./lib/seo/fix-rules";
+import { buildProposals, countFailing, FIX_KINDS, type FixItem, type FixKind, type FixPage } from "./lib/seo/fix-rules";
 import { buildPromptPack, packToJson } from "./lib/seo/fix-prompt";
 import { METRICS, type MetricId } from "./lib/seo/duel-metrics";
 import type { DuelResult } from "./lib/seo/run-duel";
@@ -54,7 +54,7 @@ export interface SeoData {
     create(items: { from: string; to: string }[], userId: string): Promise<{ created: number; skipped: { from: string; reason: string }[] }>;
   };
   /** correções do duelo: páginas com a auditoria mais recente, lotes e escritores (título, descrição, imagem, alt) */
-  fix: { pages(): Promise<FixPage[]>; store: FixStore; writers: FixWriters };
+  fix: { pages(): Promise<FixPage[]>; store: FixStore; /** uma instância nova por pedido: ela guarda as páginas carregadas */ writers(): FixWriters };
   resetRules(): Promise<void>;
   audit(opts: AuditOptions): Promise<AuditResult>;
   /** roda quando uma auditoria DIÁRIA fecha (escolhe as dicas do dia) */
@@ -87,7 +87,8 @@ const isFixItem = (v: unknown): v is FixItem => {
     typeof o.field === "string" && FIELDS.includes(o.field) &&
     (o.target === undefined || (typeof o.target === "string" && o.target.length <= 500)) &&
     typeof o.before === "string" && o.before.length <= 2000 &&
-    typeof o.after === "string" && o.after.length <= 2000
+    typeof o.after === "string" && o.after.length <= 2000 &&
+    (o.hadOverride === undefined || typeof o.hadOverride === "boolean")
   );
 };
 const logFixError = (id: string, err: unknown) => console.error("[seo] correção falhou", id, err);
@@ -371,7 +372,11 @@ export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string
         if (!isFixKind(metric)) return c.json({ error: "Tipo de correção inválido" }, 400);
         return { metric };
       }),
-      async (c) => c.json({ items: buildProposals(c.req.valid("json").metric, await data.fix.pages()) }, 200),
+      async (c) => {
+        const { metric } = c.req.valid("json");
+        const pages = await data.fix.pages();
+        return c.json({ items: buildProposals(metric, pages), failing: countFailing(metric, pages) }, 200);
+      },
     )
 
     .post(
@@ -389,7 +394,7 @@ export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string
         const { metric, items } = c.req.valid("json");
         try {
           const known = new Set((await data.fix.pages()).map((p) => p.path));
-          return c.json(await applyFixes(items, { store: data.fix.store, writers: data.fix.writers, userId: (c.get("user") as SessionUser).id, metric, knownPaths: known, onError: logFixError }), 200);
+          return c.json(await applyFixes(items, { store: data.fix.store, writers: data.fix.writers(), userId: (c.get("user") as SessionUser).id, metric, knownPaths: known, onError: logFixError }), 200);
         } catch (err) {
           const msg = err instanceof Error ? err.message : "";
           if (msg === "Já existe uma aplicação em andamento") return c.json({ error: msg }, 409);
@@ -413,7 +418,7 @@ export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string
       async (c) => {
         const { batchId, ids } = c.req.valid("json");
         try {
-          return c.json(await undoBatch(batchId, ids, { store: data.fix.store, writers: data.fix.writers, userId: (c.get("user") as SessionUser).id, onError: logFixError }), 200);
+          return c.json(await undoBatch(batchId, ids, { store: data.fix.store, writers: data.fix.writers(), userId: (c.get("user") as SessionUser).id, onError: logFixError }), 200);
         } catch (err) {
           const msg = err instanceof Error ? err.message : "";
           if (msg === "Lote não encontrado") return c.json({ error: msg }, 404);

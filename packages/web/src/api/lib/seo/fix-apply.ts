@@ -26,6 +26,10 @@ export interface FixWriters {
 }
 
 export const MAX_ITEMS = 200;
+/** A função da Vercel vive 60 s: o lote para antes disso e deixa o que falta para outra rodada. */
+const DEFAULT_BUDGET_MS = 40_000;
+/** Grava o progresso a cada N itens: se a função cair no meio, o lote já tem o que desfazer. */
+const PROGRESS_EVERY = 5;
 const FIELD_OF: Record<FixKind, FixField> = { titulo: "title", descricao: "description", compartilhamento: "ogImage", imagens: "alt" };
 const LIMIT: Partial<Record<FixField, [number, string]>> = { title: [120, "título"], description: [320, "descrição"], alt: [150, "alt"] };
 
@@ -44,7 +48,7 @@ export function validateItem(item: FixItem): string | null {
   return null;
 }
 
-type ApplyDeps = { store: FixStore; writers: FixWriters; userId: string; metric: FixKind; knownPaths: Set<string>; onError?: (id: string, err: unknown) => void };
+type ApplyDeps = { store: FixStore; writers: FixWriters; userId: string; metric: FixKind; knownPaths: Set<string>; onError?: (id: string, err: unknown) => void; budgetMs?: number; now?: () => number };
 
 export async function applyFixes(items: FixItem[], deps: ApplyDeps): Promise<{ batchId: number; applied: number; skipped: { id: string; reason: string }[] }> {
   if (items.length === 0) throw new Error("Nenhum item marcado");
@@ -58,8 +62,16 @@ export async function applyFixes(items: FixItem[], deps: ApplyDeps): Promise<{ b
     done.push({ ...it, result: "pulado", reason });
     skipped.push({ id: it.id, reason });
   };
+  const now = deps.now ?? Date.now;
+  const started = now();
+  const budget = deps.budgetMs ?? DEFAULT_BUDGET_MS;
+  let processed = 0;
   try {
     for (const it of items) {
+      if (now() - started > budget) {
+        skip(it, "tempo esgotado, aplique de novo");
+        continue;
+      }
       if (it.kind !== deps.metric) skip(it, "tipo diferente do lote");
       else if (validateItem(it)) skip(it, validateItem(it)!);
       else if (!deps.knownPaths.has(it.path)) skip(it, "página não encontrada");
@@ -73,6 +85,7 @@ export async function applyFixes(items: FixItem[], deps: ApplyDeps): Promise<{ b
           skip(it, "não foi possível gravar");
         }
       }
+      if (++processed % PROGRESS_EVERY === 0) await deps.store.finish(slot.id, done, "aplicando");
     }
   } finally {
     const applied = done.filter((i) => i.result === "gravado").length;
@@ -81,7 +94,7 @@ export async function applyFixes(items: FixItem[], deps: ApplyDeps): Promise<{ b
   return { batchId: slot.id, applied: done.filter((i) => i.result === "gravado").length, skipped };
 }
 
-type UndoDeps = { store: FixStore; writers: FixWriters; userId: string; onError?: (id: string, err: unknown) => void };
+type UndoDeps = { store: FixStore; writers: FixWriters; userId: string; onError?: (id: string, err: unknown) => void; budgetMs?: number; now?: () => number };
 
 export async function undoBatch(batchId: number, ids: string[] | undefined, deps: UndoDeps): Promise<{ undone: number; skipped: { id: string; reason: string }[] }> {
   const batch = await deps.store.get(batchId);
@@ -93,8 +106,16 @@ export async function undoBatch(batchId: number, ids: string[] | undefined, deps
   const skipped: { id: string; reason: string }[] = [];
   const items: BatchItem[] = [];
   let undone = 0;
+  const now = deps.now ?? Date.now;
+  const started = now();
+  const budget = deps.budgetMs ?? DEFAULT_BUDGET_MS;
   for (const it of batch.items) {
     if (it.result !== "gravado" || (only && !only.has(it.id))) {
+      items.push(it);
+      continue;
+    }
+    if (now() - started > budget) {
+      skipped.push({ id: it.id, reason: "tempo esgotado, desfaça de novo" });
       items.push(it);
       continue;
     }
@@ -104,7 +125,8 @@ export async function undoBatch(batchId: number, ids: string[] | undefined, deps
       continue;
     }
     try {
-      await deps.writers.write(it, it.before, deps.userId);
+      // sem override antes: remove o campo, em vez de fixar o texto que a auditoria leu do código
+      await deps.writers.write(it, it.hadOverride === false ? "" : it.before, deps.userId);
       items.push({ ...it, result: "desfeito" });
       undone++;
     } catch (err) {

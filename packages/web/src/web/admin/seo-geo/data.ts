@@ -342,7 +342,7 @@ export function useProposals(metric: Fixable) {
     queryFn: async () => {
       const res = await api.admin.seo.corrigir.propor.$post({ json: { metric } });
       if (!res.ok) throw new Error(await errorOf(res, "Não foi possível montar as propostas."));
-      return ((await res.json()) as unknown as { items: FixItemRow[] }).items;
+      return (await res.json()) as unknown as { items: FixItemRow[]; failing: number };
     },
   });
 }

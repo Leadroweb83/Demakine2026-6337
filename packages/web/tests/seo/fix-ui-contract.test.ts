@@ -25,6 +25,8 @@ describe("contrato do botão Corrigir no painel", () => {
     expect(review).toContain("Corrigir");
     expect(review).toContain("Copiar prompt");
     expect(review).toContain("Desfazer");
+    expect(review).toContain("a correção é no código");
+    expect(review).toMatch(/failing > 0[\s\S]*<PromptButton/);
   });
 });
 
