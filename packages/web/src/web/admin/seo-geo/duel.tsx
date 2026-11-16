@@ -119,7 +119,7 @@ function Result({ r, go }: { r: DuelResultRow; go: PanelProps["go"] }) {
                   <h3 className="text-[14px] font-extrabold text-dm-ink">{a.title}</h3>
                   <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10.5px] font-bold text-amber-900">{EFFORT[a.effort]}</span>
                 </div>
-                <p className="mt-1 text-[13px] leading-relaxed text-dm-ink/70">{a.how}</p>
+                {fixing !== a.metric && <p className="mt-1 text-[13px] leading-relaxed text-dm-ink/70">{a.how}</p>}
                 {actionKind(a.metric) === "corrigir" ? (
                   fixing === a.metric ? (
                     <FixReview metric={a.metric as Fixable} title={a.title} explanation={a.how} onClose={() => setFixing(null)} />
