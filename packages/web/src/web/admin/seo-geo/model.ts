@@ -104,3 +104,25 @@ export const ITEM_HINTS: Record<string, string> = {
   compartilhamento: "A prévia do link no WhatsApp e nas redes.",
   velocidade: "Rapidez de carregamento. Ainda não é medida: enquanto isso, esses pontos se dividem entre os outros itens.",
 };
+
+/** Métricas do duelo que o botão "Corrigir" resolve pelo painel. Espelha FIX_KINDS da API (há teste de igualdade). */
+export const FIXABLE = ["titulo", "descricao", "compartilhamento", "imagens"] as const;
+export type Fixable = (typeof FIXABLE)[number];
+
+/** Corrigir quando o painel grava sozinho; Copiar prompt para o que pede página nova, post ou ajuste no código. */
+export const actionKind = (metric: string): "corrigir" | "prompt" => ((FIXABLE as readonly string[]).includes(metric) ? "corrigir" : "prompt");
+
+const BAND: Record<"title" | "description" | "alt" | "ogImage", { min: number; max: number }> = {
+  title: { min: 30, max: 60 },
+  description: { min: 70, max: 155 },
+  alt: { min: 1, max: 150 },
+  ogImage: { min: 1, max: 500 },
+};
+
+/** Estado do contador de caracteres do texto proposto: dentro da faixa recomendada, curto ou longo. */
+export function lengthState(field: keyof typeof BAND, text: string): "ok" | "curto" | "longo" {
+  const n = text.trim().length;
+  return n < BAND[field].min ? "curto" : n > BAND[field].max ? "longo" : "ok";
+}
+
+export const bandText = (field: keyof typeof BAND): string => (field === "ogImage" ? "" : field === "alt" ? "até 150 caracteres" : `${BAND[field].min} a ${BAND[field].max} caracteres`);
