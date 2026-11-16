@@ -22,6 +22,9 @@ export const METRIC_LABELS: Record<MetricId, string> = {
 
 export type SiteMetrics = { pages: number; samples: number; scores: Partial<Record<MetricId, number>> };
 
+/** Tipos distintos de JSON-LD por página que valem nota máxima em "Dados estruturados". */
+export const SCHEMA_TYPES_TARGET = 3;
+
 const clamp = (n: number) => Math.max(0, Math.min(100, n));
 function lengthScore(text: string | null, min: number, max: number): number {
   if (!text) return 0;
@@ -38,7 +41,7 @@ function pageScores(f: PageFacts): Partial<Record<MetricId, number>> {
     h1: filled === 1 ? 100 : filled === 0 ? 0 : 50,
     conteudo: clamp((f.words / 300) * 100),
     ...(imgs.length ? { imagens: (imgs.filter((i) => (i.alt ?? "").trim()).length / imgs.length) * 100 } : {}),
-    schema: clamp((f.jsonLdTypes.length / 3) * 100),
+    schema: clamp((f.jsonLdTypes.length / SCHEMA_TYPES_TARGET) * 100),
     idiomas: clamp((new Set(f.hreflangs.map((h) => h.lang.toLowerCase())).size / 3) * 100),
     compartilhamento: ([f.og.title, f.og.description, f.og.image].filter(Boolean).length / 3) * 100,
   };

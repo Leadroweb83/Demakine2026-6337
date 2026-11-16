@@ -1,8 +1,11 @@
 /** "O que fazer para ganhar": transforma as derrotas do duelo em ações, das maiores diferenças para as menores. */
-import { METRIC_LABELS, type MetricId, type Verdict } from "./duel-metrics";
+import { METRIC_LABELS, SCHEMA_TYPES_TARGET, type MetricId, type Verdict } from "./duel-metrics";
 import type { Check } from "./score";
 
 export type DuelAction = { metric: MetricId; competitor: string; gap: number; effort: "baixo" | "medio" | "alto"; title: string; how: string; pages: { path: string; label: string }[] };
+/** Página da Demakine no duelo. `schemaTypes`: quantos tipos distintos de JSON-LD ela já emite (quando o duelo guarda isso). */
+export type OurPage = { path: string; label: string; checks: Check[]; schemaTypes?: number };
+const MAX_PAGES = 5;
 
 const EFFORT: Record<MetricId, DuelAction["effort"]> = {
   titulo: "baixo", descricao: "baixo", h1: "baixo", imagens: "baixo", compartilhamento: "baixo",
@@ -19,13 +22,32 @@ const HOW: Record<MetricId, (rival: string) => string> = {
   schema: (r) => `${r} usa mais tipos de dados estruturados. Confira a aba Dados estruturados e complete o que falta (Product, FAQ, trilha).`,
   idiomas: (r) => `${r} liga mais versões de idioma. Complete o hreflang e traduza título e descrição das páginas.`,
   compartilhamento: (r) => `${r} cuida melhor da prévia do link no WhatsApp. Preencha título, descrição e imagem de compartilhamento.`,
-  tamanho: (r) => `${r} tem mais páginas indexáveis. Planeje novas páginas de segmento, aplicação e dúvidas, com a ajuda do mapa de conteúdo.`,
+  tamanho: (r) => `${r} tem mais páginas indexáveis. Planeje novas páginas de segmento, aplicação e dúvidas que tenham busca real, sem repetir assunto que o site já cobre.`,
   blog: (r) => `${r} publica mais no blog. Combine um ritmo fixo de posts úteis, com um produto linkado em cada um.`,
 };
 
 const CHECK_OF: Partial<Record<MetricId, Check["item"]>> = { titulo: "titulo", descricao: "descricao", h1: "h1", conteudo: "conteudo", imagens: "imagens", schema: "schema", idiomas: "idiomas", compartilhamento: "compartilhamento" };
 
-export function actionsFor(verdicts: Record<string, Verdict[]>, ourPages: { path: string; label: string; checks: Check[] }[]): DuelAction[] {
+/** Páginas que a ação deve apontar: as piores no item da auditoria; em dados estruturados, as com menos de 3 tipos (a nota do duelo conta tipos, não o que a auditoria espera). */
+function targetPages(metric: MetricId, ourPages: OurPage[]): { path: string; label: string }[] {
+  if (metric === "schema" && ourPages.some((p) => p.schemaTypes !== undefined)) {
+    return ourPages
+      .filter((p) => (p.schemaTypes ?? SCHEMA_TYPES_TARGET) < SCHEMA_TYPES_TARGET)
+      .sort((a, b) => (a.schemaTypes ?? 0) - (b.schemaTypes ?? 0))
+      .slice(0, MAX_PAGES)
+      .map((p) => ({ path: p.path, label: p.label }));
+  }
+  const item = CHECK_OF[metric];
+  if (!item) return [];
+  return ourPages
+    .map((p) => ({ p, c: p.checks.find((c) => c.item === item) }))
+    .filter((x) => x.c && !x.c.ok && !x.c.skipped)
+    .sort((a, b) => a.c!.points / (a.c!.max || 1) - b.c!.points / (b.c!.max || 1))
+    .slice(0, MAX_PAGES)
+    .map((x) => ({ path: x.p.path, label: x.p.label }));
+}
+
+export function actionsFor(verdicts: Record<string, Verdict[]>, ourPages: OurPage[]): DuelAction[] {
   const best = new Map<MetricId, { competitor: string; gap: number }>();
   for (const [competitor, list] of Object.entries(verdicts)) {
     for (const x of list) {
@@ -36,16 +58,7 @@ export function actionsFor(verdicts: Record<string, Verdict[]>, ourPages: { path
   }
   const out: DuelAction[] = [];
   for (const [metric, { competitor, gap }] of best) {
-    const item = CHECK_OF[metric];
-    const pages = item
-      ? ourPages
-          .map((p) => ({ p, c: p.checks.find((c) => c.item === item) }))
-          .filter((x) => x.c && !x.c.ok && !x.c.skipped)
-          .sort((a, b) => a.c!.points / (a.c!.max || 1) - b.c!.points / (b.c!.max || 1))
-          .slice(0, 5)
-          .map((x) => ({ path: x.p.path, label: x.p.label }))
-      : [];
-    out.push({ metric, competitor, gap, effort: EFFORT[metric], title: `Passar ${competitor} em ${METRIC_LABELS[metric].toLowerCase()}`, how: HOW[metric](competitor), pages });
+    out.push({ metric, competitor, gap, effort: EFFORT[metric], title: `Passar ${competitor} em ${METRIC_LABELS[metric].toLowerCase()}`, how: HOW[metric](competitor), pages: targetPages(metric, ourPages) });
   }
   return out.sort((a, b) => b.gap - a.gap || RANK[a.effort] - RANK[b.effort]);
 }
