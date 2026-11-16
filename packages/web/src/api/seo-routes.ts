@@ -12,7 +12,7 @@ import { seoKey } from "../web/lib/seo-pages";
 import type { Issue } from "./lib/seo/issues";
 import type { LinkReport } from "./lib/seo/links";
 import type { Tip } from "./lib/seo/tips-library";
-import { assertPublicUrl } from "./lib/seo/crawl-external";
+import { assertPublicUrl, normalizeCompetitorUrl } from "./lib/seo/crawl-external";
 import type { DuelResult } from "./lib/seo/run-duel";
 import { imageIssues } from "./lib/seo/images";
 import { checkSchema } from "./lib/seo/schema-check";
@@ -238,10 +238,10 @@ export function createSeoRoutes(deps: { data: SeoData; cronSecret?: () => string
         for (const i of items) {
           if (!i.name || i.name.length > 60) return c.json({ error: "O nome do concorrente precisa ter de 1 a 60 caracteres" }, 400);
           try {
-            const u = await assertPublicUrl(i.url, deps.resolve);
+            const u = await assertPublicUrl(normalizeCompetitorUrl(i.url), deps.resolve);
             clean.push({ name: i.name, url: u.origin });
           } catch {
-            return c.json({ error: `Endereço não permitido: use o site público do concorrente, em https (${i.name})` }, 400);
+            return c.json({ error: `Endereço não permitido: use o site público do concorrente, como www.exemplo.com.br (${i.name}). Só vale site em https, que abre na internet e não está só na rede interna.` }, 400);
           }
         }
         if (new Set(clean.map((x) => x.url.replace("://www.", "://"))).size !== clean.length) return c.json({ error: "Os dois concorrentes são o mesmo site" }, 400);

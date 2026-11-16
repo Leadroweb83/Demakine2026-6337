@@ -54,6 +54,15 @@ export function isPublicIp(input: string): boolean {
 type Resolver = (host: string) => Promise<string[]>;
 const defaultResolve: Resolver = async (host) => (await lookup(host, { all: true })).map((a) => a.address);
 
+/**
+ * Endereço digitado no painel sem esquema ("antigo.demakine.com.br") ganha o "https://". Quem já traz esquema
+ * (inclusive http://) ou "//" não é mexido: quem decide é o assertPublicUrl, que só aceita https.
+ */
+export function normalizeCompetitorUrl(input: string): string {
+  const s = input.trim();
+  return /^[a-z][a-z0-9+.-]*:/i.test(s) || s.startsWith("//") || s === "" ? s : `https://${s}`;
+}
+
 /** Devolve a URL se for um site público em https; lança "Endereço não permitido" para qualquer outra coisa. */
 export async function assertPublicUrl(url: string, resolve: Resolver = defaultResolve): Promise<URL> {
   let u: URL;
