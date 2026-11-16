@@ -177,7 +177,7 @@ Lighthouse SEO 100.
 Domínio definitivo: https://audacegalvanica.com.br (www redireciona com 308). Feito: `<link rel="canonical">`,
 `og:url`, `og:image`/`twitter:image` com URL absoluta, `url`/`@id`/`logo`/`image` no JSON-LD, `sitemap.xml` e linha
 `Sitemap:` no robots.txt. DNS no Registro.br (e-mail do cliente fica na Hostinger, MX/TXT intocados):
-`A @ 216.198.79.1` e `A @ 64.29.17.1`; `CNAME www 595eaf93b51ccd15.vercel-dns-017.com.`.
+`A @ 216.150.1.1` e `A @ 216.150.16.1` (IPs recomendados pela Vercel em nov/2026); `CNAME www 595eaf93b51ccd15.vercel-dns-017.com.`.
 Os endereços *.vercel.app continuam com noindex (vercel.json); o domínio oficial é indexável.
 
 ## Sistema de medidas
