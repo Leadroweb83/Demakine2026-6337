@@ -11,6 +11,8 @@ import content from "../../../web/data/content.json";
 import { toWebp } from "../../../web/lib/images";
 import { isJobOpen } from "../jobs";
 import { dbDuelStore } from "./duel-store";
+import { createFixStore, createFixWriters, currentAlt } from "./fix-store";
+import type { FixPage } from "./fix-rules";
 import { runDuel } from "./run-duel";
 import { buildAllEntries } from "../sitemap";
 import { auditSite } from "./run-audit";
@@ -41,6 +43,44 @@ const ORIGIN = "https://www.demakine.com.br";
 
 const DAY = 86_400_000;
 const spDay = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(d);
+
+type ProductCode = { slug: string; images: string[]; imageAlts?: Record<string, string> };
+/** Produto do código e do painel, e a chave da foto (a do .webp ou a original) que bate com o endereço pedido. */
+async function productImage(slug: string, src: string) {
+  const code = (content as { products: ProductCode[] }).products.find((p) => p.slug === slug);
+  const [row] = await db.select().from(schema.contentDocs).where(and(eq(schema.contentDocs.collection, "produto"), eq(schema.contentDocs.key, slug)));
+  const doc = (row?.data ?? {}) as { images?: string[]; imageAlts?: Record<string, string> };
+  const path = src.replace(/^https?:\/\/[^/]+/, "").split("?")[0]!;
+  const key = (doc.images ?? code?.images ?? []).find((k) => k === path || toWebp(k) === path);
+  return { code, row, doc, key };
+}
+
+/** Páginas do site com o que a última auditoria completa leu delas (insumo das propostas do botão Corrigir). */
+async function fixPages(): Promise<FixPage[]> {
+  const pages = await dbStore.loadPages();
+  const latest = await dbStore.latestCompleteRun();
+  const byPath = new Map((latest ? await dbStore.loadRunPages(latest.id) : []).map((r) => [r.path, r]));
+  return pages.map((p) => ({ path: p.path, label: p.label, lang: p.lang, area: p.area, overrides: p.overrides, facts: byPath.get(p.path)?.facts ?? null, checks: byPath.get(p.path)?.checks ?? [] }));
+}
+
+let fixCache: SeoData["fix"] | undefined;
+/** Monta uma vez; usa savePageDoc e setImageAlt do próprio dbSeoData, então só é chamado depois dele existir. */
+function fixData(): SeoData["fix"] {
+  fixCache ??= {
+    pages: fixPages,
+    store: createFixStore(db),
+    writers: createFixWriters({
+      pages: fixPages,
+      savePageDoc: (key, doc, userId) => dbSeoData.savePageDoc(key, doc, userId),
+      setImageAlt: (slug, src, alt, userId) => dbSeoData.setImageAlt(slug, src, alt, userId),
+      productAlt: async (slug, src) => {
+        const { code, doc, key } = await productImage(slug, src);
+        return key ? currentAlt(doc, code?.imageAlts, key) : "";
+      },
+    }),
+  };
+  return fixCache;
+}
 
 export const dbSeoData: SeoData = {
   store: dbStore,
@@ -152,19 +192,22 @@ export const dbSeoData: SeoData = {
   onAuditClosed: async () => void (await dailyTips()),
 
   async setImageAlt(slug, src, alt, userId) {
-    const code = (content as { products: { slug: string; images: string[]; imageAlts?: Record<string, string> }[] }).products.find((p) => p.slug === slug);
-    const [row] = await db.select().from(schema.contentDocs).where(and(eq(schema.contentDocs.collection, "produto"), eq(schema.contentDocs.key, slug)));
-    const doc = (row?.data ?? {}) as { images?: string[]; imageAlts?: Record<string, string> };
+    const { code, row, doc, key } = await productImage(slug, src);
     if (!code && !row) throw new Error("Produto não encontrado");
-    const path = src.replace(/^https?:\/\/[^/]+/, "").split("?")[0]!;
-    const key = (doc.images ?? code?.images ?? []).find((k) => k === path || toWebp(k) === path);
     if (!key) throw new Error("Foto não encontrada neste produto");
-    const imageAlts = { ...code?.imageAlts, ...doc.imageAlts, [key]: alt };
+    const imageAlts = { ...code?.imageAlts, ...doc.imageAlts };
+    // alt vazio (desfazer uma correção) tira a descrição em vez de gravar texto vazio
+    if (alt === "") delete imageAlts[key];
+    else imageAlts[key] = alt;
     const data = { ...doc, imageAlts };
     await db
       .insert(schema.contentDocs)
       .values({ collection: "produto", key: slug, data, deleted: false, updatedBy: userId, updatedAt: new Date() })
       .onConflictDoUpdate({ target: [schema.contentDocs.collection, schema.contentDocs.key], set: { data, updatedBy: userId, updatedAt: new Date() } });
+  },
+
+  get fix() {
+    return fixData();
   },
 
   links: {

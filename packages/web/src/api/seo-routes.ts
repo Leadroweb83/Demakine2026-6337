@@ -13,6 +13,8 @@ import type { Issue } from "./lib/seo/issues";
 import type { LinkReport } from "./lib/seo/links";
 import type { Tip } from "./lib/seo/tips-library";
 import { assertPublicUrl } from "./lib/seo/crawl-external";
+import type { FixStore, FixWriters } from "./lib/seo/fix-apply";
+import type { FixPage } from "./lib/seo/fix-rules";
 import type { DuelResult } from "./lib/seo/run-duel";
 import { imageIssues } from "./lib/seo/images";
 import { checkSchema } from "./lib/seo/schema-check";
@@ -49,6 +51,8 @@ export interface SeoData {
     test(paths: string[]): Promise<OldUrlResult[]>;
     create(items: { from: string; to: string }[], userId: string): Promise<{ created: number; skipped: { from: string; reason: string }[] }>;
   };
+  /** correções do duelo: páginas com a auditoria mais recente, lotes e escritores (título, descrição, imagem, alt) */
+  fix: { pages(): Promise<FixPage[]>; store: FixStore; writers: FixWriters };
   resetRules(): Promise<void>;
   audit(opts: AuditOptions): Promise<AuditResult>;
   /** roda quando uma auditoria DIÁRIA fecha (escolhe as dicas do dia) */
