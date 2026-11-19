@@ -10,6 +10,9 @@
     // Padrão: FormSubmit (o 1º envio pede ativação no e-mail contato@).
     // Para usar o servidor do próprio site, troque por 'enviar-lead.php'.
     leadEndpoint: 'https://formsubmit.co/ajax/contato@guaraequipamentos.com.br',
+    // Planilha Google de leads: cole aqui a URL do App da Web do Apps Script (termina em /exec).
+    // Vazio = não envia para a planilha. Ver planilha-leads.gs.
+    planilhaEndpoint: '',
     leadAssunto: 'Lead BlackFriday',
     // Resposta automática enviada ao e-mail do lead logo após o envio do formulário
     autoResposta: 'Olá, {nome}! Recebemos seu contato pela Black Guará e nosso time comercial vai falar com você em breve pelo WhatsApp.\n\n' +
@@ -277,12 +280,28 @@
     // O WhatsApp abre já, ainda dentro do clique (senão o navegador bloqueia a nova aba)
     var w = window.open(waLink(texto), '_blank');
     if (w) w.opener = null;
-    enviarLeadEmail({ nome: nome, whatsapp: tel.value, email: email, cidade: cidade }).then(function (ok) {
+    var leadDados = { nome: nome, whatsapp: tel.value, email: email, cidade: cidade };
+    var naPlanilha = enviarLeadPlanilha(leadDados);
+    enviarLeadEmail(leadDados).then(function (ok) {
+      ok = ok || naPlanilha;
       if (ok) { msg.textContent = 'Recebemos seus dados, ' + primeiro + '! Nosso time comercial vai falar com você.'; form.reset(); }
       else if (w) msg.textContent = 'WhatsApp aberto, ' + primeiro + '! Se preferir, ligue (19) 3442-2196.';
       if (!w) location.href = waLink(texto);
     });
   });
+
+  // Registra o lead na planilha Google (Apps Script). Não depende de ativação por e-mail.
+  // "no-cors" + formulário simples: o Apps Script recebe sem bloqueio do navegador.
+  function enviarLeadPlanilha(lead) {
+    if (!CONFIG.planilhaEndpoint || !window.fetch) return false;
+    var dados = new URLSearchParams({
+      nome: lead.nome, whatsapp: lead.whatsapp, email: lead.email, cidade: lead.cidade,
+      origem: utm || 'direto', pagina: location.href.split('#')[0],
+      data: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+    });
+    fetch(CONFIG.planilhaEndpoint, { method: 'POST', mode: 'no-cors', body: dados, keepalive: true }).catch(function () {});
+    return true;
+  }
 
   // Envia a cópia do lead por e-mail para contato@guaraequipamentos.com.br
   function enviarLeadEmail(lead) {
