@@ -26,7 +26,7 @@ Página estática e independente. Sem build: basta subir a pasta inteira.
 Publicada na Vercel (projeto `black-guara-lp`) em **https://black.guaraequipamentos.com.br** (CNAME no DNS da Guará). A prévia `*.vercel.app` envia `noindex` para não duplicar no Google.
 
 ## Rastreamento
-- GTM instalado: contêiner `GTM-5R2XMQKM` (o mesmo do site da Guará).
+- GTM instalado: contêiner `GTM-5TF4CR59` (exclusivo da LP).
 - Cliques em WhatsApp, telefone e envio do formulário disparam `generate_lead` no dataLayer.
 - UTMs da URL vão no fim da mensagem do WhatsApp.
 
