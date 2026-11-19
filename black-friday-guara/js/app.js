@@ -12,7 +12,7 @@
     leadEndpoint: 'https://formsubmit.co/ajax/contato@guaraequipamentos.com.br',
     // Planilha Google de leads: cole aqui a URL do App da Web do Apps Script (termina em /exec).
     // Vazio = não envia para a planilha. Ver planilha-leads.gs.
-    planilhaEndpoint: '',
+    planilhaEndpoint: 'https://script.google.com/macros/s/AKfycbz-ayGWN2D_2ZCuPqC11oluJCRMeW1harfWZ3okauPrS0lnwFdnXEbUWy0XVBv4fbrDOA/exec',
     leadAssunto: 'Lead BlackFriday',
     // Resposta automática enviada ao e-mail do lead logo após o envio do formulário
     autoResposta: 'Olá, {nome}! Recebemos seu contato pela Black Guará e nosso time comercial vai falar com você em breve pelo WhatsApp.\n\n' +
