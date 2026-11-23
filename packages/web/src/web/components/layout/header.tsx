@@ -168,25 +168,13 @@ export function Header() {
           </button>
 
           <div className="hidden shrink-0 items-center gap-2 lg:flex">
-            {SHOP_OPEN ? (
+            {SHOP_OPEN && (
               <a
                 href="/loja"
                 className="rounded-full bg-dm-blue px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#0d3480] min-[1600px]:px-5 min-[1600px]:text-[13px]"
               >
                 Loja virtual
               </a>
-            ) : (
-              // etiqueta por cima do botão: não aumenta a largura do topo
-              <span
-                aria-disabled="true"
-                title="Em breve"
-                className="relative cursor-default rounded-full bg-dm-blue/80 px-4 py-2.5 text-[12.5px] font-bold uppercase tracking-wide text-white min-[1600px]:px-5 min-[1600px]:text-[13px]"
-              >
-                Loja virtual
-                <span className="absolute -top-2.5 right-2 rounded-full bg-dm-red px-1.5 py-px text-[9.5px] font-bold uppercase leading-[14px] tracking-wide text-white shadow-sm">
-                  Em breve
-                </span>
-              </span>
             )}
             {/* orçamento vai para o formulário de contato; verde fica reservado ao WhatsApp */}
             <Link
@@ -263,21 +251,13 @@ export function Header() {
               </nav>
               <LangSwitch className="mt-4 sm:hidden" />
               <div className="mt-5 flex flex-col gap-3">
-                {SHOP_OPEN ? (
+                {SHOP_OPEN && (
                   <a
                     href="/loja"
                     className="rounded-full bg-dm-blue px-6 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
                   >
                     Loja virtual
                   </a>
-                ) : (
-                  <span
-                    aria-disabled="true"
-                    className="flex items-center justify-center gap-2 rounded-full bg-dm-blue/80 px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
-                  >
-                    Loja virtual
-                    <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10.5px]">Em breve</span>
-                  </span>
                 )}
                 <Link
                   href={quoteHref()}

@@ -108,7 +108,7 @@ export function waHref(message: string) {
 
 export const departments = site.departments;
 
-/** Loja virtual: enquanto false, o botão do topo mostra "Em breve" e /loja volta para a home. */
+/** Loja virtual: enquanto false, o botão do topo não aparece e /loja volta para a home. */
 export const SHOP_OPEN = false;
 
 export const nav = [
