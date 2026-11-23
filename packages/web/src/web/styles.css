@@ -728,12 +728,6 @@
     stroke 0.35s ease;
   cursor: default;
 }
-.uf-path.has-data {
-  cursor: pointer;
-}
-.uf-path.has-data:hover {
-  fill: #e4141b;
-}
 
 /* foto do estado no mapa da home: troca suave */
 /* barras de crescimento ao lado do número de clientes (mapa da home) */

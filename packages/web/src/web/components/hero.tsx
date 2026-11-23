@@ -131,12 +131,10 @@ export function HomeHero() {
           <div>
             <CineTag>{site.legal} · Limeira/SP</CineTag>
 
-            {/* o H1 diz o que a empresa faz (o termo que o Google procura); o slogan animado fica logo abaixo, como parágrafo */}
-            <h1 className="mt-6 max-w-2xl font-display text-[15px] font-bold uppercase leading-snug tracking-[0.12em] text-white/85 md:text-[17px]">
-              Fábrica de Esteiras Transportadoras, Roscas e Elevadores sob medida
-            </h1>
+            {/* o H1 diz o que a empresa faz (o termo que o Google procura). Fica só para leitor de tela e buscadores: o dono pediu para tirar da tela (ajustes de 23/11). O slogan animado vem logo abaixo, como parágrafo */}
+            <h1 className="sr-only">Fábrica de Esteiras Transportadoras, Roscas e Elevadores sob medida</h1>
 
-            <p className="cine-title mt-4 text-white">
+            <p className="cine-title mt-6 text-white">
               <span className="cine-line">
                 <span style={{ ["--i" as string]: 0 }}>A indústria</span>
               </span>
