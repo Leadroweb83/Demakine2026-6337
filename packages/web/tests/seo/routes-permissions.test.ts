@@ -6,6 +6,9 @@ import { DEFAULT_RULES, type SeoRules } from "../../src/api/lib/seo/rules";
 import type { AuditOptions, AuditResult, StoredPage } from "../../src/api/lib/seo/run-audit";
 import { completeRun, memoryStore, sitePage } from "./helpers/audit-fakes";
 import { perfectFacts } from "./helpers/facts";
+import { memory } from "./helpers/fix-fakes";
+import type { FixPage } from "../../src/api/lib/seo/fix-rules";
+import type { DuelResult } from "../../src/api/lib/seo/run-duel";
 import type { LinkReport } from "../../src/api/lib/seo/links";
 import type { OldUrlResult } from "../../src/api/lib/seo/import-old";
 
@@ -14,9 +17,16 @@ type Env = { Variables: { user: SessionUser | null; session: unknown } };
 const user = (role: string | null, extra: Partial<SessionUser> = {}): SessionUser | null =>
   role === null ? null : { id: "u1", name: "Fulano", email: "f@x.com", role, active: true, ...extra };
 
-type Fake = SeoData & { duelRuns: number; savedComps: { name: string; url: string }[][]; audits: AuditOptions[]; saved: SeoRules[]; resets: number; closed: AuditResult[]; verified: number; alts: { slug: string; src: string; alt: string }[]; tested: string[][]; created: { items: { from: string; to: string }[]; userId: string }[]; docs: { key: string; doc: Record<string, unknown>; userId: string }[] };
+type Fake = SeoData & { duelRuns: number; savedComps: { name: string; url: string }[][]; audits: AuditOptions[]; saved: SeoRules[]; resets: number; closed: AuditResult[]; verified: number; alts: { slug: string; src: string; alt: string }[]; tested: string[][]; created: { items: { from: string; to: string }[]; userId: string }[]; docs: { key: string; doc: Record<string, unknown>; userId: string }[]; fixMem: ReturnType<typeof memory> };
+
+const failing = (item: "titulo" | "descricao") => [{ item, points: 0, max: 15, ok: false, message: "ruim", fix: "arrume" }];
+const fixPages: FixPage[] = [
+  { path: "/a", label: "A", lang: "pt", area: "institucional", overrides: {}, facts: perfectFacts({ title: "Antigo" }), checks: failing("titulo") },
+  { path: "/b", label: "Produto B", lang: "pt", area: "produtos", overrides: {}, facts: perfectFacts({ title: "B antigo" }), checks: failing("titulo") },
+];
 
 function fakeData(): Fake {
+  const fixMem = memory();
   const pages = [sitePage("/a"), sitePage("/b", { area: "produtos", label: "Produto B" }), sitePage("/en/a", { lang: "en", label: "A (EN)" })];
   const store = memoryStore(pages, { runs: [completeRun(1, 88, new Date("2026-11-10T13:00:00Z"))] });
   store.rows.push(
@@ -69,6 +79,8 @@ function fakeData(): Fake {
       },
     },
     docs: [],
+    fixMem,
+    fix: { pages: async () => fixPages, store: fixMem.store, writers: () => fixMem.writers },
     savePageDoc: async (key, doc, userId) => void d.docs.push({ key, doc, userId }),
     history: async () => [{ date: "2026-11-10", site: 88 }],
     timeline: async () => [{ at: "2026-11-10T13:00:00.000Z", text: "Auditoria completa: nota 88" }],
@@ -623,5 +635,105 @@ describe("fiação", () => {
     expect(v.crons).toContainEqual({ path: "/api/cron/seo-duelo", schedule: "0 11 * * 1" }); // duelo semanal: segunda, 08h de Brasília
     expect(v.crons).toContainEqual({ path: "/api/cron/seo", schedule: "0 10 * * *" });
     expect(v.functions?.["api/index.ts"]?.maxDuration).toBeGreaterThanOrEqual(60);
+  });
+});
+
+describe("correções do duelo (Corrigir e Copiar prompt)", () => {
+  const post = (path: string, body: unknown) => appFor("super_admin").app.request(path, json(body));
+  const proposed = async () => ((await (await post("/admin/seo/corrigir/propor", { metric: "titulo" })).json()) as { items: { id: string; path: string; before: string; after: string }[] }).items;
+
+  test("as 5 rotas existem e só o super_admin entra", () => {
+    const sigs = new Set(appFor("super_admin").routes.routes.map((r) => `${r.method} ${r.path}`));
+    for (const s of ["POST /admin/seo/corrigir/propor", "POST /admin/seo/corrigir/aplicar", "GET /admin/seo/corrigir/lotes", "POST /admin/seo/corrigir/desfazer", "POST /admin/seo/corrigir/prompt"]) expect(sigs.has(s), s).toBe(true);
+  });
+
+  test("propor devolve as páginas do grupo com antes e depois e recusa tipo inválido", async () => {
+    const items = await proposed();
+    expect(items.map((i) => [i.path, i.before])).toEqual([["/a", "Antigo"], ["/b", "B antigo"]]);
+    const body = (await (await post("/admin/seo/corrigir/propor", { metric: "titulo" })).json()) as { failing: number };
+    expect(body.failing).toBe(2);
+    const imgs = (await (await post("/admin/seo/corrigir/propor", { metric: "imagens" })).json()) as { items: unknown[]; failing: number };
+    expect(imgs).toEqual({ items: [], failing: 0 });
+    expect(items[0]!.after).toBe("A | Demakine Equipamentos Agroindustriais");
+    for (const metric of ["h1", "tamanho", "", 5, undefined]) expect((await post("/admin/seo/corrigir/propor", { metric })).status, String(metric)).toBe(400);
+  });
+
+  test("aplicar grava só o que veio marcado e guarda o lote", async () => {
+    data.fixMem.values.set("/a|title|", "Antigo");
+    data.fixMem.values.set("/b|title|", "B antigo");
+    const items = await proposed();
+    const res = await post("/admin/seo/corrigir/aplicar", { metric: "titulo", items: [items[0]] });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ batchId: 1, applied: 1, skipped: [] });
+    expect(data.fixMem.writes.map((w) => [w.key, w.userId])).toEqual([["/a|title|", "u1"]]);
+    const lotes = (await (await appFor("super_admin").app.request("/admin/seo/corrigir/lotes")).json()) as { batches: { id: number; status: string }[] };
+    expect(lotes.batches.map((b) => [b.id, b.status])).toEqual([[1, "aplicado"]]);
+  });
+
+  test("aplicar recusa página que não existe, sem gravar", async () => {
+    const [it] = await proposed();
+    const res = await post("/admin/seo/corrigir/aplicar", { metric: "titulo", items: [{ ...it, id: "titulo:/nao-existe:", path: "/nao-existe" }] });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ applied: 0, skipped: [{ reason: "página não encontrada" }] });
+    expect(data.fixMem.writes).toEqual([]);
+  });
+
+  test("aplicar recusa corpo inválido, mais de 200 itens e vez ocupada", async () => {
+    const [it] = await proposed();
+    const many = Array.from({ length: 201 }, (_, i) => ({ ...it!, id: `t:${i}` }));
+    for (const body of [{}, { metric: "titulo" }, { metric: "titulo", items: "x" }, { metric: "h1", items: [it] }, { metric: "titulo", items: [{ ...it, path: "sem-barra" }] }, { metric: "titulo", items: many }]) {
+      expect((await post("/admin/seo/corrigir/aplicar", body)).status, JSON.stringify(body).slice(0, 50)).toBe(400);
+    }
+    data.fix.store = { ...data.fixMem.store, begin: async () => null };
+    expect((await post("/admin/seo/corrigir/aplicar", { metric: "titulo", items: [it] })).status).toBe(409);
+    expect(data.fixMem.writes).toEqual([]);
+  });
+
+  test("desfazer devolve o antes; repetir dá 409, lote inexistente 404, corpo inválido 400", async () => {
+    data.fixMem.values.set("/a|title|", "Antigo");
+    const [it] = await proposed();
+    await post("/admin/seo/corrigir/aplicar", { metric: "titulo", items: [it] });
+    expect(data.fixMem.values.get("/a|title|")).toBe("A | Demakine Equipamentos Agroindustriais");
+    const ok = await post("/admin/seo/corrigir/desfazer", { batchId: 1 });
+    expect(ok.status).toBe(200);
+    expect(await ok.json()).toEqual({ undone: 1, skipped: [] });
+    // a página não tinha override: desfazer remove o campo que o painel criou (volta ao título do código)
+    expect(data.fixMem.values.get("/a|title|")).toBe("");
+    expect((await post("/admin/seo/corrigir/desfazer", { batchId: 1 })).status).toBe(409);
+    expect((await post("/admin/seo/corrigir/desfazer", { batchId: 99 })).status).toBe(404);
+    for (const body of [{}, { batchId: "x" }, { batchId: 1.5 }, { batchId: 0 }, { batchId: 1, ids: "x" }]) expect((await post("/admin/seo/corrigir/desfazer", body)).status, JSON.stringify(body)).toBe(400);
+  });
+
+  test("prompt: sem duelo dá 409; com duelo devolve o JSON; tipo inválido dá 400", async () => {
+    expect((await post("/admin/seo/corrigir/prompt", { metric: "tamanho" })).status).toBe(409);
+    const latest = {
+      at: "2026-11-16T10:00:00.000Z",
+      sites: [],
+      ours: {},
+      board: {},
+      verdicts: { Jumak: [{ metric: "tamanho", ours: 90, theirs: 120, diff: -30, result: "pior", unit: "paginas" }] },
+      actions: [{ metric: "tamanho", competitor: "Jumak", gap: 25, effort: "alto", title: "Passar Jumak em tamanho do site", how: "Planeje páginas novas.", pages: [] }],
+    } as unknown as DuelResult;
+    data.duel.latest = async () => latest;
+    const res = await post("/admin/seo/corrigir/prompt", { metric: "tamanho" });
+    expect(res.status).toBe(200);
+    const { json: text } = (await res.json()) as { json: string };
+    expect(JSON.parse(text)).toMatchObject({ versao: 1, tipo: "pagina", metrica: "tamanho", concorrente: "Jumak", diferenca: { nos: 90, eles: 120 } });
+    expect((await post("/admin/seo/corrigir/prompt", { metric: "blog" })).status).toBe(409);
+    expect((await post("/admin/seo/corrigir/prompt", { metric: "nada" })).status).toBe(400);
+  });
+
+  test("o registro de alterações descreve as ações e aplicar e desfazer republicam o site", async () => {
+    process.env.DATABASE_URL ??= "postgres://teste:teste@localhost:5432/teste";
+    const { describe: d } = await import("../../src/api/lib/audit");
+    expect(d("POST", "/api/admin/seo/corrigir/propor", {})).toBe("Propôs correções do duelo");
+    expect(d("POST", "/api/admin/seo/corrigir/aplicar", { metric: "titulo", items: [{}, {}] })).toBe("Aplicou correções do duelo: titulo, 2 itens");
+    expect(d("POST", "/api/admin/seo/corrigir/desfazer", { batchId: 3 })).toBe("Desfez o lote de correções #3 do duelo");
+    expect(d("POST", "/api/admin/seo/corrigir/prompt", {})).toBe("Copiou o prompt do duelo");
+    const { affectsSite } = await import("../../src/api/lib/publish");
+    expect(affectsSite("/api/admin/seo/corrigir/aplicar")).toBe(true);
+    expect(affectsSite("/api/admin/seo/corrigir/desfazer")).toBe(true);
+    expect(affectsSite("/api/admin/seo/corrigir/propor")).toBe(false);
+    expect(affectsSite("/api/admin/seo/corrigir/prompt")).toBe(false);
   });
 });

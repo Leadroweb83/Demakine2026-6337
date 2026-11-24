@@ -134,6 +134,13 @@
       "when": 1794515572139,
       "tag": "0018_seo_duelo",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1794840353243,
+      "tag": "0019_seo_correcoes",
+      "breakpoints": true
     }
   ]
 }

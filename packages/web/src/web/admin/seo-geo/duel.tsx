@@ -3,7 +3,8 @@ import { RefreshCw, Swords } from "lucide-react";
 import { Btn, Card, inputCls } from "../ui";
 import { EmptyState } from "../charts";
 import { useConcorrentes, useDuelar, useSaveConcorrentes, type DuelResultRow } from "./data";
-import { formatWhen } from "./model";
+import { actionKind, formatWhen, type Fixable } from "./model";
+import { FixReview, Lotes, PromptButton } from "./fix-review";
 import { METRIC_LABELS } from "../../../api/lib/seo/duel-metrics";
 import type { PanelProps } from ".";
 
@@ -46,6 +47,7 @@ function Form({ initial }: { initial: { name: string; url: string }[] }) {
 }
 
 function Result({ r, go }: { r: DuelResultRow; go: PanelProps["go"] }) {
+  const [fixing, setFixing] = useState<Fixable | null>(null);
   const sites = r.sites;
   const okSites = sites.filter((s) => s.status === "ok");
   const metrics = [...new Set(okSites.flatMap((s) => (r.verdicts[s.name] ?? []).map((v) => v.metric)))];
@@ -117,7 +119,18 @@ function Result({ r, go }: { r: DuelResultRow; go: PanelProps["go"] }) {
                   <h3 className="text-[14px] font-extrabold text-dm-ink">{a.title}</h3>
                   <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10.5px] font-bold text-amber-900">{EFFORT[a.effort]}</span>
                 </div>
-                <p className="mt-1 text-[13px] leading-relaxed text-dm-ink/70">{a.how}</p>
+                {fixing !== a.metric && <p className="mt-1 text-[13px] leading-relaxed text-dm-ink/70">{a.how}</p>}
+                {actionKind(a.metric) === "corrigir" ? (
+                  fixing === a.metric ? (
+                    <FixReview metric={a.metric as Fixable} title={a.title} explanation={a.how} onClose={() => setFixing(null)} />
+                  ) : (
+                    <div className="mt-2">
+                      <Btn onClick={() => setFixing(a.metric as Fixable)}>Corrigir</Btn>
+                    </div>
+                  )
+                ) : (
+                  <PromptButton metric={a.metric} />
+                )}
                 {a.pages.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {a.pages.map((p) => (
@@ -158,6 +171,7 @@ export function Duel({ go }: PanelProps) {
       {competitors.length === 0 && <EmptyState icon={<Swords size={32} aria-hidden="true" />} title="Cadastre um concorrente" text="Informe o nome e o site de um ou dois concorrentes e clique em Duelar agora." />}
       {competitors.length > 0 && !latest && !live && <EmptyState icon={<Swords size={32} aria-hidden="true" />} title="Nenhum duelo ainda" text="Clique em Duelar agora. Leva alguns minutos, porque lemos 1 página por segundo para não incomodar o site deles." />}
       {latest && <Result r={latest} go={go} />}
+      <Lotes />
     </div>
   );
 }

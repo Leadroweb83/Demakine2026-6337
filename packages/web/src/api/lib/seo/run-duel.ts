@@ -125,7 +125,7 @@ export async function runDuel(opts: { budgetMs: number }, deps: DuelDeps): Promi
     }
     return { name: c.name, url: c.url, status: s.status, ...(s.redirectTo ? { redirectTo: s.redirectTo } : {}), metrics };
   });
-  const actions = actionsFor(verdicts, rows.map((r) => ({ path: r.path, label: siteInfo.get(r.path)?.label ?? r.path, checks: r.checks })));
+  const actions = actionsFor(verdicts, rows.map((r) => ({ path: r.path, label: siteInfo.get(r.path)?.label ?? r.path, checks: r.checks, schemaTypes: r.facts!.jsonLdTypes.length })));
   const result: DuelResult = { at: new Date(now()).toISOString(), sites, ours, verdicts, board, actions };
   await deps.store.finish(duel.id, result, new Date(now()));
   return { duelId: duel.id, status: "completa", ...progress() };

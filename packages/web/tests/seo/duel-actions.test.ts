@@ -45,6 +45,27 @@ describe("actionsFor", () => {
     expect(a[0]).toMatchObject({ competitor: "Grande", gap: 25 });
   });
 
+  test("dados estruturados apontam as páginas com menos de 3 tipos, das piores para as melhores", () => {
+    const withTypes = [
+      { path: "/a", label: "A", checks: [], schemaTypes: 2 },
+      { path: "/b", label: "B", checks: [], schemaTypes: 3 },
+      { path: "/c", label: "C", checks: [], schemaTypes: 0 },
+      { path: "/d", label: "D", checks: [], schemaTypes: 1 },
+    ];
+    const a = actionsFor({ R: [v("schema", 60, 100)] }, withTypes);
+    expect(a[0]!.pages.map((p) => p.path)).toEqual(["/c", "/d", "/a"]);
+  });
+
+  test("dados estruturados: mostra só as 5 piores páginas", () => {
+    const many = Array.from({ length: 8 }, (_, i) => ({ path: `/p${i}`, label: `P${i}`, checks: [], schemaTypes: 1 }));
+    expect(actionsFor({ R: [v("schema", 60, 100)] }, many)[0]!.pages).toHaveLength(5);
+  });
+
+  test("dados estruturados sem a contagem de tipos continua usando a nota da auditoria", () => {
+    const old = [{ path: "/x", label: "X", checks: [chk("schema", 2, 10, false)] }];
+    expect(actionsFor({ R: [v("schema", 60, 100)] }, old)[0]!.pages.map((p) => p.path)).toEqual(["/x"]);
+  });
+
   test("nenhum texto tem travessão", () => {
     const all = actionsFor({ R: (["titulo", "descricao", "h1", "conteudo", "imagens", "schema", "idiomas", "compartilhamento"] as const).map((m) => v(m, 10, 90)).concat([v("tamanho", 1, 9, "paginas"), v("blog", 0, 5, "posts")]) }, pages);
     expect(all).toHaveLength(10);
