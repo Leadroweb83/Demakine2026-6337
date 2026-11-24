@@ -387,6 +387,12 @@ describe("Guerra é Guerra", () => {
     expect(data.savedComps).toEqual([[{ name: "Rival A", url: "https://www.rival-a.com.br" }, { name: "Rival B", url: "https://rival-b.com.br" }]]);
   });
 
+  test("aceita subdomínio e endereço digitado sem https://, guardando a origem em https", async () => {
+    const res = await appFor("super_admin").app.request("/admin/seo/concorrentes", put({ items: [{ name: "Demakine Antigo", url: "antigo.demakine.com.br" }, { name: "Rival", url: "loja.rival-e.com.br/produtos" }] }));
+    expect(res.status).toBe(200);
+    expect(data.savedComps.at(-1)).toEqual([{ name: "Demakine Antigo", url: "https://antigo.demakine.com.br" }, { name: "Rival", url: "https://loja.rival-e.com.br" }]);
+  });
+
   test("recusa mais de 2, endereço perigoso, nome inválido e repetidos, sem salvar", async () => {
     const { app } = appFor("super_admin");
     const ok = { name: "X", url: "https://x.com.br" };

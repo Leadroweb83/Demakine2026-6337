@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { assertPublicUrl, discoverPages, fetchExternal, isPublicIp, loadRobots, parseRobots } from "../../src/api/lib/seo/crawl-external";
+import { assertPublicUrl, discoverPages, fetchExternal, isPublicIp, loadRobots, normalizeCompetitorUrl, parseRobots } from "../../src/api/lib/seo/crawl-external";
 
 const pub = async () => ["93.184.216.34"];
 const res = (status: number, body = "", headers: Record<string, string> = {}) => new Response(body, { status, headers: { "content-type": "text/html", ...headers } });
@@ -13,6 +13,17 @@ describe("isPublicIp", () => {
 
   test("aceita endereços públicos", () => {
     for (const ip of ["8.8.8.8", "93.184.216.34", "172.32.0.1", "2606:4700:4700::1111"]) expect(isPublicIp(ip), ip).toBe(true);
+  });
+});
+
+describe("normalizeCompetitorUrl", () => {
+  test("endereço digitado sem https:// ganha o https://, inclusive subdomínio", () => {
+    expect(normalizeCompetitorUrl("antigo.demakine.com.br")).toBe("https://antigo.demakine.com.br");
+    expect(normalizeCompetitorUrl("  www.jumak.com.br/produtos  ")).toBe("https://www.jumak.com.br/produtos");
+  });
+
+  test("quem já traz esquema ou // fica como está, para o assertPublicUrl decidir", () => {
+    for (const u of ["https://a.com.br", "http://a.com.br", "file:///etc/passwd", "//a.com.br", "ftp://a.com.br", ""]) expect(normalizeCompetitorUrl(u), u).toBe(u);
   });
 });
 
