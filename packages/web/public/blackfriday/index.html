@@ -153,7 +153,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 24px; color: #FFFFFF">Pedido enviado</h2>
             <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #C9D5FF">Um especialista da Demakine responde em até 1 dia útil com a sua proposta de Black Friday.</p>
           </div>
-          <!-- DEV: ligar este formulário ao destino dos contatos (e-mail, CRM ou RD Station). -->
+          <!-- Envio: POST /api/leads (CRM do painel + aviso por e-mail). -->
           <form id="dk-form" action="#" method="post" style="display: flex; flex-direction: column; gap: 14px">
             <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px">
               <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 24px; color: #FFFFFF">Peça sua proposta</h2>
@@ -170,11 +170,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
               <div style="display: flex; flex-direction: column; gap: 6px">
                 <label for="dk-empresa" style="font-size: 13px; font-weight: 500; color: #C9D5FF">Empresa</label>
-                <input id="dk-empresa" name="empresa" type="text" autocomplete="organization" style="height: 46px; border-radius: 10px; border: 1px solid rgba(201,213,255,0.22); background: rgba(255,255,255,0.06); color: #FFFFFF; padding: 0 14px; font: inherit; font-size: 15px; width: 100%">
+                <input id="dk-empresa" name="empresa" type="text" required="" autocomplete="organization" style="height: 46px; border-radius: 10px; border: 1px solid rgba(201,213,255,0.22); background: rgba(255,255,255,0.06); color: #FFFFFF; padding: 0 14px; font: inherit; font-size: 15px; width: 100%">
               </div>
               <div style="display: flex; flex-direction: column; gap: 6px">
                 <label for="dk-cidade" style="font-size: 13px; font-weight: 500; color: #C9D5FF">Cidade/UF</label>
-                <input id="dk-cidade" name="cidade" type="text" autocomplete="address-level2" style="height: 46px; border-radius: 10px; border: 1px solid rgba(201,213,255,0.22); background: rgba(255,255,255,0.06); color: #FFFFFF; padding: 0 14px; font: inherit; font-size: 15px; width: 100%">
+                <input id="dk-cidade" name="cidade" type="text" required="" autocomplete="address-level2" placeholder="Limeira/SP" style="height: 46px; border-radius: 10px; border: 1px solid rgba(201,213,255,0.22); background: rgba(255,255,255,0.06); color: #FFFFFF; padding: 0 14px; font: inherit; font-size: 15px; width: 100%">
               </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px">
@@ -183,7 +183,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px">
               <label for="dk-equip" style="font-size: 13px; font-weight: 500; color: #C9D5FF">Equipamento de interesse</label>
-              <select id="dk-equip" name="equipamento" style="height: 46px; border-radius: 10px; border: 1px solid rgba(201,213,255,0.22); background: #0B1A44; color: #FFFFFF; padding: 0 12px; font: inherit; font-size: 15px">
+              <select id="dk-equip" name="equipamento" required="" style="height: 46px; border-radius: 10px; border: 1px solid rgba(201,213,255,0.22); background: #0B1A44; color: #FFFFFF; padding: 0 12px; font: inherit; font-size: 15px">
                 <option>Esteira transportadora</option>
                 <option>Rosca transportadora</option>
                 <option>Elevador de canecas</option>
@@ -194,6 +194,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <option>Projeto especial</option>
               </select>
             </div>
+            <div aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden">
+              <label for="dk-hp">Não preencha este campo</label>
+              <input id="dk-hp" name="hp" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <p id="dk-erro" role="alert" hidden style="margin: 0; font-size: 14px; color: #FF9A9D"></p>
             <button type="submit" class="dk-green" style="margin-top: 6px; height: 52px; border: 0; border-radius: 999px; background: #17864F; color: #FFFFFF; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Quero minha proposta</button>
             <p style="margin: 0; font-size: 12px; text-align: center; color: #8A9BC9">Seus dados não são compartilhados.</p>
           </form>
@@ -461,15 +466,66 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     tick(); setInterval(tick, 1000);
   })();
 
-  // Formulário: hoje só mostra a confirmação na tela.
-  // DEV: trocar pelo envio real (fetch para a API, RD Station etc.) antes de publicar.
+  // Formulário: envia para /api/leads (CRM do painel + aviso por e-mail) e dispara o evento Lead.
   (function () {
     var form = document.getElementById('dk-form');
     var ok = document.getElementById('dk-sucesso');
+    var erro = document.getElementById('dk-erro');
+    var btn = form.querySelector('button[type="submit"]');
+    var aberta = Date.now();
+    function val(id) { return (document.getElementById(id).value || '').trim(); }
+    function novoId() {
+      var a = new Uint8Array(12);
+      (window.crypto || window.msCrypto).getRandomValues(a);
+      return 'bf-' + Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+    }
+    function mostrarErro(t) { erro.textContent = t; erro.hidden = false; }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      form.style.display = 'none';
-      ok.hidden = false; ok.style.display = 'flex';
+      erro.hidden = true;
+      var q = new URLSearchParams(location.search);
+      var eventId = novoId();
+      var equip = val('dk-equip');
+      var corpo = {
+        name: val('dk-nome'),
+        phone: val('dk-tel'),
+        email: val('dk-email'),
+        company: val('dk-empresa'),
+        city: val('dk-cidade'),
+        product: equip,
+        message: 'Proposta de Black Friday: ' + equip,
+        source: 'black-friday',
+        event_id: eventId,
+        hp: val('dk-hp'),
+        elapsed: Date.now() - aberta,
+        traffic: {
+          source: q.get('utm_source') || (document.referrer ? 'referral' : 'direct'),
+          landing: location.pathname,
+          campaign: q.get('utm_campaign') || null,
+          clickIds: { gclid: q.get('gclid'), gbraid: q.get('gbraid'), wbraid: q.get('wbraid'), fbclid: q.get('fbclid') }
+        }
+      };
+      btn.disabled = true;
+      var rotulo = btn.textContent;
+      btn.textContent = 'Enviando...';
+      fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) {
+            mostrarErro((res.d && res.d.error) || 'Não foi possível enviar agora. Tente de novo ou chame no WhatsApp.');
+            btn.disabled = false; btn.textContent = rotulo;
+            return;
+          }
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'lead', event_id: eventId, lead_source: 'black-friday', lead_product: equip });
+          if (window.fbq) window.fbq('track', 'Lead', { content_name: equip }, { eventID: eventId });
+          form.style.display = 'none';
+          ok.hidden = false; ok.style.display = 'flex';
+        })
+        .catch(function () {
+          mostrarErro('Sem conexão. Tente de novo ou chame no WhatsApp.');
+          btn.disabled = false; btn.textContent = rotulo;
+        });
     });
   })();
 </script>
